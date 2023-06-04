@@ -16,7 +16,6 @@ members = [".", "entity", "migration"]
 tauri-build = { version = "1.3", features = [] }
 
 [dependencies]
-dotenv = "0.15.0"
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1.28.2", features = ["full"] }
