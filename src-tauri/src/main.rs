@@ -1,5 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![allow(unused_variables)]
 
 use entity::post;
 
@@ -10,9 +11,12 @@ mod connection;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    tokio::spawn(async move { insert().await });
-    format!("Hello, {}! You've been greeted from Rust!", name)
+async fn greet(name: &str) -> Result<String, String> {
+    let res = insert().await;
+    Ok(format!(
+        "Hello, {}! You've been greeted from Rust!",
+        res.unwrap()
+    ))
 }
 
 async fn insert() -> Result<String, DbErr> {
@@ -28,7 +32,10 @@ async fn insert() -> Result<String, DbErr> {
 
     println!("Post created with ID: {}, TITLE: {}", post.id, post.title);
 
-    Ok(String::from("ok"))
+    Ok(format!(
+        "Post created with ID: {}, TITLE: {}",
+        post.id, post.title,
+    ))
 }
 
 #[tokio::main]
