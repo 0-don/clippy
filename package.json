@@ -8,7 +8,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "tauri": "tauri",
-    "gen": "cross-env DATABASE_URL=sqlite://clippy.sqlite?mode=rwc sea-orm-cli migrate up -d ./src-tauri/migration"
+    "gen": "sea-orm-cli migrate up -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src"
   },
   "license": "MIT",
   "dependencies": {

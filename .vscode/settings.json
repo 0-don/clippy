@@ -1,6 +1,6 @@
 {
   "rust-analyzer.linkedProjects": [
-    ".\\src-tauri\\entity\\Cargo.toml",
-    ".\\src-tauri\\migration\\Cargo.toml"
+    // ".\\src-tauri\\entity\\Cargo.toml",
+    // ".\\src-tauri\\migration\\Cargo.toml"
   ]
 }
