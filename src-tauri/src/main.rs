@@ -2,7 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(unused_variables)]
 
-use entity::post;
+use entity::clipboard;
 
 use sea_orm::{ActiveModelTrait, Set};
 use sea_orm::{DatabaseConnection, DbErr};
@@ -22,20 +22,15 @@ async fn greet(name: &str) -> Result<String, String> {
 async fn insert() -> Result<String, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
 
-    let post = post::ActiveModel {
-        title: Set(String::from("Amazing title 1")),
-        text: Set(String::from("Lorem ipsum dolor sit amet.")),
+    let post = clipboard::ActiveModel {
+        r#type: Set(String::from("text")),
+        content: Set(Some(String::from("Hello, World!"))),
         ..Default::default()
     };
 
-    let post: post::Model = post.insert(&db).await?;
+    let post: clipboard::Model = post.insert(&db).await?;
 
-    println!("Post created with ID: {}, TITLE: {}", post.id, post.title);
-
-    Ok(format!(
-        "Post created with ID: {}, TITLE: {}",
-        post.id, post.title,
-    ))
+    Ok(format!("Post created with ID: {}", post.id))
 }
 
 #[tokio::main]

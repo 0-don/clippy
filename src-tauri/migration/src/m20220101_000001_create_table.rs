@@ -11,17 +11,27 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Post::Table)
+                    .table(Clipboard::Table)
                     .if_not_exists()
                     .col(
-                        ColumnDef::new(Post::Id)
+                        ColumnDef::new(Clipboard::Id)
                             .integer()
                             .not_null()
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Post::Title).string().not_null())
-                    .col(ColumnDef::new(Post::Text).string().not_null())
+                    .col(ColumnDef::new(Clipboard::Type).string().not_null())
+                    .col(ColumnDef::new(Clipboard::Content).string())
+                    .col(ColumnDef::new(Clipboard::Width).integer())
+                    .col(ColumnDef::new(Clipboard::Height).integer())
+                    .col(ColumnDef::new(Clipboard::Size).string())
+                    .col(ColumnDef::new(Clipboard::Blob).blob(BlobSize::Long))
+                    .col(ColumnDef::new(Clipboard::Star).boolean().default(false))
+                    .col(
+                        ColumnDef::new(Clipboard::CreatedDate)
+                            .date_time()
+                            .default("CURRENT_TIMESTAMP"),
+                    )
                     .to_owned(),
             )
             .await
@@ -31,16 +41,47 @@ impl MigrationTrait for Migration {
         // Replace the sample below with your own migration scripts
 
         manager
-            .drop_table(Table::drop().table(Post::Table).to_owned())
+            .drop_table(Table::drop().table(Clipboard::Table).to_owned())
             .await
     }
 }
 
 /// Learn more at https://docs.rs/sea-query#iden
 #[derive(Iden)]
-enum Post {
+enum Clipboard {
     Table,
     Id,
-    Title,
-    Text,
+    Type,
+    Content,
+    Width,
+    Height,
+    Size,
+    Blob,
+    Star,
+    CreatedDate,
+}
+
+#[derive(Iden)]
+enum Settings {
+    Table,
+    Id,
+    Startup,
+    Notification,
+    Synchronize,
+    SynctTime,
+    DarkMode,
+}
+
+#[derive(Iden)]
+enum Hotkey {
+    Table,
+    Id,
+    Event,
+    Ctrl,
+    Alt,
+    Shift,
+    Key,
+    Status,
+    Name,
+    Icon,
 }

@@ -9,7 +9,6 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
         String::from("sqlite://clippy.sqlite?mode=rwc")
     };
 
-    println!("Connecting to {}", database_url);
     let db = Database::connect(&database_url)
         .await
         .expect("Failed to setup the database");
