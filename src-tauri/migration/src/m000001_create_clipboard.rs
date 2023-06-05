@@ -3,7 +3,7 @@ use sea_orm_migration::prelude::*;
 
 pub mod clipboard {
     use sea_orm::entity::prelude::*;
-    use uuid::Uuid;
+    use sea_orm_migration::sea_orm;
 
     #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
     #[sea_orm(rs_type = "String", db_type = "String(Some(16))")]
@@ -19,8 +19,9 @@ pub mod clipboard {
     #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
     #[sea_orm(table_name = "clipboard")]
     pub struct Model {
-        #[sea_orm(primary_key, auto_increment = false)]
-        pub id: Uuid,
+        #[sea_orm(primary_key, auto_increment = true)]
+        pub id: i32,
+        #[sea_orm(default_value = "text")]
         pub r#type: ClipboardType,
         pub content: Option<String>,
         pub width: Option<i32>,
@@ -28,7 +29,7 @@ pub mod clipboard {
         pub size: Option<String>,
         pub blob: Option<Vec<u8>>,
         pub star: bool,
-        pub created_date: DateTime,
+        pub created_date: DateTimeUtc,
     }
 
     #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

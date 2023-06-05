@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 sea-orm = { version = "^0" }
+chrono = "^0"

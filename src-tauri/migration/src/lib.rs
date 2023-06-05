@@ -11,8 +11,8 @@ impl MigratorTrait for Migrator {
     fn migrations() -> Vec<Box<dyn MigrationTrait>> {
         vec![
             Box::new(m000001_create_clipboard::Migration),
-            Box::new(m000002_create_settings::Migration),
-            Box::new(m000003_create_hotkey::Migration),
+            // Box::new(m000002_create_settings::Migration),
+            // Box::new(m000003_create_hotkey::Migration),
         ]
     }
 }

@@ -14,8 +14,8 @@ pub struct Model {
     pub size: Option<String>,
     #[sea_orm(column_type = "Binary(BlobSize::Blob(None))", nullable)]
     pub blob: Option<Vec<u8>>,
-    pub star: Option<bool>,
-    pub created_date: Option<String>,
+    pub star: bool,
+    pub created_date: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

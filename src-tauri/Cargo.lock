@@ -384,7 +384,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4114279215a005bc675e386011e594e1d9b800918cea18fcadadcce864a2046b"
 dependencies = [
  "borsh-derive",
- "hashbrown 0.13.2",
+ "hashbrown 0.12.3",
 ]
 
 [[package]]
@@ -637,6 +637,7 @@ dependencies = [
 name = "clippy"
 version = "1.0.0"
 dependencies = [
+ "chrono",
  "entity",
  "migration",
  "sea-orm",
@@ -1000,6 +1001,7 @@ dependencies = [
 name = "entity"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "sea-orm",
 ]
 
@@ -2026,8 +2028,6 @@ dependencies = [
  "chrono",
  "sea-orm",
  "sea-orm-migration",
- "serde_json",
- "uuid",
 ]
 
 [[package]]
