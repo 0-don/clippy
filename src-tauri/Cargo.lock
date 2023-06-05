@@ -1001,10 +1001,8 @@ dependencies = [
 name = "entity"
 version = "1.0.0"
 dependencies = [
- "chrono",
  "sea-orm",
  "serde",
- "serde_json",
 ]
 
 [[package]]
