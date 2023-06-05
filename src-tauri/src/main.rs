@@ -3,9 +3,9 @@
 #![allow(unused_variables)]
 
 use entity::clipboard;
-
 use sea_orm::{ActiveModelTrait, Set};
 use sea_orm::{DatabaseConnection, DbErr};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu};
 
 mod connection;
 
@@ -35,7 +35,11 @@ async fn insert() -> Result<String, DbErr> {
 
 #[tokio::main]
 async fn main() {
+    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+    let tray_menu = SystemTrayMenu::new().add_item(quit);
+    let system_tray = SystemTray::new().with_menu(tray_menu);
     tauri::Builder::default()
+        .system_tray(system_tray)
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
