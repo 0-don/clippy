@@ -999,7 +999,7 @@ dependencies = [
 
 [[package]]
 name = "entity"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "chrono",
  "sea-orm",
@@ -2022,7 +2022,7 @@ dependencies = [
 
 [[package]]
 name = "migration"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "async-std",
  "chrono",

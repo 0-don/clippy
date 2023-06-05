@@ -1,6 +1,6 @@
 [package]
 name = "migration"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 publish = false
 
@@ -15,7 +15,13 @@ chrono = "^0"
 
 [dependencies.sea-orm]
 version = "^0"
-features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros", "with-chrono"]
+features = [
+  "sqlx-sqlite",
+  "runtime-tokio-rustls",
+  "macros",
+  "with-chrono",
+  "debug-print",
+]
 default-features = false
 
 [dependencies.sea-orm-migration]

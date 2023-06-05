@@ -1,41 +1,17 @@
-use sea_orm::Schema;
 use sea_orm_migration::prelude::*;
 
-pub mod clipboard {
-    use sea_orm::entity::prelude::*;
-    use sea_orm_migration::sea_orm;
-
-    #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
-    #[sea_orm(rs_type = "String", db_type = "String(Some(16))")]
-    pub enum ClipboardType {
-        #[sea_orm(string_value = "text")]
-        Text,
-        #[sea_orm(string_value = "image")]
-        Image,
-        #[sea_orm(string_value = "color")]
-        Color,
-    }
-
-    #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-    #[sea_orm(table_name = "clipboard")]
-    pub struct Model {
-        #[sea_orm(primary_key, auto_increment = true)]
-        pub id: i32,
-        #[sea_orm(default_value = "text")]
-        pub r#type: ClipboardType,
-        pub content: Option<String>,
-        pub width: Option<i32>,
-        pub height: Option<i32>,
-        pub size: Option<String>,
-        pub blob: Option<Vec<u8>>,
-        pub star: bool,
-        pub created_date: DateTimeUtc,
-    }
-
-    #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-    pub enum Relation {}
-
-    impl ActiveModelBehavior for ActiveModel {}
+#[derive(Iden)]
+enum Clipboard {
+    Table,
+    Id,
+    Type,
+    Content,
+    Width,
+    Height,
+    Size,
+    Blob,
+    Star,
+    CreatedDate,
 }
 
 #[derive(DeriveMigrationName)]
@@ -44,10 +20,40 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        let builder = manager.get_database_backend();
-        let schema = Schema::new(builder);
+        // Replace the sample below with your own migration scripts
+
         manager
-            .create_table(schema.create_table_from_entity(clipboard::Entity))
+            .create_table(
+                Table::create()
+                    .table(Clipboard::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(Clipboard::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key(),
+                    )
+                    .col(ColumnDef::new(Clipboard::Type).string().not_null())
+                    .col(ColumnDef::new(Clipboard::Content).string())
+                    .col(ColumnDef::new(Clipboard::Width).integer())
+                    .col(ColumnDef::new(Clipboard::Height).integer())
+                    .col(ColumnDef::new(Clipboard::Size).string())
+                    .col(ColumnDef::new(Clipboard::Blob).blob(BlobSize::Long))
+                    .col(
+                        ColumnDef::new(Clipboard::Star)
+                            .boolean()
+                            .not_null()
+                            .default(true),
+                    )
+                    .col(
+                        ColumnDef::new(Clipboard::CreatedDate)
+                            .date_time()
+                            .not_null()
+                            .extra("DEFAULT CURRENT_TIMESTAMP".to_owned()), // .default("CURRENT_TIMESTAMP".to_owned()),
+                    )
+                    .to_owned(),
+            )
             .await
     }
 
@@ -55,7 +61,7 @@ impl MigrationTrait for Migration {
         // Replace the sample below with your own migration scripts
 
         manager
-            .drop_table(Table::drop().table(clipboard::Entity).to_owned())
+            .drop_table(Table::drop().table(Clipboard::Table).to_owned())
             .await
     }
 }

@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "tauri": "tauri",
     "d": "tauri dev",
-    "gen": "rm -rf clippy.sqlite && sea-orm-cli migrate refresh -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src"
+    "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src"
   },
   "license": "MIT",
   "dependencies": {
@@ -21,7 +21,6 @@
     "@tauri-apps/cli": "^1.3.1",
     "@types/node": "^20.2.5",
     "autoprefixer": "^10.4.14",
-    "cross-env": "^7.0.3",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.1.3",
