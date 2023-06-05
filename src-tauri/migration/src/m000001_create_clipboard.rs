@@ -59,28 +59,3 @@ impl MigrationTrait for Migration {
             .await
     }
 }
-
-// #[derive(Iden)]
-// enum Settings {
-//     Table,
-//     Id,
-//     Startup,
-//     Notification,
-//     Synchronize,
-//     SynctTime,
-//     DarkMode,
-// }
-
-// #[derive(Iden)]
-// enum Hotkey {
-//     Table,
-//     Id,
-//     Event,
-//     Ctrl,
-//     Alt,
-//     Shift,
-//     Key,
-//     Status,
-//     Name,
-//     Icon,
-// }
