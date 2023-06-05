@@ -9,8 +9,9 @@ pub async fn greet(name: &str) -> Result<String, String> {
     let res = insert().await;
 
     Ok(format!(
-        "Hello, {}! You've been greeted from Rust!",
-        res.unwrap()
+        "Hello, {}! You've been greeted from Rust! {}",
+        res.unwrap(),
+        name,
     ))
 }
 
