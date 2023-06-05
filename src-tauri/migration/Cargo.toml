@@ -13,13 +13,6 @@ path = "src/lib.rs"
 entity = { path = "../entity" }
 async-std = { version = "1.12.0", features = ["attributes", "tokio1"] }
 
-chrono = "^0"
-
-[dependencies.sea-orm]
-version = "^0"
-features = ["macros", "with-chrono", "debug-print"]
-default-features = false
-
 [dependencies.sea-orm-migration]
 version = "^0"
 features = [
