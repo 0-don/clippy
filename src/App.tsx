@@ -1,21 +1,24 @@
 import { invoke } from "@tauri-apps/api";
 import { FaRegularKeyboard } from "solid-icons/fa";
+import { Match, Switch, createEffect, createResource } from "solid-js";
+import { Hotkey } from "./@types";
 import AppStore from "./store/AppStore";
 import SettingsStore from "./store/SettingsStore";
+
+const fetchUser = async () => (await invoke<Hotkey[]>("get_hotkeys"))[0].icon;
 
 function App() {
   const { settings, setGlobalHotkeyEvent, globalHotkeyEvent } = SettingsStore;
   const { sidebarIcons, updateSidebarIcons } = AppStore;
 
+  const [data] = createResource(fetchUser);
+
   const html = <FaRegularKeyboard />;
-  // @ts-ignore
-  console.log({ icon: JSON.stringify(html.outerHTML) });
 
-  const sIcon = sidebarIcons().find((icon) => icon.current);
-
-  setTimeout(async () => {
-    console.log(await invoke("get_hotkeys"));
+  createEffect(() => {
+    console.log(data());
   });
+  const sIcon = sidebarIcons().find((icon) => icon.current);
 
   // createEffect(() => {
   //   const setRecentClipboards = window.electron.on(
@@ -57,6 +60,18 @@ function App() {
 
   return (
     <div class="dark:bg-dark absolute flex h-full w-full overflow-hidden bg-white text-black dark:text-white ">
+      <Switch fallback={<div>Not Found</div>}>
+        <Match when={data.state === "pending" || data.state === "unresolved"}>
+          Loading...
+        </Match>
+        <Match when={data.state === "ready"}>
+          <div class="!text-5xl" innerHTML={JSON.parse(data() || "{}")}></div>
+          <div class="text-red-500">asd</div>
+        </Match>
+        <Match when={data.state === "errored"}>
+          {JSON.stringify(data.error)}
+        </Match>
+      </Switch>
       {/* <div class="dark:bg-dark-light flex flex-col items-center space-y-7 bg-gray-200 px-3.5 pt-5">
         <AppSidebar />
       </div>
