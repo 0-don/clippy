@@ -1,10 +1,10 @@
 [package]
 name = "clippy"
 version = "1.0.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+description = "Clipboard Manager built with Rust & Typescript"
+authors = ["Don-Cryptus"]
+license = "MIT"
+repository = "https://github.com/Don-Cryptus/clippy"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
