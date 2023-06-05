@@ -8,6 +8,9 @@ This template should help get you started developing with Tauri, Solid and Types
 
 https://dev.to/anshulxyz/guide-to-getting-started-with-seaorm-an-orm-for-rust-2fen
 
-sea-orm-cli migrate up
 
-sea-orm-cli migrate init -d src-tauri
+
+
+
+sea-orm-cli migrate up
+sea-orm-cli generate entity -l

@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "tauri": "tauri",
     "d": "tauri dev",
-    "gen": "sea-orm-cli migrate up -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src"
+    "gen": "rm -rf clippy.sqlite && sea-orm-cli migrate refresh -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src"
   },
   "license": "MIT",
   "dependencies": {

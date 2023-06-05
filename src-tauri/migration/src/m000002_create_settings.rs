@@ -1,4 +1,7 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    sea_orm::{EnumIter, Iterable},
+};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -20,7 +23,12 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Clipboard::Type).string().not_null())
+                    .col(
+                        ColumnDef::new(Clipboard::Type)
+                            .enumeration(Type::Table, [Type::Image, Type::Text, Type::Color])
+                            .enumeration(Type::Table, Type::iter().skip(1))
+                            .not_null(),
+                    )
                     .col(ColumnDef::new(Clipboard::Content).string())
                     .col(ColumnDef::new(Clipboard::Width).integer())
                     .col(ColumnDef::new(Clipboard::Height).integer())
@@ -30,7 +38,7 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(Clipboard::CreatedDate)
                             .date_time()
-                            .default("CURRENT_TIMESTAMP"),
+                            .default("test"),
                     )
                     .to_owned(),
             )
@@ -59,6 +67,17 @@ enum Clipboard {
     Blob,
     Star,
     CreatedDate,
+}
+
+#[derive(Iden, EnumIter)]
+pub enum Type {
+    Table,
+    #[iden = "Text"]
+    Text,
+    #[iden = "Image"]
+    Image,
+    #[iden = "Color"]
+    Color,
 }
 
 #[derive(Iden)]

@@ -23,7 +23,7 @@ async fn insert() -> Result<String, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
 
     let post = clipboard::ActiveModel {
-        r#type: Set(String::from("text")),
+        r#type: Set(String::from("textx")),
         content: Set(Some(String::from("Hello, World!"))),
         ..Default::default()
     };
