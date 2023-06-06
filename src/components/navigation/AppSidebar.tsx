@@ -17,13 +17,13 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
               class={`${
                 current
                   ? "text-black dark:text-white"
-                  : "dark:text-gray-dark text-gray-500"
-              } cursor-pointer  hover:text-black dark:hover:text-white`}
+                  : "text-gray-500 dark:text-gray-dark"
+              } cursor-pointer text-xl hover:text-black dark:hover:text-white`}
               onClick={() => updateSidebarIcons(name)}
               title={name}
             />
             {currentHotkey?.status && globalHotkeyEvent() && (
-              <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
+              <div class="absolute -left-2 -top-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
                 {currentHotkey.key}
               </div>
             )}
