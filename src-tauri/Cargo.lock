@@ -637,6 +637,8 @@ dependencies = [
  "entity",
  "migration",
  "sea-orm",
+ "serde",
+ "serde_json",
  "tauri",
  "tauri-build",
  "tokio",
