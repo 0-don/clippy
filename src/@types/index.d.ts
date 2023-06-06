@@ -27,6 +27,6 @@ export type Settings = {
   startup: boolean;
   notification: boolean;
   synchronize: boolean;
-  syncTime: number;
-  darkmode: boolean;
+  synchronize_time: number;
+  dar_kmode: boolean;
 };

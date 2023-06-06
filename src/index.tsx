@@ -9,10 +9,8 @@ const Index = () => {
   const { initSettings, settings, updateSettings, updateHotkey } =
     SettingsStore;
   const { updateSidebarIcons } = AppStore;
-
+  initSettings();
   createEffect(() => {
-    initSettings();
-
     // const refreshSettings = window.electron.on(
     //   "refreshSettings",
     //   (setting: Prisma.SettingsCreateInput) => {
@@ -30,6 +28,7 @@ const Index = () => {
     //   refreshSettings();
     //   refreshHotkeys();
     // };
+    console.log(settings());
   });
 
   if (!settings) return null;
