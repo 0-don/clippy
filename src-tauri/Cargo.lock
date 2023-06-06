@@ -636,6 +636,7 @@ version = "1.0.0"
 dependencies = [
  "entity",
  "migration",
+ "once_cell",
  "sea-orm",
  "serde",
  "serde_json",
