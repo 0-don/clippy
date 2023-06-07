@@ -1,14 +1,16 @@
 export type Clipboards = {
-  id: number;
-  type: string;
-  content: string | null;
-  width: number | null;
-  height: number | null;
-  size: string | null;
-  blob: Buffer | null;
-  star: boolean;
-  createdDate: Date;
+  id?: number | null;
+  type: ClipboardType;
+  content?: string | null;
+  width?: number | null;
+  height?: number | null;
+  size?: string | null;
+  blob?: Buffer | null;
+  star?: boolean;
+  created_date?: Date;
 };
+
+export type ClipboardType = "text" | "image" | "color";
 
 export type Hotkey = {
   id: number;

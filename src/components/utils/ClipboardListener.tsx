@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api";
 import { UnlistenFn, listen } from "@tauri-apps/api/event";
 import { createEffect, onCleanup } from "solid-js";
 import {
@@ -6,6 +7,7 @@ import {
   listenImage,
   listenText,
 } from "tauri-plugin-clipboard-api";
+import { Clipboards } from "../../@types";
 
 let tauriTextUnlisten: UnlistenFn;
 let tauriImageUnlisten: UnlistenFn;
@@ -20,14 +22,35 @@ type Listener = {
 
 export const ClipboardListener = () => {
   createEffect(async () => {
-    tauriTextUnlisten = await listen(TEXT_CHANGED, ({ payload }: Listener) => {
-      console.log(payload.value);
-    });
+    tauriTextUnlisten = await listen(
+      TEXT_CHANGED,
+      async ({ payload }: Listener) => {
+        const clipboard: Clipboards = {
+          type: "text",
+          content: payload.value,
+        };
+        await invoke("insert_clipboard", { clipboard });
+      }
+    );
 
     tauriImageUnlisten = await listen(
       IMAGE_CHANGED,
       ({ payload }: Listener) => {
-        console.log(payload.value);
+        const base64 = payload.value;
+        const img = new Image();
+
+        const blob = new Uint8Array(
+          atob(base64)
+            .split("")
+            .map((char) => char.charCodeAt(0))
+        );
+        img.onload = async function () {
+          const i = this as HTMLImageElement;
+          const width = i.naturalWidth;
+          const height = i.naturalHeight;
+          const size = blob.length;
+        };
+        img.src = `data:image/png;base64,${base64}`;
       }
     );
 

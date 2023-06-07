@@ -22,7 +22,7 @@ fn main() {
         .system_tray(tray::system_tray())
         .on_system_tray_event(tray::system_tray_event)
         .invoke_handler(tauri::generate_handler![
-            clipboard::greet,
+            clipboard::insert_clipboard,
             hotkey::get_hotkeys,
             settings::get_settings,
             window::window_on_mouse,

@@ -1,30 +1,23 @@
-use entity::clipboard;
-use sea_orm::{ActiveModelTrait, Set};
+use entity::clipboard::{self, ActiveModel, Model};
+use sea_orm::ActiveModelTrait;
 use sea_orm::{DatabaseConnection, DbErr};
 
 use crate::connection;
 
 #[tauri::command]
-pub async fn greet(name: &str) -> Result<String, String> {
-    let res = insert().await;
+pub async fn insert_clipboard(clipboard: clipboard::Model) -> Result<Model, String> {
+    println!("{:?}", clipboard);
+    let clip = insert(clipboard).await;
 
-    Ok(format!(
-        "Hello, {}! You've been greeted from Rust! {}",
-        res.unwrap(),
-        name,
-    ))
+    Ok(clip.unwrap())
 }
 
-pub async fn insert() -> Result<String, DbErr> {
+async fn insert(clipboard: clipboard::Model) -> Result<Model, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
 
-    let post = clipboard::ActiveModel {
-        r#type: Set(String::from("textx")),
-        content: Set(Some(String::from("Hello, World!"))),
-        ..Default::default()
-    };
+    let clip: ActiveModel = clipboard.into();
 
-    let post: clipboard::Model = post.insert(&db).await?;
+    let clip_db: clipboard::Model = clip.insert(&db).await?;
 
-    Ok(format!("Post created with ID: {}", post.id))
+    Ok(clip_db)
 }
