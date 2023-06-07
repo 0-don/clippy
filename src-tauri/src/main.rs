@@ -4,12 +4,8 @@
 mod commands;
 mod connection;
 mod utils;
+
 use commands::{clipboard, hotkey, settings, window};
-
-use tauri::Manager;
-use tauri::SystemTrayEvent;
-use tauri_plugin_positioner::{on_tray_event, Position, WindowExt};
-
 use utils::{setup, tray};
 
 #[tokio::main]
@@ -19,22 +15,7 @@ async fn main() {
         .plugin(tauri_plugin_positioner::init())
         .setup(setup::setup)
         .system_tray(tray::system_tray())
-        .on_system_tray_event(|app, event| {
-            on_tray_event(app, &event);
-            match event {
-                SystemTrayEvent::LeftClick {
-                    position: _,
-                    size: _,
-                    ..
-                } => {
-                    let win = app.get_window("main").unwrap();
-                    let _ = win.move_window(Position::TrayCenter);
-                    let _ = win.show();
-                    let _ = win.set_focus();
-                }
-                _ => {}
-            }
-        })
+        .on_system_tray_event(tray::system_tray_event)
         .invoke_handler(tauri::generate_handler![
             clipboard::greet,
             hotkey::get_hotkeys,
