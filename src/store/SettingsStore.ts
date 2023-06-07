@@ -59,8 +59,13 @@ function createSettingsStore() {
 
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
-    const hotkeys = await invoke<ExtendedHotKey[]>("get_hotkeys");
     setSettings(settings);
+    await initHotkeys();
+  };
+
+  const initHotkeys = async () => {
+    const hotkeys = await invoke<ExtendedHotKey[]>("get_hotkeys");
+    console.log(hotkeys);
     setHotkeys(hotkeys);
   };
 
