@@ -40,16 +40,10 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Clipboard::Height).integer())
                     .col(ColumnDef::new(Clipboard::Size).string())
                     .col(ColumnDef::new(Clipboard::Blob).blob(BlobSize::Long))
-                    .col(
-                        ColumnDef::new(Clipboard::Star)
-                            .boolean()
-                            .not_null()
-                            .default(true),
-                    )
+                    .col(ColumnDef::new(Clipboard::Star).boolean().default(true))
                     .col(
                         ColumnDef::new(Clipboard::CreatedDate)
                             .date_time()
-                            .not_null()
                             .extra("DEFAULT CURRENT_TIMESTAMP".to_owned()), // .default("CURRENT_TIMESTAMP".to_owned()),
                     )
                     .to_owned(),

@@ -26,10 +26,14 @@ export const ClipboardListener = () => {
       TEXT_CHANGED,
       async ({ payload }: Listener) => {
         const clipboard: Clipboards = {
+          id: 0,
           type: "text",
           content: payload.value,
         };
-        await invoke("insert_clipboard", { clipboard });
+        if ((clipboard.content || "").length > 0) {
+          console.log(clipboard);
+          await invoke("insert_clipboard", { clipboard });
+        }
       }
     );
 

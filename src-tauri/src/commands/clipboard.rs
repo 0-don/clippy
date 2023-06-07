@@ -1,5 +1,5 @@
 use entity::clipboard::{self, ActiveModel, Model};
-use sea_orm::ActiveModelTrait;
+use sea_orm::{ActiveModelTrait, Set};
 use sea_orm::{DatabaseConnection, DbErr};
 
 use crate::connection;
@@ -15,9 +15,20 @@ pub async fn insert_clipboard(clipboard: clipboard::Model) -> Result<Model, Stri
 async fn insert(clipboard: clipboard::Model) -> Result<Model, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
 
-    let clip: ActiveModel = clipboard.into();
+    let model = ActiveModel {
+        r#type: Set(clipboard.r#type),
+        content: Set(clipboard.content),
 
-    let clip_db: clipboard::Model = clip.insert(&db).await?;
+        star: Set(clipboard.star),
+        
+        blob: Set(clipboard.blob),
+        height: Set(clipboard.height),
+        width: Set(clipboard.width),
+        size: Set(clipboard.size),
+        ..Default::default()
+    };
+
+    let clip_db: clipboard::Model = model.insert(&db).await?;
 
     Ok(clip_db)
 }
