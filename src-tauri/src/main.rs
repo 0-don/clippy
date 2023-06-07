@@ -15,6 +15,7 @@ pub static APP: OnceCell<tauri::AppHandle> = OnceCell::new();
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard::init())
         .setup(|app| {
             APP.set(app.handle()).expect("error initializing tauri app");
             Ok(())
