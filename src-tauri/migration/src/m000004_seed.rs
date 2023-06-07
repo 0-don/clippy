@@ -23,7 +23,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("windowDisplayToggle".to_string()),
+            event: Set("window_display_toggle".to_string()),
             ctrl: Set(true),
             alt: Set(false),
             shift: Set(false),
@@ -37,7 +37,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("recentClipboards".to_string()),
+            event: Set("recent_clipboards".to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -51,7 +51,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("starredClipboards".to_string()),
+            event: Set("starred_clipboards".to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -79,7 +79,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("viewMore".to_string()),
+            event: Set("view_more".to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -93,7 +93,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("syncClipboardHistory".to_string()),
+            event: Set("sync_clipboard_history".to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -149,7 +149,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("toggleDevTool".to_string()),
+            event: Set("toggle_dev_tools".to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -163,7 +163,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("scrollToTop".to_string()),
+            event: Set("scroll_to_top".to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),

@@ -1,9 +1,8 @@
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
-import { register } from "@tauri-apps/api/globalShortcut";
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
-import { createEffect,createResource } from "solid-js";
+import { createEffect, createResource } from "solid-js";
 import { Hotkey } from "./@types";
 import { History } from "./components/app/History";
 import { RecentClipboards } from "./components/app/RecentClipboards";
@@ -21,9 +20,6 @@ function App() {
   const [data] = createResource(fetchUser);
 
   createEffect(async () => {
-    await register("CommandOrControl+A", () => {
-      console.log("Shortcut triggered");
-    });
     // listen to the `click` event and get a function to remove the event listener
     // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
     // console.log("test");
@@ -63,7 +59,8 @@ function App() {
         {sIcon?.name === "View more" && sIcon?.current && <ViewMore />}
       </div>
     </div>
-  );History
+  );
+  History;
 }
 
 export default App;

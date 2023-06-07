@@ -17,7 +17,7 @@ type SettingsTab = {
 
 function createSettingsStore() {
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
-  const [hotkeys, setHotkeys] = createSignal<ExtendedHotKey[]>([]);
+  const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
   const [settings, setSettings] = createSignal<Settings>();
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
     { name: "General", Icon: IoCogSharp, current: true },
@@ -64,9 +64,10 @@ function createSettingsStore() {
   };
 
   const initHotkeys = async () => {
-    const hotkeys = await invoke<ExtendedHotKey[]>("get_hotkeys");
+    const hotkeys = await invoke<Hotkey[]>("get_hotkeys");
     console.log(hotkeys);
     setHotkeys(hotkeys);
+    registerHotkeys(hotkeys);
   };
 
   return {
@@ -83,6 +84,10 @@ function createSettingsStore() {
     updateHotkey,
     initSettings,
   };
+}
+
+async function registerHotkeys(hotkeys: Hotkey[]) {
+  
 }
 
 export default createRoot(createSettingsStore);
