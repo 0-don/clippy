@@ -50,7 +50,9 @@
         "resizable": true,
         "title": "clippy",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "alwaysOnTop": true,
+        "visible": false
       }
     ]
   }

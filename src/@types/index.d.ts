@@ -20,6 +20,8 @@ export type Hotkey = {
   status: boolean;
   name: string;
   icon: string;
+
+  shortcut: string; // not in db added for convenience
 };
 
 export type HotkeyEvent =

@@ -5,6 +5,7 @@ import { IoCogSharp } from "solid-icons/io";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { Hotkey, Settings } from "../@types";
+import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
 
 type SettingsTabName = "General" | "Account" | "History" | "Hotkeys";
 
@@ -63,8 +64,11 @@ function createSettingsStore() {
   };
 
   const initHotkeys = async () => {
-    const hotkeys = await invoke<Hotkey[]>("get_hotkeys");
-    console.log(hotkeys);
+    const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
+      ...h,
+      shortcut: parseShortcut(h),
+    }));
+
     setHotkeys(hotkeys);
     registerHotkeys(hotkeys);
   };
@@ -84,7 +88,5 @@ function createSettingsStore() {
     initSettings,
   };
 }
-
-async function registerHotkeys(hotkeys: Hotkey[]) {}
 
 export default createRoot(createSettingsStore);

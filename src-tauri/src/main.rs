@@ -8,6 +8,9 @@ use commands::clipboard;
 use commands::hotkey;
 use commands::settings;
 use once_cell::sync::OnceCell;
+use tauri::Manager;
+use tauri::SystemTrayEvent;
+use tauri_plugin_positioner::{on_tray_event, Position, WindowExt};
 use utils::tray;
 
 pub static APP: OnceCell<tauri::AppHandle> = OnceCell::new();
@@ -21,6 +24,21 @@ async fn main() {
             Ok(())
         })
         .system_tray(tray::system_tray())
+        .on_system_tray_event(|app, event| {
+            on_tray_event(app, &event);
+            match event {
+                SystemTrayEvent::LeftClick {
+                    position: _,
+                    size: _,
+                    ..
+                } => {
+                    let win = app.get_window("main").unwrap();
+                    // let _ = win.move_window(Position::TopRight);
+                    let _ = win.show();
+                }
+                _ => {}
+            }
+        })
         .invoke_handler(tauri::generate_handler![
             clipboard::greet,
             hotkey::get_hotkeys,
