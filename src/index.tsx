@@ -1,40 +1,21 @@
-import { listen } from "@tauri-apps/api/event";
+import { appWindow } from "@tauri-apps/api/window";
 import { createEffect, createResource, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
-import { Hotkey, Settings } from "./@types";
 import App from "./App";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Index = () => {
-  const { initSettings, settings, updateSettings, updateHotkey } =
-    SettingsStore;
+  const { initSettings } = SettingsStore;
 
   createResource(initSettings);
 
   createEffect(async () => {
-    const refreshSettings = await listen<Settings>(
-      "refresh_settings",
-      ({ payload }) => {
-        updateSettings(payload, false);
-        initSettings();
-      }
+    const focus = await appWindow.onFocusChanged(
+      async ({ payload: focused }) => !focused && (await appWindow.hide())
     );
-
-    const refreshHotkeys = await listen<Hotkey>(
-      "refresh_hotkeys",
-      ({ payload }) => updateHotkey(payload, false)
-    );
-
-    onCleanup(() => {
-      refreshSettings();
-      refreshHotkeys();
-    });
+    onCleanup(focus);
   });
-
-  console.log("settings", settings());
-
-  // if (!settings()) return null;
 
   return <App />;
 };

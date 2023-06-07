@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { app, invoke } from "@tauri-apps/api";
 import { register,unregisterAll } from "@tauri-apps/api/globalShortcut";
 import { appWindow } from "@tauri-apps/api/window";
 import { Hotkey } from "../@types";
@@ -24,6 +24,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
         await appWindow.hide();
       } else {
         await appWindow.show();
+        await appWindow.setFocus();
         await invoke("window_on_mouse");
         // move_window(Position.TrayCenter);
       }

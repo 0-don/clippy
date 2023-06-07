@@ -15,7 +15,8 @@
       "all": false,
       "window": {
         "hide": true,
-        "show": true
+        "show": true,
+        "setFocus": true
       },
       "globalShortcut": {
         "all": true

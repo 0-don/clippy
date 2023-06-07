@@ -30,6 +30,7 @@ async fn main() {
                     let win = app.get_window("main").unwrap();
                     let _ = win.move_window(Position::TrayCenter);
                     let _ = win.show();
+                    let _ = win.set_focus();
                 }
                 _ => {}
             }

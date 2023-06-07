@@ -7,7 +7,6 @@ use crate::connection;
 pub async fn get_settings() -> Result<Model, String> {
     let res = get_settings_db().await;
 
-    // Ok(res.unwrap())
     Ok(res.unwrap())
 }
 
