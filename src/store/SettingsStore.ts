@@ -5,7 +5,6 @@ import { IoCogSharp } from "solid-icons/io";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { Hotkey, Settings } from "../@types";
-import { ExtendedHotKey } from "../utils/constants";
 
 type SettingsTabName = "General" | "Account" | "History" | "Hotkeys";
 
@@ -48,7 +47,7 @@ function createSettingsStore() {
   };
 
   const updateHotkey = async (
-    hotkey: ExtendedHotKey,
+    hotkey: Hotkey,
     upload: boolean | undefined = true
   ) => {
     if (upload) await invoke("updateHotkey", hotkey as Hotkey);
@@ -86,8 +85,6 @@ function createSettingsStore() {
   };
 }
 
-async function registerHotkeys(hotkeys: Hotkey[]) {
-  
-}
+async function registerHotkeys(hotkeys: Hotkey[]) {}
 
 export default createRoot(createSettingsStore);

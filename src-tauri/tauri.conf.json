@@ -17,6 +17,10 @@
         "all": false,
         "open": true
       },
+      "window": {
+        "minimize": true,
+        "unminimize": true
+      },
       "globalShortcut": {
         "all": true
       }

@@ -1,25 +1,4 @@
 import { IconTypes } from "solid-icons";
-import { Hotkey } from "../@types";
-
-export const hotKeyEvents = [
-  // local
-  "windowDisplayToggle",
-  "toggleDevTool",
-
-  // external
-  "scrollToTop",
-
-  "recentClipboards",
-  "starredClipboards",
-  "history",
-  "viewMore",
-  "clipboardSwitch",
-  "syncClipboardHistory",
-  "preferences",
-  "about",
-  "exit",
-] as const;
-export type HotkeyEvent = (typeof hotKeyEvents)[number];
 
 export const viewMoreNames = [
   "Sync Clipboard History",
@@ -98,13 +77,3 @@ export const GLOBAL_SHORTCUT_KEYS = [
 ] as const;
 
 export type GlobalShortcutKeysType = (typeof GLOBAL_SHORTCUT_KEYS)[number];
-
-export interface ExtendedHotKey extends Hotkey {
-  event: HotkeyEvent;
-  key: GlobalShortcutKeysType;
-  name:
-    | SidebarIconName
-    | "Clippy Display Toggle"
-    | ViewMoreName
-    | "Toggle Dev Tools";
-}
