@@ -1,4 +1,5 @@
-import { register, unregisterAll } from "@tauri-apps/api/globalShortcut";
+import { invoke } from "@tauri-apps/api";
+import { register,unregisterAll } from "@tauri-apps/api/globalShortcut";
 import { appWindow } from "@tauri-apps/api/window";
 import { Hotkey } from "../@types";
 
@@ -13,15 +14,20 @@ export const parseShortcut = (hotkey: Hotkey) => {
 
 export async function registerHotkeys(hotkeys: Hotkey[]) {
   await unregisterAll();
+
+  // Display and hide the app window
   const mainHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
   if (mainHotkey && mainHotkey.status) {
     await register(mainHotkey.shortcut, async () => {
-      const minimized = await appWindow.isMinimized();
-      if (minimized) {
-        await appWindow.unminimize();
+      const isVisible = await appWindow.isVisible();
+      if (isVisible) {
+        await appWindow.hide();
       } else {
-        await appWindow.minimize();
+        await appWindow.show();
+        await invoke("window_on_mouse");
+        // move_window(Position.TrayCenter);
       }
     });
   }
+  // ############################################
 }

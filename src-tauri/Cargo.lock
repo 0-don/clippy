@@ -749,6 +749,7 @@ dependencies = [
 name = "clippy"
 version = "1.0.0"
 dependencies = [
+ "enigo",
  "entity",
  "migration",
  "once_cell",
@@ -1171,6 +1172,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "071a31f4ee85403370b58aca746f01041ede6f0da2730960ad001edc2b71b394"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "enigo"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "464c869256b1d6c1db151ab7a164fe0a5a6d340095460f92d7e8fba78ab47dc0"
+dependencies = [
+ "core-graphics",
+ "libc",
+ "objc",
+ "pkg-config",
+ "windows 0.48.0",
 ]
 
 [[package]]

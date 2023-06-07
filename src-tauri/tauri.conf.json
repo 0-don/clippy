@@ -13,13 +13,9 @@
   "tauri": {
     "allowlist": {
       "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
       "window": {
-        "minimize": true,
-        "unminimize": true
+        "hide": true,
+        "show": true
       },
       "globalShortcut": {
         "all": true
@@ -49,7 +45,7 @@
         "fullscreen": false,
         "resizable": true,
         "title": "clippy",
-        "width": 800,
+        "width": 375,
         "height": 600,
         "alwaysOnTop": true,
         "visible": false
