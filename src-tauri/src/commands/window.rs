@@ -14,3 +14,9 @@ pub async fn window_on_mouse() -> Result<(), String> {
     let _ = win.move_window(Position::BottomRight);
     Ok(())
 }
+
+#[tauri::command]
+pub async fn is_production() -> Result<bool, String> {
+    let state = if cfg!(debug_assertions) { false } else { true };
+    Ok(state)
+}

@@ -16,6 +16,7 @@ type SettingsTab = {
 };
 
 function createSettingsStore() {
+  const [isProduction, setIsProduction] = createSignal<boolean>(false); // process.env.NODE_ENV === "production" ? true : false
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
   const [settings, setSettings] = createSignal<Settings>();
@@ -58,8 +59,11 @@ function createSettingsStore() {
   };
 
   const initSettings = async () => {
+    const isProduction = await invoke<boolean>("is_production");
+    console.log("isProduction", isProduction);
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
+    setIsProduction(isProduction);
     await initHotkeys();
   };
 
