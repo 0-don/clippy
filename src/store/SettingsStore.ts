@@ -17,7 +17,7 @@ type SettingsTab = {
 };
 
 function createSettingsStore() {
-  const [isProduction, setIsProduction] = createSignal<boolean>(false); // process.env.NODE_ENV === "production" ? true : false
+  const [isProduction, setIsProduction] = createSignal<boolean>(false);
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
   const [settings, setSettings] = createSignal<Settings>();
@@ -97,6 +97,7 @@ function createSettingsStore() {
     updateSettings,
     updateHotkey,
     initSettings,
+    isProduction,
   };
 }
 

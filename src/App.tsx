@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
-import { createEffect, createResource } from "solid-js";
+import { createEffect, createResource, onCleanup } from "solid-js";
 import { Hotkey } from "./@types";
 import { History } from "./components/app/History";
 import { RecentClipboards } from "./components/app/RecentClipboards";
@@ -29,6 +29,7 @@ function App() {
     // emit("click", {
     //   theMessage: "Tauri is awesome!",
     // });
+    onCleanup(unlisten);
   });
 
   const sIcon = sidebarIcons().find((icon) => icon.current);
