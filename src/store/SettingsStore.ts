@@ -4,6 +4,7 @@ import { FaRegularKeyboard, FaRegularUser } from "solid-icons/fa";
 import { IoCogSharp } from "solid-icons/io";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
+import { enable } from "tauri-plugin-autostart-api";
 import { Hotkey, Settings } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
 
@@ -58,12 +59,18 @@ function createSettingsStore() {
     );
   };
 
+  const updateIsProduction = async (state: boolean) => {
+    setIsProduction(state);
+    if (state) await enable();
+  };
+
   const initSettings = async () => {
-    const isProduction = await invoke<boolean>("is_production");
-    console.log("isProduction", isProduction);
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
-    setIsProduction(isProduction);
+
+    const isProduction = await invoke<boolean>("is_production");
+    await updateIsProduction(isProduction);
+
     await initHotkeys();
   };
 
@@ -74,7 +81,7 @@ function createSettingsStore() {
     }));
 
     setHotkeys(hotkeys);
-    registerHotkeys(hotkeys);
+    await registerHotkeys(hotkeys);
   };
 
   return {
