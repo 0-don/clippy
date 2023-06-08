@@ -5,7 +5,7 @@
 
   <p align="center">
     <br />
-    Clipboard Manager made with Electron, React & Prisma.
+    Clipboard Manager made with Tauri, Solid & Sea-Orm.
     <br />
     <a href="https://github.com/Don-Cryptus/clippy/releases/latest">Try it out</a>
     ·
