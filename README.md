@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Don-Cryptus/echat">
-    <img src="assets/clippy.png" alt="Logo" width=400 />
+    <img src="public/clippy.png" alt="Logo" width=400 />
   </a>
 
   <p align="center">
@@ -15,6 +15,6 @@
     <br />
   </p>
   <p align="center">
-    <img src="assets/clippy-showcase.webp" alt="Logo" >
+    <img src="public/clippy-showcase.webp" alt="Logo" >
   </p>
 </p>
