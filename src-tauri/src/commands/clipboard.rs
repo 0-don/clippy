@@ -19,8 +19,8 @@ async fn insert(clipboard: clipboard::Model) -> Result<Model, DbErr> {
         r#type: Set(clipboard.r#type),
         content: Set(clipboard.content),
 
-        star: Set(clipboard.star),
-        
+        star: Set(Some(false)),
+
         blob: Set(clipboard.blob),
         height: Set(clipboard.height),
         width: Set(clipboard.width),

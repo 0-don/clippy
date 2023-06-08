@@ -5,7 +5,7 @@ export type Clipboards = {
   width?: number | null;
   height?: number | null;
   size?: string | null;
-  blob?: Buffer | null;
+  blob?: Uint8Array | null;
   star?: boolean;
   created_date?: Date;
 };

@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api";
 import { UnlistenFn, listen } from "@tauri-apps/api/event";
 import { createEffect, onCleanup } from "solid-js";
 import {
@@ -8,6 +7,7 @@ import {
   listenText,
 } from "tauri-plugin-clipboard-api";
 import { Clipboards } from "../../@types";
+import { formatBytes } from "../../utils/helpers";
 
 let tauriTextUnlisten: UnlistenFn;
 let tauriImageUnlisten: UnlistenFn;
@@ -22,41 +22,59 @@ type Listener = {
 
 export const ClipboardListener = () => {
   createEffect(async () => {
-    tauriTextUnlisten = await listen(
-      TEXT_CHANGED,
-      async ({ payload }: Listener) => {
-        const clipboard: Clipboards = {
-          id: 0,
-          type: "text",
-          content: payload.value,
-        };
-        if ((clipboard.content || "").length > 0) {
-          console.log(clipboard);
-          await invoke("insert_clipboard", { clipboard });
-        }
-      }
-    );
+    console.log("wtf");
+    // tauriTextUnlisten = await listen(TEXT_CHANGED, async (event: Listener) => {
+    //   console.log(event);
+    //   const clipboard: Clipboards = {
+    //     id: 0,
+    //     type: "text",
+    //     content: event.payload.value,
+    //   };
 
-    tauriImageUnlisten = await listen(
-      IMAGE_CHANGED,
-      ({ payload }: Listener) => {
-        const base64 = payload.value;
-        const img = new Image();
+    //   console.log(clipboard);
+    //   // await invoke("insert_clipboard", { clipboard });
+    // });
 
-        const blob = new Uint8Array(
-          atob(base64)
-            .split("")
-            .map((char) => char.charCodeAt(0))
-        );
-        img.onload = async function () {
-          const i = this as HTMLImageElement;
-          const width = i.naturalWidth;
-          const height = i.naturalHeight;
-          const size = blob.length;
-        };
-        img.src = `data:image/png;base64,${base64}`;
-      }
-    );
+    // tauriImageUnlisten = await listen(
+    //   IMAGE_CHANGED,
+    //   async (event: Listener) => {
+    //     console.log(event);
+    //     const base64 = event.payload.value;
+    //     const img = new Image();
+
+    //     const blob = new Uint8Array(
+    //       atob(base64)
+    //         .split("")
+    //         .map((char) => char.charCodeAt(0))
+    //     );
+
+    //     // promisfy image load
+
+    //     const clipboard = await new Promise<Clipboards>((resolve, reject) => {
+    //       img.onload = function () {
+    //         const i = this as HTMLImageElement;
+    //         const width = i.naturalWidth;
+    //         const height = i.naturalHeight;
+    //         const size = blob.length;
+
+    //         const clipboard: Clipboards = {
+    //           id: 0,
+    //           type: "image",
+    //           width,
+    //           height,
+    //           size: formatBytes(size),
+    //           blob,
+    //         };
+    //         resolve(clipboard);
+    //       };
+    //       img.src = `data:image/png;base64,${base64}`;
+    //     });
+
+    //     console.log(clipboard);
+
+    //     // await invoke("insert_clipboard", { clipboard });
+    //   }
+    // );
 
     imageUnlisten = listenImage();
     textUnlisten = listenText();
@@ -64,8 +82,8 @@ export const ClipboardListener = () => {
     onCleanup(() => {
       imageUnlisten();
       textUnlisten();
-      tauriTextUnlisten();
-      tauriImageUnlisten();
+      // tauriTextUnlisten();
+      // tauriImageUnlisten();
     });
   });
   return true;

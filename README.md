@@ -1,16 +1,20 @@
-# Tauri + Solid + Typescript
+<p align="center">
+  <a href="https://github.com/Don-Cryptus/echat">
+    <img src="assets/clippy.png" alt="Logo" width=400 />
+  </a>
 
-This template should help get you started developing with Tauri, Solid and Typescript in Vite.
-
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-
-https://dev.to/anshulxyz/guide-to-getting-started-with-seaorm-an-orm-for-rust-2fen
-
-
-
-
-
-sea-orm-cli migrate up
-sea-orm-cli generate entity -l
+  <p align="center">
+    <br />
+    Clipboard Manager made with Electron, React & Prisma.
+    <br />
+    <a href="https://github.com/Don-Cryptus/clippy/releases/latest">Try it out</a>
+    ·
+    <a href="https://github.com/Don-Cryptus/clippy/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Don-Cryptus/clippy/issues">Request Feature</a>
+    <br />
+  </p>
+  <p align="center">
+    <img src="assets/clippy-showcase.webp" alt="Logo" >
+  </p>
+</p>
