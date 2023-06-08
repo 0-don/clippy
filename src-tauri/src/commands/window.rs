@@ -1,7 +1,8 @@
+use clipboard_master::Master;
 use tauri::Manager;
 use tauri_plugin_positioner::{Position, WindowExt};
 
-use crate::utils::setup::APP;
+use crate::utils::{clipboard::Handler, setup::APP};
 
 #[tauri::command]
 pub async fn window_on_mouse() -> Result<(), String> {
@@ -19,4 +20,10 @@ pub async fn window_on_mouse() -> Result<(), String> {
 pub async fn is_production() -> Result<bool, String> {
     let state = if cfg!(debug_assertions) { false } else { true };
     Ok(state)
+}
+
+#[tauri::command]
+pub async fn init_listener() -> Result<(), ()> {
+    let _ = Master::new(Handler).run();
+    Ok(())
 }

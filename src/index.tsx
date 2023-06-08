@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api";
 import { appWindow } from "@tauri-apps/api/window";
 import { createEffect, createResource, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
@@ -17,6 +18,8 @@ const Index = () => {
     const focus = await appWindow.onFocusChanged(
       async ({ payload: focused }) => !focused && (await appWindow.hide())
     );
+
+    await invoke("init_listener");
 
     onCleanup(focus);
   });

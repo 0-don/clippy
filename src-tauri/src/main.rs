@@ -5,31 +5,12 @@ mod commands;
 mod connection;
 mod utils;
 
-use std::io;
-
-use clipboard_master::{CallbackResult, ClipboardHandler, Master};
 use commands::{clipboard, hotkey, settings, window};
 use utils::{setup, tray};
 
 use tauri_plugin_autostart::MacosLauncher;
 
-struct Handler;
-
-impl ClipboardHandler for Handler {
-    fn on_clipboard_change(&mut self) -> CallbackResult {
-        println!("Clipboard change happened!");
-
-        CallbackResult::Next
-    }
-
-    fn on_clipboard_error(&mut self, error: io::Error) -> CallbackResult {
-        eprintln!("Error: {}", error);
-        CallbackResult::Next
-    }
-}
-
 fn main() {
-    let _ = Master::new(Handler).run();
     tauri::Builder::default()
         .plugin(tauri_plugin_clipboard::init())
         .plugin(tauri_plugin_positioner::init())
@@ -46,6 +27,7 @@ fn main() {
             settings::get_settings,
             window::window_on_mouse,
             window::is_production,
+            window::init_listener,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
