@@ -67,10 +67,13 @@ function createSettingsStore() {
   };
 
   const init = async () => {
-    await updateIsProduction();
-    await initSettings();
-    await initClipboars();
-    await initHotkeys();
+    updateIsProduction();
+
+    initSettings();
+
+    initHotkeys();
+
+    // initClipboards();
   };
 
   const initSettings = async () => {
@@ -88,7 +91,7 @@ function createSettingsStore() {
     await registerHotkeys(hotkeys);
   };
 
-  const initClipboars = async () => {
+  const initClipboards = async () => {
     const clipboards = await invoke<Clipboards[]>("get_clipboards");
     const { setClipboards } = AppStore;
     setClipboards(clipboards);
@@ -106,7 +109,7 @@ function createSettingsStore() {
     setCurrentTab,
     updateSettings,
     updateHotkey,
-    initSettings: init,
+    init,
     isProduction,
   };
 }

@@ -8,7 +8,6 @@ use crate::connection;
 pub async fn get_hotkeys() -> Result<Vec<Model>, String> {
     let res = get_all_hotkeys().await;
 
-    // Ok(res.unwrap())
     Ok(res.unwrap())
 }
 

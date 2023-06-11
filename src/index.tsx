@@ -1,15 +1,15 @@
 import { invoke } from "@tauri-apps/api";
 import { appWindow } from "@tauri-apps/api/window";
-import { createEffect, createResource, onCleanup } from "solid-js";
+import { createEffect,createResource,onCleanup } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./App";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Index = () => {
-  const { initSettings } = SettingsStore;
+  const { init } = SettingsStore;
 
-  createResource(initSettings);
+  createResource(init);
 
   createEffect(async () => {
     const focus = await appWindow.onFocusChanged(
