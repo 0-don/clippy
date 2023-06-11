@@ -24,6 +24,17 @@ pub async fn is_production() -> Result<bool, String> {
 
 #[tauri::command]
 pub async fn init_listener() -> Result<(), ()> {
-    let _ = Master::new(Handler).run();
+    // let res = tokio::runtime::Runtime::new().unwrap().spawn(async move {
+    //     println!("text: {:?}", 1);
+    //     let model = parse_model();
+    //     println!("text: {:?}", 2);
+    //     let res = insert(model).await;
+    //     println!("text: {:?}", 3);
+    // });
+
+    let _ = tauri::async_runtime::spawn(async move {
+        let master = Master::new(Handler).run();
+    });
+
     Ok(())
 }
