@@ -5,8 +5,9 @@ import { IoCogSharp } from "solid-icons/io";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { enable } from "tauri-plugin-autostart-api";
-import { Hotkey, Settings } from "../@types";
+import { Clipboards, Hotkey, Settings } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
+import AppStore from "./AppStore";
 
 type SettingsTabName = "General" | "Account" | "History" | "Hotkeys";
 
@@ -59,19 +60,22 @@ function createSettingsStore() {
     );
   };
 
-  const updateIsProduction = async (state: boolean) => {
-    setIsProduction(state);
-    if (state) await enable();
+  const updateIsProduction = async () => {
+    const isProduction = await invoke<boolean>("is_production");
+    setIsProduction(isProduction);
+    if (isProduction) await enable();
+  };
+
+  const init = async () => {
+    await updateIsProduction();
+    await initSettings();
+    await initClipboars();
+    await initHotkeys();
   };
 
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
-
-    const isProduction = await invoke<boolean>("is_production");
-    await updateIsProduction(isProduction);
-
-    await initHotkeys();
   };
 
   const initHotkeys = async () => {
@@ -82,6 +86,12 @@ function createSettingsStore() {
 
     setHotkeys(hotkeys);
     await registerHotkeys(hotkeys);
+  };
+
+  const initClipboars = async () => {
+    const clipboards = await invoke<Clipboards[]>("get_clipboards");
+    const { setClipboards } = AppStore;
+    setClipboards(clipboards);
   };
 
   return {
@@ -96,7 +106,7 @@ function createSettingsStore() {
     setCurrentTab,
     updateSettings,
     updateHotkey,
-    initSettings,
+    initSettings: init,
     isProduction,
   };
 }

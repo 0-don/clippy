@@ -24,7 +24,8 @@ pub async fn is_production() -> Result<bool, String> {
 
 #[tauri::command]
 pub async fn init_listener() -> Result<(), ()> {
-    tauri::async_runtime::spawn(async move { Master::new(Handler).run() });
+    tauri::async_runtime::spawn(async { Master::new(Handler).run() });
+    // let _ = Master::new(Handler).run();
 
     Ok(())
 }

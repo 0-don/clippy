@@ -1,9 +1,5 @@
-import { invoke } from "@tauri-apps/api";
-import { listen } from "@tauri-apps/api/event";
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
-import { createEffect, createResource, onCleanup } from "solid-js";
-import { Hotkey } from "./@types";
 import { History } from "./components/app/History";
 import { RecentClipboards } from "./components/app/RecentClipboards";
 import { StarredClipboards } from "./components/app/StarredClipboards";
@@ -12,25 +8,9 @@ import { AppSidebar } from "./components/navigation/AppSidebar";
 import AppStore from "./store/AppStore";
 import SettingsStore from "./store/SettingsStore";
 
-const fetchUser = async () => (await invoke<Hotkey[]>("get_hotkeys"))[0].icon;
-
 function App() {
-  const { settings, setGlobalHotkeyEvent, globalHotkeyEvent } = SettingsStore;
-  const { sidebarIcons, updateSidebarIcons } = AppStore;
-  const [data] = createResource(fetchUser);
-
-  createEffect(async () => {
-    // listen to the `click` event and get a function to remove the event listener
-    // there's also a `once` function that subscribes to an event and automatically unsubscribes the listener on the first event
-    // console.log("test");
-    const unlisten = await listen("click", (event) => {
-      console.log(event.payload);
-    });
-    // emit("click", {
-    //   theMessage: "Tauri is awesome!",
-    // });
-    onCleanup(unlisten);
-  });
+  const { settings } = SettingsStore;
+  const { sidebarIcons } = AppStore;
 
   const sIcon = sidebarIcons().find((icon) => icon.current);
 
@@ -61,7 +41,6 @@ function App() {
       </div>
     </div>
   );
-  History;
 }
 
 export default App;
