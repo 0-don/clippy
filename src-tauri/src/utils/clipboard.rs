@@ -1,45 +1,25 @@
 extern crate alloc;
+use crate::connection;
 use alloc::borrow::Cow;
 use arboard::{Clipboard, ImageData};
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use entity::clipboard::{ActiveModel, Model};
-use futures::executor::block_on;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, Set};
 use std::io;
 use tauri::regex::Regex;
-
-use tokio::runtime::{Builder, Runtime};
-
-use crate::connection;
 
 pub struct Handler;
 
 impl ClipboardHandler for Handler {
     fn on_clipboard_change(&mut self) -> CallbackResult {
-        // let _ = tokio::runtime::Runtime::new().unwrap().spawn(async move {
-        //     println!("text: {:?}", 1);
-        //     let model = parse_model();
-        //     println!("text: {:?}", 2);
-        //     let res = insert(model).await;
-        //     println!("text: {:?}", 3);
-        // });
-
-        // let model = parse_model();
-        let model = parse_model();
-        tauri::async_runtime::spawn(async move {
-
-            let res = insert(model).await;
-            println!("text: {:?}", res.unwrap());
+        let res = tokio::task::block_in_place(|| {
+            tokio::runtime::Handle::current().block_on(async move {
+                let model = parse_model();
+                insert(model).await
+            })
         });
 
-        // let _ = tauri::async_runtime::block_on(insert(model));
-        // let runtime = Builder::new_multi_thread()
-        //     .worker_threads(1)
-        //     .enable_all()
-        //     .build()
-        //     .unwrap();
-
-        // let thread = runtime.spawn(insert(model));
+        println!("{:?}", res.unwrap());
 
         CallbackResult::Next
     }
@@ -64,7 +44,7 @@ fn parse_model() -> ActiveModel {
     };
 
     // println!("type: {:?}", r#type);
-    println!("text: {:?}", text);
+    // println!("text: {:?}", text);
     // println!("image: {:?}", image);
 
     let img = if image.width > 0 {
