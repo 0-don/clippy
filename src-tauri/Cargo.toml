@@ -25,6 +25,7 @@ serde = { version = "1", features = ["derive"] }
 once_cell = "1.18.0"
 enigo = "0.1.2"
 clipboard-master = "3.1.3"
+async-trait = "0.1.68"
 arboard = "3.2.0"
 tauri-plugin-clipboard = "0.2.5"
 tauri-plugin-positioner = { version = "1.0.4", features = ["system-tray"] }

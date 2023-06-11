@@ -764,6 +764,7 @@ name = "clippy"
 version = "1.0.0"
 dependencies = [
  "arboard",
+ "async-trait",
  "clipboard-master",
  "enigo",
  "entity",
