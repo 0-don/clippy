@@ -13,6 +13,13 @@ use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
 
 fn main() {
+    // if cfg!(debug_assertions) {
+    //     tracing_subscriber::fmt()
+    //         .with_max_level(tracing::Level::DEBUG)
+    //         .with_test_writer()
+    //         .init();
+    // }
+
     tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_autostart::init(
