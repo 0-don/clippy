@@ -3,7 +3,8 @@ import { listen } from "@tauri-apps/api/event";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AiFillStar, AiOutlineArrowUp } from "solid-icons/ai";
-import { FaRegularImages, FaRegularTrashCan } from "solid-icons/fa";
+import { BsImages } from "solid-icons/bs";
+import { FaRegularTrashCan } from "solid-icons/fa";
 import { FiFileText } from "solid-icons/fi";
 import { VsSymbolColor } from "solid-icons/vs";
 import {
@@ -15,6 +16,7 @@ import {
   onCleanup,
 } from "solid-js";
 import { Clips } from "../../@types";
+import clippy from "../../assets/clippy.png";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
 
@@ -91,15 +93,15 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
-  // if (clipboards().length === 0) {
-  //   return (
-  //     <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
-  //       <img src={clippy} width="50%" alt="no Order" />
+  if (clipboards().length) {
+    return (
+      <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
+        <img src={clippy} width="50%" alt="no Order" />
 
-  //       <h2 class="text-2xl font-medium opacity-50">No Clipboards yet...</h2>
-  //     </div>
-  //   );
-  // }
+        <h2 class="text-2xl font-medium opacity-50">No Clipboards yet...</h2>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -146,7 +148,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         <FiFileText class="text-2xl text-zinc-700 dark:text-white" />
                       )}
                       {type === "image" && (
-                        <FaRegularImages class="text-2xl text-zinc-700 dark:text-white" />
+                        <BsImages class="text-2xl text-zinc-700 dark:text-white" />
                       )}
                       {type === "color" && (
                         <VsSymbolColor class="text-2xl text-zinc-700 dark:text-white" />

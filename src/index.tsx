@@ -11,13 +11,12 @@ const Index = () => {
 
   createResource(init);
 
+  invoke("init_listener");
+
   createEffect(() => {
     const focus = appWindow.onFocusChanged(
       async ({ payload: focused }) => !focused && (await appWindow.hide())
     );
-
-    invoke("init_listener");
-    init();
 
     onCleanup(async () => (await focus)());
   });
