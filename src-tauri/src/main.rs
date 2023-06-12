@@ -11,7 +11,6 @@ use commands::{clipboard, hotkey, settings, window};
 
 use tauri_plugin_autostart::MacosLauncher;
 
-
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())

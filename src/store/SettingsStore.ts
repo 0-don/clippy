@@ -66,13 +66,14 @@ function createSettingsStore() {
     if (isProduction) await enable();
   };
 
-  const init = async () => {
+  const init = () => {
+    // console.log("test");
     updateIsProduction();
-
+    // console.log("test");
     initSettings();
 
     initHotkeys();
-
+    // console.log("test");
     initClipboards();
   };
 
@@ -93,6 +94,7 @@ function createSettingsStore() {
 
   const initClipboards = async () => {
     const clipboards = await invoke<Clips[]>("infinite_scroll_clipboards");
+    // console.log(clipboards);
     const { setClipboards } = AppStore;
     setClipboards(clipboards);
   };

@@ -9,12 +9,12 @@ interface RecentClipboardsProps {}
 export const RecentClipboards: Component<RecentClipboardsProps> = ({}) => {
   const { clipboards, setClipboards } = AppStore;
 
-  createEffect(async () => {
-    const addClipboard = await listen<Clips>("set_clipboard", ({ payload }) => {
+  createEffect(() => {
+    const addClipboard = listen<Clips>("set_clipboard", ({ payload }) => {
       setClipboards([payload, ...clipboards()]);
     });
 
-    onCleanup(addClipboard);
+    onCleanup(() => addClipboard.then((r) => r()));
   });
   return <Clipboards />;
 };

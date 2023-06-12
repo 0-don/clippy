@@ -3,16 +3,18 @@ import { listen } from "@tauri-apps/api/event";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AiFillStar, AiOutlineArrowUp } from "solid-icons/ai";
-import { FaRegularTrashCan } from "solid-icons/fa";
+import { FaRegularImages, FaRegularTrashCan } from "solid-icons/fa";
+import { FiFileText } from "solid-icons/fi";
+import { VsSymbolColor } from "solid-icons/vs";
 import {
   Accessor,
   Component,
+  For,
   createEffect,
   createSignal,
   onCleanup,
 } from "solid-js";
 import { Clips } from "../../@types";
-import clippy from "../../assets/clippy.png";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
 
@@ -30,11 +32,11 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
   const { clipboards, setClipboards } = AppStore;
   const { globalHotkeyEvent, hotkeys } = SettingsStore;
 
-  createEffect(async () => {
-    const scrollTop = await listen("scrollToTop", () => scrollTo(0, 0));
+  createEffect(() => {
+    const scrollTop = listen("scrollToTop", () => scrollTo(0, 0));
 
-    console.log({ clipboards: clipboards() });
-    onCleanup(scrollTop);
+    // console.log(clipboards());
+    onCleanup(async () => (await scrollTop)());
   });
 
   const onScroll = async () => {
@@ -89,15 +91,15 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
-  if (clipboards().length === 0) {
-    return (
-      <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
-        <img src={clippy} width="50%" alt="no Order" />
+  // if (clipboards().length === 0) {
+  //   return (
+  //     <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
+  //       <img src={clippy} width="50%" alt="no Order" />
 
-        <h2 class="text-2xl font-medium opacity-50">No Clipboards yet...</h2>
-      </div>
-    );
-  }
+  //       <h2 class="text-2xl font-medium opacity-50">No Clipboards yet...</h2>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -122,68 +124,78 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         </button>
       )}
 
-      {clipboards()?.map((clipboard, index) => {
-        const { content, type, id, created_date, blob, width, height, size } =
-          clipboard;
-        return (
-          <button
-            type="button"
-            class="group w-full cursor-pointer px-3 hover:bg-neutral-700"
-            onClick={(e) => {
-              e.stopPropagation();
-              invoke("copy_clipboard", { id });
-            }}
-          >
-            <div class="flex justify-between py-3">
-              <div class="flex min-w-0">
-                <div class="flex items-center">
-                  <div class="relative">
-                    <div
-                      innerHTML={JSON.parse(type)}
-                      class="text-2xl text-zinc-700 dark:text-white"
-                    />
-                    {globalHotkeyEvent() && (
-                      <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
-                        {index + 1 < 10 && index + 1}
+      <For each={clipboards()}>
+        {(clipboard, index) => {
+          const { content, type, id, created_date, blob, width, height, size } =
+            clipboard;
+
+          return (
+            <button
+              type="button"
+              class="group w-full cursor-pointer px-3 hover:bg-neutral-700"
+              onClick={(e) => {
+                e.stopPropagation();
+                invoke("copy_clipboard", { id });
+              }}
+            >
+              <div class="flex justify-between py-3">
+                <div class="flex min-w-0">
+                  <div class="flex items-center">
+                    <div class="relative">
+                      {type === "text" && (
+                        <FiFileText class="text-2xl text-zinc-700 dark:text-white" />
+                      )}
+                      {type === "image" && (
+                        <FaRegularImages class="text-2xl text-zinc-700 dark:text-white" />
+                      )}
+                      {type === "color" && (
+                        <VsSymbolColor class="text-2xl text-zinc-700 dark:text-white" />
+                      )}
+                      {globalHotkeyEvent() && (
+                        <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
+                          {index() + 1 < 10 && index() + 1}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div class="truncate px-5">
+                    {blob && width && height && size ? (
+                      <img
+                        src={URL.createObjectURL(
+                          new Blob([new Uint8Array(blob)], {
+                            type: "image/png",
+                          })
+                        )}
+                        // style={{ height: '200px' }}
+                        class="relative max-h-64 w-full"
+                        alt={`${width}x${height} ${size}`}
+                        title={`${width}x${height} ${size}`}
+                      />
+                    ) : (
+                      <div class="flex" title={content || ""}>
+                        {type === "color" && (
+                          <div
+                            class="mr-1 h-5 w-5 border border-solid border-black"
+                            style={{ "background-color": `#${content}` }}
+                          />
+                        )}
+                        <p class="text-sm">{content}</p>
                       </div>
                     )}
-                  </div>
-                </div>
-                <div class="truncate px-5">
-                  {blob && width && height && size ? (
-                    <img
-                      src={URL.createObjectURL(
-                        new Blob([new Uint8Array(blob)], { type: "image/png" })
-                      )}
-                      // style={{ height: '200px' }}
-                      class="relative max-h-64 w-full"
-                      alt={`${width}x${height} ${size}`}
-                      title={`${width}x${height} ${size}`}
-                    />
-                  ) : (
-                    <div class="flex" title={content || ""}>
-                      {type === "color" && (
-                        <div
-                          class="mr-1 h-5 w-5 border border-solid border-black"
-                          style={{ "background-color": `#${content}` }}
-                        />
-                      )}
-                      <p class="text-sm">{content}</p>
+                    <div class="text-left text-xs text-zinc-400">
+                      {dayjs(created_date).toNow(true)}
                     </div>
-                  )}
-                  <div class="text-left text-xs text-zinc-400">
-                    {dayjs(created_date).toNow(true)}
                   </div>
                 </div>
+                <div class="flex w-12 flex-col items-end justify-between pl-1">
+                  {IconFunctions(clipboard)}
+                </div>
               </div>
-              <div class="flex w-12 flex-col items-end justify-between pl-1">
-                {IconFunctions(clipboard)}
-              </div>
-            </div>
-            <hr class="border-zinc-700" />
-          </button>
-        );
-      })}
+              <hr class="border-zinc-700" />
+            </button>
+          );
+        }}
+      </For>
     </div>
   );
 };
