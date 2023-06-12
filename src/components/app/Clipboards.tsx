@@ -19,6 +19,7 @@ import SettingsStore from "../../store/SettingsStore";
 dayjs.extend(relativeTime);
 
 interface ClipboardsProps {
+  star?: boolean;
   search?: Accessor<string>;
 }
 

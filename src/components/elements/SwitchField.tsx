@@ -2,8 +2,8 @@ import { Switch } from "@kobalte/core";
 import { Accessor, Component, Setter } from "solid-js";
 
 type SwitchProps = {
-  checked: Accessor<boolean>;
-  onChange: ((check: boolean) => void) | Setter<boolean>;
+  checked?: Accessor<boolean | undefined> | boolean;
+  onChange?: ((check: boolean) => void) | Setter<boolean>;
 };
 
 function className(...classes: string[]) {
@@ -11,11 +11,12 @@ function className(...classes: string[]) {
 }
 
 const SwitchField: Component<SwitchProps> = ({ checked, onChange }) => {
+  const res = typeof checked === "function" ? checked() : checked;
   // const [checked, setChecked] = createSignal(false);
   return (
     <Switch.Root
-      checked={checked()}
-      onChange={(e) => onChange(e)}
+      checked={res}
+      onChange={(e) => onChange && onChange(e)}
       class="switch"
     >
       <Switch.Label class="switch__label">Airplane mode</Switch.Label>
