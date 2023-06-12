@@ -23,11 +23,13 @@ fn main() {
         .on_system_tray_event(tray::system_tray_event)
         .invoke_handler(tauri::generate_handler![
             clipboard::infinite_scroll_clipboards,
+            clipboard::delete_clipboard,
             hotkey::get_hotkeys,
             settings::get_settings,
             window::window_on_mouse,
             window::is_production,
             window::init_listener,
+
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

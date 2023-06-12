@@ -3,10 +3,12 @@ use crate::connection;
 use alloc::borrow::Cow;
 use arboard::{Clipboard, ImageData};
 use clipboard_master::{CallbackResult, ClipboardHandler};
-use entity::clipboard::{ActiveModel, Model};
-use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, Set};
+use entity::clipboard::{self, ActiveModel, Model};
+use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait, QueryOrder, Set};
 use std::io;
-use tauri::regex::Regex;
+use tauri::{regex::Regex, Manager};
+
+use super::setup::APP;
 
 pub struct Handler;
 
@@ -21,7 +23,11 @@ impl ClipboardHandler for Handler {
 
         let _ = tauri::async_runtime::spawn(async {
             let model = parse_model();
-            let _ = insert(model).await;
+
+            let model = upsert(model).await.unwrap();
+            // let main_window = APP.get_window("main").unwrap();
+            let main_window = APP.get().unwrap().get_window("main").unwrap();
+            main_window.emit("clipboard_listener", model).unwrap();
         });
 
         CallbackResult::Next
@@ -33,14 +39,43 @@ impl ClipboardHandler for Handler {
     }
 }
 
+async fn check_if_last_same() -> Option<Model> {
+    let (text, image) = get_os_clipboard();
+
+    let str = text.unwrap();
+    let img = image.unwrap();
+
+    let db = connection::establish_connection().await.unwrap();
+
+    let last_clipboard = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::Id)
+        .one(&db)
+        .await
+        .unwrap()
+        .unwrap();
+
+    let content = last_clipboard.clone().content.unwrap();
+    let blob = last_clipboard.clone().blob.unwrap();
+
+    if content == str && blob == img.bytes.to_vec() {
+        return None;
+    }
+
+    Some(last_clipboard)
+}
+
 fn parse_model() -> ActiveModel {
-    let (text, image) = get_clipboard();
+    let (text, image) = get_os_clipboard();
+
+    let str = text.unwrap();
+    let img = image.unwrap();
+    // println!("text: {:?}", text);
 
     let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
 
-    let r#type = if text.is_empty() {
+    let r#type = if str.is_empty() {
         Set("image".to_string())
-    } else if re.is_match(&text) {
+    } else if re.is_match(&str) {
         Set("color".to_string())
     } else {
         Set("text".to_string())
@@ -50,12 +85,12 @@ fn parse_model() -> ActiveModel {
     // println!("text: {:?}", text);
     // println!("image: {:?}", image);
 
-    let img = if image.width > 0 {
+    let img = if img.width > 0 {
         ActiveModel {
-            blob: Set(Some(image.bytes.to_vec())),
-            height: Set(Some(image.height as i32)),
-            width: Set(Some(image.width as i32)),
-            size: Set(Some(image.bytes.to_vec().len().to_string())),
+            blob: Set(Some(img.bytes.to_vec())),
+            height: Set(Some(img.height as i32)),
+            width: Set(Some(img.width as i32)),
+            size: Set(Some(img.bytes.to_vec().len().to_string())),
             ..Default::default()
         }
     } else {
@@ -66,39 +101,39 @@ fn parse_model() -> ActiveModel {
 
     ActiveModel {
         r#type,
-        content: Set(Some(text)),
+        content: Set(Some(str)),
 
         star: Set(Some(false)),
         ..img
     }
 }
 
-fn get_clipboard() -> (String, ImageData<'static>) {
+fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
     // Command::new("clear").status().unwrap();
 
     let mut clipboard = Clipboard::new().unwrap();
 
-    let text = match clipboard.get_text() {
-        Ok(text) => text,
-        Err(_) => "".to_string(),
+    let text: Option<String> = match clipboard.get_text() {
+        Ok(text) => Some(text),
+        Err(_) => None,
     };
 
-    let image = match clipboard.get_image() {
-        Ok(image) => image,
-        Err(_) => ImageData {
-            width: 0,
-            height: 0,
-            bytes: Cow::from([0].as_ref()),
-        },
+    let image: Option<ImageData<'_>> = match clipboard.get_image() {
+        Ok(image) => Some(image),
+        Err(_) => None,
     };
 
     (text, image)
 }
 
-async fn insert(clipboard: ActiveModel) -> Result<Model, DbErr> {
+async fn upsert(clipboard: ActiveModel) -> Result<Option<Model>, DbErr> {
+    let is_same = check_if_last_same().await;
+    if is_same.is_some() {
+        ()
+    }
     let db: DatabaseConnection = connection::establish_connection().await?;
 
     let clip_db: Model = clipboard.insert(&db).await?;
 
-    Ok(clip_db)
+    Ok(Some(clip_db))
 }

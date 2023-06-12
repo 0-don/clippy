@@ -1,11 +1,14 @@
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { AiFillStar, AiOutlineArrowUp } from "solid-icons/ai";
-import { BsImages } from "solid-icons/bs";
-import { FaRegularTrashCan } from "solid-icons/fa";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { AiOutlineArrowUp } from "solid-icons/ai";
+import { BsImages, BsStar } from "solid-icons/bs";
 import { FiFileText } from "solid-icons/fi";
+import { IoTrashOutline } from "solid-icons/io";
 import { VsSymbolColor } from "solid-icons/vs";
 import {
   Accessor,
@@ -20,7 +23,10 @@ import clippy from "../../assets/clippy.png";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
 
+dayjs.extend(localizedFormat);
+dayjs.extend(utc);
 dayjs.extend(relativeTime);
+dayjs.extend(timezone);
 
 interface ClipboardsProps {
   star?: boolean;
@@ -37,7 +43,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
   createEffect(() => {
     const scrollTop = listen("scrollToTop", () => scrollTo(0, 0));
 
-    // console.log(clipboards());
     onCleanup(async () => (await scrollTop)());
   });
 
@@ -65,7 +70,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
   const IconFunctions = ({ id, ...clipboard }: Clips) => (
     <>
-      <AiFillStar
+      <BsStar
         onClick={async (e) => {
           e.stopPropagation();
           const starState = await invoke<boolean>("toggle_star_clipboard", {
@@ -81,7 +86,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             : "hidden text-zinc-700"
         } z-10 text-xs hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
       />
-      <FaRegularTrashCan
+      <IoTrashOutline
         onClick={async (e) => {
           e.stopPropagation();
           if (await invoke<boolean>("delete_clipboard", { id })) {
@@ -102,6 +107,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       </div>
     );
   }
+
+  const now = dayjs();
 
   return (
     <div
@@ -185,7 +192,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     )}
                     <div class="text-left text-xs text-zinc-400">
-                      {dayjs(created_date).toNow(true)}
+                      {dayjs.utc(created_date!).fromNow()}
                     </div>
                   </div>
                 </div>
