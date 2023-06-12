@@ -82,15 +82,9 @@ pub fn parse_model() -> ActiveModel {
 pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
     let mut clipboard = Clipboard::new().unwrap();
 
-    let text: Option<String> = match clipboard.get_text() {
-        Ok(text) => Some(text),
-        Err(_) => None,
-    };
+    let text: Option<String> = clipboard.get_text().ok();
 
-    let image: Option<ImageData<'_>> = match clipboard.get_image() {
-        Ok(image) => Some(image),
-        Err(_) => None,
-    };
+    let image: Option<ImageData<'_>> = clipboard.get_image().ok();
 
     (text, image)
 }

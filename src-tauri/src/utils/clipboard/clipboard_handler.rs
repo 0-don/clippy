@@ -28,7 +28,6 @@ impl ClipboardHandler for Handler {
         let _ = tauri::async_runtime::spawn(async {
             let model = parse_model();
 
-
             let model = upsert_db(model).await.unwrap();
             // let main_window = APP.get_window("main").unwrap();
             let main_window = APP.get().unwrap().get_window("main").unwrap();
