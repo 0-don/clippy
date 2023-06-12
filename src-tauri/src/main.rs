@@ -25,6 +25,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             clipboard::infinite_scroll_clipboards,
             clipboard::delete_clipboard,
+            clipboard::star_clipboard,
             hotkey::get_hotkeys,
             settings::get_settings,
             window::window_on_mouse,

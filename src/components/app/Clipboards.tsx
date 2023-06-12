@@ -73,11 +73,12 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       <BsStar
         onClick={async (e) => {
           e.stopPropagation();
-          const starState = await invoke<boolean>("toggle_star_clipboard", {
+          await invoke<boolean>("star_clipboard", {
             id,
+            star: !clipboard.star,
           });
           setClipboards((prev) =>
-            prev.map((o) => (o.id === id ? { ...o, star: starState } : o))
+            prev.map((o) => (o.id === id ? { ...o, star: !clipboard.star } : o))
           );
         }}
         class={`${

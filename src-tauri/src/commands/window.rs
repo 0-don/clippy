@@ -2,7 +2,7 @@ use clipboard_master::Master;
 use tauri::Manager;
 use tauri_plugin_positioner::{Position, WindowExt};
 
-use crate::utils::{clipboard::Handler, setup::APP};
+use crate::utils::{clipboard::clipboard_handler::Handler, setup::APP};
 
 #[tauri::command]
 pub async fn window_on_mouse() -> Result<(), String> {
