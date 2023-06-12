@@ -4,6 +4,7 @@
 mod commands;
 mod connection;
 mod utils;
+mod service;
 
 use utils::{setup, tray};
 
