@@ -2,7 +2,10 @@ extern crate alloc;
 
 use crate::{
     service::clipboard::upsert_db,
-    utils::{clipboard::clipboard_helper::parse_model, setup::APP},
+    utils::{
+        clipboard::clipboard_helper::{get_os_clipboard, parse_model},
+        setup::APP,
+    },
 };
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io;
@@ -18,10 +21,13 @@ impl ClipboardHandler for Handler {
         //         insert(model).await
         //     })
         // });
-        println!("Clipboard changed");
+        let (text, img) = get_os_clipboard();
+        println!("text: {:?}", text);
+        println!("img: {:?}", img);
 
         let _ = tauri::async_runtime::spawn(async {
             let model = parse_model();
+
 
             let model = upsert_db(model).await.unwrap();
             // let main_window = APP.get_window("main").unwrap();

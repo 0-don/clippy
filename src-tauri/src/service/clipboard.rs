@@ -8,7 +8,7 @@ use sea_orm::{
 
 pub async fn upsert_db(clipboard: ActiveModel) -> Result<Option<Model>, DbErr> {
     let is_same = check_if_last_same().await;
-    if is_same.is_none() {
+    if is_same.is_some() {
         ()
     }
     let db: DatabaseConnection = connection::establish_connection().await?;

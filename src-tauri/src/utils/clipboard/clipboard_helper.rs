@@ -1,6 +1,6 @@
 use arboard::{Clipboard, ImageData};
-use entity::clipboard::{Model, self, ActiveModel};
-use sea_orm::{Set, EntityTrait, QueryOrder};
+use entity::clipboard::{self, ActiveModel, Model};
+use sea_orm::{EntityTrait, QueryOrder, Set};
 use tauri::regex::Regex;
 
 use crate::connection;
@@ -49,7 +49,7 @@ pub fn parse_model() -> ActiveModel {
 
     let r#type = if text.is_some() {
         Set("text".to_string())
-    } else if re.is_match(&text.clone().unwrap()) {
+    } else if re.is_match(&text.as_deref().unwrap()) {
         Set("color".to_string())
     } else {
         Set("text".to_string())
@@ -80,8 +80,6 @@ pub fn parse_model() -> ActiveModel {
 }
 
 pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
-    // Command::new("clear").status().unwrap();
-
     let mut clipboard = Clipboard::new().unwrap();
 
     let text: Option<String> = match clipboard.get_text() {
