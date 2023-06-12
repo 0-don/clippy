@@ -72,15 +72,15 @@ async fn check_if_last_same() -> Option<Model> {
         return None;
     }
 
-    let last = last_clipboard.as_ref().unwrap();
+    let last = last_clipboard.unwrap();
 
     let content = if text.is_some() && last.content.is_some() {
-        text.unwrap() == last.content.unwrap()
+        text.unwrap() == last.clone().content.unwrap()
     } else {
         false
     };
     let blob = if image.is_some() && last.blob.is_some() {
-        image.unwrap().bytes.to_vec() == last.blob.unwrap()
+        image.unwrap().bytes.to_vec() == last.clone().blob.unwrap()
     } else {
         false
     };
