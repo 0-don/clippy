@@ -3,7 +3,7 @@ use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use tauri::regex::Regex;
 
-use crate::connection;
+use crate::{connection, service::clipboard::upsert_db};
 
 pub async fn check_if_last_same() -> Option<Model> {
     let (text, image) = get_os_clipboard();
@@ -87,4 +87,16 @@ pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
     let image: Option<ImageData<'_>> = clipboard.get_image().ok();
 
     (text, image)
+}
+
+pub async fn check_clipboard() -> Model {
+    let (text, img) = get_os_clipboard();
+    println!("text: {:?}", text);
+    println!("img: {:?}", img);
+
+    let model = parse_model();
+
+    let res = upsert_db(model.to_owned()).await.unwrap().unwrap();
+
+    res
 }
