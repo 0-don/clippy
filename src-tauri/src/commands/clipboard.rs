@@ -22,13 +22,13 @@ async fn get_clipboards(
     let db = connection::establish_connection().await?;
 
     let model = clipboard::Entity::find()
-        .apply_if(Some(cursor), |query, offset| query.offset(offset.unwrap()))
-        .apply_if(Some(search), |query, content| {
-            query.filter(clipboard::Column::Content.contains(&content.unwrap()))
+        .wapply_if(star, |query, starred| {
+            query.filter(clipboard::Column::Star.eq(starred))
         })
-        .apply_if(Some(star), |query, starred| {
-            query.filter(clipboard::Column::Star.eq(starred.unwrap()))
+        .wapply_if(search, |query, content| {
+            query.filter(clipboard::Column::Content.contains(&content))
         })
+        .offset(cursor)
         .limit(11)
         .all(&db)
         .await?;

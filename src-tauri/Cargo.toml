@@ -28,6 +28,7 @@ arboard = "3.2.0"
 # tauri-plugin-clipboard = "0.2.5"
 tauri-plugin-positioner = { version = "1.0.4", features = ["system-tray"] }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+chrono = "0.4.26"
 
 
 [dependencies.sea-orm]
