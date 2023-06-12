@@ -25,7 +25,6 @@ const Index = () => {
     const clipboardListener = listen<Clips>(
       "clipboard_listener",
       ({ payload }) => {
-        console.log(payload);
         setClipboards((prev) => [payload, ...prev]);
       }
     );

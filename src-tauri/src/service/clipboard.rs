@@ -56,25 +56,9 @@ pub async fn delete_clipboard_db(id: i32) -> Result<Option<bool>, DbErr> {
 async fn check_if_last_same() -> Option<Model> {
     let (text, image) = get_os_clipboard();
 
-    // let str = match text {
-    //     Some(text) => text,
-    //     None => String::new(),
-    // };
-
-    // let img = match image {
-    //     Some(image) => image,
-    //     None => ImageData {
-    //         bytes: Cow::default(),
-    //         width: 0,
-    //         height: 0,
-    //     },
-    // };
-
     if text.is_none() && image.is_none() {
         return None;
     }
-
-    // ;    let img = image.u
 
     let db = connection::establish_connection().await.unwrap();
 
@@ -84,21 +68,19 @@ async fn check_if_last_same() -> Option<Model> {
         .await
         .unwrap();
 
-    println!("last_clipboard: {:?}", last_clipboard);
-
     if last_clipboard.is_none() {
         return None;
     }
 
-    let last = last_clipboard.unwrap();
+    let last = last_clipboard.as_ref().unwrap();
 
     let content = if text.is_some() && last.content.is_some() {
-        text.unwrap() == last.clone().content.unwrap()
+        text.unwrap() == last.content.unwrap()
     } else {
         false
     };
     let blob = if image.is_some() && last.blob.is_some() {
-        image.unwrap().bytes.to_vec() == last.clone().blob.unwrap()
+        image.unwrap().bytes.to_vec() == last.blob.unwrap()
     } else {
         false
     };
