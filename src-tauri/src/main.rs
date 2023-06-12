@@ -5,10 +5,12 @@ mod commands;
 mod connection;
 mod utils;
 
-use commands::{clipboard, hotkey, settings, window};
 use utils::{setup, tray};
 
+use commands::{clipboard, hotkey, settings, window};
+
 use tauri_plugin_autostart::MacosLauncher;
+
 
 fn main() {
     tauri::Builder::default()
@@ -21,7 +23,7 @@ fn main() {
         .system_tray(tray::system_tray())
         .on_system_tray_event(tray::system_tray_event)
         .invoke_handler(tauri::generate_handler![
-            clipboard::insert_clipboard,
+            clipboard::infinite_scroll_clipboards,
             hotkey::get_hotkeys,
             settings::get_settings,
             window::window_on_mouse,

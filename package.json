@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "tauri": "tauri",
     "d": "tauri dev",
-    "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src --with-serde both"
+    "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src --model-extra-attributes  --with-serde both"
   },
   "license": "MIT",
   "dependencies": {
