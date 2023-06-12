@@ -13,8 +13,11 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@kobalte/core": "^0.9.6",
     "@tauri-apps/api": "^1.3.0",
     "dayjs": "^1.11.8",
+    "kobalte-pigment-monorepo": "https://github.com/kobaltedev/pigment",
+    "solid-headless": "^0.13.1",
     "solid-icons": "^1.0.8",
     "solid-js": "^1.7.6",
     "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart",
@@ -22,6 +25,7 @@
     "tauri-plugin-positioner-api": "^0.2.7"
   },
   "devDependencies": {
+    "@kobalte/tailwindcss": "^0.6.5",
     "@tauri-apps/cli": "^1.3.1",
     "@types/node": "^20.3.0",
     "autoprefixer": "^10.4.14",

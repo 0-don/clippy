@@ -1,4 +1,4 @@
-export type Clipboards = {
+export type Clips = {
   id?: number | null;
   type: ClipboardType;
   content?: string | null;

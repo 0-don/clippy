@@ -1,15 +1,18 @@
-use entity::clipboard;
-use sea_orm::EntityTrait;
+use entity::clipboard::{self, Model};
+use sea_orm::{DbErr, EntityTrait};
 
 use crate::connection;
 
 #[tauri::command]
-pub async fn infinite_scroll_clipboards(cursor: Option<String>) -> Result<String, ()> {
-    println!("{:?}", cursor);
+pub async fn infinite_scroll_clipboards(cursor: Option<String>) -> Result<Vec<Model>, ()> {
+    let clipboards = get_clipboards(cursor).await;
 
-    let db = connection::establish_connection().await.unwrap();
+    Ok(clipboards.unwrap())
+}
 
-    // let _clip =
-    // let model = clipboard::Entity::find()
-    Ok("clip.unwrap()".to_string())
+async fn get_clipboards(_cursor: Option<String>) -> Result<Vec<Model>, DbErr> {
+    let db = connection::establish_connection().await?;
+
+    let model = clipboard::Entity::find().all(&db).await?;
+    Ok(model)
 }

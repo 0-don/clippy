@@ -1,18 +1,26 @@
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { AiFillStar, AiOutlineArrowUp } from "solid-icons/ai";
 import { FaRegularTrashCan } from "solid-icons/fa";
-import { Component, createEffect, createSignal, onCleanup } from "solid-js";
-import clippy from "../../../../assets/clippy.png";
-import { Clipboards as Clips } from "../../@types";
+import {
+  Accessor,
+  Component,
+  createEffect,
+  createSignal,
+  onCleanup,
+} from "solid-js";
+import { Clips } from "../../@types";
+import clippy from "../../assets/clippy.png";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
-import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
-interface ClipboardsProps {}
+interface ClipboardsProps {
+  search?: Accessor<string>;
+}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
   let myRef: HTMLDivElement;
@@ -24,6 +32,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
   createEffect(async () => {
     const scrollTop = await listen("scrollToTop", () => scrollTo(0, 0));
 
+    console.log({ clipboards: clipboards() });
     onCleanup(scrollTop);
   });
 
