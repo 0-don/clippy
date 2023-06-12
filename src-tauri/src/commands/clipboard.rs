@@ -15,7 +15,6 @@ pub async fn infinite_scroll_clipboards(
 
 #[tauri::command]
 pub async fn delete_clipboard(id: i32) -> Result<Option<bool>, ()> {
-    println!("delete_clipboard: {}", id);
     let clipboards = delete_clipboard_db(id).await;
 
     Ok(clipboards.unwrap())

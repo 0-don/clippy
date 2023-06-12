@@ -3,8 +3,8 @@
 
 mod commands;
 mod connection;
-mod utils;
 mod service;
+mod utils;
 
 use utils::{setup, tray};
 
@@ -30,9 +30,7 @@ fn main() {
             window::window_on_mouse,
             window::is_production,
             window::init_listener,
-
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    println!("Hello, world!");
 }

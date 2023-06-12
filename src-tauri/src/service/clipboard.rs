@@ -1,15 +1,18 @@
+extern crate alloc;
+
 use arboard::{Clipboard, ImageData};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter, QueryOrder,
-    QuerySelect, QueryTrait,
+    QuerySelect, QueryTrait, Set,
 };
+use tauri::regex::Regex;
 
 use crate::connection;
 
 pub async fn upsert(clipboard: ActiveModel) -> Result<Option<Model>, DbErr> {
     let is_same = check_if_last_same().await;
-    if is_same.is_some() {
+    if is_same.is_none() {
         ()
     }
     let db: DatabaseConnection = connection::establish_connection().await?;
@@ -53,8 +56,25 @@ pub async fn delete_clipboard_db(id: i32) -> Result<Option<bool>, DbErr> {
 async fn check_if_last_same() -> Option<Model> {
     let (text, image) = get_os_clipboard();
 
-    let str = text.unwrap();
-    let img = image.unwrap();
+    // let str = match text {
+    //     Some(text) => text,
+    //     None => String::new(),
+    // };
+
+    // let img = match image {
+    //     Some(image) => image,
+    //     None => ImageData {
+    //         bytes: Cow::default(),
+    //         width: 0,
+    //         height: 0,
+    //     },
+    // };
+
+    if text.is_none() && image.is_none() {
+        return None;
+    }
+
+    // ;    let img = image.u
 
     let db = connection::establish_connection().await.unwrap();
 
@@ -62,17 +82,69 @@ async fn check_if_last_same() -> Option<Model> {
         .order_by_desc(clipboard::Column::Id)
         .one(&db)
         .await
-        .unwrap()
         .unwrap();
 
-    let content = last_clipboard.clone().content.unwrap();
-    let blob = last_clipboard.clone().blob.unwrap();
+    println!("last_clipboard: {:?}", last_clipboard);
 
-    if content == str && blob == img.bytes.to_vec() {
+    if last_clipboard.is_none() {
         return None;
     }
 
-    Some(last_clipboard)
+    let last = last_clipboard.unwrap();
+
+    let content = if text.is_some() && last.content.is_some() {
+        text.unwrap() == last.clone().content.unwrap()
+    } else {
+        false
+    };
+    let blob = if image.is_some() && last.blob.is_some() {
+        image.unwrap().bytes.to_vec() == last.clone().blob.unwrap()
+    } else {
+        false
+    };
+
+    if content && blob {
+        return Some(last);
+    }
+
+    None
+}
+
+pub fn parse_model() -> ActiveModel {
+    let (text, image) = get_os_clipboard();
+
+    let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
+
+    let r#type = if text.is_some() {
+        Set("image".to_string())
+    } else if re.is_match(&text.clone().unwrap()) {
+        Set("color".to_string())
+    } else {
+        Set("text".to_string())
+    };
+
+    let img = if image.is_some() {
+        let img = image.unwrap();
+        ActiveModel {
+            blob: Set(Some(img.bytes.to_vec())),
+            height: Set(Some(img.height as i32)),
+            width: Set(Some(img.width as i32)),
+            size: Set(Some(img.bytes.to_vec().len().to_string())),
+            ..Default::default()
+        }
+    } else {
+        ActiveModel {
+            ..Default::default()
+        }
+    };
+
+    ActiveModel {
+        r#type,
+        content: Set(text),
+
+        star: Set(Some(false)),
+        ..img
+    }
 }
 
 pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
