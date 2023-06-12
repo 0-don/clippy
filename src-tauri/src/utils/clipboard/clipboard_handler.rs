@@ -22,10 +22,11 @@ impl ClipboardHandler for Handler {
         //     })
         // });
         let (text, img) = get_os_clipboard();
-        println!("text: {:?}", text);
-        println!("img: {:?}", img);
 
-        let _ = tauri::async_runtime::spawn(async {
+        let _ = tauri::async_runtime::spawn(async move {
+            println!("text: {:?}", text);
+            println!("img: {:?}", img);
+
             let model = parse_model();
 
             let model = upsert_db(model).await.unwrap();
