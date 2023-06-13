@@ -130,6 +130,7 @@ pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
 pub async fn upsert_clipboard() {
     let is_same = check_if_last_is_same().await;
     if is_same.is_some() {
+        println!("Clipboard is the same as last clipboard");
         ()
     }
 

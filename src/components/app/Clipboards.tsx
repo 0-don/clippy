@@ -42,7 +42,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
   createEffect(() => {
     const scrollTop = listen("scrollToTop", () => scrollTo(0, 0));
-    console.log(clipboards());
+
     onCleanup(async () => (await scrollTop)());
   });
 
@@ -144,8 +144,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               })
             );
 
-          console.log(img);
-
           // if (blob && width && height) {
           //   const canvas = document.createElement(
           //     "canvas"
@@ -154,10 +152,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
           //   const dataArray = new Uint8ClampedArray(blob);
           //   const imageData = new ImageData(dataArray, width, height);
           //   ctx?.putImageData(imageData, width, height);
-          //   // console.log(canvas.toDataURL());
+          //   // log(canvas.toDataURL());
           // }
 
-          // console.log(img);
           return (
             <button
               type="button"

@@ -7,16 +7,14 @@ pub struct Handler;
 
 impl ClipboardHandler for Handler {
     fn on_clipboard_change(&mut self) -> CallbackResult {
-        // let res = tokio::task::block_in_place(|| {
-        //     tokio::runtime::Handle::current().block_on(async move {
-        //         let model = parse_model();
-        //         insert(model).await
-        //     })
+        tokio::task::block_in_place(|| {
+            tokio::runtime::Handle::current().block_on(async { upsert_clipboard().await })
+        });
+
+        // tauri::async_runtime::spawn(async {
+        //     println!("Clipboard changed spawn thread");
+        //     upsert_clipboard().await
         // });
-
-        println!("Clipboard changed");
-
-        tauri::async_runtime::spawn(async { upsert_clipboard().await });
 
         CallbackResult::Next
     }
