@@ -144,14 +144,15 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               })
             );
 
-          if (blob) {
-            console.log(
-              URL.createObjectURL(
-                new Blob([new Uint8Array(blob)], {
-                  type: "image/png",
-                })
-              )
-            );
+          if (blob && width && height) {
+            const canvas = document.createElement(
+              "canvas"
+            ) as HTMLCanvasElement;
+            const ctx = canvas.getContext("2d");
+            const dataArray = new Uint8ClampedArray(blob);
+            const imageData = new ImageData(dataArray, width, height);
+            ctx?.putImageData(imageData, width, height);
+            // console.log(canvas.toDataURL());
           }
 
           // console.log(img);

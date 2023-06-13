@@ -46,7 +46,7 @@ pub async fn check_if_last_same() -> Option<Model> {
 }
 
 pub fn parse_model() -> ActiveModel {
-    let (text, image) = get_os_clipboard();
+    let (text, clipboard_image) = get_os_clipboard();
 
     let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
 
@@ -58,15 +58,15 @@ pub fn parse_model() -> ActiveModel {
         Set("image".to_string())
     };
 
-    let img = parse_image(image.clone()).unwrap();
+    let formatted_img: Option<Vec<u8>> = parse_image().unwrap();
 
-    let active_model = if img.is_some() {
-        let img_data = image.unwrap();
+    let active_model = if formatted_img.is_some() {
+        let image = clipboard_image.unwrap();
         ActiveModel {
-            blob: Set(img),
-            height: Set(Some(img_data.height as i32)),
-            width: Set(Some(img_data.width as i32)),
-            size: Set(Some(img_data.bytes.to_vec().len().to_string())),
+            blob: Set(Some(image.bytes.to_vec())),
+            height: Set(Some(image.height as i32)),
+            width: Set(Some(image.width as i32)),
+            size: Set(Some(image.bytes.to_vec().len().to_string())),
             ..Default::default()
         }
     } else {
@@ -83,7 +83,9 @@ pub fn parse_model() -> ActiveModel {
     }
 }
 
-pub fn parse_image(image: Option<ImageData<'static>>) -> Result<Option<Vec<u8>>, String> {
+pub fn parse_image() -> Result<Option<Vec<u8>>, String> {
+    let (_text, image) = get_os_clipboard();
+
     if image.is_none() {
         return Ok(None);
     }
@@ -100,6 +102,7 @@ pub fn parse_image(image: Option<ImageData<'static>>) -> Result<Option<Vec<u8>>,
         image.clone().unwrap().bytes.into_owned(),
     )
     .unwrap();
+
     image2.save(fname.clone()).map_err(|err| err.to_string())?;
     let mut file = File::open(fname.clone()).unwrap();
     let mut buffer = vec![];
@@ -118,7 +121,7 @@ pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
     (text, image)
 }
 
-pub async fn check_clipboard() -> Model {
+pub async fn upsert_clipboard() -> Model {
     let model = parse_model();
 
     let res = upsert_db(model.to_owned()).await.unwrap().unwrap();

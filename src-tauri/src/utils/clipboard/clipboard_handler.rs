@@ -5,7 +5,7 @@ use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io;
 use tauri::Manager;
 
-use super::clipboard_helper::check_clipboard;
+use super::clipboard_helper::upsert_clipboard;
 
 pub struct Handler;
 
@@ -19,7 +19,7 @@ impl ClipboardHandler for Handler {
         // });
 
         let _ = tauri::async_runtime::spawn(async move {
-            let model = check_clipboard().await;
+            let model = upsert_clipboard().await;
 
             APP.get()
                 .unwrap()
