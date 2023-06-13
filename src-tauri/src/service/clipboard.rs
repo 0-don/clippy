@@ -3,16 +3,20 @@ use crate::{connection, utils::clipboard::clipboard_helper::parse_model};
 
 use entity::clipboard::{self, Model};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter, QueryOrder,
-    QuerySelect, QueryTrait, Set,
+    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, QueryOrder, QuerySelect,
+    QueryTrait, Set,
 };
 
 pub async fn upsert_db() -> Result<Model, DbErr> {
     let clipboard = parse_model();
 
-    let db: DatabaseConnection = connection::establish_connection().await?;
+    let db = connection::establish_connection().await;
 
-    let clip_db: Model = clipboard.insert(&db).await?;
+    if db.is_err() {
+        println!("Error upserting clipboard");
+    }
+
+    let clip_db: Model = clipboard.insert(&db.unwrap()).await?;
 
     Ok(clip_db)
 }
