@@ -42,7 +42,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
   createEffect(() => {
     const scrollTop = listen("scrollToTop", () => scrollTo(0, 0));
-
+    console.log(clipboards());
     onCleanup(async () => (await scrollTop)());
   });
 
@@ -58,13 +58,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
     if (bottom) {
       const cursor = clipboards()[clipboards.length - 1].id;
-      const newClipboards = await invoke<Clips[]>(
-        "infinite_scroll_clipboards",
-        {
-          cursor,
-        }
-      );
-      setClipboards([...clipboards(), ...newClipboards]);
+      // const newClipboards = await invoke<Clips[]>(
+      //   "infinite_scroll_clipboards",
+      //   {
+      //     cursor,
+      //   }
+      // );
+      // setClipboards([...clipboards(), ...newClipboards]);
     }
   };
 
@@ -109,8 +109,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     );
   }
 
-  const now = dayjs();
-
   return (
     <div
       ref={(el) => (myRef = el)}
@@ -138,7 +136,25 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         {(clipboard, index) => {
           const { content, type, id, created_date, blob, width, height, size } =
             clipboard;
+          const img =
+            blob &&
+            URL.createObjectURL(
+              new Blob([new Uint8Array(blob)], {
+                type: "image/png",
+              })
+            );
 
+          if (blob) {
+            console.log(
+              URL.createObjectURL(
+                new Blob([new Uint8Array(blob)], {
+                  type: "image/png",
+                })
+              )
+            );
+          }
+
+          // console.log(img);
           return (
             <button
               type="button"

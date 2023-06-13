@@ -1,5 +1,8 @@
+use std::{fs::File, io::Read};
+
 use arboard::{Clipboard, ImageData};
 use entity::clipboard::{self, ActiveModel, Model};
+use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use tauri::regex::Regex;
 
@@ -49,19 +52,21 @@ pub fn parse_model() -> ActiveModel {
 
     let r#type = if text.is_some() {
         Set("text".to_string())
-    } else if re.is_match(&text.as_deref().unwrap()) {
+    } else if text.is_some() && re.is_match(&text.as_deref().unwrap()) {
         Set("color".to_string())
     } else {
-        Set("text".to_string())
+        Set("image".to_string())
     };
 
-    let img = if image.is_some() {
-        let img = image.unwrap();
+    let img = parse_image(image.clone()).unwrap();
+
+    let active_model = if img.is_some() {
+        let img_data = image.unwrap();
         ActiveModel {
-            blob: Set(Some(img.bytes.to_vec())),
-            height: Set(Some(img.height as i32)),
-            width: Set(Some(img.width as i32)),
-            size: Set(Some(img.bytes.to_vec().len().to_string())),
+            blob: Set(img),
+            height: Set(Some(img_data.height as i32)),
+            width: Set(Some(img_data.width as i32)),
+            size: Set(Some(img_data.bytes.to_vec().len().to_string())),
             ..Default::default()
         }
     } else {
@@ -73,10 +78,34 @@ pub fn parse_model() -> ActiveModel {
     ActiveModel {
         r#type,
         content: Set(text),
-
         star: Set(Some(false)),
-        ..img
+        ..active_model
     }
+}
+
+pub fn parse_image(image: Option<ImageData<'static>>) -> Result<Option<Vec<u8>>, String> {
+    if image.is_none() {
+        return Ok(None);
+    }
+
+    let tmp_dir = tempfile::Builder::new()
+        .prefix("clipboard-img")
+        .tempdir()
+        .map_err(|err| err.to_string())?;
+    let fname = tmp_dir.path().join("clipboard-img.png");
+
+    let image2: RgbaImage = ImageBuffer::from_raw(
+        image.clone().unwrap().width.try_into().unwrap(),
+        image.clone().unwrap().height.try_into().unwrap(),
+        image.clone().unwrap().bytes.into_owned(),
+    )
+    .unwrap();
+    image2.save(fname.clone()).map_err(|err| err.to_string())?;
+    let mut file = File::open(fname.clone()).unwrap();
+    let mut buffer = vec![];
+    file.read_to_end(&mut buffer).unwrap();
+
+    Ok(Some(buffer))
 }
 
 pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
@@ -90,10 +119,6 @@ pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
 }
 
 pub async fn check_clipboard() -> Model {
-    let (text, img) = get_os_clipboard();
-    println!("text: {:?}", text);
-    println!("img: {:?}", img);
-
     let model = parse_model();
 
     let res = upsert_db(model.to_owned()).await.unwrap().unwrap();

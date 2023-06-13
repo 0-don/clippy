@@ -26,10 +26,10 @@ pub async fn get_clipboards_db(
     let db = connection::establish_connection().await?;
 
     let model = clipboard::Entity::find()
-        .wapply_if(star, |query, starred| {
+        .apply_if(star, |query, starred| {
             query.filter(clipboard::Column::Star.eq(starred))
         })
-        .wapply_if(search, |query, content| {
+        .apply_if(search, |query, content| {
             query.filter(clipboard::Column::Content.contains(&content))
         })
         .offset(cursor)
