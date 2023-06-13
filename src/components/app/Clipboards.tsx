@@ -144,16 +144,18 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               })
             );
 
-          if (blob && width && height) {
-            const canvas = document.createElement(
-              "canvas"
-            ) as HTMLCanvasElement;
-            const ctx = canvas.getContext("2d");
-            const dataArray = new Uint8ClampedArray(blob);
-            const imageData = new ImageData(dataArray, width, height);
-            ctx?.putImageData(imageData, width, height);
-            // console.log(canvas.toDataURL());
-          }
+          console.log(img);
+
+          // if (blob && width && height) {
+          //   const canvas = document.createElement(
+          //     "canvas"
+          //   ) as HTMLCanvasElement;
+          //   const ctx = canvas.getContext("2d");
+          //   const dataArray = new Uint8ClampedArray(blob);
+          //   const imageData = new ImageData(dataArray, width, height);
+          //   ctx?.putImageData(imageData, width, height);
+          //   // console.log(canvas.toDataURL());
+          // }
 
           // console.log(img);
           return (
@@ -168,7 +170,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               <div class="flex justify-between py-3">
                 <div class="flex min-w-0">
                   <div class="flex items-center">
-                    <div class="relative">
+                    <div class="relative" title={id + ""}>
                       {type === "text" && (
                         <FiFileText class="text-2xl text-zinc-700 dark:text-white" />
                       )}

@@ -1,9 +1,5 @@
-extern crate alloc;
-use crate::utils::setup::APP;
-
 use clipboard_master::{CallbackResult, ClipboardHandler};
-use std::io;
-use tauri::Manager;
+use std::io::Error;
 
 use super::clipboard_helper::upsert_clipboard;
 
@@ -18,21 +14,14 @@ impl ClipboardHandler for Handler {
         //     })
         // });
 
-        let _ = tauri::async_runtime::spawn(async move {
-            let model = upsert_clipboard().await;
+        println!("Clipboard changed");
 
-            APP.get()
-                .unwrap()
-                .get_window("main")
-                .unwrap()
-                .emit("clipboard_listener", model)
-                .unwrap();
-        });
+        tauri::async_runtime::spawn(async { upsert_clipboard().await });
 
         CallbackResult::Next
     }
 
-    fn on_clipboard_error(&mut self, error: io::Error) -> CallbackResult {
+    fn on_clipboard_error(&mut self, error: Error) -> CallbackResult {
         println!("Error: {}", error);
         CallbackResult::Next
     }

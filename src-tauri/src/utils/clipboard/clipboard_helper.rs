@@ -4,14 +4,15 @@ use arboard::{Clipboard, ImageData};
 use entity::clipboard::{self, ActiveModel, Model};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
-use tauri::regex::Regex;
+use tauri::{regex::Regex, Manager};
 
-use crate::{connection, service::clipboard::upsert_db};
+use crate::{connection, service::clipboard::upsert_db, utils::setup::APP};
 
-pub async fn check_if_last_same() -> Option<Model> {
+pub async fn check_if_last_is_same() -> Option<Model> {
     let (text, image) = get_os_clipboard();
 
     if text.is_none() && image.is_none() {
+        println!("No clipboard data found?");
         return None;
     }
 
@@ -24,6 +25,7 @@ pub async fn check_if_last_same() -> Option<Model> {
         .unwrap();
 
     if last_clipboard.is_none() {
+        println!("Last clipboard does not exist in db");
         return None;
     }
     let last_clipboard = last_clipboard.unwrap();
@@ -40,8 +42,12 @@ pub async fn check_if_last_same() -> Option<Model> {
     };
 
     if content && blob {
+        println!("content: {}, blob: {}", content, blob);
         return Some(last_clipboard);
     }
+
+    println!("not the same");
+    // clipboard and db are not the same
     None
 }
 
@@ -63,7 +69,7 @@ pub fn parse_model() -> ActiveModel {
     let active_model = if formatted_img.is_some() {
         let image = clipboard_image.unwrap();
         ActiveModel {
-            blob: Set(Some(image.bytes.to_vec())),
+            blob: Set(formatted_img),
             height: Set(Some(image.height as i32)),
             width: Set(Some(image.width as i32)),
             size: Set(Some(image.bytes.to_vec().len().to_string())),
@@ -121,10 +127,20 @@ pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
     (text, image)
 }
 
-pub async fn upsert_clipboard() -> Model {
+pub async fn upsert_clipboard() {
+    let is_same = check_if_last_is_same().await;
+    if is_same.is_some() {
+        ()
+    }
+
     let model = parse_model();
 
     let res = upsert_db(model.to_owned()).await.unwrap().unwrap();
 
-    res
+    APP.get()
+        .unwrap()
+        .get_window("main")
+        .unwrap()
+        .emit("clipboard_listener", res)
+        .unwrap();
 }

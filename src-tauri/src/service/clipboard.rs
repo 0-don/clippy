@@ -1,5 +1,6 @@
 extern crate alloc;
-use crate::{connection, utils::clipboard::clipboard_helper::check_if_last_same};
+use crate::connection;
+
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter, QueryOrder,
@@ -7,10 +8,6 @@ use sea_orm::{
 };
 
 pub async fn upsert_db(clipboard: ActiveModel) -> Result<Option<Model>, DbErr> {
-    let is_same = check_if_last_same().await;
-    if is_same.is_some() {
-        ()
-    }
     let db: DatabaseConnection = connection::establish_connection().await?;
 
     let clip_db: Model = clipboard.insert(&db).await?;
