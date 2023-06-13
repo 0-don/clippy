@@ -1,18 +1,20 @@
 extern crate alloc;
-use crate::connection;
+use crate::{connection, utils::clipboard::clipboard_helper::parse_model};
 
-use entity::clipboard::{self, ActiveModel, Model};
+use entity::clipboard::{self, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, DbErr, EntityTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
 };
 
-pub async fn upsert_db(clipboard: ActiveModel) -> Result<Option<Model>, DbErr> {
+pub async fn upsert_db() -> Result<Model, DbErr> {
+    let clipboard = parse_model();
+
     let db: DatabaseConnection = connection::establish_connection().await?;
 
     let clip_db: Model = clipboard.insert(&db).await?;
 
-    Ok(Some(clip_db))
+    Ok(clip_db)
 }
 
 pub async fn get_clipboards_db(

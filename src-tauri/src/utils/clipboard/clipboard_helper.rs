@@ -1,19 +1,41 @@
 use std::{fs::File, io::Read};
 
 use arboard::{Clipboard, ImageData};
-use entity::clipboard::{self, ActiveModel, Model};
+use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use tauri::{regex::Regex, Manager};
 
 use crate::{connection, service::clipboard::upsert_db, utils::setup::APP};
 
-pub async fn check_if_last_is_same() -> Option<Model> {
+#[tauri::command(async)]
+pub async fn upsert_clipboard() {
+    if check_if_last_is_same().await {
+        println!("Clipboard is the same as last clipboard");
+        return;
+    }
+
+    let res = upsert_db().await;
+
+    if res.is_err() {
+        println!("Error upserting clipboard: {}", res.err().unwrap());
+        return;
+    }
+
+    APP.get()
+        .unwrap()
+        .get_window("main")
+        .unwrap()
+        .emit("clipboard_listener", res.unwrap())
+        .unwrap();
+}
+
+pub async fn check_if_last_is_same() -> bool {
     let (text, image) = get_os_clipboard();
 
     if text.is_none() && image.is_none() {
         println!("No clipboard data found?");
-        return None;
+        return false;
     }
 
     let db = connection::establish_connection().await.unwrap();
@@ -26,8 +48,9 @@ pub async fn check_if_last_is_same() -> Option<Model> {
 
     if last_clipboard.is_none() {
         println!("Last clipboard does not exist in db");
-        return None;
+        return false;
     }
+
     let last_clipboard = last_clipboard.unwrap();
 
     let content = if text.is_some() && last_clipboard.content.is_some() {
@@ -41,18 +64,16 @@ pub async fn check_if_last_is_same() -> Option<Model> {
         false
     };
 
-    if content && blob {
-        println!("content: {}, blob: {}", content, blob);
-        return Some(last_clipboard);
+    if content || blob {
+        return true;
     }
 
-    println!("not the same");
-    // clipboard and db are not the same
-    None
+    println!("clipboard and db are not the same");
+    return false;
 }
 
 pub fn parse_model() -> ActiveModel {
-    let (text, clipboard_image) = get_os_clipboard();
+    let (text, _) = get_os_clipboard();
 
     let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
 
@@ -64,22 +85,7 @@ pub fn parse_model() -> ActiveModel {
         Set("image".to_string())
     };
 
-    let formatted_img: Option<Vec<u8>> = parse_image().unwrap();
-
-    let active_model = if formatted_img.is_some() {
-        let image = clipboard_image.unwrap();
-        ActiveModel {
-            blob: Set(formatted_img),
-            height: Set(Some(image.height as i32)),
-            width: Set(Some(image.width as i32)),
-            size: Set(Some(image.bytes.to_vec().len().to_string())),
-            ..Default::default()
-        }
-    } else {
-        ActiveModel {
-            ..Default::default()
-        }
-    };
+    let active_model = get_active_model();
 
     ActiveModel {
         r#type,
@@ -89,17 +95,20 @@ pub fn parse_model() -> ActiveModel {
     }
 }
 
-pub fn parse_image() -> Result<Option<Vec<u8>>, String> {
+pub fn get_active_model() -> ActiveModel {
     let (_text, image) = get_os_clipboard();
 
     if image.is_none() {
-        return Ok(None);
-    }
+        return ActiveModel {
+            ..Default::default()
+        };
+    };
 
     let tmp_dir = tempfile::Builder::new()
         .prefix("clipboard-img")
         .tempdir()
-        .map_err(|err| err.to_string())?;
+        .map_err(|err| err.to_string())
+        .unwrap();
     let fname = tmp_dir.path().join("clipboard-img.png");
 
     let image2: RgbaImage = ImageBuffer::from_raw(
@@ -109,39 +118,30 @@ pub fn parse_image() -> Result<Option<Vec<u8>>, String> {
     )
     .unwrap();
 
-    image2.save(fname.clone()).map_err(|err| err.to_string())?;
+    image2
+        .save(fname.clone())
+        .map_err(|err| err.to_string())
+        .unwrap();
     let mut file = File::open(fname.clone()).unwrap();
     let mut buffer = vec![];
     file.read_to_end(&mut buffer).unwrap();
 
-    Ok(Some(buffer))
+    ActiveModel {
+        height: Set(Some(image.clone().unwrap().height as i32)),
+        width: Set(Some(image.clone().unwrap().width as i32)),
+        size: Set(Some(
+            image.clone().unwrap().bytes.to_vec().len().to_string(),
+        )),
+        ..Default::default()
+    }
 }
 
 pub fn get_os_clipboard() -> (Option<String>, Option<ImageData<'static>>) {
     let mut clipboard = Clipboard::new().unwrap();
 
-    let text: Option<String> = clipboard.get_text().ok();
+    let text = clipboard.get_text().ok();
 
-    let image: Option<ImageData<'_>> = clipboard.get_image().ok();
+    let image = clipboard.get_image().ok();
 
     (text, image)
-}
-
-pub async fn upsert_clipboard() {
-    let is_same = check_if_last_is_same().await;
-    if is_same.is_some() {
-        println!("Clipboard is the same as last clipboard");
-        ()
-    }
-
-    let model = parse_model();
-
-    let res = upsert_db(model.to_owned()).await.unwrap().unwrap();
-
-    APP.get()
-        .unwrap()
-        .get_window("main")
-        .unwrap()
-        .emit("clipboard_listener", res)
-        .unwrap();
 }
