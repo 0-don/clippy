@@ -12,10 +12,6 @@ pub async fn upsert_db() -> Result<Model, DbErr> {
 
     let db = connection::establish_connection().await;
 
-    if db.is_err() {
-        println!("Error upserting clipboard");
-    }
-
     let clip_db: Model = clipboard.insert(&db.unwrap()).await?;
 
     Ok(clip_db)

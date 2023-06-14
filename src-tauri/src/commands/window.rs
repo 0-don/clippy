@@ -23,6 +23,5 @@ pub fn is_production() -> bool {
 
 #[tauri::command]
 pub fn init_listener() {
-    // let _ = Master::new(Handler).run();
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
 }
