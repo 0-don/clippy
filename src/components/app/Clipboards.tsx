@@ -136,13 +136,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         {(clipboard, index) => {
           const { content, type, id, created_date, blob, width, height, size } =
             clipboard;
-          const img =
-            blob &&
-            URL.createObjectURL(
-              new Blob([new Uint8Array(blob)], {
-                type: "image/png",
-              })
-            );
 
           // if (blob && width && height) {
           //   const canvas = document.createElement(

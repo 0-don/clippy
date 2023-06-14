@@ -1,6 +1,6 @@
 extern crate alloc;
-use crate::{connection, utils::clipboard::clipboard_helper::parse_model};
 
+use crate::{connection, utils::clipboard::clipboard_helper::parse_model};
 use entity::clipboard::{self, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, QueryOrder, QuerySelect,

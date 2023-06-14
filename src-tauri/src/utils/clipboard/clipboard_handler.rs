@@ -11,7 +11,7 @@ impl ClipboardHandler for Handler {
             tokio::runtime::Handle::current().block_on(async { upsert_clipboard().await })
         });
 
-        //first copy doesnt work, so we do it twice
+        // first copy doesnt work, so we do it twice
         // tauri::async_runtime::spawn(async { upsert_clipboard().await });
 
         CallbackResult::Next
