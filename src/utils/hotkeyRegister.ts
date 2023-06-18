@@ -20,15 +20,19 @@ export const parseShortcut = (hotkey: Hotkey) => {
 export async function registerHotkeys(hotkeys: Hotkey[]) {
   await unregisterAll();
 
-
+  // unregister all hotkeys
+  // for (const hotkey of hotkeys) {
+  //   await unregister(hotkey.shortcut);
+  // }
+  // ############################################
 
   // Display and hide the app window
   const mainHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
 
   if (
-    mainHotkey?.shortcut &&
-    !(await isRegistered(mainHotkey?.shortcut)) &&
     mainHotkey &&
+    mainHotkey?.shortcut &&
+    !(await isRegistered(mainHotkey.shortcut)) &&
     mainHotkey.status
   ) {
     try {
@@ -43,9 +47,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
           move_window(Position.BottomRight);
         }
       });
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   }
   // ############################################
 }
