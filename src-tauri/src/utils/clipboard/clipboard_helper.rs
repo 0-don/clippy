@@ -1,3 +1,5 @@
+use std::{fs::File, io::Read};
+
 use arboard::{Clipboard, ImageData};
 use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
@@ -77,21 +79,7 @@ pub fn parse_model() -> ActiveModel {
             ..Default::default()
         }
     } else {
-        let parsed_image: RgbaImage = ImageBuffer::from_raw(
-            image.clone().unwrap().width.try_into().unwrap(),
-            image.clone().unwrap().height.try_into().unwrap(),
-            image.clone().unwrap().bytes.into_owned(),
-        )
-        .unwrap();
-        ActiveModel {
-            blob: Set(Some(parsed_image.to_vec())),
-            height: Set(Some(image.clone().unwrap().height as i32)),
-            width: Set(Some(image.clone().unwrap().width as i32)),
-            size: Set(Some(
-                image.clone().unwrap().bytes.to_vec().len().to_string(),
-            )),
-            ..Default::default()
-        }
+        get_active_model(image)
     };
 
     ActiveModel {
@@ -99,6 +87,40 @@ pub fn parse_model() -> ActiveModel {
         content: Set(text),
         star: Set(Some(false)),
         ..active_model
+    }
+}
+
+pub fn get_active_model(image: Option<ImageData<'_>>) -> ActiveModel {
+    let tmp_dir = tempfile::Builder::new()
+        .prefix("clipboard-img")
+        .tempdir()
+        .map_err(|err| err.to_string())
+        .unwrap();
+    let fname = tmp_dir.path().join("clipboard-img.png");
+
+    let image2: RgbaImage = ImageBuffer::from_raw(
+        image.clone().unwrap().width.try_into().unwrap(),
+        image.clone().unwrap().height.try_into().unwrap(),
+        image.clone().unwrap().bytes.into_owned(),
+    )
+    .unwrap();
+
+    image2
+        .save(fname.clone())
+        .map_err(|err| err.to_string())
+        .unwrap();
+    let mut file = File::open(fname.clone()).unwrap();
+    let mut buffer = vec![];
+    file.read_to_end(&mut buffer).unwrap();
+
+    ActiveModel {
+        blob: Set(Some(buffer)),
+        height: Set(Some(image.clone().unwrap().height as i32)),
+        width: Set(Some(image.clone().unwrap().width as i32)),
+        size: Set(Some(
+            image.clone().unwrap().bytes.to_vec().len().to_string(),
+        )),
+        ..Default::default()
     }
 }
 
