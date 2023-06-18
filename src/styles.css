@@ -16,10 +16,10 @@
   border-radius: 50px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffffff;
+  background: #000;
 }
 ::-webkit-scrollbar-thumb:active {
-  background: #000000;
+  background: #fff;
 }
 ::-webkit-scrollbar-track {
   @apply bg-white dark:bg-gray-500;

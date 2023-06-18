@@ -24,7 +24,7 @@ pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
         None
     };
 
-    (text, image)
+    return (text, image);
 }
 
 #[derive(Debug, Clone)]
