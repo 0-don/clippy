@@ -68,7 +68,6 @@ impl ClipboardHelper {
         let image = self.active_model.blob.as_ref();
 
         if text.is_none() && image.is_none() {
-            println!("No clipboard data found?");
             return false;
         }
 
@@ -81,7 +80,6 @@ impl ClipboardHelper {
             .unwrap();
 
         if last_clipboard.is_none() {
-            println!("Last clipboard does not exist in db");
             return false;
         }
 
@@ -94,11 +92,9 @@ impl ClipboardHelper {
             && last_clipboard.blob.is_some()
             && image.as_ref().unwrap() == last_clipboard.blob.as_ref().unwrap()
         {
-            println!("Clipboard is the same as last clipboard");
             return true;
         }
 
-        println!("clipboard and db are not the same");
         return false;
     }
 

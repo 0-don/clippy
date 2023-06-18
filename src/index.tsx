@@ -1,5 +1,4 @@
 import { listen } from "@tauri-apps/api/event";
-import { unregisterAll } from "@tauri-apps/api/globalShortcut";
 import { appWindow } from "@tauri-apps/api/window";
 import { createEffect, createResource, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
@@ -10,7 +9,7 @@ import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Index = () => {
-  const { setClipboards, clipboards } = AppStore;
+  const { setClipboards } = AppStore;
   const { init } = SettingsStore;
 
   createEffect(() => {
@@ -18,7 +17,7 @@ const Index = () => {
       async ({ payload: focused }) => !focused && (await appWindow.hide())
     );
     createResource(init);
-    createResource(unregisterAll);
+
     const clipboardListener = listen<Clips>(
       "clipboard_listener",
       ({ payload }) => {
@@ -26,10 +25,7 @@ const Index = () => {
       }
     );
 
-    console.log("listening for clipboard changes");
-
     onCleanup(async () => {
-      console.log("cleaning up");
       (await clipboardListener)();
       (await focus)();
     });
