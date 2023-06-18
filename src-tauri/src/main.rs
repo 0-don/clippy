@@ -33,6 +33,7 @@ fn main() {
             clipboard::infinite_scroll_clipboards,
             clipboard::delete_clipboard,
             clipboard::star_clipboard,
+            clipboard::copy_clipboard,
             hotkey::get_hotkeys,
             settings::get_settings,
             window::window_on_mouse,

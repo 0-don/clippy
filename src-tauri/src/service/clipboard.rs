@@ -15,6 +15,14 @@ pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr>
     Ok(clip_db)
 }
 
+pub async fn get_clipboard_db(id: i32) -> Result<Model, DbErr> {
+    let db = connection::establish_connection().await?;
+
+    let model = clipboard::Entity::find_by_id(id).one(&db).await?;
+
+    Ok(model.unwrap())
+}
+
 pub async fn get_clipboards_db(
     cursor: Option<u64>,
     search: Option<String>,
