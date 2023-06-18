@@ -32,10 +32,12 @@ pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
         let r#type = &clipboard.as_ref().unwrap().r#type;
 
         if r#type == "image" {
-            let width = clipboard.as_ref().unwrap().width.unwrap() as usize;
-            let height = clipboard.as_ref().unwrap().height.unwrap() as usize;
-            let blob = clipboard.as_ref().unwrap().to_owned().blob.unwrap();
-            let image = image::load_from_memory(&blob as &[u8]).unwrap();
+            let clipboard_ref = clipboard.as_ref().unwrap();
+            let width = clipboard_ref.width.unwrap() as usize;
+            let height = clipboard_ref.height.unwrap() as usize;
+            let blob = clipboard_ref.blob.as_ref().unwrap();
+
+            let image = image::load_from_memory(blob).unwrap();
 
             let img_data = ImageData {
                 width,

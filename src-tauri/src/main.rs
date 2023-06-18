@@ -38,7 +38,6 @@ fn main() {
             settings::get_settings,
             window::window_on_mouse,
             window::is_production,
-            window::init_listener,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

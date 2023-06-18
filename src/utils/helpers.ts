@@ -9,3 +9,7 @@ export function formatBytes(bytes: number, decimals = 2) {
 
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
+
+export async function sleep() {
+  return new Promise((resolve) => setTimeout(resolve, 5000));
+}

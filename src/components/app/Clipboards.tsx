@@ -137,17 +137,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
           const { content, type, id, created_date, blob, width, height, size } =
             clipboard;
 
-          // if (blob && width && height) {
-          //   const canvas = document.createElement(
-          //     "canvas"
-          //   ) as HTMLCanvasElement;
-          //   const ctx = canvas.getContext("2d");
-          //   const dataArray = new Uint8ClampedArray(blob);
-          //   const imageData = new ImageData(dataArray, width, height);
-          //   ctx?.putImageData(imageData, width, height);
-          //   // log(canvas.toDataURL());
-          // }
-
           return (
             <button
               type="button"
@@ -195,10 +184,16 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         {type === "color" && (
                           <div
                             class="mr-1 h-5 w-5 border border-solid border-black"
-                            style={{ "background-color": `#${content}` }}
+                            style={{
+                              "background-color": `${
+                                content?.includes("#")
+                                  ? `${content}`
+                                  : `#${content}`
+                              }`,
+                            }}
                           />
                         )}
-                        <p class="text-sm">{content}</p>
+                        <p class="text-sm">{content || " "}</p>
                       </div>
                     )}
                     <div class="text-left text-xs text-zinc-400">

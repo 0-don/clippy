@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import { appWindow } from "@tauri-apps/api/window";
 import { createEffect, createResource, onCleanup } from "solid-js";
@@ -13,14 +12,12 @@ const Index = () => {
   const { setClipboards } = AppStore;
   const { init } = SettingsStore;
 
-  createResource(init);
-
-  invoke("init_listener");
-
   createEffect(() => {
+    console.log(1);
     const focus = appWindow.onFocusChanged(
       async ({ payload: focused }) => !focused && (await appWindow.hide())
     );
+    createResource(init);
 
     const clipboardListener = listen<Clips>(
       "clipboard_listener",

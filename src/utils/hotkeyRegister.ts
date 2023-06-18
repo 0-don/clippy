@@ -20,6 +20,8 @@ export const parseShortcut = (hotkey: Hotkey) => {
 export async function registerHotkeys(hotkeys: Hotkey[]) {
   await unregisterAll();
 
+
+
   // Display and hide the app window
   const mainHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
 
