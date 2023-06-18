@@ -1,64 +1,54 @@
-use crate::{
-    connection,
-    service::clipboard::upsert_db,
-    utils::setup::{APP, CLIPBOARD_HELPER},
-};
+use crate::{connection, service::clipboard::insert_clipboard_db, utils::setup::APP};
 use arboard::Clipboard;
-use entity::clipboard::{self, ActiveModel, Model};
+use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::io::Cursor;
 use tauri::{regex::Regex, Manager};
 
+pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
+    let mut clipboard = Clipboard::new().unwrap();
+    let text = clipboard.get_text().ok();
+    let image = clipboard.get_image().ok();
+
+    let image: Option<RgbaImage> = if image.is_some() {
+        Some(
+            ImageBuffer::from_raw(
+                image.as_ref().unwrap().width.try_into().unwrap(),
+                image.as_ref().unwrap().height.try_into().unwrap(),
+                image.clone().unwrap().bytes.into_owned(),
+            )
+            .unwrap(),
+        )
+    } else {
+        None
+    };
+
+    (text, image)
+}
+
 #[derive(Debug, Clone)]
 pub struct ClipboardHelper {
-    clipboard: (Option<String>, Option<RgbaImage>),
-    model: Option<Model>,
-    active_model: Option<ActiveModel>,
+    pub clipboard: (Option<String>, Option<RgbaImage>),
+    pub active_model: ActiveModel,
 }
 impl ClipboardHelper {
     pub fn new() -> Self {
         ClipboardHelper {
-            clipboard: Self::get_os_clipboard(),
-            model: None,
-            active_model: None,
+            clipboard: (None, None),
+            active_model: ActiveModel::default(),
         }
     }
 
-    fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
-        let mut clipboard = Clipboard::new().unwrap();
-        let text = clipboard.get_text().ok();
-        let image = clipboard.get_image().ok();
-
-        let image: Option<RgbaImage> = if image.is_some() {
-            Some(
-                ImageBuffer::from_raw(
-                    image.clone().unwrap().width.try_into().unwrap(),
-                    image.clone().unwrap().height.try_into().unwrap(),
-                    image.clone().unwrap().bytes.into_owned(),
-                )
-                .unwrap(),
-            )
-        } else {
-            None
-        };
-
-        (text, image)
-    }
-
-    pub fn refresh_clipboard(mut self) {
-        let clipboard = Self::get_os_clipboard();
-        self.clipboard = clipboard;
-    }
-
     pub async fn upsert_clipboard() {
-        let clipboard_helper = CLIPBOARD_HELPER.get().unwrap();
+        let mut clipboard_helper = ClipboardHelper::new();
+        clipboard_helper.refresh_clipboard();
 
         if clipboard_helper.check_if_last_is_same().await {
             return;
         }
 
-        let model = upsert_db().await;
+        let model = insert_clipboard_db(clipboard_helper.active_model).await;
 
         APP.get()
             .unwrap()
@@ -68,8 +58,14 @@ impl ClipboardHelper {
             .unwrap();
     }
 
-    async fn check_if_last_is_same(&self) -> bool {
-        let (text, image) = &self.clipboard;
+    pub fn refresh_clipboard(&mut self) {
+        self.clipboard = get_os_clipboard();
+        self.active_model = self.parse_model();
+    }
+
+    async fn check_if_last_is_same(&mut self) -> bool {
+        let text = self.active_model.content.as_ref();
+        let image = self.active_model.blob.as_ref();
 
         if text.is_none() && image.is_none() {
             println!("No clipboard data found?");
@@ -93,10 +89,10 @@ impl ClipboardHelper {
 
         if text.is_some() // check if text is same
         && last_clipboard.content.is_some()
-        && text.clone().unwrap() == last_clipboard.content.as_deref().unwrap()
+        && text.as_ref().unwrap() == last_clipboard.content.as_ref().unwrap()
             || image.is_some() // check if image is same
             && last_clipboard.blob.is_some()
-            && &image.clone().unwrap().to_vec() == last_clipboard.blob.as_deref().unwrap()
+            && image.as_ref().unwrap() == last_clipboard.blob.as_ref().unwrap()
         {
             println!("Clipboard is the same as last clipboard");
             return true;
@@ -106,8 +102,8 @@ impl ClipboardHelper {
         return false;
     }
 
-    pub fn parse_model(self) -> ActiveModel {
-        let (text, image) = self.clipboard;
+    pub fn parse_model(&mut self) -> ActiveModel {
+        let (text, image) = &self.clipboard;
 
         let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
 
@@ -121,6 +117,7 @@ impl ClipboardHelper {
 
         let active_model = if image.is_none() {
             ActiveModel {
+                blob: Set(None),
                 ..Default::default()
             }
         } else {
@@ -133,8 +130,8 @@ impl ClipboardHelper {
 
             ActiveModel {
                 size: Set(Some(bytes.len().to_string())),
-                height: Set(Some(image.clone().unwrap().height() as i32)),
-                width: Set(Some(image.unwrap().width() as i32)),
+                height: Set(Some(image.as_ref().unwrap().height() as i32)),
+                width: Set(Some(image.as_ref().unwrap().width() as i32)),
                 blob: Set(Some(bytes)),
                 ..Default::default()
             }
@@ -142,7 +139,7 @@ impl ClipboardHelper {
 
         ActiveModel {
             r#type,
-            content: Set(text),
+            content: Set(text.to_owned()),
             star: Set(Some(false)),
             ..active_model
         }
