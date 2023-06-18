@@ -5,9 +5,8 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { AiOutlineArrowUp } from "solid-icons/ai";
 import { BsImages, BsStar } from "solid-icons/bs";
-import { FiFileText } from "solid-icons/fi";
+import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsSymbolColor } from "solid-icons/vs";
 import {
@@ -55,16 +54,17 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     } else {
       setScrollToTop(false);
     }
+    console.log(bottom);
 
     if (bottom) {
-      const cursor = clipboards()[clipboards.length - 1].id;
-      // const newClipboards = await invoke<Clips[]>(
-      //   "infinite_scroll_clipboards",
-      //   {
-      //     cursor,
-      //   }
-      // );
-      // setClipboards([...clipboards(), ...newClipboards]);
+      const cursor = clipboards().length;
+      const newClipboards = await invoke<Clips[]>(
+        "infinite_scroll_clipboards",
+        {
+          cursor,
+        }
+      );
+      setClipboards((prev) => [...prev, ...newClipboards]);
     }
   };
 
@@ -121,8 +121,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
           class="absolute bottom-5 right-4 rounded-full bg-neutral-700 px-2 py-1 hover:bg-gray-500"
           onClick={() => myRef?.scrollTo(0, 0)}
         >
-          <div class="relative">
-            <AiOutlineArrowUp class="text-xl text-white dark:text-white" />
+          <div class="relative flex items-center justify-center py-1">
+            <FiArrowUp class="text-xl !text-white dark:!text-white " />
             {globalHotkeyEvent() && (
               <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
                 {hotkeys().find((key) => key.event === "scroll_to_top")?.key}
@@ -144,6 +144,10 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               onClick={(e) => {
                 e.stopPropagation();
                 invoke("copy_clipboard", { id });
+              }}
+              onDblClick={(e) => {
+                e.stopPropagation();
+                // invoke("save_clipboard", { id });
               }}
             >
               <div class="flex justify-between py-3">
@@ -193,7 +197,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                             }}
                           />
                         )}
-                        <p class="text-sm">{content || " "}</p>
+                        <p class="text-sm">{content || " "}</p>
                       </div>
                     )}
                     <div class="text-left text-xs text-zinc-400">

@@ -19,7 +19,6 @@ pub async fn infinite_scroll_clipboards(
     star: Option<bool>,
 ) -> Result<Vec<Model>, ()> {
     let clipboards = get_clipboards_db(cursor, search, star).await;
-
     Ok(clipboards.unwrap())
 }
 
