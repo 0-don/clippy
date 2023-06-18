@@ -1,14 +1,14 @@
 extern crate alloc;
 
-use crate::{connection, utils::clipboard::clipboard_helper::parse_model};
+use crate::{connection, utils::clipboard::clipboard_helper::ClipboardHelper};
 use entity::clipboard::{self, Model};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, QueryOrder, QuerySelect,
-    QueryTrait, Set,
+    ColumnTrait, DbErr, EntityTrait, QueryFilter, QueryOrder, QuerySelect, QueryTrait, Set, ActiveModelTrait,
 };
 
 pub async fn upsert_db() -> Result<Model, DbErr> {
-    let clipboard = parse_model();
+    let clipboard_helper = ClipboardHelper::new();
+    let clipboard = clipboard_helper.parse_model();
 
     let db = connection::establish_connection().await;
 

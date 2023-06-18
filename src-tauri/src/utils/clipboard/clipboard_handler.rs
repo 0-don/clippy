@@ -1,14 +1,15 @@
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io::Error;
 
-use super::clipboard_helper::upsert_clipboard;
+use super::clipboard_helper::ClipboardHelper;
 
 pub struct Handler;
 
 impl ClipboardHandler for Handler {
     fn on_clipboard_change(&mut self) -> CallbackResult {
         tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(async { upsert_clipboard().await })
+            tokio::runtime::Handle::current()
+                .block_on(async { ClipboardHelper::upsert_clipboard().await })
         });
 
         // first copy doesnt work, so we do it twice
