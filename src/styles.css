@@ -44,5 +44,3 @@ input::-webkit-inner-spin-button {
 .checkbox:checked + .check-icon {
   display: flex;
 }
-
-/* as */
