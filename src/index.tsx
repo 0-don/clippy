@@ -3,10 +3,10 @@ import { appWindow } from "@tauri-apps/api/window";
 import { createEffect, createResource, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
 import { Clips } from "./@types";
-import App from "./App";
+import App from "./components/App";
+import ClipboardStore from "./store/ClipboardStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
-import ClipboardStore from "./store/ClipboardStore";
 
 const Index = () => {
   const { setClipboards } = ClipboardStore;

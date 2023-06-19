@@ -1,13 +1,13 @@
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
 import { Show } from "solid-js";
-import { History } from "./components/app/History";
-import { RecentClipboards } from "./components/app/RecentClipboards";
-import { StarredClipboards } from "./components/app/StarredClipboards";
-import { ViewMore } from "./components/app/ViewMore";
-import { AppSidebar } from "./components/navigation/AppSidebar";
-import AppStore from "./store/AppStore";
-import SettingsStore from "./store/SettingsStore";
+import AppStore from "../store/AppStore";
+import SettingsStore from "../store/SettingsStore";
+import { History } from "./app/History";
+import { RecentClipboards } from "./app/RecentClipboards";
+import { StarredClipboards } from "./app/StarredClipboards";
+import { ViewMore } from "./app/ViewMore";
+import { AppSidebar } from "./navigation/AppSidebar";
 
 function App() {
   const { settings } = SettingsStore;

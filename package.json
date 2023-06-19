@@ -1,7 +1,7 @@
 {
   "name": "clippy",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -11,7 +11,6 @@
     "d": "tauri dev",
     "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src --expanded-format --with-serde both"
   },
-  "license": "MIT",
   "dependencies": {
     "@kobalte/core": "^0.9.6",
     "@tauri-apps/api": "^1.4.0",
