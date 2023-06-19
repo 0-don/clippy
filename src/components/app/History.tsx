@@ -1,7 +1,7 @@
 import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
 import { Component, createEffect, createSignal, onCleanup } from "solid-js";
-import ClipboardStore from "../../store/ClipboardStore";
+import ClipboardStore, { initialWhere } from "../../store/ClipboardStore";
 import SwitchField from "../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
 
@@ -17,9 +17,8 @@ export const History: Component<HistoryProps> = ({}) => {
     const img = showImages();
 
     const delayDebounceFn = setTimeout(async () => {
-      setWhere((prev) => ({
-        ...prev,
-        cursor: undefined,
+      setWhere(() => ({
+        ...initialWhere,
         search: text.length && !img ? text : undefined,
         img: img || undefined,
       }));
