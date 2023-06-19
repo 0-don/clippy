@@ -1,5 +1,4 @@
 import { invoke } from "@tauri-apps/api";
-import { listen } from "@tauri-apps/api/event";
 import { BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,7 +14,6 @@ import {
   Show,
   createEffect,
   createSignal,
-  onCleanup,
 } from "solid-js";
 import { Clips } from "../../@types";
 import clippy from "../../assets/clippy.png";
@@ -38,11 +36,15 @@ export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
   const { clipboards, setClipboards } = AppStore;
   const { globalHotkeyEvent, hotkeys } = SettingsStore;
 
-  createEffect(() => {
-    const scrollTop = listen("scrollToTop", () => scrollTo(0, 0));
+  async function getClipboards(cursor?: number, star?: boolean) {
+    const newClipboards = await invoke<Clips[]>("infinite_scroll_clipboards", {
+      cursor,
+      star,
+    });
+    return newClipboards;
+  }
 
-    onCleanup(async () => (await scrollTop)());
-  });
+  createEffect(async () => setClipboards(await getClipboards(undefined, star)));
 
   const onScroll = async () => {
     const bottom =
@@ -56,13 +58,7 @@ export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
 
     if (bottom) {
       const cursor = clipboards().length;
-      const newClipboards = await invoke<Clips[]>(
-        "infinite_scroll_clipboards",
-        {
-          cursor,
-          star: !!star,
-        }
-      );
+      const newClipboards = await getClipboards(cursor, star);
       setClipboards((prev) => [...prev, ...newClipboards]);
     }
   };

@@ -2,9 +2,10 @@ import { BsStarFill } from "solid-icons/bs";
 import { CgMore } from "solid-icons/cg";
 import { TbSearch } from "solid-icons/tb";
 import { VsHistory } from "solid-icons/vs";
-import { createRoot, createSignal } from "solid-js";
+import { createRoot,createSignal } from "solid-js";
 import { Clips } from "../@types";
-import { SidebarIcon, SidebarIconName } from "../utils/constants";
+import { SidebarIcon,SidebarIconName } from "../utils/constants";
+
 
 function createAppStore() {
   const [clipboards, setClipboards] = createSignal<Clips[]>([]);
@@ -28,12 +29,15 @@ function createAppStore() {
       prev.map((s) => ({ ...s, current: s.name === name }))
     );
 
+  const sIcon = () => sidebarIcons().find((s) => s.current);
+
   return {
     clipboards,
     setClipboards,
     sidebarIcons,
     setSidebarIcons,
     updateSidebarIcons,
+    sIcon,
   };
 }
 

@@ -1,5 +1,6 @@
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
+import { Show } from "solid-js";
 import { History } from "./components/app/History";
 import { RecentClipboards } from "./components/app/RecentClipboards";
 import { StarredClipboards } from "./components/app/StarredClipboards";
@@ -10,9 +11,7 @@ import SettingsStore from "./store/SettingsStore";
 
 function App() {
   const { settings } = SettingsStore;
-  const { sidebarIcons } = AppStore;
-
-  const sIcon = sidebarIcons().find((icon) => icon.current);
+  const { sIcon } = AppStore;
 
   return (
     <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
@@ -22,7 +21,7 @@ function App() {
       <div class="min-w-0 flex-1">
         <div class="flex w-full justify-between py-1 pl-2">
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
-            {sIcon?.name?.toLocaleUpperCase()}
+            {sIcon()?.name?.toLocaleUpperCase()}
           </p>
           {settings()?.synchronize ? (
             <FiGlobe title="online" />
@@ -30,14 +29,21 @@ function App() {
             <BsHddFill title="offline" />
           )}
         </div>
-        {sIcon?.name === "Recent Clipboards" && sIcon?.current && (
+        <Show when={sIcon()?.name === "Recent Clipboards"}>
           <RecentClipboards />
-        )}
-        {sIcon?.name === "Starred Clipboards" && sIcon?.current && (
+        </Show>
+
+        <Show when={sIcon()?.name === "Starred Clipboards"}>
           <StarredClipboards />
-        )}
-        {sIcon?.name === "History" && sIcon?.current && <History />}
-        {sIcon?.name === "View more" && sIcon?.current && <ViewMore />}
+        </Show>
+
+        <Show when={sIcon()?.name === "History"}>
+          <History />
+        </Show>
+
+        <Show when={sIcon()?.name === "View more"}>
+          <ViewMore />
+        </Show>
       </div>
     </div>
   );

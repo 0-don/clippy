@@ -70,7 +70,7 @@ function createSettingsStore() {
     updateIsProduction();
     initSettings();
     initHotkeys();
-    initClipboards();
+    // initClipboards();
   };
 
   const initSettings = async () => {
