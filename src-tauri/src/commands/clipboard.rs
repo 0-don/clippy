@@ -3,10 +3,11 @@ extern crate alloc;
 use alloc::borrow::Cow;
 use arboard::{Clipboard, ImageData};
 use entity::clipboard::Model;
+use tauri::Manager;
 
-use crate::service::clipboard::{
+use crate::{service::clipboard::{
     delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
-};
+}, utils::setup::APP};
 
 #[tauri::command]
 pub async fn infinite_scroll_clipboards(
@@ -46,27 +47,27 @@ pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
             clip.set_text(content).unwrap();
         }
 
-        // APP.get()
-        //     .unwrap()
-        //     .get_window("main")
-        //     .unwrap()
-        //     .hide()
-        //     .unwrap();
+        APP.get()
+            .unwrap()
+            .get_window("main")
+            .unwrap()
+            .hide()
+            .unwrap();
     }
 
     Ok(())
 }
 
 #[tauri::command]
-pub async fn star_clipboard(id: i32, star: bool) -> Result<Option<bool>, ()> {
-    let clipboards = star_clipboard_db(id, star).await;
+pub async fn star_clipboard(id: i32, star: bool) -> Result<bool, ()> {
+    let clipboard = star_clipboard_db(id, star).await;
 
-    Ok(clipboards.unwrap())
+    Ok(clipboard.unwrap())
 }
 
 #[tauri::command]
-pub async fn delete_clipboard(id: i32) -> Result<Option<bool>, ()> {
-    let clipboards = delete_clipboard_db(id).await;
+pub async fn delete_clipboard(id: i32) -> Result<bool, ()> {
+    let clipboard = delete_clipboard_db(id).await;
 
-    Ok(clipboards.unwrap())
+    Ok(clipboard.unwrap())
 }

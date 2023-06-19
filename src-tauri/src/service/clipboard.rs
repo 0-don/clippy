@@ -10,7 +10,11 @@ use sea_orm::{
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
     let db = connection::establish_connection().await;
 
-    let clip_db: Model = clipboard.insert(&db.unwrap()).await?;
+    let mut clip_db: Model = clipboard.insert(&db.unwrap()).await?;
+
+    if let Some(content) = &clip_db.content {
+        clip_db.content = content.get(..100).map(|s| s.to_string());
+    }
 
     Ok(clip_db)
 }
@@ -43,10 +47,20 @@ pub async fn get_clipboards_db(
         .all(&db)
         .await?;
 
-    Ok(model)
+    let parsed_model: Vec<Model> = model
+        .into_iter()
+        .map(|mut m| {
+            if let Some(content) = &m.content {
+                m.content = content.get(..100).map(|s| s.to_string());
+            }
+            m
+        })
+        .collect();
+
+    Ok(parsed_model)
 }
 
-pub async fn star_clipboard_db(id: i32, star: bool) -> Result<Option<bool>, DbErr> {
+pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
     let db = connection::establish_connection().await?;
 
     let model = clipboard::ActiveModel {
@@ -57,13 +71,13 @@ pub async fn star_clipboard_db(id: i32, star: bool) -> Result<Option<bool>, DbEr
 
     let _clipboard = clipboard::Entity::update(model).exec(&db).await?;
 
-    Ok(Some(true))
+    Ok(true)
 }
 
-pub async fn delete_clipboard_db(id: i32) -> Result<Option<bool>, DbErr> {
+pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
     let db = connection::establish_connection().await?;
 
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
 
-    Ok(Some(true))
+    Ok(true)
 }

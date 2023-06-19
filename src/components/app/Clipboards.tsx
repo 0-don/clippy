@@ -31,6 +31,7 @@ interface ClipboardsProps {
 
 export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
   let myRef: HTMLDivElement;
+  let timer: NodeJS.Timeout;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
   const { clipboards, setClipboards } = AppStore;
@@ -154,9 +155,15 @@ export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
                 class="group w-full cursor-pointer px-3 hover:bg-neutral-700"
                 onClick={(e) => {
                   e.stopPropagation();
-                  invoke("copy_clipboard", { id });
+
+                  if (e.detail === 1) {
+                    timer = setTimeout(async () => {
+                      await invoke("copy_clipboard", { id });
+                    }, 200);
+                  }
                 }}
                 onDblClick={async (e) => {
+                  clearTimeout(timer);
                   e.stopPropagation();
                   if (type !== "image" || !blob) return;
                   await writeBinaryFile(`clipboard-${id}.png`, blob, {

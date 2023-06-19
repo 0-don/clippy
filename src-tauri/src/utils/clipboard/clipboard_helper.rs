@@ -103,10 +103,10 @@ impl ClipboardHelper {
 
         let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
 
-        let r#type = if text.is_some() {
-            Set("text".to_string())
-        } else if text.is_some() && re.is_match(&text.as_deref().unwrap()) {
+        let r#type = if text.is_some() && re.is_match(text.as_ref().unwrap()) {
             Set("color".to_string())
+        } else if text.is_some() {
+            Set("text".to_string())
         } else {
             Set("image".to_string())
         };
