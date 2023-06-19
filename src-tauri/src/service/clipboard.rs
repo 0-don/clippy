@@ -12,8 +12,8 @@ pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr>
 
     let mut clip_db: Model = clipboard.insert(&db.unwrap()).await?;
 
-    if let Some(content) = &clip_db.content {
-        clip_db.content = content.get(..100).map(|s| s.to_string());
+    if clip_db.content.is_some() && clip_db.content.as_ref().unwrap().len() > 100 {
+        clip_db.content = clip_db.content.unwrap()[..100].to_string().into();
     }
 
     Ok(clip_db)
@@ -31,6 +31,7 @@ pub async fn get_clipboards_db(
     cursor: Option<u64>,
     search: Option<String>,
     star: Option<bool>,
+    show_images: Option<bool>,
 ) -> Result<Vec<Model>, DbErr> {
     let db = connection::establish_connection().await?;
 
@@ -41,6 +42,9 @@ pub async fn get_clipboards_db(
         .apply_if(search, |query, content| {
             query.filter(clipboard::Column::Content.contains(&content))
         })
+        .apply_if(show_images, |query, _| {
+            query.filter(clipboard::Column::Type.eq("image"))
+        })
         .offset(cursor)
         .limit(50)
         .order_by_desc(clipboard::Column::Id)
@@ -50,8 +54,8 @@ pub async fn get_clipboards_db(
     let parsed_model: Vec<Model> = model
         .into_iter()
         .map(|mut m| {
-            if let Some(content) = &m.content {
-                m.content = content.get(..100).map(|s| s.to_string());
+            if m.content.is_some() && m.content.as_ref().unwrap().len() > 100 {
+                m.content = m.content.unwrap()[..100].to_string().into();
             }
             m
         })
