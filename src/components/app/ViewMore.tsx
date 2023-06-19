@@ -34,7 +34,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
           </div>
           {name === "Sync Clipboard History" && (
             <SwitchField
-              checked={settings()?.synchronize}
+              checked={settings()?.synchronize || false}
               onChange={undefined}
             />
           )}
