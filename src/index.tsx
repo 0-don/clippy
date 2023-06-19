@@ -13,16 +13,15 @@ const Index = () => {
   const { init } = SettingsStore;
 
   createEffect(() => {
-    const focus = appWindow.onFocusChanged(
-      async ({ payload: focused }) => !focused && (await appWindow.hide())
-    );
     createResource(init);
+    
+    const focus = appWindow.onFocusChanged(
+      async ({ payload }) => !payload && (await appWindow.hide())
+    );
 
     const clipboardListener = listen<Clips>(
       "clipboard_listener",
-      ({ payload }) => {
-        setClipboards((prev) => [payload, ...prev]);
-      }
+      ({ payload }) => setClipboards((prev) => [payload, ...prev])
     );
 
     onCleanup(async () => {

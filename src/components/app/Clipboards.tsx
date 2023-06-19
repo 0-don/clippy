@@ -2,9 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import { BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
 import dayjs from "dayjs";
-import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
-import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { BsImages, BsStar } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
@@ -25,17 +23,15 @@ import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
 import { formatBytes } from "../../utils/helpers";
 
-dayjs.extend(localizedFormat);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
-dayjs.extend(timezone);
 
 interface ClipboardsProps {
   star?: boolean;
   search?: Accessor<string>;
 }
 
-export const Clipboards: Component<ClipboardsProps> = ({}) => {
+export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
   let myRef: HTMLDivElement;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
@@ -64,6 +60,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         "infinite_scroll_clipboards",
         {
           cursor,
+          star: !!star,
         }
       );
       setClipboards((prev) => [...prev, ...newClipboards]);
@@ -100,12 +97,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       />
     </>
   );
-
-  async function downloadBlob(blob: Blob, name = "img.png") {
-    await writeBinaryFile(name, await blob.arrayBuffer(), {
-      dir: BaseDirectory.Desktop,
-    });
-  }
 
   return (
     <Show
@@ -153,10 +144,12 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               size,
             } = clipboard;
 
-            let finalBlob = blob
-              ? new Blob([new Uint8Array(blob)], {
-                  type: "image/png",
-                })
+            const src = blob
+              ? URL.createObjectURL(
+                  new Blob([new Uint8Array(blob)], {
+                    type: "image/png",
+                  })
+                )
               : null;
 
             return (
@@ -167,10 +160,12 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   e.stopPropagation();
                   invoke("copy_clipboard", { id });
                 }}
-                onDblClick={(e) => {
+                onDblClick={async (e) => {
                   e.stopPropagation();
-                  if (type !== "image" || !finalBlob) return;
-                  downloadBlob(finalBlob, `clipboard-${id}.png`);
+                  if (type !== "image" || !blob) return;
+                  await writeBinaryFile(`clipboard-${id}.png`, blob, {
+                    dir: BaseDirectory.Desktop,
+                  });
                 }}
               >
                 <div class="flex justify-between py-3">
@@ -194,9 +189,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="truncate px-5">
-                      {finalBlob ? (
+                      {src ? (
                         <img
-                          src={URL.createObjectURL(finalBlob)}
+                          src={src}
                           // style={{ height: '200px' }}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}

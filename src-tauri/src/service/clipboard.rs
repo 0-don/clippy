@@ -38,7 +38,7 @@ pub async fn get_clipboards_db(
             query.filter(clipboard::Column::Content.contains(&content))
         })
         .offset(cursor)
-        .limit(11)
+        .limit(50)
         .order_by_desc(clipboard::Column::Id)
         .all(&db)
         .await?;
