@@ -13,17 +13,16 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "process": {
+        "exit": true
+      },
       "fs": {
-        "scope": ["$DESKTOP/*"],
-        "writeFile": false
+        "scope": ["$DESKTOP/*"]
       },
       "window": {
         "hide": true,
         "show": true,
         "setFocus": true
-      },
-      "dialog": {
-        "save": true
       },
       "globalShortcut": {
         "all": true

@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api";
+import { exit } from '@tauri-apps/api/process';
 import { Component } from "solid-js";
 import { Hotkey } from "../../@types";
 import SettingsStore from "../../store/SettingsStore";
@@ -59,7 +60,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* About */}
       {createButton("About", async () => await invoke("createAboutWindow"))}
       {/* Exit */}
-      {createButton("Exit", async () => await invoke("exit"))}
+      {createButton("Exit", async () => await exit(1))}
     </>
   );
 };

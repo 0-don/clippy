@@ -1,3 +1,4 @@
+use crate::utils::setup::APP;
 use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::{on_tray_event, Position, WindowExt};
 
@@ -21,6 +22,10 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
             let _ = win.show();
             let _ = win.set_focus();
         }
+        SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
+            "quit" => app.exit(1),
+            _ => {}
+        },
         _ => {}
     }
 }
