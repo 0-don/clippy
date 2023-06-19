@@ -3,28 +3,30 @@ import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
 import { Component, createEffect, createSignal, onCleanup } from "solid-js";
 import { Clips } from "../../@types";
-import AppStore from "../../store/AppStore";
-import SettingsStore from "../../store/SettingsStore";
+import ClipboardStore from "../../store/ClipboardStore";
 import SwitchField from "../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
 
 interface HistoryProps {}
 
 export const History: Component<HistoryProps> = ({}) => {
-  const [input, setInput] = createSignal<HTMLInputElement>();
-  const [search, setSearch] = createSignal("");
+  const [search, setSearch] = createSignal<undefined | string>();
   const [showImages, setShowImages] = createSignal(false);
-  const { setGlobalHotkeyEvent } = SettingsStore;
-  const { setClipboards } = AppStore;
+  const { setClipboards } = ClipboardStore;
 
   createEffect(() => {
+    const text = search();
+    const img = showImages();
     const delayDebounceFn = setTimeout(async () => {
       const clipboards = await invoke<Clips[]>("infinite_scroll_clipboards", {
-        search: showImages() ? undefined : search(),
-        show_images: showImages(),
+        search: img ? undefined : text,
+        show_images: img,
       });
+
+      console.log(clipboards);
+
       setClipboards(clipboards);
-    }, 100);
+    }, 0);
 
     onCleanup(() => clearTimeout(delayDebounceFn));
   });
@@ -37,13 +39,8 @@ export const History: Component<HistoryProps> = ({}) => {
             placeholder="search"
             class="w-full rounded-md border border-gray-300 px-3 py-0.5 focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
             type="text"
-            onFocus={async () => {
-              setGlobalHotkeyEvent(false);
-              await invoke("disableHotkeys");
-            }}
             value={search()}
-            ref={(e) => setInput(e)}
-            onChange={(e) => {
+            onInput={(e) => {
               setShowImages(false);
               setSearch(e.target.value);
             }}
@@ -58,7 +55,7 @@ export const History: Component<HistoryProps> = ({}) => {
         </div>
       </div>
 
-      <Clipboards search={search} />
+      <Clipboards />
     </>
   );
 };

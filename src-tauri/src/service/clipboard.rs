@@ -35,6 +35,10 @@ pub async fn get_clipboards_db(
 ) -> Result<Vec<Model>, DbErr> {
     let db = connection::establish_connection().await?;
 
+    println!(
+        "cursor: {:?}, search: {:?}, star: {:?}, show_images: {:?}",
+        cursor, search, star, show_images
+    );
     let model = clipboard::Entity::find()
         .apply_if(star, |query, starred| {
             query.filter(clipboard::Column::Star.eq(starred))

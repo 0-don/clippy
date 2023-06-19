@@ -19,7 +19,7 @@ function App() {
         <AppSidebar />
       </div>
       <div class="min-w-0 flex-1">
-        <div class="flex w-full justify-between py-1 pl-2">
+        <div class="flex w-full justify-between px-2 py-1">
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
             {sIcon()?.name?.toLocaleUpperCase()}
           </p>

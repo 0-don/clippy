@@ -7,26 +7,19 @@ import { BsImages } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
-import {
-  Accessor,
-  Component,
-  For,
-  Show,
-  createEffect,
-  createSignal,
-} from "solid-js";
+import { Component, For, Show, createEffect, createSignal } from "solid-js";
 import { Clips } from "../../@types";
 import clippy from "../../assets/clippy.png";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
 import { formatBytes } from "../../utils/helpers";
+import ClipboardStore from "../../store/ClipboardStore";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
 interface ClipboardsProps {
   star?: boolean;
-  search?: Accessor<string>;
 }
 
 export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
@@ -34,7 +27,7 @@ export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
   let timer: NodeJS.Timeout;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
-  const { clipboards, setClipboards } = AppStore;
+  const { clipboards, setClipboards } = ClipboardStore;
   const { globalHotkeyEvent, hotkeys } = SettingsStore;
 
   async function getClipboards(cursor?: number, star?: boolean) {

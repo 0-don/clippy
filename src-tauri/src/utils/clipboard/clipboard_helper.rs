@@ -9,7 +9,13 @@ use tauri::{regex::Regex, Manager};
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let mut clipboard = Clipboard::new().unwrap();
 
-    let mut text: Option<String> = clipboard.get_text().ok().unwrap().trim().to_string().into();
+    let mut text: Option<String> = clipboard
+        .get_text()
+        .ok()
+        .unwrap_or("".into())
+        .trim()
+        .to_string()
+        .into();
     if text.is_some() && text.as_ref().unwrap().len() == 0 {
         text = None;
     }
@@ -17,13 +23,10 @@ pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let image = clipboard.get_image().ok();
 
     let image: Option<RgbaImage> = if image.is_some() {
-        Some(
-            ImageBuffer::from_raw(
-                image.as_ref().unwrap().width.try_into().unwrap(),
-                image.as_ref().unwrap().height.try_into().unwrap(),
-                image.clone().unwrap().bytes.into_owned(),
-            )
-            .unwrap(),
+        ImageBuffer::from_raw(
+            image.as_ref().unwrap().width.try_into().unwrap(),
+            image.as_ref().unwrap().height.try_into().unwrap(),
+            image.clone().unwrap().bytes.into_owned(),
         )
     } else {
         None

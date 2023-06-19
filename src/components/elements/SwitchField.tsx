@@ -11,7 +11,7 @@ type SwitchProps = {
 const SwitchField: Component<SwitchProps> = ({ checked, onChange }) => {
   return (
     <Switch.Root
-      class="mx-1 inline-flex items-center"
+      class="mx-1 inline-flex cursor-pointer items-center"
       checked={checked()}
       onChange={onChange}
     >
