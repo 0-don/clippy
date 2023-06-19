@@ -1,4 +1,3 @@
-use crate::utils::setup::APP;
 use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::{on_tray_event, Position, WindowExt};
 
