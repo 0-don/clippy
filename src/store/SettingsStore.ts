@@ -5,9 +5,8 @@ import { IoCogSharp } from "solid-icons/io";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { enable } from "tauri-plugin-autostart-api";
-import { Clips, Hotkey, Settings } from "../@types";
+import { Hotkey, Settings } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
-import AppStore from "./AppStore";
 
 type SettingsTabName = "General" | "Account" | "History" | "Hotkeys";
 
@@ -70,7 +69,6 @@ function createSettingsStore() {
     updateIsProduction();
     initSettings();
     initHotkeys();
-    // initClipboards();
   };
 
   const initSettings = async () => {
@@ -86,13 +84,6 @@ function createSettingsStore() {
 
     setHotkeys(hotkeys);
     await registerHotkeys(hotkeys);
-  };
-
-  const initClipboards = async () => {
-    const clipboards = await invoke<Clips[]>("get_clipboards");
-
-    const { setClipboards } = AppStore;
-    setClipboards(clipboards);
   };
 
   return {

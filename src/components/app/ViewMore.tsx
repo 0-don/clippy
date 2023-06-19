@@ -57,7 +57,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
         async () => await invoke("createSettingsWindow")
       )}
       {/* About */}
-      {createButton("About", async () => await invoke("createAboutWindow"))},
+      {createButton("About", async () => await invoke("createAboutWindow"))}
       {/* Exit */}
       {createButton("Exit", async () => await invoke("exit"))}
     </>
