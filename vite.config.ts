@@ -4,7 +4,6 @@ import solidPlugin from "vite-plugin-solid";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
-  console.log(join(resolve(), "pages/index.html"));
   return {
     plugins: [solidPlugin()],
 
@@ -31,8 +30,8 @@ export default defineConfig(async () => {
       rollupOptions: {
         input: {
           main: join(resolve(), "pages/index.html"),
-          // about: join(resolve(), "pages/about.html"),
-          // settings: join(resolve(), "pages/settings.html"),
+          about: join(resolve(), "pages/about.html"),
+          settings: join(resolve(), "pages/settings.html"),
         },
       },
     },

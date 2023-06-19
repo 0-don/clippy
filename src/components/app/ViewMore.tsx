@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api";
-import { exit } from '@tauri-apps/api/process';
+import { exit } from "@tauri-apps/api/process";
+import { WebviewWindow } from "@tauri-apps/api/window";
 import { Component } from "solid-js";
 import { Hotkey } from "../../@types";
 import SettingsStore from "../../store/SettingsStore";
@@ -55,10 +56,19 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* Preferences */}
       {createButton(
         "Preferences",
-        async () => await invoke("createSettingsWindow")
+        () =>
+          new WebviewWindow("settings", {
+            url: "./pages/settings.html",
+          })
       )}
       {/* About */}
-      {createButton("About", async () => await invoke("createAboutWindow"))}
+      {createButton(
+        "About",
+        () =>
+          new WebviewWindow("about", {
+            url: "./pages/about.html",
+          })
+      )}
       {/* Exit */}
       {createButton("Exit", async () => await exit(1))}
     </>

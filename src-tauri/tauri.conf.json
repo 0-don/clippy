@@ -20,6 +20,7 @@
         "scope": ["$DESKTOP/*"]
       },
       "window": {
+        "create": true,
         "hide": true,
         "show": true,
         "setFocus": true
