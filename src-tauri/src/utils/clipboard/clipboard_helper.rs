@@ -8,7 +8,12 @@ use tauri::{regex::Regex, Manager};
 
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let mut clipboard = Clipboard::new().unwrap();
-    let text = clipboard.get_text().ok();
+
+    let mut text: Option<String> = clipboard.get_text().ok().unwrap().trim().to_string().into();
+    if text.is_some() && text.as_ref().unwrap().len() == 0 {
+        text = None;
+    }
+
     let image = clipboard.get_image().ok();
 
     let image: Option<RgbaImage> = if image.is_some() {
@@ -68,7 +73,7 @@ impl ClipboardHelper {
         let image = self.active_model.blob.as_ref();
 
         if text.is_none() && image.is_none() {
-            return false;
+            return true;
         }
 
         let db = connection::establish_connection().await.unwrap();
