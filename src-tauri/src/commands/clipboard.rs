@@ -3,13 +3,9 @@ extern crate alloc;
 use alloc::borrow::Cow;
 use arboard::{Clipboard, ImageData};
 use entity::clipboard::Model;
-use tauri::Manager;
 
-use crate::{
-    service::clipboard::{
-        delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
-    },
-    utils::setup::APP,
+use crate::service::clipboard::{
+    delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
 };
 
 #[tauri::command]

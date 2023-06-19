@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
+import { BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -22,6 +23,7 @@ import { Clips } from "../../@types";
 import clippy from "../../assets/clippy.png";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
+import { formatBytes } from "../../utils/helpers";
 
 dayjs.extend(localizedFormat);
 dayjs.extend(utc);
@@ -99,32 +101,10 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
-  function downloadBlob(blob: Blob, name = "img.png") {
-    // Convert your blob into a Blob URL (a special url that points to an object in the browser's memory)
-    const blobUrl = URL.createObjectURL(blob);
-
-    // Create a link element
-    const link = document.createElement("a");
-
-    // Set link's href to point to the Blob URL
-    link.href = blobUrl;
-    link.download = name;
-
-    // Append link to the body
-    document.body.appendChild(link);
-
-    // Dispatch click event on the link
-    // This is necessary as link.click() does not work on the latest firefox
-    link.dispatchEvent(
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-    );
-
-    // Remove link from body
-    document.body.removeChild(link);
+  async function downloadBlob(blob: Blob, name = "img.png") {
+    await writeBinaryFile(name, await blob.arrayBuffer(), {
+      dir: BaseDirectory.Desktop,
+    });
   }
 
   return (
@@ -220,7 +200,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           // style={{ height: '200px' }}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
-                          title={`${width}x${height} ${size}`}
+                          title={`${width}x${height} ${formatBytes(
+                            Number(size || "0")
+                          )}`}
                         />
                       ) : (
                         <div class="flex" title={content || ""}>
