@@ -13,7 +13,7 @@ use crate::{
 };
 
 #[tauri::command]
-pub async fn infinite_scroll_clipboards(
+pub async fn get_clipboards(
     cursor: Option<u64>,
     search: Option<String>,
     star: Option<bool>,

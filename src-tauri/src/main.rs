@@ -30,7 +30,7 @@ fn main() {
         .system_tray(tray::system_tray())
         .on_system_tray_event(tray::system_tray_event)
         .invoke_handler(tauri::generate_handler![
-            clipboard::infinite_scroll_clipboards,
+            clipboard::get_clipboards,
             clipboard::delete_clipboard,
             clipboard::star_clipboard,
             clipboard::copy_clipboard,

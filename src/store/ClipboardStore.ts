@@ -25,10 +25,7 @@ function createClipboardStore() {
   async function getClipboards() {
     const params = where();
 
-    const newClipboards = await invoke<Clips[]>(
-      "infinite_scroll_clipboards",
-      params
-    );
+    const newClipboards = await invoke<Clips[]>("get_clipboards", params);
     return newClipboards;
   }
 

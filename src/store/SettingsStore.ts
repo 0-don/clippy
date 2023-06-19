@@ -89,7 +89,7 @@ function createSettingsStore() {
   };
 
   const initClipboards = async () => {
-    const clipboards = await invoke<Clips[]>("infinite_scroll_clipboards");
+    const clipboards = await invoke<Clips[]>("get_clipboards");
 
     const { setClipboards } = AppStore;
     setClipboards(clipboards);
