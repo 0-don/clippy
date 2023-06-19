@@ -50,12 +50,12 @@ pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
             clip.set_text(content).unwrap();
         }
 
-        APP.get()
-            .unwrap()
-            .get_window("main")
-            .unwrap()
-            .hide()
-            .unwrap();
+        // APP.get()
+        //     .unwrap()
+        //     .get_window("main")
+        //     .unwrap()
+        //     .hide()
+        //     .unwrap();
     }
 
     Ok(())

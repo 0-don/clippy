@@ -99,6 +99,34 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
+  function downloadBlob(blob: Blob, name = "img.png") {
+    // Convert your blob into a Blob URL (a special url that points to an object in the browser's memory)
+    const blobUrl = URL.createObjectURL(blob);
+
+    // Create a link element
+    const link = document.createElement("a");
+
+    // Set link's href to point to the Blob URL
+    link.href = blobUrl;
+    link.download = name;
+
+    // Append link to the body
+    document.body.appendChild(link);
+
+    // Dispatch click event on the link
+    // This is necessary as link.click() does not work on the latest firefox
+    link.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      })
+    );
+
+    // Remove link from body
+    document.body.removeChild(link);
+  }
+
   return (
     <Show
       when={clipboards().length}
@@ -115,7 +143,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         onScroll={onScroll}
         class="h-full overflow-auto pb-5"
       >
-        {scrollToTop() && (
+        <Show when={scrollToTop()}>
           <button
             type="button"
             class="absolute bottom-5 right-4 rounded-full bg-neutral-700 px-2 py-1 hover:bg-gray-500"
@@ -130,7 +158,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               )}
             </div>
           </button>
-        )}
+        </Show>
 
         <For each={clipboards()}>
           {(clipboard, index) => {
@@ -145,6 +173,12 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               size,
             } = clipboard;
 
+            let finalBlob = blob
+              ? new Blob([new Uint8Array(blob)], {
+                  type: "image/png",
+                })
+              : null;
+
             return (
               <button
                 type="button"
@@ -155,7 +189,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                 }}
                 onDblClick={(e) => {
                   e.stopPropagation();
-                  // invoke("save_clipboard", { id });
+                  if (type !== "image" || !finalBlob) return;
+                  downloadBlob(finalBlob, `clipboard-${id}.png`);
                 }}
               >
                 <div class="flex justify-between py-3">
@@ -179,13 +214,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="truncate px-5">
-                      {blob && width && height && size ? (
+                      {finalBlob ? (
                         <img
-                          src={URL.createObjectURL(
-                            new Blob([new Uint8Array(blob)], {
-                              type: "image/png",
-                            })
-                          )}
+                          src={URL.createObjectURL(finalBlob)}
                           // style={{ height: '200px' }}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
