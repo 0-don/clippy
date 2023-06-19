@@ -6,14 +6,14 @@ type ClipboardWhere = {
   cursor?: number;
   search?: string;
   star?: boolean;
-  show_images?: boolean;
+  img?: boolean;
 };
 
 export const initialWhere: ClipboardWhere = {
   cursor: undefined,
   search: undefined,
   star: undefined,
-  show_images: undefined,
+  img: undefined,
 };
 
 function createClipboardStore() {
@@ -24,6 +24,7 @@ function createClipboardStore() {
 
   async function getClipboards() {
     const params = where();
+
     const newClipboards = await invoke<Clips[]>(
       "infinite_scroll_clipboards",
       params

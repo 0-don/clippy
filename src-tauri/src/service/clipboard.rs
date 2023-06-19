@@ -31,14 +31,10 @@ pub async fn get_clipboards_db(
     cursor: Option<u64>,
     search: Option<String>,
     star: Option<bool>,
-    show_images: Option<bool>,
+    img: Option<bool>,
 ) -> Result<Vec<Model>, DbErr> {
     let db = connection::establish_connection().await?;
 
-    println!(
-        "cursor: {:?}, search: {:?}, star: {:?}, show_images: {:?}",
-        cursor, search, star, show_images
-    );
     let model = clipboard::Entity::find()
         .apply_if(star, |query, starred| {
             query.filter(clipboard::Column::Star.eq(starred))
@@ -46,7 +42,7 @@ pub async fn get_clipboards_db(
         .apply_if(search, |query, content| {
             query.filter(clipboard::Column::Content.contains(&content))
         })
-        .apply_if(show_images, |query, _| {
+        .apply_if(img, |query, _| {
             query.filter(clipboard::Column::Type.eq("image"))
         })
         .offset(cursor)

@@ -17,9 +17,9 @@ pub async fn infinite_scroll_clipboards(
     cursor: Option<u64>,
     search: Option<String>,
     star: Option<bool>,
-    show_images: Option<bool>,
+    img: Option<bool>,
 ) -> Result<Vec<Model>, ()> {
-    let clipboards = get_clipboards_db(cursor, search, star, show_images).await;
+    let clipboards = get_clipboards_db(cursor, search, star, img).await;
     Ok(clipboards.unwrap())
 }
 

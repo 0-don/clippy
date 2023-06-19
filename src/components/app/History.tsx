@@ -15,12 +15,13 @@ export const History: Component<HistoryProps> = ({}) => {
   createEffect(() => {
     const text = search();
     const img = showImages();
+
     const delayDebounceFn = setTimeout(async () => {
       setWhere((prev) => ({
         ...prev,
         cursor: undefined,
-        search: text.length ? text : undefined,
-        show_images: img,
+        search: text.length && !img ? text : undefined,
+        img: img || undefined,
       }));
       const clipboards = await getClipboards();
       setClipboards(clipboards);
