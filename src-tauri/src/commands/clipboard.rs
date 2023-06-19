@@ -19,6 +19,10 @@ pub async fn get_clipboards(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<Vec<Model>, ()> {
+    // println!(
+    //     "cursor: {:?}, search: {:?}, star: {:?}, img: {:?}",
+    //     cursor, search, star, img
+    // );
     let clipboards = get_clipboards_db(cursor, search, star, img).await;
     Ok(clipboards.unwrap())
 }

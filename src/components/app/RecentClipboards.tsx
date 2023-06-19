@@ -5,7 +5,12 @@ import { Clipboards } from "./Clipboards";
 interface RecentClipboardsProps {}
 
 export const RecentClipboards: Component<RecentClipboardsProps> = ({}) => {
-  const { setClipboards, getClipboards } = ClipboardStore;
-  createEffect(async () => setClipboards(await getClipboards()));
+  const { setClipboards, getClipboards, resetWhere } = ClipboardStore;
+
+  createEffect(async () => {
+    resetWhere();
+    setClipboards(await getClipboards());
+  });
+
   return <Clipboards />;
 };

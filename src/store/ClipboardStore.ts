@@ -22,12 +22,8 @@ function createClipboardStore() {
 
   const resetWhere = () => setWhere(initialWhere);
 
-  async function getClipboards() {
-    const params = where();
-
-    const newClipboards = await invoke<Clips[]>("get_clipboards", params);
-    return newClipboards;
-  }
+  const getClipboards = async () =>
+    await invoke<Clips[]>("get_clipboards", where());
 
   return {
     clipboards,
