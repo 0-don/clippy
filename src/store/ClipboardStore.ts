@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api";
 import { createRoot, createSignal } from "solid-js";
 import { Clips } from "../@types";
 
@@ -8,7 +9,7 @@ type ClipboardWhere = {
   show_images?: boolean;
 };
 
-const initialWhere: ClipboardWhere = {
+export const initialWhere: ClipboardWhere = {
   cursor: undefined,
   search: undefined,
   star: undefined,
@@ -21,12 +22,22 @@ function createClipboardStore() {
 
   const resetWhere = () => setWhere(initialWhere);
 
+  async function getClipboards() {
+    const params = where();
+    const newClipboards = await invoke<Clips[]>(
+      "infinite_scroll_clipboards",
+      params
+    );
+    return newClipboards;
+  }
+
   return {
     clipboards,
     setClipboards,
     where,
     setWhere,
     resetWhere,
+    getClipboards,
   };
 }
 

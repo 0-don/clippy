@@ -12,7 +12,7 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
       {sidebarIcons().map(({ current, Icon, name }) => {
         const currentHotkey = hotkeys()?.find((key) => key.name === name);
         return (
-          <div class="relative">
+          <div class="relative" title={currentHotkey?.name}>
             <Icon
               class={`${
                 current

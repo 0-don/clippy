@@ -7,38 +7,25 @@ import { BsImages } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
-import { Component, For, Show, createEffect, createSignal } from "solid-js";
+import { Component, For, Show, createSignal } from "solid-js";
 import { Clips } from "../../@types";
 import clippy from "../../assets/clippy.png";
-import AppStore from "../../store/AppStore";
+import ClipboardStore from "../../store/ClipboardStore";
 import SettingsStore from "../../store/SettingsStore";
 import { formatBytes } from "../../utils/helpers";
-import ClipboardStore from "../../store/ClipboardStore";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
-interface ClipboardsProps {
-  star?: boolean;
-}
+interface ClipboardsProps {}
 
-export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
+export const Clipboards: Component<ClipboardsProps> = ({}) => {
   let myRef: HTMLDivElement;
   let timer: NodeJS.Timeout;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
-  const { clipboards, setClipboards } = ClipboardStore;
+  const { clipboards, setClipboards, getClipboards, setWhere } = ClipboardStore;
   const { globalHotkeyEvent, hotkeys } = SettingsStore;
-
-  async function getClipboards(cursor?: number, star?: boolean) {
-    const newClipboards = await invoke<Clips[]>("infinite_scroll_clipboards", {
-      cursor,
-      star,
-    });
-    return newClipboards;
-  }
-
-  createEffect(async () => setClipboards(await getClipboards(undefined, star)));
 
   const onScroll = async () => {
     const bottom =
@@ -51,8 +38,8 @@ export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
     }
 
     if (bottom) {
-      const cursor = clipboards().length;
-      const newClipboards = await getClipboards(cursor, star);
+      setWhere((prev) => ({ ...prev, cursor: clipboards().length }));
+      const newClipboards = await getClipboards();
       setClipboards((prev) => [...prev, ...newClipboards]);
     }
   };

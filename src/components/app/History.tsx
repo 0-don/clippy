@@ -1,8 +1,6 @@
-import { invoke } from "@tauri-apps/api";
 import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
 import { Component, createEffect, createSignal, onCleanup } from "solid-js";
-import { Clips } from "../../@types";
 import ClipboardStore from "../../store/ClipboardStore";
 import SwitchField from "../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
@@ -10,21 +8,21 @@ import { Clipboards } from "./Clipboards";
 interface HistoryProps {}
 
 export const History: Component<HistoryProps> = ({}) => {
-  const [search, setSearch] = createSignal<undefined | string>();
+  const [search, setSearch] = createSignal<string>("");
   const [showImages, setShowImages] = createSignal(false);
-  const { setClipboards } = ClipboardStore;
+  const { setClipboards, setWhere, getClipboards } = ClipboardStore;
 
   createEffect(() => {
     const text = search();
     const img = showImages();
     const delayDebounceFn = setTimeout(async () => {
-      const clipboards = await invoke<Clips[]>("infinite_scroll_clipboards", {
-        search: img ? undefined : text,
+      setWhere((prev) => ({
+        ...prev,
+        cursor: undefined,
+        search: text.length ? text : undefined,
         show_images: img,
-      });
-
-      console.log(clipboards);
-
+      }));
+      const clipboards = await getClipboards();
       setClipboards(clipboards);
     }, 0);
 
