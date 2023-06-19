@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
-import { AiOutlineSearch } from "solid-icons/ai";
-import { FaRegularImages } from "solid-icons/fa";
+import { BsCardImage } from "solid-icons/bs";
+import { RiSystemSearchLine } from "solid-icons/ri";
 import { Component, createEffect, createSignal, onCleanup } from "solid-js";
 import { Clips } from "../../@types";
 import AppStore from "../../store/AppStore";
@@ -21,10 +21,10 @@ export const History: Component<HistoryProps> = ({}) => {
     const delayDebounceFn = setTimeout(async () => {
       const clipboards = await invoke<Clips[]>("infinite_scroll_clipboards", {
         search: showImages() ? undefined : search(),
-        showImages: showImages(),
+        show_images: showImages(),
       });
       setClipboards(clipboards);
-    });
+    }, 100);
 
     onCleanup(() => clearTimeout(delayDebounceFn));
   });
@@ -49,11 +49,11 @@ export const History: Component<HistoryProps> = ({}) => {
             }}
           />
           <div class="absolute inset-y-0 right-1 flex items-center">
-            <AiOutlineSearch />
+            <RiSystemSearchLine class="dark:text-white" />
           </div>
         </div>
         <div class="flex items-center pl-2">
-          <FaRegularImages class="text-2xl" />
+          <BsCardImage class="text-2xl dark:text-white" />
           <SwitchField checked={showImages} onChange={setShowImages} />
         </div>
       </div>

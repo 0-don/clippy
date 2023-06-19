@@ -3,10 +3,10 @@ import { BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
-import { BsImages, BsStar } from "solid-icons/bs";
+import { BsImages } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
-import { VsSymbolColor } from "solid-icons/vs";
+import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
 import {
   Accessor,
   Component,
@@ -66,7 +66,7 @@ export const Clipboards: Component<ClipboardsProps> = ({ star }) => {
 
   const IconFunctions = ({ id, ...clipboard }: Clips) => (
     <>
-      <BsStar
+      <VsStarFull
         onClick={async (e) => {
           e.stopPropagation();
           await invoke<boolean>("star_clipboard", {

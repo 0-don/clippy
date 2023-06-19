@@ -5,15 +5,19 @@ use arboard::{Clipboard, ImageData};
 use entity::clipboard::Model;
 use tauri::Manager;
 
-use crate::{service::clipboard::{
-    delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
-}, utils::setup::APP};
+use crate::{
+    service::clipboard::{
+        delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
+    },
+    utils::setup::APP,
+};
 
 #[tauri::command]
 pub async fn infinite_scroll_clipboards(
     cursor: Option<u64>,
     search: Option<String>,
     star: Option<bool>,
+    show_images: Option<bool>,
 ) -> Result<Vec<Model>, ()> {
     let clipboards = get_clipboards_db(cursor, search, star).await;
     Ok(clipboards.unwrap())

@@ -16,8 +16,6 @@
     "@kobalte/core": "^0.9.6",
     "@tauri-apps/api": "^1.4.0",
     "dayjs": "^1.11.8",
-    "kobalte-pigment-monorepo": "https://github.com/kobaltedev/pigment",
-    "solid-headless": "^0.13.1",
     "solid-icons": "^1.0.8",
     "solid-js": "^1.7.6",
     "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart",

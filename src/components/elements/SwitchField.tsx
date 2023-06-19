@@ -1,52 +1,27 @@
 import { Switch } from "@kobalte/core";
+import { FiCheck } from "solid-icons/fi";
+import { VsClose } from "solid-icons/vs";
 import { Accessor, Component, Setter } from "solid-js";
 
 type SwitchProps = {
-  checked?: Accessor<boolean | undefined> | boolean;
-  onChange?: ((check: boolean) => void) | Setter<boolean>;
+  checked: Accessor<boolean>;
+  onChange: Setter<boolean>;
 };
 
-function className(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const SwitchField: Component<SwitchProps> = ({ checked, onChange }) => {
-  const res = typeof checked === "function" ? checked() : checked;
-  // const [checked, setChecked] = createSignal(false);
   return (
     <Switch.Root
-      checked={res}
-      onChange={(e) => onChange && onChange(e)}
-      class="switch"
+      class="mx-1 inline-flex items-center"
+      checked={checked()}
+      onChange={onChange}
     >
-      <Switch.Label class="switch__label">Airplane mode</Switch.Label>
-      <Switch.Input class="switch__input" />
-      <Switch.Control class="switch__control">
-        <Switch.Thumb class="switch__thumb" />
+      <Switch.Input />
+      <Switch.Control class="inline-flex h-4 w-11 items-center rounded-xl bg-zinc-500 transition-colors kb-checked:bg-green-600">
+        <Switch.Thumb class="inline-flex h-4 w-4 items-center justify-center rounded-lg bg-zinc-700 p-0.5 transition-all kb-checked:translate-x-[calc(172%)]">
+          {checked() ? <FiCheck /> : <VsClose />}
+        </Switch.Thumb>
       </Switch.Control>
     </Switch.Root>
-    // <Toggle>
-    //   {checked() && <AiOutlineCheck class="mr-3 text-white" />}
-    //   <span
-    //     aria-hidden="true"
-    //     class="pointer-events-none absolute h-full w-full rounded-md"
-    //   />
-
-    //   <span
-    //     aria-hidden="true"
-    //     class={className(
-    //       checked() ? "border-white" : "border-gray-500",
-    //       "pointer-events-none absolute mx-auto h-4 w-9 rounded-full border-2 transition-colors duration-200 ease-in-out"
-    //     )}
-    //   />
-    //   <span
-    //     aria-hidden="true"
-    //     class={className(
-    //       checked() ? "translate-x-6 bg-white" : "translate-x-1 bg-gray-500 ",
-    //       "pointer-events-none absolute left-0 flex h-2 w-2 transform items-center justify-center rounded-full text-xs shadow ring-0 transition-transform duration-200 ease-in-out"
-    //     )}
-    //   />
-    // </Toggle>
   );
 };
 
