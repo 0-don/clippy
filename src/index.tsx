@@ -4,17 +4,17 @@ import { createEffect, createResource, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
 import { Clips } from "./@types";
 import App from "./App";
-import AppStore from "./store/AppStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
+import ClipboardStore from "./store/ClipboardStore";
 
 const Index = () => {
-  const { setClipboards } = AppStore;
+  const { setClipboards } = ClipboardStore;
   const { init } = SettingsStore;
 
   createEffect(() => {
     createResource(init);
-    
+
     const focus = appWindow.onFocusChanged(
       async ({ payload }) => !payload && (await appWindow.hide())
     );
