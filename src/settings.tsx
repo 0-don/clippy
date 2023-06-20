@@ -1,6 +1,7 @@
 import { Show, render } from "solid-js/web";
 
 import { createResource } from "solid-js";
+
 import { SettingsAccount } from "./components/pages/settings/SettingsAcount";
 import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
 import { SettingsHistory } from "./components/pages/settings/SettingsHistory";

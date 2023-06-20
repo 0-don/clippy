@@ -1,7 +1,8 @@
 import { invoke } from "@tauri-apps/api";
 import { IconTypes } from "solid-icons";
-import { FaRegularKeyboard, FaRegularUser } from "solid-icons/fa";
-import { IoCogSharp } from "solid-icons/io";
+import { FiUser } from "solid-icons/fi";
+import { HiSolidCog8Tooth } from "solid-icons/hi";
+import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { enable } from "tauri-plugin-autostart-api";
@@ -22,8 +23,8 @@ function createSettingsStore() {
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
   const [settings, setSettings] = createSignal<Settings>();
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
-    { name: "General", Icon: IoCogSharp, current: true },
-    { name: "Account", Icon: FaRegularUser, current: false },
+    { name: "General", Icon: HiSolidCog8Tooth, current: true },
+    { name: "Account", Icon: FiUser, current: false },
     {
       name: "History",
       Icon: VsHistory,
@@ -31,7 +32,7 @@ function createSettingsStore() {
     },
     {
       name: "Hotkeys",
-      Icon: FaRegularKeyboard,
+      Icon: RiDeviceKeyboardFill,
       current: false,
     },
   ]);
@@ -61,8 +62,8 @@ function createSettingsStore() {
     );
   };
 
-  const getHotkey = (name: HotkeyEvent) =>
-    hotkeys().find((h) => h.name === name);
+  const getHotkey = (event: HotkeyEvent) =>
+    hotkeys().find((h) => h.event === event);
 
   const updateIsProduction = async () => {
     const isProduction = await invoke<boolean>("is_production");

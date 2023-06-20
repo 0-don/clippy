@@ -1,12 +1,14 @@
 import { BsBellFill } from "solid-icons/bs";
-import { FaRegularKeyboard, FaRegularMoon } from "solid-icons/fa";
-import { TiCogOutline } from "solid-icons/ti";
+import { FiMoon } from "solid-icons/fi";
+import { HiSolidCog8Tooth } from "solid-icons/hi";
+import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
 import SettingsStore from "../../../store/SettingsStore";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
 import { DarkMode } from "../../utils/DarkMode";
+import { IconToString } from "../../utils/IconToString";
 import { Shortcut } from "../../utils/Shortcut";
 
 interface SettingsGeneralProps {}
@@ -16,7 +18,8 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
 
   return (
     <>
-      <TextBlock Icon={FaRegularKeyboard} title="Keyboard shortcut">
+      <IconToString />
+      <TextBlock Icon={RiDeviceKeyboardFill} title="Keyboard shortcut">
         <div class="mb-2 flex items-center space-x-2 px-5 pb-2.5">
           <Show when={getHotkey("window_display_toggle")}>
             <Shortcut hotkey={getHotkey("window_display_toggle")!} />
@@ -24,7 +27,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
         </div>
       </TextBlock>
 
-      <TextBlock Icon={TiCogOutline} title="System">
+      <TextBlock Icon={HiSolidCog8Tooth} title="System">
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
             <VsRocket />
@@ -57,7 +60,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
 
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
-            <FaRegularMoon />
+            <FiMoon class="text-white" />
             <h6 class="text-sm">Switch Theme.</h6>
           </div>
           <div>
