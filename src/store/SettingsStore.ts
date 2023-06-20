@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { IconTypes } from "solid-icons";
-import { FiUser } from "solid-icons/fi";
+import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
@@ -9,7 +9,7 @@ import { enable } from "tauri-plugin-autostart-api";
 import { Hotkey, HotkeyEvent, Settings } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
 
-type SettingsTabName = "General" | "Account" | "History" | "Hotkeys";
+type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
 
 type SettingsTab = {
   name: SettingsTabName;
@@ -24,7 +24,7 @@ function createSettingsStore() {
   const [settings, setSettings] = createSignal<Settings>();
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
     { name: "General", Icon: HiSolidCog8Tooth, current: true },
-    { name: "Account", Icon: FiUser, current: false },
+    { name: "Backup", Icon: BsDatabaseFillGear, current: false },
     {
       name: "History",
       Icon: VsHistory,

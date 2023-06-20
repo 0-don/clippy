@@ -4,7 +4,7 @@ import { SettingsBackup } from "./components/pages/settings/SettingsBackup";
 import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
 import { SettingsHistory } from "./components/pages/settings/SettingsHistory";
 import { SettingsHotkeys } from "./components/pages/settings/SettingsHotkeys";
-import { Tabs } from "./components/utils/Tabs";
+import { Tabs } from "./components/navigation/SettingsTabs";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
@@ -22,7 +22,7 @@ const Settings = () => {
           <SettingsGeneral />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "Account"}>
+        <Show when={getCurrentTab()?.name === "Backup"}>
           <SettingsBackup />
         </Show>
 

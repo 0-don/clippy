@@ -19,7 +19,7 @@ const SwitchField: Component<SwitchProps> = ({ checked, onChange }) => {
       onChange={onChange}
     >
       <Switch.Input />
-      <Switch.Control class="inline-flex h-4 w-11 items-center rounded-xl bg-red-600 bg-opacity-20 transition-colors kb-checked:bg-green-600 kb-checked:bg-opacity-20">
+      <Switch.Control class="inline-flex h-4 w-11 items-center rounded-xl bg-red-600 bg-opacity-20 transition-colors kb-checked:bg-indigo-600">
         <Switch.Thumb class="inline-flex h-4 w-4 items-center justify-center rounded-lg bg-zinc-700 p-0.5 transition-all kb-checked:translate-x-[calc(172%)]">
           {getChecked() ? <FiCheck /> : <VsClose />}
         </Switch.Thumb>

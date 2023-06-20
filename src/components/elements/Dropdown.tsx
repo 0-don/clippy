@@ -50,10 +50,10 @@ export const Dropdown: Component<DropdownProps> = ({
       )}
     >
       <Combobox.Control class="rounded-md border border-gray-300 p-1 focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark">
-        <Combobox.Trigger class="flex items-center">
+        <Combobox.Trigger class="group flex items-center">
           <Combobox.Input class="w-8 cursor-pointer bg-transparent text-center outline-none" />
           <Combobox.Icon>
-            <VsArrowSwap class="rotate-90" />
+            <VsArrowSwap class="rotate-90 group-hover:text-indigo-200" />
           </Combobox.Icon>
         </Combobox.Trigger>
       </Combobox.Control>

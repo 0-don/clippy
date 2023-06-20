@@ -8,7 +8,7 @@ export const Tabs: Component<TabsProps> = ({}) => {
 
   return (
     <div class="border-b border-gray-500">
-      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <nav class="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
         <For each={tabs()}>
           {({ Icon, current, name }) => (
             <button

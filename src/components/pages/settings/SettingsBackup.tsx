@@ -1,7 +1,7 @@
 import { BsClockHistory, BsGlobeAmericas } from "solid-icons/bs";
 import { FaSolidUpload } from "solid-icons/fa";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
-import { TiArrowSyncOutline } from "solid-icons/ti";
+import { TbDatabaseStar } from "solid-icons/tb";
 import { Component, Show, createEffect, createSignal } from "solid-js";
 import SettingsStore from "../../../store/SettingsStore";
 import { Dropdown } from "../../elements/Dropdown";
@@ -24,7 +24,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
 
   return (
     <>
-      <TextBlock Icon={TiArrowSyncOutline} title="Sync">
+      <TextBlock Icon={TbDatabaseStar} title="Sync">
         <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
           <div class="flex items-center space-x-2 truncate">
             <RiDeviceSave3Fill />
