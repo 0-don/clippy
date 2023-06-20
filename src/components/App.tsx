@@ -3,11 +3,11 @@ import { FiGlobe } from "solid-icons/fi";
 import { Show } from "solid-js";
 import AppStore from "../store/AppStore";
 import SettingsStore from "../store/SettingsStore";
-import { History } from "./app/History";
-import { RecentClipboards } from "./app/RecentClipboards";
-import { StarredClipboards } from "./app/StarredClipboards";
-import { ViewMore } from "./app/ViewMore";
 import { AppSidebar } from "./navigation/AppSidebar";
+import { ClipboardHistory } from "./pages/app/ClipboardHistory";
+import { RecentClipboards } from "./pages/app/RecentClipboards";
+import { StarredClipboards } from "./pages/app/StarredClipboards";
+import { ViewMore } from "./pages/app/ViewMore";
 
 function App() {
   const { settings } = SettingsStore;
@@ -38,7 +38,7 @@ function App() {
         </Show>
 
         <Show when={sIcon()?.name === "History"}>
-          <History />
+          <ClipboardHistory />
         </Show>
 
         <Show when={sIcon()?.name === "View more"}>

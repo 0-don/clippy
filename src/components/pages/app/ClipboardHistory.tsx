@@ -1,13 +1,13 @@
 import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
 import { Component, createEffect, createSignal, onCleanup } from "solid-js";
-import ClipboardStore, { initialWhere } from "../../store/ClipboardStore";
-import SwitchField from "../elements/SwitchField";
+import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
+import SwitchField from "../../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
 
-interface HistoryProps {}
+interface ClipboardHistoryProps {}
 
-export const History: Component<HistoryProps> = ({}) => {
+export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
   const [search, setSearch] = createSignal<string>("");
   const [showImages, setShowImages] = createSignal(false);
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;

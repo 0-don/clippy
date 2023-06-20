@@ -1,5 +1,5 @@
 import { Component, createEffect } from "solid-js";
-import ClipboardStore from "../../store/ClipboardStore";
+import ClipboardStore from "../../../store/ClipboardStore";
 import { Clipboards } from "./Clipboards";
 
 interface RecentClipboardsProps {}

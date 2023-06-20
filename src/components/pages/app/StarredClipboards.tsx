@@ -1,5 +1,5 @@
 import { Component, createEffect } from "solid-js";
-import ClipboardStore, { initialWhere } from "../../store/ClipboardStore";
+import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
 import { Clipboards } from "./Clipboards";
 
 interface StarredClipboardsProps {}
