@@ -5,7 +5,7 @@ import { IoCogSharp } from "solid-icons/io";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { enable } from "tauri-plugin-autostart-api";
-import { Hotkey, Settings } from "../@types";
+import { Hotkey, HotkeyEvent, Settings } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
 
 type SettingsTabName = "General" | "Account" | "History" | "Hotkeys";
@@ -61,6 +61,9 @@ function createSettingsStore() {
     );
   };
 
+  const getHotkey = (name: HotkeyEvent) =>
+    hotkeys().find((h) => h.name === name);
+
   const updateIsProduction = async () => {
     const isProduction = await invoke<boolean>("is_production");
     setIsProduction(isProduction);
@@ -70,7 +73,7 @@ function createSettingsStore() {
   const init = () => {
     updateIsProduction();
     initSettings();
-    initHotkeys();
+    initHotkeys(true);
   };
 
   const initSettings = async () => {
@@ -78,14 +81,14 @@ function createSettingsStore() {
     setSettings(settings);
   };
 
-  const initHotkeys = async () => {
+  const initHotkeys = async (register: boolean = false) => {
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
       ...h,
       shortcut: parseShortcut(h),
     }));
 
     setHotkeys(hotkeys);
-    await registerHotkeys(hotkeys);
+    register && (await registerHotkeys(hotkeys));
   };
 
   return {
@@ -103,6 +106,9 @@ function createSettingsStore() {
     init,
     isProduction,
     getCurrentTab,
+    initSettings,
+    initHotkeys,
+    getHotkey,
   };
 }
 

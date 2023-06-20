@@ -1,5 +1,6 @@
 import { Show, render } from "solid-js/web";
 
+import { createResource } from "solid-js";
 import { SettingsAccount } from "./components/pages/settings/SettingsAcount";
 import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
 import { SettingsHistory } from "./components/pages/settings/SettingsHistory";
@@ -9,7 +10,10 @@ import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Settings = () => {
-  const { tabs, getCurrentTab } = SettingsStore;
+  const { tabs, getCurrentTab, initHotkeys, initSettings } = SettingsStore;
+
+  createResource(initHotkeys);
+  createResource(initSettings);
 
   return (
     <div class="absolute flex h-full w-full flex-col overflow-hidden bg-white text-black dark:bg-dark dark:text-white">

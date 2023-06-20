@@ -2,8 +2,7 @@ import { BsBellFill } from "solid-icons/bs";
 import { FaRegularKeyboard, FaRegularMoon } from "solid-icons/fa";
 import { TiCogOutline } from "solid-icons/ti";
 import { VsRocket } from "solid-icons/vs";
-import { Component } from "solid-js";
-import { Hotkey } from "../../../@types";
+import { Component, Show } from "solid-js";
 import SettingsStore from "../../../store/SettingsStore";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
@@ -13,16 +12,15 @@ import { Shortcut } from "../../utils/Shortcut";
 interface SettingsGeneralProps {}
 
 export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
-  const { hotkeys, settings, updateSettings } = SettingsStore;
-  const hotkey = hotkeys().find(
-    (key) => key.event === "window_display_toggle"
-  ) as Hotkey;
+  const { getHotkey, settings, updateSettings } = SettingsStore;
 
   return (
     <>
       <TextBlock Icon={FaRegularKeyboard} title="Keyboard shortcut">
         <div class="mb-2 flex items-center space-x-2 px-5 pb-2.5">
-          <Shortcut hotkey={hotkey} />
+          <Show when={getHotkey("window_display_toggle")}>
+            <Shortcut hotkey={getHotkey("window_display_toggle")!} />
+          </Show>
         </div>
       </TextBlock>
 

@@ -20,7 +20,7 @@ export const Tabs: Component<TabsProps> = ({}) => {
               } group inline-flex items-center border-b-2 px-3 py-4 text-sm font-medium`}
               onClick={() => setCurrentTab(name)}
             >
-              <Icon class="text-1xl mr-2" />
+              <Icon class="text-1xl mr-2 text-white" />
               <span>{name}</span>
             </button>
           )}
