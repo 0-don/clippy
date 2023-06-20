@@ -6,6 +6,16 @@ use crate::utils::setup::APP;
 #[tauri::command]
 pub fn window_on_mouse() {
     let win = APP.get().unwrap().get_window("main").unwrap();
+
+    println!("window_on_mouse");
+
+    if win.is_visible().unwrap() {
+        let _ = win.hide();
+    } else {
+        let _ = win.show();
+        let _ = win.set_focus();
+    }
+
     // let enigo = Enigo::new();
     // let (x, y) = enigo.mouse_location();
 

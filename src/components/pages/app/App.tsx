@@ -23,11 +23,12 @@ function App() {
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
             {sIcon()?.name?.toLocaleUpperCase()}
           </p>
-          {settings()?.synchronize ? (
+          <Show
+            when={settings()?.synchronize}
+            fallback={<BsHddFill title="offline" />}
+          >
             <FiGlobe title="online" />
-          ) : (
-            <BsHddFill title="offline" />
-          )}
+          </Show>
         </div>
         <Show when={sIcon()?.name === "Recent Clipboards"}>
           <RecentClipboards />
