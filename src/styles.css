@@ -35,50 +35,13 @@
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  display: none;
+  @apply hidden;
 }
 
 .checkbox:checked + .check-icon {
-  display: flex;
+  @apply flex;
 }
 
-.combobox__control {
-  display: inline-flex;
-  justify-content: space-between;
-  width: 200px;
-  border-radius: 6px;
-  font-size: 16px;
-  line-height: 1;
-  outline: none;
-  background-color: white;
-  border: 1px solid hsl(240 6% 90%);
-  color: hsl(240 4% 16%);
-  transition: border-color 250ms, color 250ms;
-}
-.combobox__control[data-invalid] {
-  border-color: hsl(0 72% 51%);
-  color: hsl(0 72% 51%);
-}
-.combobox__control_multi {
-  width: 100%;
-  min-width: 200px;
-  max-width: 300px;
-}
-.combobox__input {
-  appearance: none;
-  display: inline-flex;
-  min-width: 0;
-  min-height: 40px;
-  padding-left: 16px;
-  font-size: 16px;
-  background: transparent;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-  outline: none;
-}
-.combobox__input::placeholder {
-  color: hsl(240 4% 46%);
-}
 .combobox__trigger {
   appearance: none;
   display: inline-flex;

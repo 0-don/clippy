@@ -5,54 +5,62 @@ import { Component, createSignal } from "solid-js";
 import { GlobalShortcutKeysType } from "../../utils/constants";
 
 interface DropdownProps {
-  items: string[] | readonly string[] | number[];
-  value: string | number;
-  onChange: (char: GlobalShortcutKeysType | number) => void;
+  items: string[];
+  value: string;
+  onChange: (char: GlobalShortcutKeysType | string) => void;
 }
 
-const ALL_OPTIONS = ["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"];
-
-export const Dropdown: Component<DropdownProps> = ({}) => {
+export const Dropdown: Component<DropdownProps> = ({
+  items,
+  onChange,
+  value,
+}) => {
   const filter = createFilter({ sensitivity: "base" });
-  const [options, setOptions] = createSignal(ALL_OPTIONS);
+  const [options, setOptions] = createSignal(items);
+
   const onOpenChange = (
     isOpen: boolean,
     triggerMode?: Combobox.ComboboxTriggerMode
-  ) => {
-    // Show all options on ArrowDown/ArrowUp and button click.
-    if (isOpen && triggerMode === "manual") {
-      setOptions(ALL_OPTIONS);
-    }
-  };
-  const onInputChange = (value: string) => {
-    setOptions(ALL_OPTIONS.filter((option) => filter.contains(option, value)));
-  };
+  ) => isOpen && triggerMode === "manual" && setOptions(items);
+
+  const onInputChange = (value: string) =>
+    setOptions(items.filter((option) => filter.contains(option, value)));
+
   return (
     <Combobox.Root
       options={options()}
       onInputChange={onInputChange}
       onOpenChange={onOpenChange}
-      placeholder="Search a fruit…"
+      onChange={onChange}
+      defaultValue={value}
+      multiple={false}
       itemComponent={(props) => (
-        <Combobox.Item item={props.item} class="combobox__item">
+        <Combobox.Item
+          item={props.item}
+          class={`${
+            props.item.rawValue === value
+              ? "bg-indigo-600 text-white"
+              : "text-white"
+          } flex justify-between`}
+        >
           <Combobox.ItemLabel>{props.item.rawValue}</Combobox.ItemLabel>
-          <Combobox.ItemIndicator class="combobox__item-indicator">
+          <Combobox.ItemIndicator>
             <FiCheck />
           </Combobox.ItemIndicator>
         </Combobox.Item>
       )}
     >
-      <Combobox.Control class="combobox__control" aria-label="Fruit">
-        <Combobox.Input class="combobox__input" />
-        <Combobox.Trigger class="combobox__trigger">
-          <Combobox.Icon class="combobox__icon">
+      <Combobox.Control class="inline-flex w-[200px] justify-between rounded-md border border-solid border-zinc-200 bg-[white] text-base leading-none text-zinc-800">
+        <Combobox.Input class="inline-flex min-h-[40px] min-w-0 appearance-none rounded-bl-md rounded-tl-md pl-4 text-base" />
+        <Combobox.Trigger class="inline-flex w-auto appearance-none items-center justify-center rounded-br-md rounded-tr-md border-l border-solid border-l-zinc-200 bg-zinc-100 px-2.5 py-0 text-base leading-[0] text-zinc-800 transition-[250ms] duration-[background-color]">
+          <Combobox.Icon class="h-5 w-5 flex-[0_0_20px]">
             <FaSolidSort />
           </Combobox.Icon>
         </Combobox.Trigger>
       </Combobox.Control>
       <Combobox.Portal>
-        <Combobox.Content class="combobox__content">
-          <Combobox.Listbox class="combobox__listbox" />
+        <Combobox.Content class="">
+          <Combobox.Listbox class="absolute z-10 max-h-24 w-full overflow-auto rounded-md bg-dark-light py-1 text-sm shadow-lg" />
         </Combobox.Content>
       </Combobox.Portal>
     </Combobox.Root>
