@@ -8,9 +8,9 @@ import { Dropdown } from "../../elements/Dropdown";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
 
-interface SettingsAccountProps {}
+interface SettingsBackupProps {}
 
-export const SettingsAccount: Component<SettingsAccountProps> = ({}) => {
+export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const [url, setUrl] = createSignal<string>();
   const { settings, updateSettings } = SettingsStore;
 

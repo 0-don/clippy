@@ -1,8 +1,6 @@
-import { Show, render } from "solid-js/web";
-
 import { createResource } from "solid-js";
-
-import { SettingsAccount } from "./components/pages/settings/SettingsAcount";
+import { Show, render } from "solid-js/web";
+import { SettingsBackup } from "./components/pages/settings/SettingsBackup";
 import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
 import { SettingsHistory } from "./components/pages/settings/SettingsHistory";
 import { SettingsHotkeys } from "./components/pages/settings/SettingsHotkeys";
@@ -11,7 +9,7 @@ import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Settings = () => {
-  const { tabs, getCurrentTab, initHotkeys, initSettings } = SettingsStore;
+  const { getCurrentTab, initHotkeys, initSettings } = SettingsStore;
 
   createResource(initHotkeys);
   createResource(initSettings);
@@ -25,7 +23,7 @@ const Settings = () => {
         </Show>
 
         <Show when={getCurrentTab()?.name === "Account"}>
-          <SettingsAccount />
+          <SettingsBackup />
         </Show>
 
         <Show when={getCurrentTab()?.name === "History"}>
