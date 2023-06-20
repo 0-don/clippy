@@ -83,13 +83,18 @@ function createSettingsStore() {
   };
 
   const initHotkeys = async (register: boolean = false) => {
+
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
       ...h,
       shortcut: parseShortcut(h),
     }));
 
+
     setHotkeys(hotkeys);
-    register && (await registerHotkeys(hotkeys));
+
+    if(register ) await registerHotkeys(hotkeys);
+
+ 
   };
 
   return {

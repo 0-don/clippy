@@ -18,9 +18,9 @@ const Settings = () => {
     <div class="absolute flex h-full w-full flex-col overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
       <Tabs />
       <div class="p-5 dark:text-white">
-        <Show when={getCurrentTab()?.name === "General"}>
+        {/* <Show when={getCurrentTab()?.name === "General"}>
           <SettingsGeneral />
-        </Show>
+        </Show> */}
 
         <Show when={getCurrentTab()?.name === "Backup"}>
           <SettingsBackup />
