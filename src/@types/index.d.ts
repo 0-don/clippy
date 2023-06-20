@@ -26,6 +26,15 @@ export type Hotkey = {
   shortcut: string; // not in db added for convenience
 };
 
+export type Settings = {
+  id: number;
+  startup: boolean;
+  notification: boolean;
+  synchronize: boolean;
+  synchronize_time: number;
+  dark_mode: boolean;
+};
+
 export type HotkeyEvent =
   | "window_display_toggle"
   | "recent_clipboards"
@@ -38,12 +47,3 @@ export type HotkeyEvent =
   | "exit"
   | "toggle_dev_tools"
   | "scroll_to_top";
-
-export type Settings = {
-  id: number;
-  startup: boolean;
-  notification: boolean;
-  synchronize: boolean;
-  synchronize_time: number;
-  dar_kmode: boolean;
-};

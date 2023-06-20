@@ -5,7 +5,7 @@ import { Accessor, Component, Setter } from "solid-js";
 
 type SwitchProps = {
   checked: Accessor<boolean> | boolean;
-  onChange: Setter<boolean> | undefined;
+  onChange: (val: boolean) => Promise<void> | Setter<boolean> | undefined;
 };
 
 const SwitchField: Component<SwitchProps> = ({ checked, onChange }) => {

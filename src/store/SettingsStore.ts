@@ -41,6 +41,8 @@ function createSettingsStore() {
       prev.map((tab) => ({ ...tab, current: tab.name === tabName }))
     );
 
+  const getCurrentTab = () => tabs().find((tab) => tab.current);
+
   const updateSettings = async (
     settings: Settings,
     upload: boolean | undefined = true
@@ -100,6 +102,7 @@ function createSettingsStore() {
     updateHotkey,
     init,
     isProduction,
+    getCurrentTab,
   };
 }
 

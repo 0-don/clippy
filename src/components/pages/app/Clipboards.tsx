@@ -9,10 +9,10 @@ import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
 import { Component, For, Show, createSignal } from "solid-js";
 import { Clips } from "../../../@types";
+import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import SettingsStore from "../../../store/SettingsStore";
 import { formatBytes } from "../../../utils/helpers";
-import clippy from "../../assets/clippy.png";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
