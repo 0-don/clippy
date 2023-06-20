@@ -46,12 +46,12 @@ export const SettingsAccount: Component<SettingsAccountProps> = ({}) => {
             <div class="flex items-center">
               <p class="text-sm">Minutes:&nbsp;</p>
               <Dropdown
-                items={[1, 5, 10, 15, 30, 60]}
-                value={(settings()?.synchronize_time || 60) / 60}
+                items={["1", "5", "10", "15", "30", "60"]}
+                value={"" + (settings()?.synchronize_time || 60) / 60}
                 onChange={async (syncTime) => {
                   await updateSettings({
                     ...settings()!,
-                    synchronize_time: (syncTime as number) * 60,
+                    synchronize_time: Number(syncTime) * 60,
                   });
                 }}
               />

@@ -18,7 +18,7 @@ function App() {
     <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
       <IconToString />
       <div class="flex flex-col items-center space-y-7 bg-gray-200 px-3.5 pt-5 dark:bg-dark-light">
-        <AppSidebar />I
+        <AppSidebar />
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex w-full justify-between px-2 py-1">

@@ -1,10 +1,10 @@
-import { BsStarFill } from "solid-icons/bs";
+import { FiArrowUp } from "solid-icons/fi";
 import { Component } from "solid-js";
 
 interface IconToStringProps {}
 
 export const IconToString: Component<IconToStringProps> = ({}) => {
-  const html = <BsStarFill />;
+  const html = <FiArrowUp />;
   // @ts-ignore
   console.log({ icon: JSON.stringify(html.outerHTML) });
   return <>{html}</>;
