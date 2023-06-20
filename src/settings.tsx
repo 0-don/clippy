@@ -1,18 +1,16 @@
-import { createResource } from "solid-js";
 import { Show, render } from "solid-js/web";
+import { Tabs } from "./components/navigation/SettingsTabs";
 import { SettingsBackup } from "./components/pages/settings/SettingsBackup";
-import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
 import { SettingsHistory } from "./components/pages/settings/SettingsHistory";
 import { SettingsHotkeys } from "./components/pages/settings/SettingsHotkeys";
-import { Tabs } from "./components/navigation/SettingsTabs";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Settings = () => {
   const { getCurrentTab, initHotkeys, initSettings } = SettingsStore;
 
-  createResource(initHotkeys);
-  createResource(initSettings);
+  initHotkeys(false);
+  initSettings();
 
   return (
     <div class="absolute flex h-full w-full flex-col overflow-hidden bg-white text-black dark:bg-dark dark:text-white">

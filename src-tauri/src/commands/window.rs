@@ -7,8 +7,6 @@ use crate::utils::setup::APP;
 pub fn window_on_mouse() {
     let win = APP.get().unwrap().get_window("main").unwrap();
 
-    println!("window_on_mouse");
-
     if win.is_visible().unwrap() {
         let _ = win.hide();
     } else {

@@ -15,7 +15,6 @@ export const SettingsHotkeys: Component<SettingsHotkeysProps> = ({}) => {
         <div class="h-64 overflow-auto px-5">
           <For each={hotkeys()}>
             {(hotkey, index) => {
-              console.log(hotkey.event);
               return (
                 <>
                   <div class="flex items-center px-0.5 py-4">

@@ -16,7 +16,6 @@ export const parseShortcut = (hotkey: Hotkey) => {
 };
 
 export async function registerHotkeys(hotkeys: Hotkey[]) {
-  console.log("?")
   await unregisterAll();
 
   // unregister all hotkeys
@@ -36,9 +35,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   ) {
     try {
       await register(mainHotkey.shortcut, () => invoke("window_on_mouse"));
-    } catch (_) {
-      console.log(_)
-    }
+    } catch (_) {}
   }
   // ############################################
 }
