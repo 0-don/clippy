@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, For } from "solid-js";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
 
@@ -8,8 +8,8 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
   const { hotkeys, globalHotkeyEvent } = SettingsStore;
   const { sidebarIcons, updateSidebarIcons } = AppStore;
   return (
-    <>
-      {sidebarIcons().map(({ current, Icon, name }) => {
+    <For each={sidebarIcons()}>
+      {({ current, Icon, name }) => {
         const currentHotkey = hotkeys()?.find((key) => key.name === name);
         return (
           <div class="relative" title={currentHotkey?.name}>
@@ -29,7 +29,7 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
             )}
           </div>
         );
-      })}
-    </>
+      }}
+    </For>
   );
 };

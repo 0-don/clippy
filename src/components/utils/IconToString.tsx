@@ -1,11 +1,11 @@
-import { RiDeviceKeyboardFill } from "solid-icons/ri";
+import { BsStarFill } from "solid-icons/bs";
 import { Component } from "solid-js";
 
 interface IconToStringProps {}
 
 export const IconToString: Component<IconToStringProps> = ({}) => {
-  const html = <RiDeviceKeyboardFill />;
+  const html = <BsStarFill />;
   // @ts-ignore
-  log({ icon: JSON.stringify(html.outerHTML) });
+  console.log({ icon: JSON.stringify(html.outerHTML) });
   return <>{html}</>;
 };

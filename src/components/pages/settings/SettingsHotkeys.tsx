@@ -14,16 +14,19 @@ export const SettingsHotkeys: Component<SettingsHotkeysProps> = ({}) => {
       <TextBlock Icon={FaSolidKeyboard} title="Change your Hotkeys">
         <div class="h-64 overflow-auto px-5">
           <For each={hotkeys()}>
-            {(hotkey, index) => (
-              <>
-                <div class="flex items-center px-0.5 py-4">
-                  <Shortcut hotkey={hotkey} />
-                </div>
-                {hotkeys().length !== index() + 1 && (
-                  <hr class="border-zinc-700" />
-                )}
-              </>
-            )}
+            {(hotkey, index) => {
+              console.log(hotkey.event)
+              return (
+                <>
+                  <div class="flex items-center px-0.5 py-4">
+                    <Shortcut hotkey={hotkey} />
+                  </div>
+                  {hotkeys().length !== index() + 1 && (
+                    <hr class="border-zinc-700" />
+                  )}
+                </>
+              );
+            }}
           </For>
         </div>
       </TextBlock>

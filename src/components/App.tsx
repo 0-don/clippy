@@ -8,6 +8,7 @@ import { ClipboardHistory } from "./pages/app/ClipboardHistory";
 import { RecentClipboards } from "./pages/app/RecentClipboards";
 import { StarredClipboards } from "./pages/app/StarredClipboards";
 import { ViewMore } from "./pages/app/ViewMore";
+import { IconToString } from "./utils/IconToString";
 
 function App() {
   const { settings } = SettingsStore;
@@ -15,8 +16,9 @@ function App() {
 
   return (
     <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
+      <IconToString />
       <div class="flex flex-col items-center space-y-7 bg-gray-200 px-3.5 pt-5 dark:bg-dark-light">
-        <AppSidebar />
+        <AppSidebar />I
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex w-full justify-between px-2 py-1">

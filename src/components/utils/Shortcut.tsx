@@ -1,4 +1,4 @@
-import { Component, Show, createEffect } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Hotkey } from "../../@types";
 import SettingsStore from "../../store/SettingsStore";
 import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
@@ -12,10 +12,6 @@ interface ShortcutProps {
 export const Shortcut: Component<ShortcutProps> = ({ hotkey }) => {
   const { updateHotkey, hotkeys } = SettingsStore;
   const { icon, status, ctrl, alt, shift, key, name } = hotkey;
-
-  createEffect(() => {
-    console.log(hotkeys());
-  });
 
   return (
     <>
