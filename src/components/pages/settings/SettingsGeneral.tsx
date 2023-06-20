@@ -8,7 +8,6 @@ import SettingsStore from "../../../store/SettingsStore";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
 import { DarkMode } from "../../utils/DarkMode";
-import { IconToString } from "../../utils/IconToString";
 import { Shortcut } from "../../utils/Shortcut";
 
 interface SettingsGeneralProps {}
@@ -18,7 +17,6 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
 
   return (
     <>
-      <IconToString />
       <TextBlock Icon={RiDeviceKeyboardFill} title="Keyboard shortcut">
         <div class="mb-2 flex items-center space-x-2 px-5 pb-2.5">
           <Show when={getHotkey("window_display_toggle")}>

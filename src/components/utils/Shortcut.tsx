@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Hotkey } from "../../@types";
 import SettingsStore from "../../store/SettingsStore";
 import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
@@ -20,25 +20,23 @@ export const Shortcut: Component<ShortcutProps> = ({ hotkey }) => {
           <div innerHTML={JSON.parse(icon)} class="relative" />
         </div>
 
-        {status && (
-          <>
-            <CheckBox
-              checked={ctrl}
-              onChange={() => updateHotkey({ ...hotkey, ctrl: !ctrl })}
-              text="Ctrl"
-            />
-            <CheckBox
-              checked={alt}
-              onChange={() => updateHotkey({ ...hotkey, alt: !alt })}
-              text="Alt"
-            />
-            <CheckBox
-              checked={shift}
-              onChange={() => updateHotkey({ ...hotkey, shift: !shift })}
-              text="Shift"
-            />
-          </>
-        )}
+        <Show when={status}>
+          <CheckBox
+            checked={ctrl}
+            onChange={() => updateHotkey({ ...hotkey, ctrl: !ctrl })}
+            text="Ctrl"
+          />
+          <CheckBox
+            checked={alt}
+            onChange={() => updateHotkey({ ...hotkey, alt: !alt })}
+            text="Alt"
+          />
+          <CheckBox
+            checked={shift}
+            onChange={() => updateHotkey({ ...hotkey, shift: !shift })}
+            text="Shift"
+          />
+        </Show>
         <Dropdown
           items={GLOBAL_SHORTCUT_KEYS}
           value={key}

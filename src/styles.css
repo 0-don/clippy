@@ -33,6 +33,15 @@
   @apply bg-transparent;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.checkbox:checked + .check-icon {
+  display: flex;
+}
+
 .combobox__control {
   display: inline-flex;
   justify-content: space-between;
