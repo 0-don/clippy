@@ -67,6 +67,8 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
         () =>
           new WebviewWindow("about", {
             url: "./pages/about.html",
+            width: 375,
+            height: 600,
           })
       )}
       {/* Exit */}
