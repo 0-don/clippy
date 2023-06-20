@@ -60,6 +60,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
           new WebviewWindow("settings", {
             url: "./pages/settings.html",
             alwaysOnTop: true,
+            title: "Settings",
           })
       )}
       {/* About */}
@@ -68,6 +69,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
         () =>
           new WebviewWindow("about", {
             url: "./pages/about.html",
+            title: "About",
             width: 375,
             height: 600,
             alwaysOnTop: true,

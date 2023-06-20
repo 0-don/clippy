@@ -1,6 +1,6 @@
 import { Combobox, createFilter } from "@kobalte/core";
-import { FaSolidSort } from "solid-icons/fa";
 import { FiCheck } from "solid-icons/fi";
+import { VsArrowSwap } from "solid-icons/vs";
 import { Component, createSignal } from "solid-js";
 import { GlobalShortcutKeysType } from "../../utils/constants";
 
@@ -34,6 +34,7 @@ export const Dropdown: Component<DropdownProps> = ({
       onChange={onChange}
       defaultValue={value}
       multiple={false}
+      virtualized={true}
       itemComponent={(props) => (
         <Combobox.Item
           item={props.item}
@@ -50,11 +51,11 @@ export const Dropdown: Component<DropdownProps> = ({
         </Combobox.Item>
       )}
     >
-      <Combobox.Control class="inline-flex w-[200px] justify-between rounded-md border border-solid border-zinc-200 bg-[white] text-base leading-none text-zinc-800">
-        <Combobox.Input class="inline-flex min-h-[40px] min-w-0 appearance-none rounded-bl-md rounded-tl-md pl-4 text-base" />
-        <Combobox.Trigger class="inline-flex w-auto appearance-none items-center justify-center rounded-br-md rounded-tr-md border-l border-solid border-l-zinc-200 bg-zinc-100 px-2.5 py-0 text-base leading-[0] text-zinc-800 transition-[250ms] duration-[background-color]">
-          <Combobox.Icon class="h-5 w-5 flex-[0_0_20px]">
-            <FaSolidSort />
+      <Combobox.Control class="rounded-md border border-gray-300 p-1 focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark">
+        <Combobox.Trigger class="flex items-center">
+          <Combobox.Input class="w-8 cursor-pointer bg-transparent outline-none text-center" />
+          <Combobox.Icon class="">
+            <VsArrowSwap class="rotate-90" />
           </Combobox.Icon>
         </Combobox.Trigger>
       </Combobox.Control>
