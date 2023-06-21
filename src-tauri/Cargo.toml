@@ -11,13 +11,13 @@ edition = "2021"
 members = [".", "migration", "entity"]
 
 [build-dependencies]
-tauri-build = { version = "1.3", features = [] }
+tauri-build = { version = "1.4", features = [] }
 
 [dependencies]
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1.28.2", features = ["full"] }
-tauri = { version = "1.3", features = [ "app-all", "window-create",
+tauri = { version = "1.4", features = [ "app-all", "window-create",
   "process-exit",
   "global-shortcut-all",
   "system-tray",
