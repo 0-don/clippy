@@ -1,6 +1,7 @@
 use clipboard_master::Master;
 use once_cell::sync::OnceCell;
 use tauri::{LogicalSize, Manager};
+use window_shadows::set_shadow;
 
 use crate::utils::clipboard::clipboard_handler::Handler;
 
@@ -14,6 +15,9 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
 
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
 
+    #[cfg(any(windows, target_os = "macos"))]
+    set_shadow(&window, true).unwrap();
+    
     #[cfg(debug_assertions)]
     {
         window.open_devtools();

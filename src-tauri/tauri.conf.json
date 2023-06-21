@@ -59,7 +59,9 @@
         "width": 375,
         "height": 600,
         "alwaysOnTop": true,
-        "visible": false
+        "visible": false,
+        "decorations": false,
+        "transparent": true
       }
     ]
   }
