@@ -11,35 +11,34 @@ interface ShortcutProps {
 
 export const Shortcut: Component<ShortcutProps> = (props) => {
   const { updateHotkey } = SettingsStore;
-  const { icon, status, ctrl, alt, shift, key, name } = props.hotkey;
 
   return (
     <>
       <div class="flex w-full items-center space-x-2.5 text-sm ">
         <div class="w-8">
-          <div innerHTML={JSON.parse(icon)} class="relative" />
+          <div innerHTML={JSON.parse(props.hotkey.icon)} class="relative" />
         </div>
 
-        <Show when={status}>
+        <Show when={props.hotkey.status}>
           <CheckBox
-            checked={ctrl}
-            onChange={() => updateHotkey({ ...props.hotkey, ctrl: !ctrl })}
+            checked={props.hotkey.ctrl}
+            onChange={(ctrl) => updateHotkey({ ...props.hotkey, ctrl })}
             text="Ctrl"
           />
           <CheckBox
-            checked={alt}
-            onChange={() => updateHotkey({ ...props.hotkey, alt: !alt })}
+            checked={props.hotkey.alt}
+            onChange={(alt) => updateHotkey({ ...props.hotkey, alt })}
             text="Alt"
           />
           <CheckBox
-            checked={shift}
-            onChange={() => updateHotkey({ ...props.hotkey, shift: !shift })}
+            checked={props.hotkey.shift}
+            onChange={(shift) => updateHotkey({ ...props.hotkey, shift })}
             text="Shift"
           />
         </Show>
         <Dropdown
           items={GLOBAL_SHORTCUT_KEYS as unknown as string[]}
-          value={key}
+          value={props.hotkey.key}
           onChange={(currentKey) => {
             if (typeof currentKey === "number") return;
             updateHotkey({
@@ -49,7 +48,7 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
             });
           }}
         />
-        <p class="flex w-full justify-end truncate">{name}</p>
+        <p class="flex w-full justify-end truncate">{props.hotkey.name}</p>
       </div>
     </>
   );

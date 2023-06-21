@@ -7,8 +7,6 @@ license = "MIT"
 repository = "https://github.com/Don-Cryptus/clippy"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [workspace]
 members = [".", "migration", "entity"]
 
@@ -48,9 +46,9 @@ default-features = false
 custom-protocol = ["tauri/custom-protocol"]
 
 
-[profile.release]
-panic = "abort"
-codegen-units = 1
-lto = true
-opt-level = "s"
-strip = true
+# [profile.release]
+# panic = "abort"
+# codegen-units = 1
+# lto = true
+# opt-level = "s"
+# strip = true

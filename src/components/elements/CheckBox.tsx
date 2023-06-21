@@ -4,12 +4,12 @@ import { Component } from "solid-js";
 interface CheckBoxProps {
   text: string;
   checked: boolean;
-  onChange: () => void;
+  onChange: (check: boolean) => void;
 }
 
 export const CheckBox: Component<CheckBoxProps> = (props) => {
   return (
-    <button type="button" class="flex items-center" onClick={props.onChange}>
+    <button type="button" class="flex items-center" onClick={() =>props.onChange(!props.checked)}>
       <div class="relative flex h-[1.1rem] w-[1.1rem] flex-shrink-0 items-center justify-center rounded-sm border border-gray-400 bg-white dark:border-gray-700 dark:bg-dark">
         <input
           type="checkbox"
