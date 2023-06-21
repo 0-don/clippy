@@ -8,20 +8,22 @@ export const DarkMode: Component<DarkModeProps> = ({}) => {
   const { settings, updateSettings } = SettingsStore;
 
   createEffect(() => {
+    console.log(settings());
     if (settings()?.dark_mode) {
-      document.querySelector("html")?.classList?.add?.("dark");
+      console;
+      document.querySelector("body")?.classList?.add?.("dark");
     } else {
-      document.querySelector("html")?.classList?.remove?.("dark");
+      document.querySelector("body")?.classList?.remove?.("dark");
     }
   });
 
   return (
     <SwitchField
-      checked={settings()?.dark_mode || false}
-      onChange={() =>
+      checked={settings()?.dark_mode}
+      onChange={(dark_mode) =>
         updateSettings({
           ...settings()!,
-          dark_mode: !settings()?.dark_mode,
+          dark_mode,
         })
       }
     />

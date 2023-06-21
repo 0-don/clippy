@@ -5,7 +5,7 @@ import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
-import { enable } from "tauri-plugin-autostart-api";
+import { disable, enable } from "tauri-plugin-autostart-api";
 import { Hotkey, HotkeyEvent, Settings } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
 
@@ -18,7 +18,6 @@ type SettingsTab = {
 };
 
 function createSettingsStore() {
-  const [isProduction, setIsProduction] = createSignal<boolean>(false);
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
   const [settings, setSettings] = createSignal<Settings>();
@@ -48,9 +47,11 @@ function createSettingsStore() {
     settings: Settings,
     upload: boolean | undefined = true
   ) => {
-    console.log(settings);
     if (upload) await invoke("update_settings", { settings });
     setSettings(settings);
+
+    // const env = import.meta.env;
+    // env.PROD && settings.startup ? await enable() : await disable();
   };
 
   const updateHotkey = async (
@@ -66,14 +67,7 @@ function createSettingsStore() {
   const getHotkey = (event: HotkeyEvent) =>
     hotkeys().find((h) => h.event === event);
 
-  const updateIsProduction = async () => {
-    const isProduction = await invoke<boolean>("is_production");
-    setIsProduction(isProduction);
-    if (isProduction) await enable();
-  };
-
   const init = () => {
-    updateIsProduction();
     initSettings();
     initHotkeys(true);
   };
@@ -81,6 +75,9 @@ function createSettingsStore() {
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
+
+    const env = import.meta.env;
+    env.PROD && settings.startup ? await enable() : await disable();
   };
 
   const initHotkeys = async (register: boolean = false) => {
@@ -109,7 +106,6 @@ function createSettingsStore() {
     updateSettings,
     updateHotkey,
     init,
-    isProduction,
     getCurrentTab,
     initSettings,
     initHotkeys,

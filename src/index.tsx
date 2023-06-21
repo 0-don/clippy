@@ -12,9 +12,9 @@ const Index = () => {
   const { setClipboards } = ClipboardStore;
   const { init } = SettingsStore;
 
-  createEffect(() => {
-    createResource(init);
+  createResource(init);
 
+  createEffect(() => {
     const focus = appWindow.onFocusChanged(
       async ({ payload }) => !payload && (await appWindow.hide())
     );

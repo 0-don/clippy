@@ -8,15 +8,15 @@ type SwitchProps = {
   onChange: (val: boolean) => Promise<void> | Setter<boolean> | undefined;
 };
 
-const SwitchField: Component<SwitchProps> = ({ checked, onChange }) => {
+const SwitchField: Component<SwitchProps> = (props) => {
   const getChecked = () =>
-    typeof checked === "function" ? checked() : checked;
+    typeof props.checked === "function" ? props.checked() : props.checked;
 
   return (
     <Switch.Root
       class="mx-1 inline-flex cursor-pointer items-center"
       checked={getChecked()}
-      onChange={onChange}
+      onChange={props.onChange}
     >
       <Switch.Input />
       <Switch.Control class="inline-flex h-4 w-11 items-center rounded-xl bg-red-600 bg-opacity-20 transition-colors kb-checked:bg-indigo-600">
