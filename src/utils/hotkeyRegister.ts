@@ -34,7 +34,9 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
     mainHotkey.status
   ) {
     try {
-      await register(mainHotkey.shortcut, () => invoke("window_on_mouse"));
+      await register(mainHotkey.shortcut, () =>
+        invoke("window_display_toggle")
+      );
     } catch (_) {}
   }
   // ############################################

@@ -4,7 +4,7 @@ use tauri_plugin_positioner::{Position, WindowExt};
 use crate::utils::setup::APP;
 
 #[tauri::command]
-pub fn window_on_mouse() {
+pub fn window_display_toggle() {
     let win = APP.get().unwrap().get_window("main").unwrap();
 
     if win.is_visible().unwrap() {
@@ -20,10 +20,4 @@ pub fn window_on_mouse() {
     // let _ = win.set_position(PhysicalPosition::new(x, y));
 
     let _ = win.move_window(Position::BottomRight);
-}
-
-#[tauri::command]
-pub fn is_production() -> bool {
-    let state = if cfg!(debug_assertions) { false } else { true };
-    state
 }

@@ -28,8 +28,7 @@ fn main() {
             hotkey::update_hotkey,
             settings::get_settings,
             settings::update_settings,
-            window::window_on_mouse,
-            window::is_production,
+            window::window_display_toggle,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
