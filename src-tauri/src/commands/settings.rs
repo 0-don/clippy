@@ -1,7 +1,6 @@
-use entity::settings::{self, Model};
-use sea_orm::{DatabaseConnection, DbErr, EntityTrait};
+use entity::settings::Model;
 
-use crate::connection;
+use crate::service::settings::{get_settings_db, update_settings_db};
 
 #[tauri::command]
 pub async fn get_settings() -> Result<Model, String> {
@@ -10,10 +9,9 @@ pub async fn get_settings() -> Result<Model, String> {
     Ok(res.unwrap())
 }
 
-async fn get_settings_db() -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::establish_connection().await?;
+#[tauri::command]
+pub async fn update_settings(settings: Model) -> Result<Model, String> {
+    let res = update_settings_db(settings).await;
 
-    let settings = settings::Entity::find_by_id(1).one(&db).await?;
-
-    Ok(settings.unwrap())
+    Ok(res.unwrap())
 }

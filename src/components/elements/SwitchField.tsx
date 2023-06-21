@@ -4,7 +4,7 @@ import { VsClose } from "solid-icons/vs";
 import { Accessor, Component, Setter } from "solid-js";
 
 type SwitchProps = {
-  checked: Accessor<boolean> | boolean;
+  checked?: Accessor<boolean> | boolean;
   onChange: (val: boolean) => Promise<void> | Setter<boolean> | undefined;
 };
 

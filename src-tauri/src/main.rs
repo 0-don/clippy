@@ -5,21 +5,11 @@ mod commands;
 mod connection;
 mod service;
 mod utils;
-
+use commands::{clipboard, hotkey, settings, window};
+use tauri_plugin_autostart::MacosLauncher;
 use utils::{setup, tray};
 
-use commands::{clipboard, hotkey, settings, window};
-
-use tauri_plugin_autostart::MacosLauncher;
-
 fn main() {
-    // if cfg!(debug_assertions) {
-    //     tracing_subscriber::fmt()
-    //         .with_max_level(tracing::Level::DEBUG)
-    //         .with_test_writer()
-    //         .init();
-    // }
-
     tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_autostart::init(
@@ -36,6 +26,7 @@ fn main() {
             clipboard::copy_clipboard,
             hotkey::get_hotkeys,
             settings::get_settings,
+            settings::update_settings,
             window::window_on_mouse,
             window::is_production,
         ])

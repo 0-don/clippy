@@ -16,7 +16,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
   const { getHotkey, settings, updateSettings } = SettingsStore;
 
   return (
-    <>
+    <Show when={settings()}>
       <TextBlock Icon={RiDeviceKeyboardFill} title="Keyboard shortcut">
         <div class="mb-2 flex items-center space-x-2 px-5 pb-2.5">
           <Show when={getHotkey("window_display_toggle")}>
@@ -33,7 +33,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
           </div>
           <div>
             <SwitchField
-              checked={settings()?.startup || false}
+              checked={settings()?.startup}
               onChange={(check: boolean) =>
                 updateSettings({ ...settings()!, startup: check })
               }
@@ -48,7 +48,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
           </div>
           <div>
             <SwitchField
-              checked={settings()?.notification || false}
+              checked={settings()?.notification}
               onChange={(check: boolean) =>
                 updateSettings({ ...settings()!, notification: check })
               }
@@ -66,6 +66,6 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
           </div>
         </div>
       </TextBlock>
-    </>
+    </Show>
   );
 };
