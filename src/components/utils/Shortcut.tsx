@@ -10,7 +10,7 @@ interface ShortcutProps {
 }
 
 export const Shortcut: Component<ShortcutProps> = ({ hotkey }) => {
-  const { updateHotkey, hotkeys } = SettingsStore;
+  const { updateHotkey } = SettingsStore;
   const { icon, status, ctrl, alt, shift, key, name } = hotkey;
 
   return (

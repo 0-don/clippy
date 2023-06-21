@@ -60,7 +60,7 @@ function createSettingsStore() {
     hotkey: Hotkey,
     upload: boolean | undefined = true
   ) => {
-    // if (upload) await invoke("updateHotkey", hotkey as Hotkey);
+    if (upload) await invoke("update_hotkey", { hotkey });
     setHotkeys((prev) =>
       prev.map((h) => (h.id === hotkey.id ? { ...h, ...hotkey } : h))
     );
