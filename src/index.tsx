@@ -35,7 +35,7 @@ const Index = () => {
 
     const initHotkeysListener = listen("init_hotkeys_listener", () => {
       console.log("init");
-      initHotkeys();
+      initHotkeys(true);
     });
 
     // onCleanup(async () => {

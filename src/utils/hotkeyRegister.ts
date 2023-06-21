@@ -67,6 +67,12 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
         await unregister(key);
       } catch (_) {}
     }
+
+    for (const hotkey of leftOverHotkeys) {
+      try {
+        await unregister(hotkey.shortcut);
+      } catch (_) {}
+    }
     setGlobalHotkeyEvent(false);
   }, 5000);
 }
