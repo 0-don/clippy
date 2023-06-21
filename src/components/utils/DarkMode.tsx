@@ -5,17 +5,9 @@ import SwitchField from "../elements/SwitchField";
 interface DarkModeProps {}
 
 export const DarkMode: Component<DarkModeProps> = ({}) => {
-  const { settings, updateSettings } = SettingsStore;
+  const { settings, updateSettings, darkMode } = SettingsStore;
 
-  createEffect(() => {
-    console.log(settings());
-    if (settings()?.dark_mode) {
-      console;
-      document.querySelector("body")?.classList?.add?.("dark");
-    } else {
-      document.querySelector("body")?.classList?.remove?.("dark");
-    }
-  });
+  createEffect(darkMode);
 
   return (
     <SwitchField

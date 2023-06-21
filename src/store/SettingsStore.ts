@@ -50,8 +50,10 @@ function createSettingsStore() {
     if (upload) await invoke("update_settings", { settings });
     setSettings(settings);
 
-    // const env = import.meta.env;
-    // env.PROD && settings.startup ? await enable() : await disable();
+    try {
+      const env = import.meta.env;
+      env.PROD && settings.startup ? await enable() : await disable();
+    } catch (_) {}
   };
 
   const updateHotkey = async (
@@ -64,20 +66,28 @@ function createSettingsStore() {
     );
   };
 
+  const darkMode = () =>
+    settings()?.dark_mode
+      ? document.querySelector("html")?.classList?.add?.("dark")
+      : document.querySelector("html")?.classList?.remove?.("dark");
+
   const getHotkey = (event: HotkeyEvent) =>
     hotkeys().find((h) => h.event === event);
 
-  const init = () => {
-    initSettings();
+  const init = async () => {
+    await initSettings();
     initHotkeys(true);
+    darkMode();
   };
 
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
 
-    const env = import.meta.env;
-    env.PROD && settings.startup ? await enable() : await disable();
+    try {
+      const env = import.meta.env;
+      env.PROD && settings.startup ? await enable() : await disable();
+    } catch (_) {}
   };
 
   const initHotkeys = async (register: boolean = false) => {
@@ -110,6 +120,7 @@ function createSettingsStore() {
     initSettings,
     initHotkeys,
     getHotkey,
+    darkMode,
   };
 }
 

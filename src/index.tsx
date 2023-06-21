@@ -24,9 +24,12 @@ const Index = () => {
       ({ payload }) => setClipboards((prev) => [payload, ...prev])
     );
 
+    const initLisiner = listen("init_listener", init);
+
     onCleanup(async () => {
       (await clipboardListener)();
       (await focus)();
+      (await initLisiner)();
     });
   });
 
