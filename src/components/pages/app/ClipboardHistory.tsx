@@ -1,6 +1,12 @@
 import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
-import { Component, createEffect, createSignal, onCleanup } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
 import SwitchField from "../../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
@@ -8,9 +14,13 @@ import { Clipboards } from "./Clipboards";
 interface ClipboardHistoryProps {}
 
 export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
+  let input: HTMLInputElement | undefined;
+
   const [search, setSearch] = createSignal<string>("");
   const [showImages, setShowImages] = createSignal(false);
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;
+
+  onMount(() => input?.focus());
 
   createEffect(() => {
     const text = search();
@@ -37,6 +47,8 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
             placeholder="search"
             class="w-full rounded-md border border-gray-300 px-3 py-0.5 focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
             type="text"
+            autofocus
+            ref={input}
             value={search()}
             onInput={(e) => {
               setShowImages(false);

@@ -2,10 +2,15 @@ import { invoke } from "@tauri-apps/api";
 import {
   isRegistered,
   register,
+  registerAll,
+  unregister,
   unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 import { Hotkey } from "../@types";
+import ClipboardStore from "../store/ClipboardStore";
+import HotkeyStore from "../store/HotkeyStore";
 import SettingsStore from "../store/SettingsStore";
+import { CLIPBOARD_HOTKEYS } from "./constants";
 
 export const parseShortcut = (hotkey: Hotkey) => {
   const { ctrl, alt, shift, key } = hotkey;
@@ -17,13 +22,13 @@ export const parseShortcut = (hotkey: Hotkey) => {
 };
 
 export async function registerHotkeys(hotkeys: Hotkey[]) {
-  const {} = SettingsStore;
+  const { setGlobalHotkeyEvent } = HotkeyStore;
+  const { getCurrentTab } = SettingsStore;
+  const { clipboards } = ClipboardStore;
   await unregisterAll();
 
-  // unregister all hotkeys
-  // for (const hotkey of hotkeys) {
-  //   await unregister(hotkey.shortcut);
-  // }
+  // ############################################
+  setGlobalHotkeyEvent(true);
   // ############################################
 
   // Display and hide the app window
@@ -46,8 +51,22 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
     (h) => h.event !== "window_display_toggle"
   );
 
+  // copy to clipboard
+  await registerAll(
+    CLIPBOARD_HOTKEYS,
+    async (num) =>
+      await invoke("copy_clipboard", { id: clipboards()[Number(num) - 1].id })
+  );
+
+  for (const hotkey of leftOverHotkeys) {
+  }
+
   setTimeout(async () => {
-    for (const hotkey of leftOverHotkeys) {
+    for (const key of CLIPBOARD_HOTKEYS) {
+      try {
+        await unregister(key);
+      } catch (_) {}
     }
+    setGlobalHotkeyEvent(false);
   }, 5000);
 }

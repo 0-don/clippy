@@ -1,24 +1,27 @@
 import { listen } from "@tauri-apps/api/event";
 import { appDataDir, appLocalDataDir } from "@tauri-apps/api/path";
 import { appWindow } from "@tauri-apps/api/window";
-import { createEffect, createResource, onCleanup } from "solid-js";
+import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import { Clips } from "./@types";
 import App from "./components/pages/app/App";
 import ClipboardStore from "./store/ClipboardStore";
+import HotkeyStore from "./store/HotkeyStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Index = () => {
+  const { initHotkeys } = HotkeyStore;
   const { setClipboards } = ClipboardStore;
   const { init } = SettingsStore;
 
   createResource(init);
 
-  createEffect(async () => {
+  onMount(async () => {
     const appLocalDataDirPath = await appLocalDataDir();
     const appDataDirPath = await appDataDir();
     console.log(appLocalDataDirPath, appDataDirPath);
+
     const focus = appWindow.onFocusChanged(
       async ({ payload }) => !payload && (await appWindow.hide())
     );
@@ -30,11 +33,16 @@ const Index = () => {
 
     const initLisiner = listen("init_listener", init);
 
-    onCleanup(async () => {
-      (await clipboardListener)();
-      (await focus)();
-      (await initLisiner)();
+    const initHotkeysListener = listen("init_hotkeys_listener", () => {
+      console.log("init");
+      initHotkeys();
     });
+
+    // onCleanup(async () => {
+    //   (await clipboardListener)();
+    //   (await focus)();
+    //   (await initLisiner)();
+    // });
   });
 
   return <App />;

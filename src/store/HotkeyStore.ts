@@ -20,7 +20,7 @@ function createHotkeyStore() {
   const getHotkey = (event: HotkeyEvent) =>
     hotkeys().find((h) => h.event === event);
 
-  const initHotkeys = async (register: boolean = false) => {
+  const initHotkeys = async (register: boolean | undefined = false) => {
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
       ...h,
       shortcut: parseShortcut(h),
@@ -28,9 +28,8 @@ function createHotkeyStore() {
 
     setHotkeys(hotkeys);
 
-    if (register) {
-      await registerHotkeys(hotkeys);
-    }
+    
+    if (register) await registerHotkeys(hotkeys);
   };
 
   return {

@@ -10,6 +10,7 @@ pub fn window_display_toggle() {
     if win.is_visible().unwrap() {
         let _ = win.hide();
     } else {
+        let _ = win.emit("init_hotkeys_listener", Some(()));
         let _ = win.show();
         let _ = win.set_focus();
     }

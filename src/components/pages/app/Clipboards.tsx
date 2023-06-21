@@ -20,7 +20,7 @@ dayjs.extend(relativeTime);
 interface ClipboardsProps {}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
-  let myRef: HTMLDivElement;
+  let myRef: HTMLDivElement | undefined;
   let timer: NodeJS.Timeout;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
@@ -31,11 +31,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     const bottom =
       myRef && myRef.scrollHeight - myRef.scrollTop === myRef.clientHeight;
 
-    if (myRef?.scrollTop !== 0) {
-      setScrollToTop(true);
-    } else {
-      setScrollToTop(false);
-    }
+    myRef?.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false);
 
     if (bottom) {
       setWhere((prev) => ({ ...prev, cursor: clipboards().length }));
@@ -80,14 +76,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       when={clipboards().length}
       fallback={
         <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
-          <img src={clippy} width="50%" alt="no Order" />
-
+          <img src={clippy} width="50%" alt="no clipboards" />
           <h2 class="text-2xl font-medium opacity-50">No Clipboards yet...</h2>
         </div>
       }
     >
       <div
-        ref={(el) => (myRef = el)}
+        ref={myRef}
         onScroll={onScroll}
         class="h-full overflow-auto pb-5"
       >

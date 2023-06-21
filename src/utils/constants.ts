@@ -24,6 +24,8 @@ export type SidebarIcon = {
   current: boolean;
 };
 
+export const CLIPBOARD_HOTKEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
 export const GLOBAL_SHORTCUT_KEYS = [
   "none",
   "A",
