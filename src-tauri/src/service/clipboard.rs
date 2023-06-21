@@ -73,6 +73,8 @@ pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
         ..Default::default()
     };
 
+    println!("model: {:?}", model);
+
     let _clipboard = clipboard::Entity::update(model).exec(&db).await?;
 
     Ok(true)
