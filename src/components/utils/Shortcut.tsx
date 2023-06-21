@@ -9,9 +9,9 @@ interface ShortcutProps {
   hotkey: Hotkey;
 }
 
-export const Shortcut: Component<ShortcutProps> = ({ hotkey }) => {
+export const Shortcut: Component<ShortcutProps> = (props) => {
   const { updateHotkey } = SettingsStore;
-  const { icon, status, ctrl, alt, shift, key, name } = hotkey;
+  const { icon, status, ctrl, alt, shift, key, name } = props.hotkey;
 
   return (
     <>
@@ -23,17 +23,17 @@ export const Shortcut: Component<ShortcutProps> = ({ hotkey }) => {
         <Show when={status}>
           <CheckBox
             checked={ctrl}
-            onChange={() => updateHotkey({ ...hotkey, ctrl: !ctrl })}
+            onChange={() => updateHotkey({ ...props.hotkey, ctrl: !ctrl })}
             text="Ctrl"
           />
           <CheckBox
             checked={alt}
-            onChange={() => updateHotkey({ ...hotkey, alt: !alt })}
+            onChange={() => updateHotkey({ ...props.hotkey, alt: !alt })}
             text="Alt"
           />
           <CheckBox
             checked={shift}
-            onChange={() => updateHotkey({ ...hotkey, shift: !shift })}
+            onChange={() => updateHotkey({ ...props.hotkey, shift: !shift })}
             text="Shift"
           />
         </Show>
@@ -43,7 +43,7 @@ export const Shortcut: Component<ShortcutProps> = ({ hotkey }) => {
           onChange={(currentKey) => {
             if (typeof currentKey === "number") return;
             updateHotkey({
-              ...hotkey,
+              ...props.hotkey,
               key: currentKey,
               status: currentKey !== "none",
             });

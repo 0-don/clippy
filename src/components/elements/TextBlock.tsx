@@ -8,21 +8,16 @@ interface TextBlockProps {
   className?: string;
 }
 
-export const TextBlock: Component<TextBlockProps> = ({
-  children,
-  Icon,
-  title,
-  className,
-}) => {
+export const TextBlock: Component<TextBlockProps> = (props) => {
   return (
     <div
-      class={`mb-7 rounded-md border border-solid border-zinc-700 shadow-2xl ${className}`}
+      class={`mb-7 rounded-md border border-solid border-zinc-700 shadow-2xl ${props.className}`}
     >
       <div class="mb-2 flex items-center space-x-2 bg-zinc-800 px-5 pb-2.5 pt-5">
-        <Icon />
-        <h2 class="font-semibold">{title}</h2>
+        <props.Icon />
+        <h2 class="font-semibold">{props.title}</h2>
       </div>
-      {children}
+      {props.children}
     </div>
   );
 };

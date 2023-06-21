@@ -10,39 +10,35 @@ interface DropdownProps {
   onChange: (char: GlobalShortcutKeysType | string) => void;
 }
 
-export const Dropdown: Component<DropdownProps> = ({
-  items,
-  onChange,
-  value,
-}) => {
+export const Dropdown: Component<DropdownProps> = (props) => {
   const filter = createFilter({ sensitivity: "base" });
-  const [options, setOptions] = createSignal(items);
+  const [options, setOptions] = createSignal(props.items);
 
   const onOpenChange = (
     isOpen: boolean,
     triggerMode?: Combobox.ComboboxTriggerMode
-  ) => isOpen && triggerMode === "manual" && setOptions(items);
+  ) => isOpen && triggerMode === "manual" && setOptions(props.items);
 
   const onInputChange = (value: string) =>
-    setOptions(items.filter((option) => filter.contains(option, value)));
+    setOptions(props.items.filter((option) => filter.contains(option, value)));
 
   return (
     <Combobox.Root
       options={options()}
       onInputChange={onInputChange}
       onOpenChange={onOpenChange}
-      onChange={onChange}
-      defaultValue={value}
-      itemComponent={(props) => (
+      onChange={props.onChange}
+      defaultValue={props.value}
+      itemComponent={(p) => (
         <Combobox.Item
-          item={props.item}
+          item={p.item}
           class={`${
-            props.item.rawValue === value
+            p.item.rawValue === props.value
               ? "bg-indigo-600 text-white"
               : "text-white"
           } flex cursor-pointer items-center justify-between px-2 hover:bg-indigo-600`}
         >
-          <Combobox.ItemLabel>{props.item.rawValue}</Combobox.ItemLabel>
+          <Combobox.ItemLabel>{p.item.rawValue}</Combobox.ItemLabel>
           <Combobox.ItemIndicator>
             <FiCheck />
           </Combobox.ItemIndicator>
