@@ -4,6 +4,7 @@ import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show, createEffect } from "solid-js";
+import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
@@ -13,7 +14,8 @@ import { Shortcut } from "../../utils/Shortcut";
 interface SettingsGeneralProps {}
 
 export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
-  const { getHotkey, settings, updateSettings } = SettingsStore;
+  const { settings, updateSettings } = SettingsStore;
+  const { getHotkey } = HotkeyStore;
 
   createEffect(() => {
     console.log(settings()?.startup);

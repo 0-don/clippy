@@ -3,6 +3,7 @@ import { exit } from "@tauri-apps/api/process";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { Component } from "solid-js";
 import { Hotkey } from "../../../@types";
+import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
 import { ViewMoreName } from "../../../utils/constants";
 import SwitchField from "../../elements/SwitchField";
@@ -10,8 +11,8 @@ import SwitchField from "../../elements/SwitchField";
 interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
-  const { settings, updateSettings, hotkeys, globalHotkeyEvent } =
-    SettingsStore;
+  const { settings, updateSettings } = SettingsStore;
+  const { hotkeys, globalHotkeyEvent } = HotkeyStore;
 
   const createButton = (name: ViewMoreName, onClick: () => void) => {
     const hotkey = hotkeys().find((key) => key.name === name) as Hotkey;

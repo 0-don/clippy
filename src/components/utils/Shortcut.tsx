@@ -1,6 +1,6 @@
 import { Component, Show } from "solid-js";
 import { Hotkey } from "../../@types";
-import SettingsStore from "../../store/SettingsStore";
+import HotkeyStore from "../../store/HotkeyStore";
 import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
 import { CheckBox } from "../elements/CheckBox";
 import { Dropdown } from "../elements/Dropdown";
@@ -10,7 +10,7 @@ interface ShortcutProps {
 }
 
 export const Shortcut: Component<ShortcutProps> = (props) => {
-  const { updateHotkey } = SettingsStore;
+  const { updateHotkey } = HotkeyStore;
 
   return (
     <>

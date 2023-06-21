@@ -6,8 +6,8 @@ import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { disable, enable } from "tauri-plugin-autostart-api";
-import { Hotkey, HotkeyEvent, Settings } from "../@types";
-import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
+import { Settings } from "../@types";
+import HotkeyStore from "./HotkeyStore";
 
 type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
 
@@ -18,9 +18,6 @@ type SettingsTab = {
 };
 
 function createSettingsStore() {
-  const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
-  const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
-  const [settings, setSettings] = createSignal<Settings>();
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
     { name: "General", Icon: HiSolidCog8Tooth, current: true },
     { name: "Backup", Icon: BsDatabaseFillGear, current: false },
@@ -35,6 +32,7 @@ function createSettingsStore() {
       current: false,
     },
   ]);
+  const [settings, setSettings] = createSignal<Settings>();
 
   const setCurrentTab = (tabName: SettingsTabName) =>
     setTabs((prev) =>
@@ -56,27 +54,14 @@ function createSettingsStore() {
     } catch (_) {}
   };
 
-  const updateHotkey = async (
-    hotkey: Hotkey,
-    upload: boolean | undefined = true
-  ) => {
-    if (upload) await invoke("update_hotkey", { hotkey });
-    setHotkeys((prev) =>
-      prev.map((h) => (h.id === hotkey.id ? { ...h, ...hotkey } : h))
-    );
-  };
-
   const darkMode = () =>
     settings()?.dark_mode
       ? document.querySelector("html")?.classList?.add?.("dark")
       : document.querySelector("html")?.classList?.remove?.("dark");
 
-  const getHotkey = (event: HotkeyEvent) =>
-    hotkeys().find((h) => h.event === event);
-
   const init = async () => {
     await initSettings();
-    initHotkeys(true);
+    HotkeyStore.initHotkeys(true);
     darkMode();
   };
 
@@ -90,36 +75,16 @@ function createSettingsStore() {
     } catch (_) {}
   };
 
-  const initHotkeys = async (register: boolean = false) => {
-    const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
-      ...h,
-      shortcut: parseShortcut(h),
-    }));
-
-    setHotkeys(hotkeys);
-
-    if (register) {
-      await registerHotkeys(hotkeys);
-    }
-  };
-
   return {
-    globalHotkeyEvent,
-    setGlobalHotkeyEvent,
-    hotkeys,
-    setHotkeys,
     settings,
     setSettings,
+    updateSettings,
     tabs,
     setTabs,
     setCurrentTab,
-    updateSettings,
-    updateHotkey,
-    init,
     getCurrentTab,
+    init,
     initSettings,
-    initHotkeys,
-    getHotkey,
     darkMode,
   };
 }

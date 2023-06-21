@@ -1,11 +1,17 @@
 import { join, resolve } from "path";
+import checker from 'vite-plugin-checker';
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
   return {
-    plugins: [solidPlugin()],
+    plugins: [
+      solidPlugin(),
+      checker({
+        typescript: true,
+      }),
+    ],
 
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
     // prevent vite from obscuring rust errors

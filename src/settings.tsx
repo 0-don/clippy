@@ -4,11 +4,13 @@ import { SettingsBackup } from "./components/pages/settings/SettingsBackup";
 import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
 import { SettingsHistory } from "./components/pages/settings/SettingsHistory";
 import { SettingsHotkeys } from "./components/pages/settings/SettingsHotkeys";
+import HotkeyStore from "./store/HotkeyStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Settings = () => {
-  const { getCurrentTab, initHotkeys, initSettings } = SettingsStore;
+  const { getCurrentTab, initSettings } = SettingsStore;
+  const { initHotkeys } = HotkeyStore;
 
   initHotkeys(false);
   initSettings();

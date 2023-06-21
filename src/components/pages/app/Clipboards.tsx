@@ -11,7 +11,7 @@ import { Component, For, Show, createSignal } from "solid-js";
 import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
-import SettingsStore from "../../../store/SettingsStore";
+import HotkeyStore from "../../../store/HotkeyStore";
 import { formatBytes } from "../../../utils/helpers";
 
 dayjs.extend(utc);
@@ -25,7 +25,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
   const { clipboards, setClipboards, getClipboards, setWhere } = ClipboardStore;
-  const { globalHotkeyEvent, hotkeys } = SettingsStore;
+  const { globalHotkeyEvent, hotkeys } = HotkeyStore;
 
   const onScroll = async () => {
     const bottom =
@@ -164,18 +164,17 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         {type === "color" && (
                           <VsSymbolColor class="text-2xl text-zinc-700 dark:text-white" />
                         )}
-                        {globalHotkeyEvent() && (
+                        <Show when={globalHotkeyEvent()}>
                           <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
                             {index() + 1 < 10 && index() + 1}
                           </div>
-                        )}
+                        </Show>
                       </div>
                     </div>
                     <div class="truncate px-5">
                       {src ? (
                         <img
                           src={src}
-                          // style={{ height: '200px' }}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(

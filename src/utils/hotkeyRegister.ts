@@ -5,6 +5,7 @@ import {
   unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 import { Hotkey } from "../@types";
+import SettingsStore from "../store/SettingsStore";
 
 export const parseShortcut = (hotkey: Hotkey) => {
   const { ctrl, alt, shift, key } = hotkey;
@@ -16,6 +17,7 @@ export const parseShortcut = (hotkey: Hotkey) => {
 };
 
 export async function registerHotkeys(hotkeys: Hotkey[]) {
+  const {} = SettingsStore;
   await unregisterAll();
 
   // unregister all hotkeys
@@ -39,5 +41,13 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
       );
     } catch (_) {}
   }
-  // ############################################
+
+  const leftOverHotkeys = hotkeys.filter(
+    (h) => h.event !== "window_display_toggle"
+  );
+
+  setTimeout(async () => {
+    for (const hotkey of leftOverHotkeys) {
+    }
+  }, 5000);
 }

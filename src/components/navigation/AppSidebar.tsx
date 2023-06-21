@@ -1,11 +1,11 @@
 import { Component, For, Show } from "solid-js";
 import AppStore from "../../store/AppStore";
-import SettingsStore from "../../store/SettingsStore";
+import HotkeyStore from "../../store/HotkeyStore";
 
 interface AppSidebarProps {}
 
 export const AppSidebar: Component<AppSidebarProps> = ({}) => {
-  const { hotkeys, globalHotkeyEvent, getHotkey } = SettingsStore;
+  const { hotkeys, globalHotkeyEvent, getHotkey } = HotkeyStore;
   const { sidebarIcons, updateSidebarIcons } = AppStore;
   return (
     <Show when={hotkeys().length}>

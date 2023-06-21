@@ -1,13 +1,13 @@
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { Component, For } from "solid-js";
-import SettingsStore from "../../../store/SettingsStore";
+import HotkeyStore from "../../../store/HotkeyStore";
 import { TextBlock } from "../../elements/TextBlock";
 import { Shortcut } from "../../utils/Shortcut";
 
 interface SettingsHotkeysProps {}
 
 export const SettingsHotkeys: Component<SettingsHotkeysProps> = ({}) => {
-  const { hotkeys } = SettingsStore;
+  const { hotkeys } = HotkeyStore;
 
   return (
     <>
