@@ -48,7 +48,7 @@ function createSettingsStore() {
     settings: Settings,
     upload: boolean | undefined = true
   ) => {
-    if (upload) await invoke("updateSettings", settings);
+    if (upload) await invoke("update_settings", { settings });
     setSettings(settings);
   };
 
