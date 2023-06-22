@@ -8,6 +8,7 @@ import {
   onMount,
 } from "solid-js";
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
+import { removeAllHotkeyListeners } from "../../../utils/hotkeyRegister";
 import SwitchField from "../../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
 
@@ -20,7 +21,10 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
   const [showImages, setShowImages] = createSignal(false);
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;
 
-  onMount(() => input?.focus());
+  onMount(() => {
+    input?.focus();
+    removeAllHotkeyListeners();
+  });
 
   createEffect(() => {
     const text = search();
