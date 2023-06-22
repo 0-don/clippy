@@ -13,6 +13,7 @@ import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
 import { formatBytes } from "../../../utils/helpers";
+import { removeAllHotkeyListeners } from "../../../utils/hotkeyRegister";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -20,18 +21,30 @@ dayjs.extend(relativeTime);
 interface ClipboardsProps {}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
-  let myRef: HTMLDivElement | undefined;
-  let timer: NodeJS.Timeout;
+  let dbClickTimer: NodeJS.Timeout;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
-  const { clipboards, setClipboards, getClipboards, setWhere } = ClipboardStore;
+  const {
+    clipboards,
+    setClipboards,
+    getClipboards,
+    setWhere,
+    clipboardRef,
+    setClipboardRef,
+  } = ClipboardStore;
   const { globalHotkeyEvent, hotkeys } = HotkeyStore;
 
   const onScroll = async () => {
-    const bottom =
-      myRef && myRef.scrollHeight - myRef.scrollTop === myRef.clientHeight;
+    if (!clipboardRef()) return;
 
-    myRef?.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false);
+    const bottom =
+      clipboardRef() &&
+      clipboardRef()!.scrollHeight - clipboardRef()!.scrollTop ===
+        clipboardRef()!.clientHeight;
+
+    clipboardRef()!.scrollTop !== 0
+      ? setScrollToTop(true)
+      : setScrollToTop(false);
 
     if (bottom) {
       setWhere((prev) => ({ ...prev, cursor: clipboards().length }));
@@ -82,7 +95,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       }
     >
       <div
-        ref={myRef}
+        ref={(ref) => setClipboardRef(ref)}
         onScroll={onScroll}
         class="h-full overflow-auto pb-5"
       >
@@ -90,15 +103,15 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
           <button
             type="button"
             class="absolute bottom-5 right-4 rounded-full bg-neutral-700 px-2 py-1 hover:bg-gray-500"
-            onClick={() => myRef?.scrollTo(0, 0)}
+            onClick={() => clipboardRef()!.scrollTo(0, 0)}
           >
             <div class="relative flex items-center justify-center py-1">
               <FiArrowUp class="text-xl !text-white dark:!text-white " />
-              {globalHotkeyEvent() && (
+              <Show when={globalHotkeyEvent()}>
                 <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
                   {hotkeys().find((key) => key.event === "scroll_to_top")?.key}
                 </div>
-              )}
+              </Show>
             </div>
           </button>
         </Show>
@@ -132,13 +145,14 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   e.stopPropagation();
 
                   if (e.detail === 1) {
-                    timer = setTimeout(async () => {
+                    dbClickTimer = setTimeout(async () => {
                       await invoke("copy_clipboard", { id });
+                      removeAllHotkeyListeners();
                     }, 200);
                   }
                 }}
                 onDblClick={async (e) => {
-                  clearTimeout(timer);
+                  clearTimeout(dbClickTimer);
                   e.stopPropagation();
                   if (type !== "image" || !blob) return;
                   await writeBinaryFile(`clipboard-${id}.png`, blob, {

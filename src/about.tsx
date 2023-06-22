@@ -1,5 +1,5 @@
 import { getVersion } from "@tauri-apps/api/app";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import icon from "./assets/clippy.png";
 import "./styles.css";
@@ -7,13 +7,13 @@ import "./styles.css";
 const About = () => {
   const [version, setVersion] = createSignal("0.0.0");
 
-  createEffect(async () => {
+  onMount(async () => {
     const appVersion = await getVersion();
     setVersion(appVersion);
   });
 
   return (
-    <div class="absolute flex h-full w-full flex-col items-center justify-center space-y-2 bg-white text-black dark:bg-dark dark:text-white ">
+    <div class="absolute flex h-full w-full flex-col items-center justify-center space-y-2 bg-white text-black dark:bg-dark  dark:text-white">
       <img src={icon} alt="logo" width="300px" />
       <h1 class="text-xl font-bold">{version()}</h1>
       <h2 class="text-base">No updates currently available</h2>

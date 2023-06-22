@@ -26,12 +26,15 @@ function createAppStore() {
       prev.map((s) => ({ ...s, current: s.name === name }))
     );
 
+  const getCurrentSidebarIcon = () => sidebarIcons().find((s) => s.current);
+
   const sIcon = () => sidebarIcons().find((s) => s.current);
 
   return {
     sidebarIcons,
     setSidebarIcons,
     updateSidebarIcons,
+    getCurrentSidebarIcon,
     sIcon,
   };
 }

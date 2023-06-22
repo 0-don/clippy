@@ -17,6 +17,9 @@ export const initialWhere: ClipboardWhere = {
 };
 
 function createClipboardStore() {
+  const [clipboardRef, setClipboardRef] = createSignal<
+    HTMLDivElement | undefined
+  >();
   const [clipboards, setClipboards] = createSignal<Clips[]>([]);
   const [where, setWhere] = createSignal<ClipboardWhere>(initialWhere);
 
@@ -32,6 +35,8 @@ function createClipboardStore() {
     setWhere,
     resetWhere,
     getClipboards,
+    clipboardRef,
+    setClipboardRef,
   };
 }
 

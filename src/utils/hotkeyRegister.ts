@@ -7,9 +7,9 @@ import {
   unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 import { Hotkey } from "../@types";
+import AppStore from "../store/AppStore";
 import ClipboardStore from "../store/ClipboardStore";
 import HotkeyStore from "../store/HotkeyStore";
-import SettingsStore from "../store/SettingsStore";
 import { CLIPBOARD_HOTKEYS } from "./constants";
 
 export const parseShortcut = (hotkey: Hotkey) => {
@@ -18,13 +18,17 @@ export const parseShortcut = (hotkey: Hotkey) => {
   if (ctrl) modifiers.push("CommandOrControl");
   if (alt) modifiers.push("Alt");
   if (shift) modifiers.push("Shift");
-  return `${modifiers.join("+")}+${key.toUpperCase()}`;
+  return `${modifiers.join("+")}${
+    modifiers.length ? "+" : ""
+  }${key.toUpperCase()}`;
 };
+
+export let timer: NodeJS.Timeout | undefined;
 
 export async function registerHotkeys(hotkeys: Hotkey[]) {
   const { setGlobalHotkeyEvent } = HotkeyStore;
-  const { getCurrentTab } = SettingsStore;
-  const { clipboards } = ClipboardStore;
+  const { getCurrentSidebarIcon } = AppStore;
+  const { clipboards, clipboardRef } = ClipboardStore;
   await unregisterAll();
 
   // ############################################
@@ -33,13 +37,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
 
   // Display and hide the app window
   const mainHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
-
-  if (
-    mainHotkey &&
-    mainHotkey?.shortcut &&
-    !(await isRegistered(mainHotkey.shortcut)) &&
-    mainHotkey.status
-  ) {
+  if (mainHotkey?.status && !(await isRegistered(mainHotkey.shortcut))) {
     try {
       await register(mainHotkey.shortcut, () =>
         invoke("window_display_toggle")
@@ -47,32 +45,39 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
     } catch (_) {}
   }
 
-  const leftOverHotkeys = hotkeys.filter(
-    (h) => h.event !== "window_display_toggle"
-  );
-
   // copy to clipboard
-  await registerAll(
-    CLIPBOARD_HOTKEYS,
-    async (num) =>
-      await invoke("copy_clipboard", { id: clipboards()[Number(num) - 1].id })
-  );
+  await registerAll(CLIPBOARD_HOTKEYS, async (num) => {
+    await invoke("copy_clipboard", { id: clipboards()[Number(num) - 1].id });
+    removeAllHotkeyListeners();
+  });
 
-  for (const hotkey of leftOverHotkeys) {
+  const scrollToTop = hotkeys.find((h) => h.event === "scroll_to_top");
+
+  if (scrollToTop?.status && getCurrentSidebarIcon()?.name !== "View more") {
+    await register(scrollToTop.shortcut, () => clipboardRef()!.scrollTo(0, 0));
   }
 
-  setTimeout(async () => {
-    for (const key of CLIPBOARD_HOTKEYS) {
-      try {
-        await unregister(key);
-      } catch (_) {}
-    }
+  // for (const hotkey of hotkeys) {
+  //   console.log(hotkey.name);
+  // }
 
-    for (const hotkey of leftOverHotkeys) {
-      try {
-        await unregister(hotkey.shortcut);
-      } catch (_) {}
-    }
-    setGlobalHotkeyEvent(false);
-  }, 5000);
+  timer = setTimeout(removeAllHotkeyListeners, 5000);
 }
+
+export const removeAllHotkeyListeners = async () => {
+  const { hotkeys, setGlobalHotkeyEvent } = HotkeyStore;
+  for (const key of CLIPBOARD_HOTKEYS) {
+    try {
+      await unregister(key);
+    } catch (_) {}
+  }
+
+  for (const hotkey of hotkeys()) {
+    if (hotkey.event === "window_display_toggle") continue;
+    try {
+      await unregister(hotkey.shortcut);
+    } catch (_) {}
+  }
+  setGlobalHotkeyEvent(false);
+  clearTimeout(timer);
+};
