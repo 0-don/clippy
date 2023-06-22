@@ -1,11 +1,14 @@
 import { invoke } from "@tauri-apps/api";
 import { exit } from "@tauri-apps/api/process";
-import { WebviewWindow } from "@tauri-apps/api/window";
 import { Component, Show } from "solid-js";
 import { Hotkey } from "../../../@types";
 import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
 import { ViewMoreName } from "../../../utils/constants";
+import {
+  createAboutWindow,
+  createSettingsWindow,
+} from "../../../utils/helpers";
 import SwitchField from "../../elements/SwitchField";
 
 interface ViewMoreProps {}
@@ -52,32 +55,12 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* Sync Clipboard History  */}
       {createButton(
         "Sync Clipboard History",
-        async () => await invoke("toggleSyncClipboardHistory")
+        async () => await invoke("sync_clipboard_history")
       )}
       {/* Preferences */}
-      {createButton(
-        "Preferences",
-        () =>
-          new WebviewWindow("settings", {
-            url: "./pages/settings.html",
-            title: "Settings",
-            height: 425,
-            width: 500,
-            alwaysOnTop: true,
-          })
-      )}
+      {createButton("Preferences", createSettingsWindow)}
       {/* About */}
-      {createButton(
-        "About",
-        () =>
-          new WebviewWindow("about", {
-            url: "./pages/about.html",
-            title: "About",
-            width: 375,
-            height: 600,
-            alwaysOnTop: true,
-          })
-      )}
+      {createButton("About", createAboutWindow)}
       {/* Exit */}
       {createButton("Exit", async () => await exit(1))}
     </>

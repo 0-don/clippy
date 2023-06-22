@@ -1,22 +1,22 @@
 import { IconTypes } from "solid-icons";
 
-export const viewMoreNames = [
+export const VIEW_MORE_NAMES = [
   "Sync Clipboard History",
   "Preferences",
   "About",
   "Exit",
 ] as const;
 
-export type ViewMoreName = (typeof viewMoreNames)[number];
+export type ViewMoreName = (typeof VIEW_MORE_NAMES)[number];
 
-export const sidebarIconNames = [
+export const SIDEBAR_ICON_NAMES = [
   "Recent Clipboards",
   "Starred Clipboards",
   "History",
   "View more",
 ] as const;
 
-export type SidebarIconName = (typeof sidebarIconNames)[number];
+export type SidebarIconName = (typeof SIDEBAR_ICON_NAMES)[number];
 
 export type SidebarIcon = {
   name: SidebarIconName;

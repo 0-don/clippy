@@ -1,3 +1,5 @@
+import { WebviewWindow } from "@tauri-apps/api/window";
+
 export function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
 
@@ -12,4 +14,24 @@ export function formatBytes(bytes: number, decimals = 2) {
 
 export async function sleep(milis: number) {
   return new Promise((resolve) => setTimeout(resolve, milis));
+}
+
+export function createAboutWindow() {
+  new WebviewWindow("about", {
+    url: "./pages/about.html",
+    title: "About",
+    width: 375,
+    height: 600,
+    alwaysOnTop: true,
+  });
+}
+
+export function createSettingsWindow() {
+  new WebviewWindow("settings", {
+    url: "./pages/settings.html",
+    title: "Settings",
+    height: 425,
+    width: 500,
+    alwaysOnTop: true,
+  });
 }

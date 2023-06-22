@@ -1,3 +1,5 @@
+import { SidebarIconName, ViewMoreName } from "../utils/constants";
+
 export type Clips = {
   id?: number | null;
   type: ClipboardType;
@@ -20,7 +22,7 @@ export type Hotkey = {
   shift: boolean;
   key: string;
   status: boolean;
-  name: string;
+  name: ViewMoreName & SidebarIconName;
   icon: string;
 
   shortcut: string; // not in db added for convenience

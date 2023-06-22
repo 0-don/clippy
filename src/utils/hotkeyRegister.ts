@@ -6,11 +6,13 @@ import {
   unregister,
   unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
+import { exit } from "@tauri-apps/api/process";
 import { Hotkey } from "../@types";
 import AppStore from "../store/AppStore";
 import ClipboardStore from "../store/ClipboardStore";
 import HotkeyStore from "../store/HotkeyStore";
-import { CLIPBOARD_HOTKEYS } from "./constants";
+import { CLIPBOARD_HOTKEYS, SIDEBAR_ICON_NAMES } from "./constants";
+import { createAboutWindow, createSettingsWindow } from "./helpers";
 
 export const parseShortcut = (hotkey: Hotkey) => {
   const { ctrl, alt, shift, key } = hotkey;
@@ -27,7 +29,7 @@ export let timer: NodeJS.Timeout | undefined;
 
 export async function registerHotkeys(hotkeys: Hotkey[]) {
   const { setGlobalHotkeyEvent } = HotkeyStore;
-  const { getCurrentSidebarIcon } = AppStore;
+  const { getCurrentSidebarIcon, updateSidebarIcons } = AppStore;
   const { clipboards, clipboardRef } = ClipboardStore;
   await unregisterAll();
 
@@ -46,20 +48,64 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   }
 
   // copy to clipboard
-  await registerAll(CLIPBOARD_HOTKEYS, async (num) => {
-    await invoke("copy_clipboard", { id: clipboards()[Number(num) - 1].id });
-    removeAllHotkeyListeners();
-  });
+  try {
+    await registerAll(CLIPBOARD_HOTKEYS, async (num) => {
+      await invoke("copy_clipboard", { id: clipboards()[Number(num) - 1].id });
+      removeAllHotkeyListeners();
+    });
+  } catch (_) {}
 
-  const scrollToTop = hotkeys.find((h) => h.event === "scroll_to_top");
+  // sidebar navigation
+  const siderbarHotkeys = hotkeys.filter((h) =>
+    SIDEBAR_ICON_NAMES.includes(h.name)
+  );
 
-  if (scrollToTop?.status && getCurrentSidebarIcon()?.name !== "View more") {
-    await register(scrollToTop.shortcut, () => clipboardRef()!.scrollTo(0, 0));
+  for (const hotkey of siderbarHotkeys) {
+    try {
+      if (hotkey.status)
+        await register(hotkey.shortcut, () => updateSidebarIcons(hotkey.name));
+    } catch (_) {}
   }
 
-  // for (const hotkey of hotkeys) {
-  //   console.log(hotkey.name);
-  // }
+  const syncClipboardHistory = hotkeys.find(
+    (h) => h.event === "sync_clipboard_history"
+  );
+  try {
+    if (syncClipboardHistory?.status)
+      await register(syncClipboardHistory.shortcut, () =>
+        invoke("sync_clipboard_history")
+      );
+  } catch (error) {}
+
+  const preferences = hotkeys.find((h) => h.event === "preferences");
+
+  try {
+    if (preferences?.status)
+      await register(preferences.shortcut, createSettingsWindow);
+  } catch (_) {}
+
+  const about = hotkeys.find((h) => h.event === "about");
+
+  try {
+    if (about?.status) await register(about.shortcut, createAboutWindow);
+  } catch (_) {}
+
+  //exit
+  const exitHotkey = hotkeys.find((h) => h.event === "exit");
+  try {
+    if (exitHotkey?.status)
+      await register(exitHotkey.shortcut, async () => await exit(1));
+  } catch (_) {}
+
+  // scroll to top
+  try {
+    const scrollToTop = hotkeys.find((h) => h.event === "scroll_to_top");
+    if (scrollToTop?.status && getCurrentSidebarIcon()?.name !== "View more") {
+      await register(scrollToTop.shortcut, () =>
+        clipboardRef()!.scrollTo(0, 0)
+      );
+    }
+  } catch (_) {}
 
   timer = setTimeout(removeAllHotkeyListeners, 5000);
 }
