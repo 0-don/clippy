@@ -16,7 +16,7 @@ pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     APP.set(app.handle()).expect("error initializing tauri app");
-    
+
     create_config();
 
     let window = app.get_window("main").unwrap();
@@ -44,7 +44,7 @@ pub fn create_config() {
     }
 
     let config = Config {
-        db: data_path.db_file_path.clone(),
+        db: format!("sqlite://{}?mode=rwc", &data_path.db_file_path),
     };
 
     let _ = fs::write(

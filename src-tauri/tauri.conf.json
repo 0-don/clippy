@@ -16,6 +16,9 @@
       "app": {
         "all": true
       },
+      "dialog": {
+        "open": true
+      },
       "process": {
         "exit": true
       },

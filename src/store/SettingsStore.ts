@@ -1,11 +1,12 @@
 import { invoke } from "@tauri-apps/api";
+import { open } from "@tauri-apps/api/dialog";
 import { IconTypes } from "solid-icons";
 import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
-import { createRoot, createSignal } from "solid-js";
-import { disable, enable } from "tauri-plugin-autostart-api";
+import { createRoot,createSignal } from "solid-js";
+import { disable,enable } from "tauri-plugin-autostart-api";
 import { Settings } from "../@types";
 import HotkeyStore from "./HotkeyStore";
 
@@ -75,6 +76,25 @@ function createSettingsStore() {
     } catch (_) {}
   };
 
+  const syncClipboard = async () => {
+    let dir: string | undefined;
+
+    const synchronize = !settings()?.synchronize;
+
+    if (synchronize) {
+      dir = (await open({
+        directory: true,
+        title: "Select Database Backup Location",
+      })) as string;
+    }
+
+    updateSettings({
+      ...settings()!,
+      synchronize,
+    });
+    await invoke("sync_clipboard_history", { dir });
+  };
+
   return {
     settings,
     setSettings,
@@ -86,6 +106,7 @@ function createSettingsStore() {
     init,
     initSettings,
     darkMode,
+    syncClipboard,
   };
 }
 

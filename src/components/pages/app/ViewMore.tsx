@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api";
 import { exit } from "@tauri-apps/api/process";
 import { Component, Show } from "solid-js";
 import { Hotkey } from "../../../@types";
@@ -14,7 +13,7 @@ import SwitchField from "../../elements/SwitchField";
 interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
-  const { settings, updateSettings } = SettingsStore;
+  const { settings, syncClipboard } = SettingsStore;
   const { hotkeys, globalHotkeyEvent } = HotkeyStore;
 
   const createButton = (name: ViewMoreName, onClick: () => void) => {
@@ -53,16 +52,13 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
   return (
     <>
       {/* Sync Clipboard History  */}
-      {createButton(
-        "Sync Clipboard History",
-        async () => await invoke("sync_clipboard_history")
-      )}
+      {createButton("Sync Clipboard History", syncClipboard)}
       {/* Preferences */}
       {createButton("Preferences", createSettingsWindow)}
       {/* About */}
       {createButton("About", createAboutWindow)}
       {/* Exit */}
-      {createButton("Exit", async () => await exit(1))}
+      {createButton("Exit", exit)}
     </>
   );
 };
