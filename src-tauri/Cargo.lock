@@ -743,7 +743,6 @@ dependencies = [
  "entity",
  "image",
  "migration",
- "once_cell",
  "sea-orm",
  "serde_json",
  "tauri",

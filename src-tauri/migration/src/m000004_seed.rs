@@ -15,7 +15,7 @@ impl MigrationTrait for Migration {
             startup: Set(true),
             dark_mode: Set(true),
             notification: Set(false),
-            synchronize: Set(true),
+            synchronize: Set(false),
             ..Default::default()
         }
         .insert(db)

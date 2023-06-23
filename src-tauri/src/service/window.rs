@@ -11,7 +11,6 @@ pub fn init_event() {
         .unwrap();
 }
 
-
 pub fn init_hotkey() {
     APP.get()
         .unwrap()
@@ -19,4 +18,15 @@ pub fn init_hotkey() {
         .unwrap()
         .emit("init_hotkeys_listener", Some(()))
         .unwrap();
+}
+
+pub fn get_config_path() -> String {
+    APP.get()
+        .unwrap()
+        .path_resolver()
+        .app_data_dir()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_string()
 }

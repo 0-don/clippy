@@ -17,3 +17,12 @@ pub fn window_display_toggle() {
 
     let _ = win.move_window(Position::BottomRight);
 }
+
+// https://docs.rs/dirs_next/
+#[tauri::command]
+pub fn sync_clipboard_history() {
+    // println!(
+    //     "{:?}",
+
+    // );
+}

@@ -29,6 +29,7 @@ fn main() {
             settings::get_settings,
             settings::update_settings,
             window::window_display_toggle,
+            window::sync_clipboard_history
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
