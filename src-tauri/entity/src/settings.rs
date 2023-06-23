@@ -18,7 +18,6 @@ pub struct Model {
     pub startup: bool,
     pub notification: bool,
     pub synchronize: bool,
-    pub synchronize_time: i32,
     pub dark_mode: bool,
 }
 
@@ -28,7 +27,6 @@ pub enum Column {
     Startup,
     Notification,
     Synchronize,
-    SynchronizeTime,
     DarkMode,
 }
 
@@ -55,7 +53,6 @@ impl ColumnTrait for Column {
             Self::Startup => ColumnType::Boolean.def(),
             Self::Notification => ColumnType::Boolean.def(),
             Self::Synchronize => ColumnType::Boolean.def(),
-            Self::SynchronizeTime => ColumnType::Integer.def(),
             Self::DarkMode => ColumnType::Boolean.def(),
         }
     }

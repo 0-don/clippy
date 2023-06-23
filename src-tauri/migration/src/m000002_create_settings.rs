@@ -13,7 +13,6 @@ pub mod settings {
         pub startup: bool,
         pub notification: bool,
         pub synchronize: bool,
-        pub synchronize_time: i32,
         pub dark_mode: bool,
     }
 

@@ -37,7 +37,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             />
           </div>
         </div>
-        <Show when={settings()?.synchronize}>
+        {/* <Show when={settings()?.synchronize}>
           <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
             <div class="flex items-center space-x-2 truncate">
               <BsClockHistory />
@@ -57,7 +57,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               />
             </div>
           </div>
-        </Show>
+        </Show> */}
       </TextBlock>
 
       <Show when={url() && settings()?.synchronize}>

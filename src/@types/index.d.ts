@@ -33,7 +33,6 @@ export type Settings = {
   startup: boolean;
   notification: boolean;
   synchronize: boolean;
-  synchronize_time: number;
   dark_mode: boolean;
 };
 
