@@ -10,3 +10,13 @@ pub fn init_event() {
         .emit("init_listener", Some(()))
         .unwrap();
 }
+
+
+pub fn init_hotkey() {
+    APP.get()
+        .unwrap()
+        .get_window("main")
+        .unwrap()
+        .emit("init_hotkeys_listener", Some(()))
+        .unwrap();
+}

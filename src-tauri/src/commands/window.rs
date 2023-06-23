@@ -1,7 +1,7 @@
 use tauri::Manager;
 use tauri_plugin_positioner::{Position, WindowExt};
 
-use crate::utils::setup::APP;
+use crate::{utils::setup::APP, service::window::init_hotkey};
 
 #[tauri::command]
 pub fn window_display_toggle() {
@@ -10,7 +10,7 @@ pub fn window_display_toggle() {
     if win.is_visible().unwrap() {
         let _ = win.hide();
     } else {
-        let _ = win.emit("init_hotkeys_listener", Some(()));
+        init_hotkey();
         let _ = win.show();
         let _ = win.set_focus();
     }
