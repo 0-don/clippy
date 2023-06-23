@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use tauri::Manager;
 
 use crate::utils::setup::APP;
@@ -26,7 +28,6 @@ pub fn get_config_path() -> String {
         .path_resolver()
         .app_data_dir()
         .unwrap()
-        .to_str()
-        .unwrap()
+        .to_string_lossy()
         .to_string()
 }

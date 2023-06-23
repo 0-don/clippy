@@ -7,6 +7,7 @@ import {
   unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 import { exit } from "@tauri-apps/api/process";
+import { appWindow } from "@tauri-apps/api/window";
 import { Hotkey } from "../@types";
 import AppStore from "../store/AppStore";
 import ClipboardStore from "../store/ClipboardStore";
@@ -46,6 +47,8 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
       );
     } catch (_) {}
   }
+
+  if (!await appWindow.isVisible()) return;
 
   // copy to clipboard
   try {

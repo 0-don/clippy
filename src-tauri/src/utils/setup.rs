@@ -1,6 +1,7 @@
-use std::{fs, sync::OnceLock};
+use std::{fs, path::PathBuf, sync::OnceLock};
 
 use clipboard_master::Master;
+use serde::{Deserialize, Serialize};
 use tauri::{LogicalSize, Manager};
 use window_shadows::set_shadow;
 
@@ -33,7 +34,29 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     Ok(())
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Config {
+    db: String,
+}
+
 pub fn create_config() {
     let config_dir = get_config_path();
-    let _ = fs::create_dir_all(config_dir);
+    let _ = fs::create_dir_all(&config_dir);
+
+    // let config_file = Path::new(&config_dir).join("config.json");
+    let config_file: PathBuf = [&config_dir, "config.json"].iter().collect();
+
+    if config_file.exists() {
+        return;
+    }
+
+    let db = [&config_dir, "clippy.sqlite"]
+        .iter()
+        .collect::<PathBuf>()
+        .to_string_lossy()
+        .to_string();
+
+    let config = Config { db };
+
+    let _ = fs::write(config_file, serde_json::to_string(&config).unwrap());
 }

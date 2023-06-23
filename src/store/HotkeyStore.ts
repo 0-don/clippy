@@ -28,7 +28,6 @@ function createHotkeyStore() {
 
     setHotkeys(hotkeys);
 
-    
     if (register) await registerHotkeys(hotkeys);
   };
 
