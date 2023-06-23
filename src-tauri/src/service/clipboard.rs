@@ -61,6 +61,8 @@ pub async fn get_clipboards_db(
         })
         .collect();
 
+    db.close().await?;
+
     Ok(parsed_model)
 }
 
@@ -77,6 +79,8 @@ pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
 
     let _clipboard = clipboard::Entity::update(model).exec(&db).await?;
 
+    db.close().await?;
+
     Ok(true)
 }
 
@@ -84,6 +88,8 @@ pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
     let db = connection::establish_connection().await?;
 
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
+
+    db.close().await?;
 
     Ok(true)
 }

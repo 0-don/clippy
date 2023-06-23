@@ -103,6 +103,8 @@ impl ClipboardHelper {
             return true;
         }
 
+        db.close().await.unwrap();
+
         return false;
     }
 

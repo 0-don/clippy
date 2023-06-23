@@ -20,5 +20,7 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
         .exec(&db)
         .await?;
 
+    db.close().await?;
+
     Ok(updated_settings)
 }

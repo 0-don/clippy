@@ -1,14 +1,13 @@
-use std::path::PathBuf;
-
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{Database, DbConn};
 
-use crate::{service::window::get_config_path, types::types::Config};
+use crate::{service::window::get_data_path, types::types::Config};
 
 pub async fn establish_connection() -> Result<DbConn, DbErr> {
     // let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set.");
     let database_url = if cfg!(debug_assertions) {
-        String::from("sqlite://../clippy.sqlite?mode=rwc")
+        // String::from("sqlite://../clippy.sqlite?mode=rwc")
+        get_prod_database_url()
     } else {
         get_prod_database_url()
     };
@@ -16,21 +15,20 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
     let db = Database::connect(&database_url)
         .await
         .expect("Failed to setup the database");
-    Migrator::up(&db, None)
-        .await
-        .expect("Failed to run migrations for tests");
+
+    Migrator::up(&db, None).await.ok();
 
     Ok(db)
 }
 
 fn get_prod_database_url() -> String {
-    let config_dir = get_config_path();
+    let data_path = get_data_path();
 
-    let config_file: PathBuf = [&config_dir, "config.json"].iter().collect();
+    let json = std::fs::read_to_string(data_path.db_file_path).unwrap();
 
-    let config = std::fs::read_to_string(config_file).unwrap();
+    let config: Config = serde_json::from_str(&json).unwrap();
 
-    let config: Config = serde_json::from_str(&config).unwrap();
+    let db = format!("sqlite://{}?mode=rwc", config.db);
 
-    config.db
+    db
 }

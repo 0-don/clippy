@@ -1,11 +1,11 @@
-use std::{fs, path::PathBuf, sync::OnceLock};
+use std::{fs, path::Path, sync::OnceLock};
 
 use clipboard_master::Master;
 use tauri::{LogicalSize, Manager};
 use window_shadows::set_shadow;
 
 use crate::{
-    service::window::get_config_path, types::types::Config,
+    service::window::get_data_path, types::types::Config,
     utils::clipboard::clipboard_handler::Handler,
 };
 
@@ -15,6 +15,10 @@ pub static MAIN_WINDOW_Y: i32 = 600;
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    APP.set(app.handle()).expect("error initializing tauri app");
+    
+    create_config();
+
     let window = app.get_window("main").unwrap();
 
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
@@ -29,31 +33,22 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
 
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
 
-    APP.set(app.handle()).expect("error initializing tauri app");
-
-    create_config();
-
     Ok(())
 }
 
 pub fn create_config() {
-    let config_dir = get_config_path();
-    let _ = fs::create_dir_all(&config_dir);
+    let data_path = get_data_path();
 
-    // let config_file = Path::new(&config_dir).join("config.json");
-    let config_file: PathBuf = [&config_dir, "config.json"].iter().collect();
-
-    if config_file.exists() {
+    if Path::new(&data_path.config_file_path).exists() {
         return;
     }
 
-    let db = [&config_dir, "clippy.sqlite"]
-        .iter()
-        .collect::<PathBuf>()
-        .to_string_lossy()
-        .to_string();
+    let config = Config {
+        db: data_path.db_file_path.clone(),
+    };
 
-    let config = Config { db };
-
-    let _ = fs::write(config_file, serde_json::to_string(&config).unwrap());
+    let _ = fs::write(
+        &data_path.config_file_path,
+        serde_json::to_string(&config).unwrap(),
+    );
 }
