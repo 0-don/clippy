@@ -24,7 +24,7 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
 fn get_prod_database_url() -> String {
     let data_path = get_data_path();
 
-    let json = std::fs::read_to_string(data_path.db_file_path).unwrap();
+    let json = std::fs::read_to_string(data_path.config_file_path).unwrap();
 
     let config: Config = serde_json::from_str(&json).unwrap();
 

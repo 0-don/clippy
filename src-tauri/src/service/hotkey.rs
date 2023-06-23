@@ -8,8 +8,6 @@ pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
 
     let hotkeys = hotkey::Entity::find().all(&db).await?;
 
-    db.close().await?;
-
     Ok(hotkeys)
 }
 
@@ -21,8 +19,6 @@ pub async fn update_hotkey_db(hotkey: Model) -> Result<Model, DbErr> {
     let updated_hotkey = hotkey::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
-
-    db.close().await?;
 
     Ok(updated_hotkey)
 }

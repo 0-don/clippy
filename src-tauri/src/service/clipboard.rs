@@ -8,9 +8,9 @@ use sea_orm::{
 };
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
-    let db = connection::establish_connection().await;
+    let db = connection::establish_connection().await?;
 
-    let mut clip_db: Model = clipboard.insert(&db.unwrap()).await?;
+    let mut clip_db: Model = clipboard.insert(&db).await?;
 
     if clip_db.content.is_some() && clip_db.content.as_ref().unwrap().len() > 100 {
         clip_db.content = clip_db.content.unwrap()[..100].to_string().into();
@@ -61,8 +61,6 @@ pub async fn get_clipboards_db(
         })
         .collect();
 
-    db.close().await?;
-
     Ok(parsed_model)
 }
 
@@ -75,11 +73,7 @@ pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
         ..Default::default()
     };
 
-    println!("model: {:?}", model);
-
     let _clipboard = clipboard::Entity::update(model).exec(&db).await?;
-
-    db.close().await?;
 
     Ok(true)
 }
@@ -88,8 +82,6 @@ pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
     let db = connection::establish_connection().await?;
 
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
-
-    db.close().await?;
 
     Ok(true)
 }
