@@ -1,11 +1,13 @@
 use std::{fs, path::PathBuf, sync::OnceLock};
 
 use clipboard_master::Master;
-use serde::{Deserialize, Serialize};
 use tauri::{LogicalSize, Manager};
 use window_shadows::set_shadow;
 
-use crate::{service::window::get_config_path, utils::clipboard::clipboard_handler::Handler};
+use crate::{
+    service::window::get_config_path, types::types::Config,
+    utils::clipboard::clipboard_handler::Handler,
+};
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
@@ -32,11 +34,6 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     create_config();
 
     Ok(())
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Config {
-    db: String,
 }
 
 pub fn create_config() {

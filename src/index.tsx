@@ -1,5 +1,4 @@
 import { listen } from "@tauri-apps/api/event";
-import { appDataDir, appLocalDataDir } from "@tauri-apps/api/path";
 import { appWindow } from "@tauri-apps/api/window";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
@@ -19,10 +18,6 @@ const Index = () => {
   createResource(init);
 
   onMount(async () => {
-    const appLocalDataDirPath = await appLocalDataDir();
-    const appDataDirPath = await appDataDir();
-    console.log(appLocalDataDirPath, appDataDirPath);
-
     const focus = appWindow.onFocusChanged(async ({ payload }) => {
       if (!payload) {
         await appWindow.hide();

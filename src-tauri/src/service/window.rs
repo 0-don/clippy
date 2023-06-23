@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use tauri::Manager;
 
 use crate::utils::setup::APP;

@@ -3,7 +3,7 @@ import { FiMoon } from "solid-icons/fi";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsRocket } from "solid-icons/vs";
-import { Component, Show, createEffect } from "solid-js";
+import { Component, Show } from "solid-js";
 import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
 import SwitchField from "../../elements/SwitchField";
@@ -16,10 +16,6 @@ interface SettingsGeneralProps {}
 export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
   const { settings, updateSettings } = SettingsStore;
   const { getHotkey } = HotkeyStore;
-
-  createEffect(() => {
-    console.log(settings()?.startup);
-  });
 
   return (
     <Show when={settings()}>

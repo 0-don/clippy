@@ -5,6 +5,7 @@ mod commands;
 mod connection;
 mod service;
 mod utils;
+mod types;
 use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
 use utils::{setup, tray};
