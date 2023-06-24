@@ -3,6 +3,7 @@ import { BsDeviceHdd } from "solid-icons/bs";
 import { FiTrash2 } from "solid-icons/fi";
 import { Component, createSignal, onMount } from "solid-js";
 import { formatBytes } from "../../../utils/helpers";
+import { TextBlock } from "../../elements/TextBlock";
 
 interface SettingsHistoryProps {}
 
@@ -23,26 +24,15 @@ export const SettingsHistory: Component<SettingsHistoryProps> = ({}) => {
 
   return (
     <>
-      <div class="rounded-md border border-solid border-zinc-700 shadow-2xl">
-        <div class="mb-2 flex items-center space-x-2 bg-zinc-800 px-5 pb-2.5 pt-5">
-          <BsDeviceHdd
-            title="Refresh"
-            class="cursor-pointer hover:text-zinc-400"
-            onClick={async () =>
-              setDatabaseInfo(await invoke<DatabaseInfo>("get_db_size"))
-            }
-          />
-          <h2 class="font-semibold">Local Storage</h2>
-        </div>
-
+      <TextBlock Icon={BsDeviceHdd} title="Local Storage">
         <ul class="mx-5 list-disc px-5 pb-5">
           <li>{`${databaseInfo().records} local items (${formatBytes(
             databaseInfo().size
           )}) are saved on this computer`}</li>
         </ul>
-      </div>
+      </TextBlock>
 
-      <div class="flex w-full justify-end pt-5">
+      <div class="flex w-full justify-end">
         <button
           type="button"
           onClick={async () => {

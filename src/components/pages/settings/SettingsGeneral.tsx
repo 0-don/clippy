@@ -60,7 +60,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
 
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
-            <FiMoon class="text-white" />
+            <FiMoon class="dark:text-white" />
             <h6 class="text-sm">Switch Theme.</h6>
           </div>
           <div>
