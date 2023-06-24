@@ -77,7 +77,7 @@ pub async fn delete_clipboard(id: i32) -> Result<bool, ()> {
 }
 
 #[tauri::command]
-pub async fn clear_clipboards(id: i32) -> Result<bool, ()> {
+pub async fn clear_clipboards() -> Result<bool, ()> {
     let deleted = clear_clipboards_db().await;
 
     Ok(deleted.unwrap())

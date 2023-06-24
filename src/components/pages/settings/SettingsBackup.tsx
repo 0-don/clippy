@@ -1,10 +1,9 @@
-import { BsClockHistory, BsGlobeAmericas } from "solid-icons/bs";
-import { FaSolidUpload } from "solid-icons/fa";
+import { BsGlobeAmericas } from "solid-icons/bs";
+import { FiUpload } from "solid-icons/fi";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { TbDatabaseStar } from "solid-icons/tb";
-import { Component, Show, createEffect, createSignal } from "solid-js";
+import { Component, Show, createSignal } from "solid-js";
 import SettingsStore from "../../../store/SettingsStore";
-import { Dropdown } from "../../elements/Dropdown";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
 
@@ -12,15 +11,14 @@ interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const [url, setUrl] = createSignal<string>();
-  const { settings, updateSettings } = SettingsStore;
+  const { settings, syncClipboard } = SettingsStore;
 
-  createEffect(() => {
-    // const getUrl = async () => {
-    //   const res = await window.electron.getDatbasePath();
-    //   if (res) setUrl(res);
-    // };
-    // getUrl();
-  });
+  // createEffect(
+  //   on(settings, async () => {
+  //     const res = await invoke<string>("get_db_path");
+  //     setUrl(res);
+  //   })
+  // );
 
   return (
     <>
@@ -33,34 +31,13 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div>
             <SwitchField
               checked={settings()?.synchronize || false}
-              onChange={async () => {}}
+              onChange={async () => syncClipboard()}
             />
           </div>
         </div>
-        {/* <Show when={settings()?.synchronize}>
-          <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
-            <div class="flex items-center space-x-2 truncate">
-              <BsClockHistory />
-              <h6 class="text-sm">Change backup time</h6>
-            </div>
-            <div class="flex items-center">
-              <p class="text-sm">Minutes:&nbsp;</p>
-              <Dropdown
-                items={["1", "5", "10", "15", "30", "60"]}
-                value={"" + (settings()?.synchronize_time || 60) / 60}
-                onChange={async (syncTime) => {
-                  await updateSettings({
-                    ...settings()!,
-                    synchronize_time: Number(syncTime) * 60,
-                  });
-                }}
-              />
-            </div>
-          </div>
-        </Show> */}
       </TextBlock>
 
-      <Show when={url() && settings()?.synchronize}>
+      <Show when={url()}>
         <TextBlock
           Icon={BsGlobeAmericas}
           title="Database Location"
@@ -82,7 +59,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
                 {url()}
               </div>
               <div class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400">
-                <FaSolidUpload />
+                <FiUpload class="dark:text-white" />
                 <div>Browse</div>
               </div>
             </button>

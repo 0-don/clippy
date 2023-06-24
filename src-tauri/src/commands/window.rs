@@ -37,6 +37,16 @@ pub async fn get_db_size() -> Result<u64, ()> {
 }
 
 #[tauri::command]
+pub async fn get_db_path() -> Result<String, ()> {
+    let data_path = get_data_path();
+
+    let config: Config =
+        serde_json::from_str(&read_to_string(&data_path.config_file_path).unwrap()).unwrap();
+
+    Ok(config.db)
+}
+
+#[tauri::command]
 pub fn sync_clipboard_history(dir: Option<String>) {
     let data_path = get_data_path();
 
