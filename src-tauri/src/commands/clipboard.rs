@@ -7,7 +7,7 @@ use tauri::Manager;
 
 use crate::{
     service::clipboard::{
-        delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
+        delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db, clear_clipboards_db,
     },
     utils::setup::APP,
 };
@@ -74,4 +74,11 @@ pub async fn delete_clipboard(id: i32) -> Result<bool, ()> {
     let clipboard = delete_clipboard_db(id).await;
 
     Ok(clipboard.unwrap())
+}
+
+#[tauri::command]
+pub async fn clear_clipboards(id: i32) -> Result<bool, ()> {
+    let deleted = clear_clipboards_db().await;
+
+    Ok(deleted.unwrap())
 }

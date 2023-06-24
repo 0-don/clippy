@@ -4,8 +4,8 @@
 mod commands;
 mod connection;
 mod service;
-mod utils;
 mod types;
+mod utils;
 use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
 use utils::{setup, tray};
@@ -25,12 +25,14 @@ fn main() {
             clipboard::delete_clipboard,
             clipboard::star_clipboard,
             clipboard::copy_clipboard,
+            clipboard::clear_clipboards,
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
             settings::get_settings,
             settings::update_settings,
             window::window_display_toggle,
-            window::sync_clipboard_history
+            window::sync_clipboard_history,
+            window::get_db_size
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

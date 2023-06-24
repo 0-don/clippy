@@ -85,3 +85,14 @@ pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
 
     Ok(true)
 }
+
+pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
+    let db = connection::establish_connection().await?;
+
+    clipboard::Entity::delete_many()
+        .filter(clipboard::Column::Star.eq(false))
+        .exec(&db)
+        .await?;
+
+    Ok(true)
+}

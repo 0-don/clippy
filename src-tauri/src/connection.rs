@@ -4,12 +4,7 @@ use sea_orm::{Database, DbConn};
 use crate::{service::window::get_data_path, types::types::Config};
 
 pub async fn establish_connection() -> Result<DbConn, DbErr> {
-    let database_url = if cfg!(debug_assertions) {
-        // String::from("sqlite://../clippy.sqlite?mode=rwc")
-        get_prod_database_url()
-    } else {
-        get_prod_database_url()
-    };
+    let database_url = get_prod_database_url();
 
     let db = Database::connect(&database_url)
         .await
