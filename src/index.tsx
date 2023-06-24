@@ -1,4 +1,5 @@
 import { listen } from "@tauri-apps/api/event";
+import { sendNotification } from "@tauri-apps/api/notification";
 import { appWindow } from "@tauri-apps/api/window";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
@@ -13,34 +14,30 @@ import { removeAllHotkeyListeners } from "./utils/hotkeyRegister";
 const Index = () => {
   const { initHotkeys } = HotkeyStore;
   const { setClipboards } = ClipboardStore;
-  const { init } = SettingsStore;
+  const { init, settings } = SettingsStore;
 
   createResource(init);
 
   onMount(async () => {
-    const focus = appWindow.onFocusChanged(async ({ payload }) => {
+    appWindow.onFocusChanged(async ({ payload }) => {
       if (!payload) {
         await appWindow.hide();
         removeAllHotkeyListeners();
       }
     });
 
-    const clipboardListener = listen<Clips>(
-      "clipboard_listener",
-      ({ payload }) => setClipboards((prev) => [payload, ...prev])
-    );
+    listen<Clips>("clipboard_listener", ({ payload }) => {
+      settings()?.notification &&
+        sendNotification({
+          title: `New ${payload.type}`,
+          body: "Copied to clipboard",
+        });
+      setClipboards((prev) => [payload, ...prev]);
+    });
 
-    const initLisiner = listen("init_listener", init);
+    listen("init_listener", init);
 
-    const initHotkeysListener = listen("init_hotkeys_listener", () =>
-      initHotkeys(true)
-    );
-
-    // onCleanup(async () => {
-    //   (await clipboardListener)();
-    //   (await focus)();
-    //   (await initLisiner)();
-    // });
+    listen("init_hotkeys_listener", () => initHotkeys(true));
   });
 
   return <App />;

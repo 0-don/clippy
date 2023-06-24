@@ -17,7 +17,7 @@ tauri-build = { version = "1.4", features = [] }
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1.28.2", features = ["full"] }
-tauri = { version = "1.4", features = [ "dialog-open",
+tauri = { version = "1.4", features = [ "notification-all", "dialog-open",
   "app-all",
   "window-create",
   "process-exit",
