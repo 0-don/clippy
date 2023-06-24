@@ -47,9 +47,9 @@ default-features = false
 custom-protocol = ["tauri/custom-protocol"]
 
 
-[profile.release]
-panic = "abort"
-codegen-units = 1
-lto = true
-opt-level = "s"
-strip = true
+# [profile.release]
+# panic = "abort"
+# codegen-units = 1
+# lto = true
+# opt-level = "s"
+# strip = true
