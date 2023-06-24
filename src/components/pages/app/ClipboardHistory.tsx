@@ -45,7 +45,7 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
 
   return (
     <>
-      <div class="flex items-center bg-zinc-800 px-3 py-2">
+      <div class="flex items-center dark:bg-zinc-800 px-3 py-2">
         <div class="relative w-full">
           <input
             placeholder="search"

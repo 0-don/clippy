@@ -22,7 +22,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
     return (
       <button
         type="button"
-        class="w-full cursor-pointer px-3 hover:bg-neutral-700"
+        class="w-full cursor-pointer px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
         onClick={onClick}
       >
         <div class="flex items-center justify-between py-4">
@@ -30,7 +30,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
             <div class="relative">
               <div innerHTML={JSON.parse(hotkey.icon)} class="text-2xl" />
               <Show when={globalHotkeyEvent() && hotkey.status}>
-                <div class="absolute left-0 top-0 -ml-2 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
+                <div class="absolute left-0 top-0 -ml-2 -mt-3 rounded-sm bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
                   {hotkey.key}
                 </div>
               </Show>
