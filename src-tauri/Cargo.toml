@@ -17,8 +17,7 @@ tauri-build = { version = "1.4", features = [] }
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1.28.2", features = ["full"] }
-tauri = { version = "1.4", features = [ "notification-all", "dialog-open",
-  "app-all",
+tauri = { version = "1.4", features = [ "app-all", "notification-all", "dialog-open",
   "window-create",
   "process-exit",
   "global-shortcut-all",
@@ -48,9 +47,9 @@ default-features = false
 custom-protocol = ["tauri/custom-protocol"]
 
 
-# [profile.release]
-# panic = "abort"
-# codegen-units = 1
-# lto = true
-# opt-level = "s"
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
 # strip = true

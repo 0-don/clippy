@@ -58,7 +58,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* About */}
       {createButton("About", createAboutWindow)}
       {/* Exit */}
-      {createButton("Exit", exit)}
+      {createButton("Exit", async () => await exit(1))}
     </>
   );
 };
