@@ -44,7 +44,7 @@ pub fn create_config() {
     }
 
     let config = Config {
-        db: format!("sqlite://{}?mode=rwc", &data_path.db_file_path),
+        db: format!("{}", &data_path.db_file_path),
     };
 
     let _ = fs::write(

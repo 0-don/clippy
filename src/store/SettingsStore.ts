@@ -5,8 +5,8 @@ import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
-import { createRoot,createSignal } from "solid-js";
-import { disable,enable } from "tauri-plugin-autostart-api";
+import { createRoot, createSignal } from "solid-js";
+import { disable, enable } from "tauri-plugin-autostart-api";
 import { Settings } from "../@types";
 import HotkeyStore from "./HotkeyStore";
 
@@ -88,7 +88,9 @@ function createSettingsStore() {
       })) as string;
     }
 
-    updateSettings({
+    if (dir === null) return;
+
+    await updateSettings({
       ...settings()!,
       synchronize,
     });
