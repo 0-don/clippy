@@ -1,8 +1,9 @@
+import { invoke } from "@tauri-apps/api";
 import { BsGlobeAmericas } from "solid-icons/bs";
 import { FiUpload } from "solid-icons/fi";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { TbDatabaseStar } from "solid-icons/tb";
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Show, createEffect, createSignal, on } from "solid-js";
 import SettingsStore from "../../../store/SettingsStore";
 import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
@@ -13,12 +14,13 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const [url, setUrl] = createSignal<string>();
   const { settings, syncClipboard } = SettingsStore;
 
-  // createEffect(
-  //   on(settings, async () => {
-  //     const res = await invoke<string>("get_db_path");
-  //     setUrl(res);
-  //   })
-  // );
+  createEffect(
+    on(
+      () => settings()?.synchronize,
+      () =>
+        setTimeout(async () => setUrl(await invoke<string>("get_db_path")), 100)
+    )
+  );
 
   return (
     <>
@@ -31,7 +33,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div>
             <SwitchField
               checked={settings()?.synchronize || false}
-              onChange={async () => syncClipboard()}
+              onChange={syncClipboard}
             />
           </div>
         </div>
@@ -47,10 +49,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <button
               type="button"
               class="group relative w-full cursor-pointer"
-              onClick={async () => {
-                // const res = await window.electron.selectDatabasePath();
-                // if (res) setUrl(res);
-              }}
+              onClick={syncClipboard}
             >
               <div
                 title={url()}

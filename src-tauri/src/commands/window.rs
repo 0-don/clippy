@@ -1,6 +1,9 @@
 use crate::{
-    service::window::{get_data_path, init_hotkey},
-    types::types::Config,
+    service::{
+        clipboard::count_clipboards_db,
+        window::{get_data_path, init_hotkey},
+    },
+    types::types::{Config, DatabaseInfo},
     utils::setup::APP,
 };
 use std::{
@@ -26,14 +29,16 @@ pub fn window_display_toggle() {
 }
 
 #[tauri::command]
-pub async fn get_db_size() -> Result<u64, ()> {
+pub async fn get_db_size() -> Result<DatabaseInfo, ()> {
     let data_path = get_data_path();
 
     let config: Config =
         serde_json::from_str(&read_to_string(&data_path.config_file_path).unwrap()).unwrap();
     let size = fs::metadata(config.db).unwrap().len();
 
-    Ok(size)
+    let records = count_clipboards_db().await.unwrap();
+
+    Ok(DatabaseInfo { records, size })
 }
 
 #[tauri::command]

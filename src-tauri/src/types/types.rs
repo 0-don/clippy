@@ -11,3 +11,9 @@ pub struct DataPath {
     pub db_file_path: String,
     pub config_file_path: String,
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct DatabaseInfo {
+    pub records: u64,
+    pub size: u64,
+}

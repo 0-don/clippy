@@ -4,7 +4,7 @@ use crate::connection;
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, QueryOrder, QuerySelect,
-    QueryTrait, Set,
+    QueryTrait, Set, PaginatorTrait,
 };
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
@@ -95,4 +95,13 @@ pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
         .await?;
 
     Ok(true)
+}
+
+
+pub async fn count_clipboards_db() -> Result<u64, DbErr> {
+    let db = connection::establish_connection().await?;
+
+    let count = clipboard::Entity::find().count(&db).await?;
+
+    Ok(count)
 }
