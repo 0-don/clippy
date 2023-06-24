@@ -140,7 +140,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             return (
               <button
                 type="button"
-                class="group w-full cursor-pointer px-3 hover:bg-neutral-700"
+                class="group w-full cursor-pointer px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
                 onClick={(e) => {
                   e.stopPropagation();
 
@@ -174,7 +174,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           <VsSymbolColor class="text-2xl text-zinc-700 dark:text-white" />
                         )}
                         <Show when={globalHotkeyEvent()}>
-                          <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
+                          <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
                             {index() + 1 < 10 && index() + 1}
                           </div>
                         </Show>
@@ -194,7 +194,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         <div class="flex" title={content || ""}>
                           {type === "color" && (
                             <div
-                              class="mr-1 h-5 w-5 border border-solid border-black"
+                              class="mr-1 h-5 w-5 border border-solid border-zinc-400 dark:border-black"
                               style={{
                                 "background-color": `${
                                   content?.includes("#")
@@ -216,7 +216,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                     {IconFunctions(clipboard)}
                   </div>
                 </div>
-                <hr class="border-zinc-700" />
+                <hr class="dark:border-zinc-700 border-zinc-400" />
               </button>
             );
           }}
