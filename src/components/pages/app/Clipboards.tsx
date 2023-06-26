@@ -216,7 +216,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                     {IconFunctions(clipboard)}
                   </div>
                 </div>
-                <hr class="dark:border-zinc-700 border-zinc-400" />
+                <hr class="border-zinc-400 dark:border-zinc-700" />
               </button>
             );
           }}
