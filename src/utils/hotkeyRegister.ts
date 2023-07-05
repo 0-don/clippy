@@ -1,10 +1,10 @@
 import { invoke } from "@tauri-apps/api";
 import {
-isRegistered,
-register,
-registerAll,
-unregister,
-unregisterAll,
+  isRegistered,
+  register,
+  registerAll,
+  unregister,
+  unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 import { exit } from "@tauri-apps/api/process";
 import { appWindow } from "@tauri-apps/api/window";
@@ -12,8 +12,8 @@ import { Hotkey } from "../@types";
 import AppStore from "../store/AppStore";
 import ClipboardStore from "../store/ClipboardStore";
 import HotkeyStore from "../store/HotkeyStore";
-import { CLIPBOARD_HOTKEYS,SIDEBAR_ICON_NAMES } from "./constants";
-import { createAboutWindow,createSettingsWindow } from "./helpers";
+import { CLIPBOARD_HOTKEYS, SIDEBAR_ICON_NAMES } from "./constants";
+import { createAboutWindow, createSettingsWindow } from "./helpers";
 
 export const parseShortcut = (hotkey: Hotkey) => {
   const { ctrl, alt, shift, key } = hotkey;
@@ -130,7 +130,11 @@ export const removeAllHotkeyListeners = async () => {
   }
 
   for (const hotkey of hotkeys()) {
-    if (hotkey.event === "window_display_toggle") continue;
+    if (
+      hotkey.event === "window_display_toggle" ||
+      hotkey.event === "type_clipboard"
+    )
+      continue;
     try {
       await unregister(hotkey.shortcut);
     } catch (_) {}
