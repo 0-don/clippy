@@ -22,9 +22,10 @@
 ### features
 
 - images & text support
+- keybinds for everything
 - add favorite clipboards
 - instant search
 - change database location
 - change keyboard bindings
-- darkmode
+- dark mode / white mode
   
