@@ -19,6 +19,7 @@
   </p>
 </p>
 
+successor of [the electron clippy](https://github.com/Don-Cryptus/clippy)
 ### features
 
 - images & text support
