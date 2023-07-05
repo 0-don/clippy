@@ -26,4 +26,5 @@
 - instant search
 - change database location
 - change keyboard bindings
+- darkmode
   
