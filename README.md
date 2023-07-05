@@ -18,3 +18,12 @@
     <img src="public/clippy-showcase.webp" alt="Logo" >
   </p>
 </p>
+
+### features
+
+- images & text support
+- add favorite clipboards
+- instant search
+- change database location
+- change keyboard bindings
+  
