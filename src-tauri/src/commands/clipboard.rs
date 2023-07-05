@@ -89,8 +89,6 @@ pub async fn clear_clipboards() -> Result<bool, ()> {
 pub async fn type_clipboard() -> Result<bool, ()> {
     let clipboard = get_last_clipboard_db().await;
 
-    println!("test");
-
     if clipboard.is_ok() {
         let r#type = &clipboard.as_ref().unwrap().r#type;
 

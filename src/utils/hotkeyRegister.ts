@@ -51,7 +51,6 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   const typeHotkey = hotkeys.find((h) => h.event === "type_clipboard");
   if (typeHotkey?.status && !(await isRegistered(typeHotkey.shortcut))) {
     try {
-      console.log(typeHotkey.shortcut);
       await register(typeHotkey.shortcut, () => invoke("type_clipboard"));
     } catch (_) {}
   }
