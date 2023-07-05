@@ -20,6 +20,7 @@
 </p>
 
 successor of [the electron clippy](https://github.com/Don-Cryptus/clippy)
+
 ### features
 
 - images & text support
@@ -29,4 +30,3 @@ successor of [the electron clippy](https://github.com/Don-Cryptus/clippy)
 - change database location
 - change keyboard bindings
 - dark mode / white mode
-  
