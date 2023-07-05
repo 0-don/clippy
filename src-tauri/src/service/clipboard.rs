@@ -27,6 +27,17 @@ pub async fn get_clipboard_db(id: i32) -> Result<Model, DbErr> {
     Ok(model.unwrap())
 }
 
+pub async fn get_last_clipboard_db() -> Result<Model, DbErr> {
+    let db = connection::establish_connection().await?;
+
+    let model = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::Id)
+        .one(&db)
+        .await?;
+
+    Ok(model.unwrap())
+}
+
 pub async fn get_clipboards_db(
     cursor: Option<u64>,
     search: Option<String>,

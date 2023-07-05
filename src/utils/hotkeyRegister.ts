@@ -1,10 +1,10 @@
 import { invoke } from "@tauri-apps/api";
 import {
-  isRegistered,
-  register,
-  registerAll,
-  unregister,
-  unregisterAll,
+isRegistered,
+register,
+registerAll,
+unregister,
+unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 import { exit } from "@tauri-apps/api/process";
 import { appWindow } from "@tauri-apps/api/window";
@@ -12,8 +12,8 @@ import { Hotkey } from "../@types";
 import AppStore from "../store/AppStore";
 import ClipboardStore from "../store/ClipboardStore";
 import HotkeyStore from "../store/HotkeyStore";
-import { CLIPBOARD_HOTKEYS, SIDEBAR_ICON_NAMES } from "./constants";
-import { createAboutWindow, createSettingsWindow } from "./helpers";
+import { CLIPBOARD_HOTKEYS,SIDEBAR_ICON_NAMES } from "./constants";
+import { createAboutWindow,createSettingsWindow } from "./helpers";
 
 export const parseShortcut = (hotkey: Hotkey) => {
   const { ctrl, alt, shift, key } = hotkey;
@@ -39,16 +39,24 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   // ############################################
 
   // Display and hide the app window
-  const mainHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
-  if (mainHotkey?.status && !(await isRegistered(mainHotkey.shortcut))) {
+  const windowHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
+  if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
     try {
-      await register(mainHotkey.shortcut, () =>
+      await register(windowHotkey.shortcut, () =>
         invoke("window_display_toggle")
       );
     } catch (_) {}
   }
 
-  if (!await appWindow.isVisible()) return;
+  const typeHotkey = hotkeys.find((h) => h.event === "type_clipboard");
+  if (typeHotkey?.status && !(await isRegistered(typeHotkey.shortcut))) {
+    try {
+      console.log(typeHotkey.shortcut);
+      await register(typeHotkey.shortcut, () => invoke("type_clipboard"));
+    } catch (_) {}
+  }
+
+  if (!(await appWindow.isVisible())) return;
 
   // copy to clipboard
   try {

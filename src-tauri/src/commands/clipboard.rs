@@ -2,12 +2,14 @@ extern crate alloc;
 
 use alloc::borrow::Cow;
 use arboard::{Clipboard, ImageData};
+use enigo::*;
 use entity::clipboard::Model;
 use tauri::Manager;
 
 use crate::{
     service::clipboard::{
-        delete_clipboard_db, get_clipboard_db, get_clipboards_db, star_clipboard_db, clear_clipboards_db,
+        clear_clipboards_db, delete_clipboard_db, get_clipboard_db, get_clipboards_db,
+        get_last_clipboard_db, star_clipboard_db,
     },
     utils::setup::APP,
 };
@@ -81,4 +83,20 @@ pub async fn clear_clipboards() -> Result<bool, ()> {
     let deleted = clear_clipboards_db().await;
 
     Ok(deleted.unwrap())
+}
+
+#[tauri::command]
+pub async fn type_clipboard() -> Result<bool, ()> {
+    let clipboard = get_last_clipboard_db().await;
+
+    if clipboard.is_ok() {
+        let r#type = &clipboard.as_ref().unwrap().r#type;
+
+        if r#type != "image" {
+            let mut enigo = Enigo::new();
+            enigo.key_sequence(clipboard.unwrap().content.unwrap().as_str());
+        }
+    }
+
+    Ok(true)
 }

@@ -15,8 +15,8 @@
   "dependencies": {
     "@kobalte/core": "^0.9.8",
     "@tauri-apps/api": "^1.4.0",
-    "dayjs": "^1.11.8",
-    "solid-icons": "^1.0.9",
+    "dayjs": "^1.11.9",
+    "solid-icons": "^1.0.11",
     "solid-js": "^1.7.7",
     "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart",
     "tauri-plugin-clipboard-api": "^0.2.5",
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@kobalte/tailwindcss": "^0.6.5",
     "@tauri-apps/cli": "^1.4.0",
-    "@types/node": "^20.3.2",
+    "@types/node": "^20.3.3",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",

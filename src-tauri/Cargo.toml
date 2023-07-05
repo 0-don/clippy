@@ -34,6 +34,7 @@ image = "0.24.6"
 tauri-plugin-positioner = { version = "1.0.4", features = ["system-tray"] }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 window-shadows = "0.2.1"
+enigo = "0.1.2"
 
 
 [dependencies.sea-orm]

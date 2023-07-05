@@ -38,6 +38,7 @@ export type Settings = {
 
 export type HotkeyEvent =
   | "window_display_toggle"
+  | "type_clipboard"
   | "recent_clipboards"
   | "recent_clipboards"
   | "history"

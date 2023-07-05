@@ -26,6 +26,7 @@ fn main() {
             clipboard::star_clipboard,
             clipboard::copy_clipboard,
             clipboard::clear_clipboards,
+            clipboard::type_clipboard,
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
             settings::get_settings,
@@ -34,6 +35,7 @@ fn main() {
             window::sync_clipboard_history,
             window::get_db_size,
             window::get_db_path,
+            
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

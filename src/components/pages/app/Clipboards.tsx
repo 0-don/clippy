@@ -148,7 +148,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                     dbClickTimer = setTimeout(async () => {
                       await invoke("copy_clipboard", { id });
                       removeAllHotkeyListeners();
-                    }, 200);
+                    }, clipboard.type === "image" ? 200 : 0);
                   }
                 }}
                 onDblClick={async (e) => {
