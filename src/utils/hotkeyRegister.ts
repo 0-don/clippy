@@ -42,9 +42,10 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   const windowHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
   if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
     try {
-      await register(windowHotkey.shortcut, () =>
-        invoke("window_display_toggle")
-      );
+      await register(windowHotkey.shortcut, () => {
+        updateSidebarIcons("Recent Clipboards");
+        invoke("window_display_toggle");
+      });
     } catch (_) {}
   }
 
