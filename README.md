@@ -19,7 +19,7 @@
   </p>
 </p>
 
-successor of [the electron clippy](https://github.com/Don-Cryptus/clippy)
+successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 
 ### features
 
