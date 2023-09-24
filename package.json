@@ -1,6 +1,6 @@
 {
   "name": "clippy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "start": "vite",
@@ -13,28 +13,28 @@
     "icon": "tauri icon"
   },
   "dependencies": {
-    "@kobalte/core": "^0.9.8",
+    "@kobalte/core": "^0.11.0",
     "@tauri-apps/api": "^1.4.0",
-    "dayjs": "^1.11.9",
-    "solid-icons": "^1.0.11",
-    "solid-js": "^1.7.8",
+    "dayjs": "^1.11.10",
+    "solid-icons": "^1.0.12",
+    "solid-js": "^1.7.12",
     "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart",
-    "tauri-plugin-clipboard-api": "^0.2.5",
+    "tauri-plugin-clipboard-api": "^0.3.1",
     "tauri-plugin-positioner-api": "^0.2.7"
   },
   "devDependencies": {
-    "@kobalte/tailwindcss": "^0.6.5",
+    "@kobalte/tailwindcss": "^0.8.0",
     "@tauri-apps/cli": "^1.4.0",
-    "@types/node": "^20.4.5",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.27",
-    "prettier": "^3.0.0",
+    "@types/node": "^20.6.4",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.30",
+    "prettier": "^3.0.3",
     "prettier-plugin-organize-imports": "^3.2.3",
-    "prettier-plugin-tailwindcss": "^0.4.1",
+    "prettier-plugin-tailwindcss": "^0.5.4",
     "tailwindcss": "^3.3.3",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.8",
-    "vite-plugin-checker": "^0.6.1",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-checker": "^0.6.2",
     "vite-plugin-solid": "^2.7.0"
   }
 }
