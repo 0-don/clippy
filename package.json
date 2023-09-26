@@ -25,7 +25,7 @@
   "devDependencies": {
     "@kobalte/tailwindcss": "^0.8.0",
     "@tauri-apps/cli": "^1.4.0",
-    "@types/node": "^20.6.4",
+    "@types/node": "^20.6.5",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.30",
     "prettier": "^3.0.3",
