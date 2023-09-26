@@ -44,17 +44,18 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
     try {
       await register(windowHotkey.shortcut, () => {
         updateSidebarIcons("Recent Clipboards");
+
         invoke("window_display_toggle");
       });
     } catch (_) {}
   }
 
-  const typeHotkey = hotkeys.find((h) => h.event === "type_clipboard");
-  if (typeHotkey?.status && !(await isRegistered(typeHotkey.shortcut))) {
-    try {
-      await register(typeHotkey.shortcut, () => invoke("type_clipboard"));
-    } catch (_) {}
-  }
+  // const typeHotkey = hotkeys.find((h) => h.event === "type_clipboard");
+  // if (typeHotkey?.status && !(await isRegistered(typeHotkey.shortcut))) {
+  //   try {
+  //     await register(typeHotkey.shortcut, () => invoke("type_clipboard"));
+  //   } catch (_) {}
+  // }
 
   if (!(await appWindow.isVisible())) return;
 
@@ -68,7 +69,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
 
   // sidebar navigation
   const siderbarHotkeys = hotkeys.filter((h) =>
-    SIDEBAR_ICON_NAMES.includes(h.name)
+    SIDEBAR_ICON_NAMES.includes(h.name),
   );
 
   for (const hotkey of siderbarHotkeys) {
@@ -79,12 +80,12 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   }
 
   const syncClipboardHistory = hotkeys.find(
-    (h) => h.event === "sync_clipboard_history"
+    (h) => h.event === "sync_clipboard_history",
   );
   try {
     if (syncClipboardHistory?.status)
       await register(syncClipboardHistory.shortcut, () =>
-        invoke("sync_clipboard_history")
+        invoke("sync_clipboard_history"),
       );
   } catch (error) {}
 
@@ -113,7 +114,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
     const scrollToTop = hotkeys.find((h) => h.event === "scroll_to_top");
     if (scrollToTop?.status && getCurrentSidebarIcon()?.name !== "View more") {
       await register(scrollToTop.shortcut, () =>
-        clipboardRef()!.scrollTo(0, 0)
+        clipboardRef()!.scrollTo(0, 0),
       );
     }
   } catch (_) {}

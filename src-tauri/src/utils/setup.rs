@@ -1,8 +1,10 @@
-use std::{fs, path::Path, sync::OnceLock};
-
+use arboard::Clipboard;
 use clipboard_master::Master;
+
+use std::sync::{Arc, Mutex};
+use std::{fs, path::Path, sync::OnceLock};
 use tauri::{LogicalSize, Manager};
-use window_shadows::set_shadow;
+// use window_shadows::set_shadow;
 
 use crate::{
     service::window::get_data_path, types::types::Config,
@@ -13,9 +15,13 @@ pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
+pub static CLIPBOARD: OnceLock<Arc<Mutex<Clipboard>>> = OnceLock::new();
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     APP.set(app.handle()).expect("error initializing tauri app");
+
+    let clipboard = Clipboard::new()?;
+    let _ = CLIPBOARD.set(Arc::new(Mutex::new(clipboard)));
 
     create_config();
 

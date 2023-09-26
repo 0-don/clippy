@@ -1,7 +1,7 @@
 extern crate alloc;
 
 use alloc::borrow::Cow;
-use arboard::{Clipboard, ImageData};
+use arboard::ImageData;
 use enigo::*;
 use entity::clipboard::Model;
 use tauri::Manager;
@@ -11,7 +11,7 @@ use crate::{
         clear_clipboards_db, delete_clipboard_db, get_clipboard_db, get_clipboards_db,
         get_last_clipboard_db, star_clipboard_db,
     },
-    utils::setup::APP,
+    utils::setup::{APP, CLIPBOARD},
 };
 
 #[tauri::command]
@@ -30,7 +30,7 @@ pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
     let clipboard = get_clipboard_db(id).await;
 
     if clipboard.is_ok() {
-        let mut clip = Clipboard::new().unwrap();
+        // let mut clip = Clipboard::new().unwrap();
         let r#type = &clipboard.as_ref().unwrap().r#type;
 
         if r#type == "image" {
@@ -47,10 +47,22 @@ pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
                 bytes: Cow::from(image.as_bytes()),
             };
 
-            clip.set_image(img_data).unwrap();
+            CLIPBOARD
+                .get()
+                .unwrap()
+                .lock()
+                .unwrap()
+                .set_image(img_data)
+                .unwrap();
         } else {
             let content = clipboard.unwrap().content.unwrap();
-            clip.set_text(content).unwrap();
+            CLIPBOARD
+                .get()
+                .unwrap()
+                .lock()
+                .unwrap()
+                .set_text(content)
+                .unwrap();
         }
 
         APP.get()

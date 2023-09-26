@@ -1,5 +1,8 @@
-use crate::{connection, service::clipboard::insert_clipboard_db, utils::setup::APP};
-use arboard::Clipboard;
+use crate::{
+    connection,
+    service::clipboard::insert_clipboard_db,
+    utils::setup::{APP, CLIPBOARD},
+};
 use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
@@ -7,9 +10,11 @@ use std::io::Cursor;
 use tauri::{regex::Regex, Manager};
 
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
-    let mut clipboard = Clipboard::new().unwrap();
-
-    let mut text: Option<String> = clipboard
+    let mut text: Option<String> = CLIPBOARD
+        .get()
+        .unwrap()
+        .lock()
+        .unwrap()
         .get_text()
         .ok()
         .unwrap_or("".into())
@@ -20,7 +25,7 @@ pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
         text = None;
     }
 
-    let image = clipboard.get_image().ok();
+    let image = CLIPBOARD.get().unwrap().lock().unwrap().get_image().ok();
 
     let image: Option<RgbaImage> = if image.is_some() {
         ImageBuffer::from_raw(
