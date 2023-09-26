@@ -37,7 +37,10 @@ const Index = () => {
 
     listen("init_listener", init);
 
-    listen("init_hotkeys_listener", () => initHotkeys(true));
+    listen("init_hotkeys_listener", () => {
+      console.log("init_hotkeys_listener");
+      initHotkeys(true);
+    });
   });
 
   return <App />;

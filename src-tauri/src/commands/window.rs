@@ -18,8 +18,10 @@ pub fn window_display_toggle() {
     let win = APP.get().unwrap().get_window("main").unwrap();
 
     if win.is_visible().unwrap() {
+        println!("Hiding window");
         let _ = win.hide();
     } else {
+        println!("Showing window");
         init_hotkey();
         let _ = win.show();
         let _ = win.set_focus();
