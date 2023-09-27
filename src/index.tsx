@@ -41,13 +41,12 @@ const Index = () => {
     const init_listener = await listen("init_listener", init);
 
     const init_hotkeys_listener = await listen("init_hotkeys_listener", () => {
-      console.log("init_hotkeys_listener");
-      // initHotkeys(true);
+      initHotkeys(true);
     });
 
     return async () => {
-      // clipboard_listener();
-      // init_listener();
+      clipboard_listener();
+      init_listener();
       init_hotkeys_listener();
     };
   });

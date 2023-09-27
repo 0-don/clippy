@@ -105,7 +105,6 @@ impl ClipboardHelper {
             && last_clipboard.blob.is_some()
             && image.as_ref().unwrap() == last_clipboard.blob.as_ref().unwrap()
         {
-            
             return true;
         }
 
