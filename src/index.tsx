@@ -26,21 +26,30 @@ const Index = () => {
       }
     });
 
-    listen<Clips>("clipboard_listener", ({ payload }) => {
-      settings()?.notification &&
-        sendNotification({
-          title: `New ${payload.type}`,
-          body: "Copied to clipboard",
-        });
-      setClipboards((prev) => [payload, ...prev]);
-    });
+    const clipboard_listener = await listen<Clips>(
+      "clipboard_listener",
+      ({ payload }) => {
+        settings()?.notification &&
+          sendNotification({
+            title: `New ${payload.type}`,
+            body: "Copied to clipboard",
+          });
+        setClipboards((prev) => [payload, ...prev]);
+      },
+    );
 
-    listen("init_listener", init);
+    const init_listener = await listen("init_listener", init);
 
-    listen("init_hotkeys_listener", () => {
+    const init_hotkeys_listener = await listen("init_hotkeys_listener", () => {
       console.log("init_hotkeys_listener");
-      initHotkeys(true);
+      // initHotkeys(true);
     });
+
+    return async () => {
+      // clipboard_listener();
+      // init_listener();
+      init_hotkeys_listener();
+    };
   });
 
   return <App />;
