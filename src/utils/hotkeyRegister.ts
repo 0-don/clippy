@@ -41,13 +41,18 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   // Display and hide the app window
   const windowHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
   if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
+    console.log("registering", await isRegistered(windowHotkey.shortcut));
     try {
       await register(windowHotkey.shortcut, () => {
+        console.log("registered");
         updateSidebarIcons("Recent Clipboards");
 
         invoke("window_display_toggle");
       });
-    } catch (_) {}
+    } catch (_) {
+      console.log("error");
+      registerHotkeys(hotkeys);
+    }
   }
 
   // const typeHotkey = hotkeys.find((h) => h.event === "type_clipboard");
