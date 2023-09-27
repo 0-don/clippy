@@ -26,6 +26,30 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
             let _ = win.show();
             let _ = win.set_focus();
         }
+        SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("Clicked on tray icon");
+            let win = app.get_window("main").unwrap();
+            let _ = win.move_window(Position::TrayCenter);
+            init_hotkey();
+            let _ = win.show();
+            let _ = win.set_focus();
+        }
+        SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("Clicked on tray icon");
+            let win = app.get_window("main").unwrap();
+            let _ = win.move_window(Position::TrayCenter);
+            init_hotkey();
+            let _ = win.show();
+            let _ = win.set_focus();
+        }
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
             "open" => {
                 let win = app.get_window("main").unwrap();
@@ -35,8 +59,12 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
                 let _ = win.set_focus();
             }
             "quit" => app.exit(1),
-            _ => {}
+            _ => {
+                println!("Unhandled tray event");
+            }
         },
-        _ => {}
+        _ => {
+            println!("Unhandled tray event");
+        }
     }
 }

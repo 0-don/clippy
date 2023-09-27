@@ -21,7 +21,7 @@ const Index = () => {
   onMount(async () => {
     appWindow.onFocusChanged(async ({ payload }) => {
       if (!payload) {
-        await appWindow.hide();
+        // await appWindow.hide();
         removeAllHotkeyListeners();
       }
     });
