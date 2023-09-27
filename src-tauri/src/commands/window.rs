@@ -17,6 +17,8 @@ use tauri_plugin_positioner::{Position, WindowExt};
 pub fn window_display_toggle() {
     let win = APP.get().unwrap().get_window("main").unwrap();
 
+    println!("Window is visible: {:?}", win.is_visible());
+
     if win.is_visible().unwrap() {
         println!("Hiding window");
         let _ = win.hide();

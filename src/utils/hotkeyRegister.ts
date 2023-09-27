@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import {
+  isRegistered,
   register,
   registerAll,
   unregister,
@@ -31,6 +32,8 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   const { getCurrentSidebarIcon, updateSidebarIcons } = AppStore;
   const { clipboards, clipboardRef } = ClipboardStore;
 
+  // await sleep(1000);
+  //
   // await unregisterAll();
 
   // ############################################
@@ -40,9 +43,10 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   // Display and hide the app window
   const windowHotkey = hotkeys.find((h) => h.event === "window_display_toggle");
 
-  if (windowHotkey?.status) {
+  if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
     try {
       await register(windowHotkey.shortcut, () => {
+        console.log("window_display_toggle");
         updateSidebarIcons("Recent Clipboards");
         invoke("window_display_toggle");
       });
