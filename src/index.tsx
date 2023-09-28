@@ -19,9 +19,10 @@ const Index = () => {
   createResource(init);
 
   onMount(async () => {
-    appWindow.onFocusChanged(async ({ payload }) => {
+    appWindow.onFocusChanged(({ payload }) => {
+      console.log(payload);
       if (!payload) {
-        // await appWindow.hide();
+        appWindow.hide();
         removeAllHotkeyListeners();
       }
     });
