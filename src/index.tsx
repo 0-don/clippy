@@ -9,10 +9,10 @@ import ClipboardStore from "./store/ClipboardStore";
 import HotkeyStore from "./store/HotkeyStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
-import { removeAllHotkeyListeners } from "./utils/hotkeyRegister";
+import { registerHotkeys } from "./utils/hotkeyRegister";
 
 const Index = () => {
-  const { initHotkeys } = HotkeyStore;
+  const { hotkeys } = HotkeyStore;
   const { setClipboards } = ClipboardStore;
   const { init, settings } = SettingsStore;
 
@@ -21,10 +21,10 @@ const Index = () => {
   onMount(async () => {
     appWindow.onFocusChanged(({ payload }) => {
       console.log(payload);
-      if (!payload) {
-        appWindow.hide();
-        removeAllHotkeyListeners();
-      }
+      // if (!payload) {
+      //   appWindow.hide();
+      //   removeAllHotkeyListeners();
+      // }
     });
 
     const clipboard_listener = await listen<Clips>(
@@ -42,7 +42,7 @@ const Index = () => {
     const init_listener = await listen("init_listener", init);
 
     const init_hotkeys_listener = await listen("init_hotkeys_listener", () => {
-      initHotkeys(true);
+      registerHotkeys(hotkeys());
     });
 
     return async () => {
