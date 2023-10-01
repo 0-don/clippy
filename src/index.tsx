@@ -19,12 +19,13 @@ const Index = () => {
   createResource(init);
 
   onMount(async () => {
-    appWindow.onFocusChanged(({ payload }) => {
+    console.log("mounted");
+    const focus = await appWindow.onFocusChanged(({ payload }) => {
       console.log(payload);
-      // if (!payload) {
-      //   appWindow.hide();
-      //   removeAllHotkeyListeners();
-      // }
+      if (!payload) {
+        // appWindow.hide();
+        //   removeAllHotkeyListeners();
+      }
     });
 
     const clipboard_listener = await listen<Clips>(
@@ -41,14 +42,15 @@ const Index = () => {
 
     const init_listener = await listen("init_listener", init);
 
-    const init_hotkeys_listener = await listen("init_hotkeys_listener", () => {
-      registerHotkeys(hotkeys());
-    });
+    const init_hotkeys_listener = await listen("init_hotkeys_listener", () =>
+      registerHotkeys(hotkeys()),
+    );
 
     return async () => {
       clipboard_listener();
       init_listener();
       init_hotkeys_listener();
+      focus();
     };
   });
 
