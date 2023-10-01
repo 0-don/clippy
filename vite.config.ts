@@ -1,5 +1,3 @@
-import { join, resolve } from "path";
-import checker from "vite-plugin-checker";
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
 
@@ -7,36 +5,21 @@ import solidPlugin from "vite-plugin-solid";
 export default defineConfig({
   plugins: [
     solidPlugin(),
-    checker({
-      typescript: true,
-    }),
+    // checker({
+    //   typescript: true,
+    // }),
   ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-  // prevent vite from obscuring rust errors
+  //
+  // 1. prevent vite from obscuring rust errors
   clearScreen: false,
-  // tauri expects a fixed port, fail if that port is not available
+  // 2. tauri expects a fixed port, fail if that port is not available
   server: {
     port: 1420,
     strictPort: true,
   },
-  // to make use of `TAURI_DEBUG` and other env variables
+  // 3. to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ["VITE_", "TAURI_"],
-  build: {
-    // Tauri supports es2021
-    target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
-    // don't minify for debug builds
-    minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
-    // produce sourcemaps for debug builds
-    sourcemap: !!process.env.TAURI_DEBUG,
-
-    rollupOptions: {
-      input: {
-        main: join(resolve(), "index.html"),
-        about: join(resolve(), "pages/about.html"),
-        settings: join(resolve(), "pages/settings.html"),
-      },
-    },
-  },
 });

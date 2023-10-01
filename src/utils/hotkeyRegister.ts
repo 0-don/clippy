@@ -54,13 +54,13 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   for (const hotkey of siderbarHotkeys) {
     try {
       if (hotkey.status)
-        register(hotkey.shortcut, () => updateSidebarIcons(hotkey.name));
+        await register(hotkey.shortcut, () => updateSidebarIcons(hotkey.name));
     } catch (_) {}
   }
 
   // copy to clipboard
   try {
-    registerAll(CLIPBOARD_HOTKEYS, async (num) => {
+    await registerAll(CLIPBOARD_HOTKEYS, async (num) => {
       await invoke("copy_clipboard", { id: clipboards()[Number(num) - 1].id });
       removeAllHotkeyListeners();
     });
@@ -86,7 +86,7 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   const about = hotkeys.find((h) => h.event === "about");
 
   try {
-    if (about?.status) register(about.shortcut, createAboutWindow);
+    if (about?.status) await register(about.shortcut, createAboutWindow);
   } catch (_) {}
 
   //exit
@@ -100,7 +100,9 @@ export async function registerHotkeys(hotkeys: Hotkey[]) {
   try {
     const scrollToTop = hotkeys.find((h) => h.event === "scroll_to_top");
     if (scrollToTop?.status && getCurrentSidebarIcon()?.name !== "View more") {
-      register(scrollToTop.shortcut, () => clipboardRef()!.scrollTo(0, 0));
+      await register(scrollToTop.shortcut, () =>
+        clipboardRef()!.scrollTo(0, 0),
+      );
     }
   } catch (_) {}
 
@@ -111,7 +113,7 @@ export const removeAllHotkeyListeners = async () => {
   const { hotkeys, setGlobalHotkeyEvent } = HotkeyStore;
   for (const key of CLIPBOARD_HOTKEYS) {
     try {
-      unregister(key);
+      await unregister(key);
     } catch (_) {}
   }
 
@@ -122,7 +124,7 @@ export const removeAllHotkeyListeners = async () => {
     )
       continue;
     try {
-      unregister(hotkey.shortcut);
+      await unregister(hotkey.shortcut);
     } catch (_) {}
   }
   setGlobalHotkeyEvent(false);

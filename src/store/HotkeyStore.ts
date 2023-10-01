@@ -23,6 +23,8 @@ function createHotkeyStore() {
     hotkeys().find((h) => h.event === event);
 
   const initHotkeys = async (reg: boolean | undefined = false) => {
+    // await unregisterAll();
+
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
       ...h,
       shortcut: parseShortcut(h),
@@ -36,15 +38,10 @@ function createHotkeyStore() {
     );
 
     if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
-      try {
-        register(windowHotkey.shortcut, () => {
-          console.log("window_display_toggle");
-          AppStore.updateSidebarIcons("Recent Clipboards");
-          invoke("window_display_toggle");
-        });
-      } catch (_) {
-        console.log("error");
-      }
+      register(windowHotkey.shortcut, () => {
+        AppStore.updateSidebarIcons("Recent Clipboards");
+        invoke("window_display_toggle");
+      }).catch(() => {});
     }
 
     if (reg) await registerHotkeys(hotkeys);
