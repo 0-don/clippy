@@ -1,9 +1,7 @@
 import { invoke } from "@tauri-apps/api";
-import { isRegistered, register } from "@tauri-apps/api/globalShortcut";
 import { createRoot, createSignal } from "solid-js";
 import { Hotkey, HotkeyEvent } from "../@types";
 import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
-import AppStore from "./AppStore";
 
 function createHotkeyStore() {
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
@@ -32,17 +30,17 @@ function createHotkeyStore() {
 
     setHotkeys(hotkeys);
 
-    // Display and hide the app window
-    const windowHotkey = hotkeys.find(
-      (h) => h.event === "window_display_toggle",
-    );
+    // // Display and hide the app window
+    // const windowHotkey = hotkeys.find(
+    //   (h) => h.event === "window_display_toggle",
+    // );
 
-    if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
-      register(windowHotkey.shortcut, () => {
-        AppStore.updateSidebarIcons("Recent Clipboards");
-        invoke("window_display_toggle");
-      }).catch(() => {});
-    }
+    // if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
+    //   register(windowHotkey.shortcut, () => {
+    //     AppStore.updateSidebarIcons("Recent Clipboards");
+    //     invoke("window_display_toggle");
+    //   }).catch(() => {});
+    // }
 
     if (reg) await registerHotkeys(hotkeys);
   };

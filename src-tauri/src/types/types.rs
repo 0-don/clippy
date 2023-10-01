@@ -1,3 +1,4 @@
+use global_hotkey::hotkey::HotKey;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -16,4 +17,11 @@ pub struct DataPath {
 pub struct DatabaseInfo {
     pub records: u64,
     pub size: u64,
+}
+
+#[derive(Debug)]
+pub struct Key {
+    pub id: u32,
+    pub key: &'static str,
+    pub hotkey: HotKey,
 }

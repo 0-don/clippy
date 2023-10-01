@@ -26,6 +26,8 @@ tauri = { version = "1", features = [ "app-all", "notification-all", "dialog-ope
   "window-set-focus",
   "window-show",
 ] }
+anyhow = "1"
+global-hotkey = "0"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 clipboard-master = "3"
