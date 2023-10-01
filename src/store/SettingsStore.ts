@@ -37,20 +37,20 @@ function createSettingsStore() {
 
   const setCurrentTab = (tabName: SettingsTabName) =>
     setTabs((prev) =>
-      prev.map((tab) => ({ ...tab, current: tab.name === tabName }))
+      prev.map((tab) => ({ ...tab, current: tab.name === tabName })),
     );
 
   const getCurrentTab = () => tabs().find((tab) => tab.current);
 
   const updateSettings = async (
     settings: Settings,
-    upload: boolean | undefined = true
+    upload: boolean | undefined = true,
   ) => {
     if (upload) await invoke("update_settings", { settings });
     setSettings(settings);
 
     try {
-      const env = import.meta.env;
+      const env = (import.meta as any).env;
       env.PROD && settings.startup ? await enable() : await disable();
     } catch (_) {}
   };
@@ -71,7 +71,7 @@ function createSettingsStore() {
     setSettings(settings);
 
     try {
-      const env = import.meta.env;
+      const env = (import.meta as any).env;
       env.PROD && settings.startup ? await enable() : await disable();
     } catch (_) {}
   };

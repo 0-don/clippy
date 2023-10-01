@@ -49,3 +49,7 @@ export type HotkeyEvent =
   | "exit"
   | "toggle_dev_tools"
   | "scroll_to_top";
+
+interface ImportMeta {
+  env: any;
+}
