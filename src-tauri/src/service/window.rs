@@ -1,6 +1,7 @@
 use std::{fs, path::PathBuf};
 
-use tauri::Manager;
+use tauri::{Manager, Window};
+use tauri_plugin_positioner::{Position, WindowExt};
 
 use crate::{types::types::DataPath, utils::setup::APP};
 
@@ -20,6 +21,21 @@ pub fn init_hotkey() {
         .unwrap()
         .emit("init_hotkeys_listener", Some(()))
         .unwrap();
+}
+
+pub fn get_main_window() -> Window {
+    APP.get().unwrap().get_window("main").unwrap()
+}
+
+pub fn toggle_main_window() {
+    let window = get_main_window();
+    if window.is_visible().unwrap() {
+        let _ = window.hide();
+    } else {
+        let _ = window.move_window(Position::BottomRight);
+        let _ = window.show();
+        let _ = window.set_focus();
+    }
 }
 
 pub fn get_data_path() -> DataPath {

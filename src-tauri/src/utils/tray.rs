@@ -1,7 +1,7 @@
-use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu};
-use tauri_plugin_positioner::{on_tray_event, Position, WindowExt};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
+use tauri_plugin_positioner::on_tray_event;
 
-use crate::service::window::init_hotkey;
+use crate::service::window::toggle_main_window;
 
 pub fn system_tray() -> SystemTray {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -18,46 +18,9 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
             position: _,
             size: _,
             ..
-        } => {
-            println!("Clicked on tray icon");
-            let win = app.get_window("main").unwrap();
-            let _ = win.move_window(Position::TrayCenter);
-            init_hotkey();
-            let _ = win.show();
-            let _ = win.set_focus();
-        }
-        SystemTrayEvent::RightClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("Clicked on tray icon");
-            let win = app.get_window("main").unwrap();
-            let _ = win.move_window(Position::TrayCenter);
-            init_hotkey();
-            let _ = win.show();
-            let _ = win.set_focus();
-        }
-        SystemTrayEvent::DoubleClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("Clicked on tray icon");
-            let win = app.get_window("main").unwrap();
-            let _ = win.move_window(Position::TrayCenter);
-            init_hotkey();
-            let _ = win.show();
-            let _ = win.set_focus();
-        }
+        } => toggle_main_window(),
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-            "open" => {
-                let win = app.get_window("main").unwrap();
-                let _ = win.move_window(Position::BottomRight);
-                init_hotkey();
-                let _ = win.show();
-                let _ = win.set_focus();
-            }
+            "open" => toggle_main_window(),
             "quit" => app.exit(1),
             _ => {
                 println!("Unhandled tray event");
