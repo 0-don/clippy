@@ -1,7 +1,7 @@
 use crate::{
     service::{hotkey::get_all_hotkeys_db, window::toggle_main_window},
     types::types::Key,
-    utils::setup::{APP, GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER, HOTKEY_STOP_TX},
+    utils::setup::{HotkeyEvent, APP, GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER, HOTKEY_STOP_TX},
 };
 use core::time::Duration;
 use global_hotkey::hotkey::HotKey;
@@ -9,7 +9,8 @@ use global_hotkey::GlobalHotKeyEvent;
 use tauri::Manager;
 use tokio::sync::oneshot;
 
-pub fn init_hotkey_listener(i: i32) -> () {
+pub fn init_hotkey_listener() -> () {
+    let receiver = GlobalHotKeyEvent::receiver();
     println!("init_hotkey_listener");
 
     tauri::async_runtime::spawn(async {
@@ -25,25 +26,58 @@ pub fn init_hotkey_listener(i: i32) -> () {
 
     let (new_stop_tx, mut stop_rx) = oneshot::channel();
     *HOTKEY_STOP_TX.get().unwrap().lock().unwrap() = Some(new_stop_tx);
-    let receiver = GlobalHotKeyEvent::receiver();
+
     tauri::async_runtime::spawn(async move {
         loop {
-            println!("{}", i);
             if let Ok(event) = receiver.try_recv() {
                 let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
 
                 if let Some(hotkey) = hotkeys.get(&event.id) {
-                    println!("Hotkey Pressed: {:?}", hotkey);
-                    toggle_main_window();
+                    parse_hotkey_event(&hotkey);
                 }
             }
 
             if stop_rx.try_recv().is_ok() {
                 break;
             }
+
             std::thread::sleep(Duration::from_millis(100));
         }
     });
+}
+
+pub fn parse_hotkey_event(key: &Key) {
+    let event: Result<HotkeyEvent, ()> = key.event.parse::<HotkeyEvent>();
+
+    match event {
+        Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
+        Ok(HotkeyEvent::TypeClipboard) => {
+            // Handle TypeClipboard event
+        }
+        Ok(HotkeyEvent::SyncClipboardHistory) => {
+            // Handle SyncClipboardHistory event
+        }
+        Ok(HotkeyEvent::Preferences) => {
+            // Handle Preferences event
+        }
+        Ok(HotkeyEvent::About) => {
+            // Handle About event
+        }
+        Ok(HotkeyEvent::Exit) => {
+            // Handle Exit event
+        }
+        Ok(
+            HotkeyEvent::RecentClipboard
+            | HotkeyEvent::StarredClipboard
+            | HotkeyEvent::History
+            | HotkeyEvent::ViewMore,
+        ) => {
+            // Handle grouped events: RecentClipboard, StarredClipboard, History, and ViewMore
+        }
+        Err(()) => {
+            // Handle invalid event string
+        }
+    }
 }
 
 pub fn register_hotkeys() {
@@ -54,7 +88,6 @@ pub fn register_hotkeys() {
 
     for (_, hotkey) in hotkeys_store.iter() {
         if window.is_visible().unwrap() {
-            println!("register_hotkeys");
             hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
         } else if hotkey.global {
             let key = hotkey_manager.register(hotkey.hotkey.clone());

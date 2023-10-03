@@ -1,4 +1,5 @@
 use super::hotkey::hotkey_listener::init_hotkey_listener;
+use crate::define_hotkey_event;
 use crate::types::types::Key;
 use crate::{
     service::window::get_data_path, types::types::Config,
@@ -24,17 +25,30 @@ pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static CLIPBOARD: OnceLock<Arc<Mutex<Clipboard>>> = OnceLock::new();
 
-pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "recent_clipboards"];
+define_hotkey_event! {
+    WindowDisplayToggle => "window_display_toggle",
+    TypeClipboard => "type_clipboard",
+    SyncClipboardHistory => "sync_clipboard_history",
+    Preferences => "preferences",
+    About => "about",
+    Exit => "exit",
+    RecentClipboard => "recent_clipboards",
+    StarredClipboard => "starred_clipboards",
+    History => "history",
+    ViewMore => "view_more",
+}
 
-pub static VIEW_MORE_EVENTS: [&'static str; 4] =
-    ["sync_clipboard_history", "preferences", "about", "exit"];
+pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
 
-pub static SIDEBAR_ICON_EVENTS: [&'static str; 4] = [
-    "recent_clipboards",
-    "starred_clipboards",
-    "history",
-    "view_more",
-];
+// pub static VIEW_MORE_EVENTS: [&'static str; 4] =
+//     ["sync_clipboard_history", "preferences", "about", "exit"];
+
+// pub static SIDEBAR_ICON_EVENTS: [&'static str; 4] = [
+//     "recent_clipboards",
+//     "starred_clipboards",
+//     "history",
+//     "view_more",
+// ];
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     APP.set(app.handle()).expect("error initializing tauri app");
@@ -56,10 +70,11 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
         window.open_devtools();
     }
 
+
+
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
 
-    init_hotkey_listener(1);
-    init_hotkey_listener(2);
+    init_hotkey_listener();
 
     Ok(())
 }
