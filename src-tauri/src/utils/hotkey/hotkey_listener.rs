@@ -29,10 +29,11 @@ pub fn init_hotkey_listener() -> () {
     let _ = hotkey_manager.register(hotkey).unwrap();
 
     let receiver = GlobalHotKeyEvent::receiver();
-    std::thread::spawn(|| {
-        let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
+    // Runtime;
+    tokio::spawn(async {
         loop {
             if let Ok(event) = receiver.try_recv() {
+                let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
                 if let Some(hotkey) = hotkeys.get(&event.id) {
                     println!("Hotkey Pressed: {:?}", hotkey);
                     toggle_main_window();
@@ -41,6 +42,16 @@ pub fn init_hotkey_listener() -> () {
             std::thread::sleep(Duration::from_millis(100));
         }
     });
+    // std::thread::spawn(|| loop {
+    //     if let Ok(event) = receiver.try_recv() {
+    //         let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
+    //         if let Some(hotkey) = hotkeys.get(&event.id) {
+    //             println!("Hotkey Pressed: {:?}", hotkey);
+    //             toggle_main_window();
+    //         }
+    //     }
+    //     std::thread::sleep(Duration::from_millis(100));
+    // });
 }
 
 pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
