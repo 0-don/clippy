@@ -1,57 +1,82 @@
+use crate::{
+    service::{hotkey::get_all_hotkeys_db, window::toggle_main_window},
+    types::types::Key,
+    utils::setup::{HOTKEYS, HOTKEY_MANAGER, HOTKEY_STOP_TX},
+};
 use core::time::Duration;
-
 use global_hotkey::hotkey::HotKey;
 use global_hotkey::GlobalHotKeyEvent;
-
-use crate::{
-    service::window::toggle_main_window,
-    types::types::Key,
-    utils::setup::{HOTKEYS, HOTKEY_MANAGER},
-};
+use tokio::sync::oneshot;
 
 pub fn init_hotkey_listener() -> () {
     println!("init_hotkey_listener");
 
-    let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
+    // If there's an existing sender, send a stop signal to the previous task
+    if let Some(sender) = HOTKEY_STOP_TX.get().unwrap().lock().unwrap().take() {
+        let _ = sender.send(());
+    }
 
-    let hotkey_str: String = parse_shortcut(true, false, false, "y");
-    let hotkey: HotKey = hotkey_str.parse().unwrap();
 
-    HOTKEYS.get().unwrap().lock().unwrap().insert(
-        hotkey.id(),
-        Key {
-            id: hotkey.id(),
-            key: hotkey_str,
-            hotkey: hotkey.clone(),
-        },
-    );
-
-    let _ = hotkey_manager.register(hotkey).unwrap();
-
+    // let (new_stop_tx, mut stop_rx) = oneshot::channel();
+    // *HOTKEY_STOP_TX.get().unwrap().lock().unwrap() = Some(new_stop_tx);
     let receiver = GlobalHotKeyEvent::receiver();
-    // Runtime;
-    tokio::spawn(async {
+    tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
                 let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
+                println!("Hotkey Pressed: {:?}", event.id);
                 if let Some(hotkey) = hotkeys.get(&event.id) {
                     println!("Hotkey Pressed: {:?}", hotkey);
                     toggle_main_window();
                 }
             }
-            std::thread::sleep(Duration::from_millis(100));
+            println!("looping");
+
+            // if stop_rx.try_recv().is_ok() {
+            //     break;
+            // }
+            std::thread::sleep(Duration::from_millis(1000));
         }
     });
-    // std::thread::spawn(|| loop {
-    //     if let Ok(event) = receiver.try_recv() {
-    //         let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
-    //         if let Some(hotkey) = hotkeys.get(&event.id) {
-    //             println!("Hotkey Pressed: {:?}", hotkey);
-    //             toggle_main_window();
-    //         }
-    //     }
-    //     std::thread::sleep(Duration::from_millis(100));
-    // });
+}
+
+
+
+pub async fn upsert_hotkeys_in_store() -> anyhow::Result<()> {
+    let hotkeys = get_all_hotkeys_db().await?;
+    let mut hotkey_store = HOTKEYS.get().unwrap().lock().unwrap();
+
+    for hotkey in hotkeys {
+        let hotkey_str: String = parse_shortcut(
+            hotkey.ctrl,
+            hotkey.alt,
+            hotkey.shift,
+            &hotkey.key.to_lowercase(),
+        );
+
+        let key: HotKey = hotkey_str.parse()?;
+
+        let key = Key {
+            id: key.id(),
+            event: hotkey.event,
+            key_str: hotkey_str,
+            ctrl: hotkey.ctrl,
+            alt: hotkey.alt,
+            shift: hotkey.shift,
+            key: hotkey.key,
+            hotkey: key,
+        };
+
+        if hotkey_store.get(&key.id).is_some() {
+            let _ = hotkey_store.remove(&key.id);
+        }
+
+        hotkey_store.insert(key.id, key);
+    }
+
+    println!("finsihed");
+
+    Ok(())
 }
 
 pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {

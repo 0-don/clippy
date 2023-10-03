@@ -22,6 +22,11 @@ pub struct DatabaseInfo {
 #[derive(Debug)]
 pub struct Key {
     pub id: u32,
+    pub key_str: String,
+    pub event: String,
+    pub ctrl: bool,
+    pub alt: bool,
+    pub shift: bool,
     pub key: String,
     pub hotkey: HotKey,
 }
