@@ -1,4 +1,4 @@
-use super::hotkey::hotkey_listener::{init_hotkey_listener, upsert_hotkeys_in_store};
+use super::hotkey::hotkey_listener::init_hotkey_listener;
 use crate::types::types::Key;
 use crate::{
     service::window::get_data_path, types::types::Config,
@@ -57,9 +57,9 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     }
 
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
-    tauri::async_runtime::spawn(async { upsert_hotkeys_in_store().await });
 
-    init_hotkey_listener();
+    init_hotkey_listener(1);
+    init_hotkey_listener(2);
 
     Ok(())
 }
