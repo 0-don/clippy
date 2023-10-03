@@ -52,7 +52,7 @@ pub fn init_hotkey_listener() -> () {
 }
 
 pub async fn parse_hotkey_event(key: &Key) {
-    let event: Result<HotkeyEvent, ()> = key.event.parse::<HotkeyEvent>();
+    let event = key.event.parse::<HotkeyEvent>();
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
@@ -66,9 +66,7 @@ pub async fn parse_hotkey_event(key: &Key) {
         Ok(HotkeyEvent::About) => {
             // Handle About event
         }
-        Ok(HotkeyEvent::Exit) => {
-            // Handle Exit event
-        }
+        Ok(HotkeyEvent::Exit) => APP.get().unwrap().exit(1),
         Ok(
             HotkeyEvent::RecentClipboard
             | HotkeyEvent::StarredClipboard
