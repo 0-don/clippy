@@ -19,7 +19,7 @@ pub struct DatabaseInfo {
     pub size: u64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Key {
     pub id: u32,
     pub global: bool,

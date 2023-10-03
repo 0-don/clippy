@@ -1,7 +1,10 @@
 use crate::{
     service::{hotkey::get_all_hotkeys_db, window::toggle_main_window},
     types::types::Key,
-    utils::setup::{HotkeyEvent, APP, GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER, HOTKEY_STOP_TX},
+    utils::{
+        clipboard::clipboard_helper::type_last_clipboard,
+        setup::{HotkeyEvent, APP, GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER, HOTKEY_STOP_TX},
+    },
 };
 use core::time::Duration;
 use global_hotkey::hotkey::HotKey;
@@ -30,10 +33,12 @@ pub fn init_hotkey_listener() -> () {
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
-                let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
-
-                if let Some(hotkey) = hotkeys.get(&event.id) {
-                    parse_hotkey_event(&hotkey);
+                let hotkey = {
+                    let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
+                    hotkeys.get(&event.id).cloned()
+                };
+                if let Some(hotkey) = hotkey {
+                    parse_hotkey_event(&hotkey).await;
                 }
             }
 
@@ -46,14 +51,12 @@ pub fn init_hotkey_listener() -> () {
     });
 }
 
-pub fn parse_hotkey_event(key: &Key) {
+pub async fn parse_hotkey_event(key: &Key) {
     let event: Result<HotkeyEvent, ()> = key.event.parse::<HotkeyEvent>();
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
-        Ok(HotkeyEvent::TypeClipboard) => {
-            // Handle TypeClipboard event
-        }
+        Ok(HotkeyEvent::TypeClipboard) => type_last_clipboard().await,
         Ok(HotkeyEvent::SyncClipboardHistory) => {
             // Handle SyncClipboardHistory event
         }
