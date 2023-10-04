@@ -1,9 +1,15 @@
-use std::{fs, path::PathBuf};
+use std::{
+    fs::{self, read_to_string},
+    path::{Path, PathBuf},
+};
 
-use tauri::{Manager, Window};
+use tauri::{api::dialog::blocking::FileDialogBuilder, Manager, Window};
 use tauri_plugin_positioner::{Position, WindowExt};
 
-use crate::{types::types::DataPath, utils::setup::APP};
+use crate::{
+    types::types::{Config, DataPath},
+    utils::setup::APP,
+};
 
 pub fn init_event() {
     APP.get()
@@ -67,5 +73,47 @@ pub fn get_data_path() -> DataPath {
         config_path,
         db_file_path,
         config_file_path,
+    }
+}
+
+pub fn sync_clipboard_history() {
+    let data_path = get_data_path();
+
+    // get local config from app data
+    let mut config: Config =
+        serde_json::from_str(&read_to_string(&data_path.config_file_path).unwrap()).unwrap();
+    let dir = FileDialogBuilder::new().pick_folder();
+
+    // check if user disabled backup or not
+    if dir.is_some() {
+        // path to backup file
+        let dir_file = dir.unwrap().to_string_lossy().to_string();
+
+        // check if backup file exists
+        if !Path::new(&dir_file).exists() {
+            // copy current database to backup location
+            let _ = fs::copy(&config.db, &dir_file);
+        }
+
+        // overwrite config database location
+        config.db = dir_file.to_string();
+
+        // overwrite config file
+        let _ = fs::write(
+            &data_path.config_file_path,
+            serde_json::to_string(&config).unwrap(),
+        );
+    } else {
+        // copy backup file to default database location
+        let _ = fs::copy(&config.db, &data_path.db_file_path);
+
+        // overwrite config database default location
+        config.db = data_path.db_file_path;
+
+        // overwrite config file
+        let _ = fs::write(
+            &data_path.config_file_path,
+            serde_json::to_string(&config).unwrap(),
+        );
     }
 }

@@ -3,7 +3,7 @@ use crate::{
         hotkey::{get_all_hotkeys_db, update_hotkey_db},
         window::init_event,
     },
-    utils::hotkey::hotkey_listener::unregister_hotkeys,
+    utils::hotkey::hotkey_manager::unregister_hotkeys,
 };
 use entity::hotkey::Model;
 
