@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api";
 import { createRoot, createSignal } from "solid-js";
 import { Hotkey, HotkeyEvent } from "../@types";
-import { parseShortcut, registerHotkeys } from "../utils/hotkeyRegister";
+import { parseShortcut } from "../utils/hotkeyRegister";
 
 function createHotkeyStore() {
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
@@ -20,7 +20,7 @@ function createHotkeyStore() {
   const getHotkey = (event: HotkeyEvent) =>
     hotkeys().find((h) => h.event === event);
 
-  const initHotkeys = async (reg: boolean | undefined = false) => {
+  const initHotkeys = async () => {
     // await unregisterAll();
 
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
@@ -41,8 +41,6 @@ function createHotkeyStore() {
     //     invoke("window_display_toggle");
     //   }).catch(() => {});
     // }
-
-    if (reg) await registerHotkeys(hotkeys);
   };
 
   return {
