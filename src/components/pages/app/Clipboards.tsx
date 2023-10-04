@@ -63,7 +63,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             star: !clipboard.star,
           });
           setClipboards((prev) =>
-            prev.map((o) => (o.id === id ? { ...o, star: !clipboard.star } : o))
+            prev.map((o) =>
+              o.id === id ? { ...o, star: !clipboard.star } : o,
+            ),
           );
         }}
         class={`${
@@ -133,7 +135,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               ? URL.createObjectURL(
                   new Blob([new Uint8Array(blob)], {
                     type: "image/png",
-                  })
+                  }),
                 )
               : null;
 
@@ -145,10 +147,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   e.stopPropagation();
 
                   if (e.detail === 1) {
-                    dbClickTimer = setTimeout(async () => {
-                      await invoke("copy_clipboard", { id });
-                      removeAllHotkeyListeners();
-                    }, clipboard.type === "image" ? 200 : 0);
+                    dbClickTimer = setTimeout(
+                      async () => {
+                        await invoke("copy_clipboard", { id });
+                        removeAllHotkeyListeners();
+                      },
+                      clipboard.type === "image" ? 200 : 0,
+                    );
                   }
                 }}
                 onDblClick={async (e) => {
@@ -187,7 +192,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(
-                            Number(size || "0")
+                            Number(size || "0"),
                           )}`}
                         />
                       ) : (

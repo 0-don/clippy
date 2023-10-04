@@ -12,7 +12,7 @@ const Settings = () => {
   const { getCurrentTab, initSettings } = SettingsStore;
   const { initHotkeys } = HotkeyStore;
 
-  initHotkeys(false);
+  initHotkeys();
   initSettings();
 
   return (

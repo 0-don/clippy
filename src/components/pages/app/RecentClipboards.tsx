@@ -1,4 +1,4 @@
-import { Component, createEffect, onMount } from "solid-js";
+import { Component, onMount } from "solid-js";
 import ClipboardStore from "../../../store/ClipboardStore";
 import { Clipboards } from "./Clipboards";
 

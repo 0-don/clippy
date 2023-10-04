@@ -1,15 +1,15 @@
 import { defineConfig } from "vite";
+import checker from "vite-plugin-checker";
 import solidPlugin from "vite-plugin-solid";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     solidPlugin(),
-    // checker({
-    //   typescript: true,
-    // }),
+    checker({
+      typescript: true,
+    }),
   ],
-
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent vite from obscuring rust errors
