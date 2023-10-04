@@ -36,6 +36,15 @@ define_hotkey_event! {
     StarredClipboard => "starred_clipboards",
     History => "history",
     ViewMore => "view_more",
+    Key1 => "key_1",
+    Key2 => "key_2",
+    Key3 => "key_3",
+    Key4 => "key_4",
+    Key5 => "key_5",
+    Key6 => "key_6",
+    Key7 => "key_7",
+    Key8 => "key_8",
+    Key9 => "key_9",
 }
 
 pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
@@ -61,7 +70,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
 
     create_config();
 
-    let window = app.get_window("main").unwrap();
+    let window: tauri::Window = app.get_window("main").unwrap();
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
     #[cfg(any(windows, target_os = "macos"))]
     set_shadow(&window, true).unwrap();
@@ -69,8 +78,6 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     {
         window.open_devtools();
     }
-
-
 
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
 

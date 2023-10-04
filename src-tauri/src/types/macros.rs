@@ -6,6 +6,14 @@ macro_rules! define_hotkey_event {
             $($name,)*
         }
 
+        impl HotkeyEvent {
+            pub fn as_str(&self) -> &'static str {
+                match *self {
+                    $(HotkeyEvent::$name => $value,)*
+                }
+            }
+        }
+
         impl std::str::FromStr for HotkeyEvent {
             type Err = ();
 

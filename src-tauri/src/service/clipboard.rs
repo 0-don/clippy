@@ -1,11 +1,17 @@
 extern crate alloc;
 
-use crate::connection;
+use crate::{
+    connection,
+    utils::setup::{APP, CLIPBOARD},
+};
+use alloc::borrow::Cow;
+use arboard::ImageData;
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, QueryFilter, QueryOrder, QuerySelect,
-    QueryTrait, Set, PaginatorTrait,
+    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
+    QuerySelect, QueryTrait, Set,
 };
+use tauri::Manager;
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
     let db = connection::establish_connection().await?;
@@ -108,11 +114,82 @@ pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
     Ok(true)
 }
 
-
 pub async fn count_clipboards_db() -> Result<u64, DbErr> {
     let db = connection::establish_connection().await?;
 
     let count = clipboard::Entity::find().count(&db).await?;
 
     Ok(count)
+}
+
+pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
+    let db = connection::establish_connection().await?;
+
+    let model = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::Id)
+        .offset(Some(i))
+        .limit(1)
+        .one(&db)
+        .await?;
+
+    if model.is_none() {
+        return Ok(None);
+    }
+
+    let model = model.unwrap();
+    let _ = copy_clipboard_from_id(model.id).await;
+
+    Ok(Some(model))
+}
+
+pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
+    let clipboard = get_clipboard_db(id).await;
+
+    if clipboard.is_ok() {
+        // let mut clip = Clipboard::new().unwrap();
+        let r#type = &clipboard.as_ref().unwrap().r#type;
+
+        if r#type == "image" {
+            let clipboard_ref = clipboard.as_ref().unwrap();
+            let width = clipboard_ref.width.unwrap() as usize;
+            let height = clipboard_ref.height.unwrap() as usize;
+            let blob = clipboard_ref.blob.as_ref().unwrap();
+
+            let image = image::load_from_memory(blob).unwrap();
+
+            let img_data = ImageData {
+                width,
+                height,
+                bytes: Cow::from(image.as_bytes()),
+            };
+
+            CLIPBOARD
+                .get()
+                .unwrap()
+                .lock()
+                .unwrap()
+                .set_image(img_data)
+                .unwrap();
+        } else {
+            let content = clipboard.unwrap().content.unwrap();
+            CLIPBOARD
+                .get()
+                .unwrap()
+                .lock()
+                .unwrap()
+                .set_text(content)
+                .unwrap();
+        }
+
+        APP.get()
+            .unwrap()
+            .get_window("main")
+            .unwrap()
+            .hide()
+            .unwrap();
+
+        return Ok(true);
+    }
+
+    Ok(false)
 }

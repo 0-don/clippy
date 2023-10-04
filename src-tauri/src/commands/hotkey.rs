@@ -1,6 +1,9 @@
-use crate::service::{
-    hotkey::{get_all_hotkeys_db, update_hotkey_db},
-    window::init_event,
+use crate::{
+    service::{
+        hotkey::{get_all_hotkeys_db, update_hotkey_db},
+        window::init_event,
+    },
+    utils::hotkey::hotkey_listener::unregister_hotkeys,
 };
 use entity::hotkey::Model;
 
@@ -18,4 +21,9 @@ pub async fn update_hotkey(hotkey: Model) -> Result<Model, String> {
     init_event();
 
     Ok(res.unwrap())
+}
+
+#[tauri::command]
+pub async fn stop_hotkeys() -> Result<(), String> {
+    Ok(unregister_hotkeys(false))
 }
