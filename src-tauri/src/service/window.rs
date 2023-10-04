@@ -8,7 +8,7 @@ use tauri_plugin_positioner::{Position, WindowExt};
 
 use crate::{
     types::types::{Config, DataPath},
-    utils::setup::APP,
+    utils::{hotkey::hotkey_listener::init_hotkey_listener, setup::APP},
 };
 
 pub fn init_event() {
@@ -17,15 +17,6 @@ pub fn init_event() {
         .get_window("main")
         .unwrap()
         .emit("init_listener", Some(()))
-        .unwrap();
-}
-
-pub fn init_hotkey() {
-    APP.get()
-        .unwrap()
-        .get_window("main")
-        .unwrap()
-        .emit("init_hotkeys_listener", Some(()))
         .unwrap();
 }
 
@@ -42,6 +33,7 @@ pub fn toggle_main_window() {
         let _ = window.show();
         let _ = window.set_focus();
     }
+    init_hotkey_listener();
 }
 
 pub fn get_data_path() -> DataPath {

@@ -12,18 +12,14 @@ pub fn register_hotkeys() {
     let window = APP.get().unwrap().get_window("main").unwrap();
 
     for (_, hotkey) in hotkeys_store.iter() {
-        if window.is_visible().unwrap() {
-            hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
-        } else if hotkey.global {
-            let key = hotkey_manager.register(hotkey.hotkey.clone());
-            if key.is_err() {
+        if window.is_visible().is_ok() || hotkey.global {
+            if hotkey_manager.register(hotkey.hotkey.clone()).is_err() {
                 hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
                 hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
-            } else {
-                key.unwrap();
             }
         }
     }
+
 }
 
 pub fn unregister_hotkeys(all: bool) {
