@@ -36,7 +36,6 @@ async fn main() {
             settings::get_settings,
             settings::update_settings,
             window::window_display_toggle,
-            window::sync_clipboard_history,
             window::get_db_size,
             window::get_db_path,
         ])
