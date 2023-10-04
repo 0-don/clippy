@@ -76,7 +76,7 @@ pub fn get_data_path() -> DataPath {
     }
 }
 
-pub fn sync_clipboard_history() {
+pub async fn sync_clipboard_history() -> Result<(), ()> {
     let data_path = get_data_path();
 
     // get local config from app data
@@ -116,4 +116,6 @@ pub fn sync_clipboard_history() {
             serde_json::to_string(&config).unwrap(),
         );
     }
+
+    Ok(())
 }
