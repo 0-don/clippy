@@ -1,55 +1,36 @@
+import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
-import { sendNotification } from "@tauri-apps/api/notification";
 import { appWindow } from "@tauri-apps/api/window";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
-import { Clips } from "./@types";
 import App from "./components/pages/app/App";
-import ClipboardStore from "./store/ClipboardStore";
 import HotkeyStore from "./store/HotkeyStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
-import { registerHotkeys } from "./utils/hotkeyRegister";
 
 const Index = () => {
-  const { hotkeys } = HotkeyStore;
-  const { setClipboards } = ClipboardStore;
-  const { init, settings } = SettingsStore;
+  const { setGlobalHotkeyEvent } = HotkeyStore;
+  const { init } = SettingsStore;
 
   createResource(init);
 
   onMount(async () => {
-    console.log("mounted");
-    const focus = await appWindow.onFocusChanged(({ payload }) => {
-      console.log(payload);
-      if (!payload) {
-        // appWindow.hide();
-        //   removeAllHotkeyListeners();
-      }
-    });
+    setGlobalHotkeyEvent(true);
 
-    const clipboard_listener = await listen<Clips>(
-      "clipboard_listener",
-      ({ payload }) => {
-        settings()?.notification &&
-          sendNotification({
-            title: `New ${payload.type}`,
-            body: "Copied to clipboard",
-          });
-        setClipboards((prev) => [payload, ...prev]);
-      },
+    const focus = await appWindow.onFocusChanged(
+      async ({ payload }) =>
+        !payload && (await invoke("window_display_toggle")),
     );
 
     const init_listener = await listen("init_listener", init);
 
-    const init_hotkeys_listener = await listen("init_hotkeys_listener", () =>
-      registerHotkeys(hotkeys()),
-    );
+    setTimeout(async () => {
+      await invoke("stop_hotkeys");
+      setGlobalHotkeyEvent(false);
+    }, 5000);
 
     return async () => {
-      clipboard_listener();
       init_listener();
-      init_hotkeys_listener();
       focus();
     };
   });

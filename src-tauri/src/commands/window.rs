@@ -1,32 +1,15 @@
 use crate::{
     service::{
         clipboard::count_clipboards_db,
-        window::{get_data_path, init_hotkey},
+        window::{get_data_path, toggle_main_window},
     },
     types::types::{Config, DatabaseInfo},
-    utils::setup::APP,
 };
 use std::fs::{self, read_to_string};
-use tauri::Manager;
-use tauri_plugin_positioner::{Position, WindowExt};
 
 #[tauri::command]
 pub fn window_display_toggle() {
-    let win = APP.get().unwrap().get_window("main").unwrap();
-
-    println!("Window is visible: {:?}", win.is_visible());
-
-    if win.is_visible().unwrap() {
-        println!("Hiding window");
-        let _ = win.hide();
-    } else {
-        println!("Showing window");
-        init_hotkey();
-        let _ = win.show();
-        let _ = win.set_focus();
-    }
-
-    let _ = win.move_window(Position::BottomRight);
+    toggle_main_window();
 }
 
 #[tauri::command]

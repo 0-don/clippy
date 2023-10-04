@@ -18,7 +18,6 @@ use tokio::sync::oneshot;
 
 pub fn init_hotkey_listener() -> () {
     let receiver = GlobalHotKeyEvent::receiver();
-    println!("init_hotkey_listener");
 
     tauri::async_runtime::spawn(async {
         unregister_hotkeys(true);
