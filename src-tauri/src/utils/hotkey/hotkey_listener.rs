@@ -1,5 +1,8 @@
 use crate::{
-    service::{hotkey::get_all_hotkeys_db, window::toggle_main_window},
+    service::{
+        clipboard::copy_clipboard_from_index, hotkey::get_all_hotkeys_db,
+        window::toggle_main_window,
+    },
     types::types::Key,
     utils::{
         clipboard::clipboard_helper::type_last_clipboard,
@@ -9,6 +12,7 @@ use crate::{
 use core::time::Duration;
 use global_hotkey::hotkey::HotKey;
 use global_hotkey::GlobalHotKeyEvent;
+use tauri::regex::Regex;
 use tauri::Manager;
 use tokio::sync::oneshot;
 
@@ -54,36 +58,47 @@ pub fn init_hotkey_listener() -> () {
 pub async fn parse_hotkey_event(key: &Key) {
     let event = key.event.parse::<HotkeyEvent>();
 
+    let window = APP.get().unwrap().get_window("main").unwrap();
+
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
         Ok(HotkeyEvent::TypeClipboard) => type_last_clipboard().await,
-        Ok(HotkeyEvent::SyncClipboardHistory) => {
-            // Handle SyncClipboardHistory event
-        }
-        Ok(HotkeyEvent::Preferences) => {
-            // Handle Preferences event
-        }
-        Ok(HotkeyEvent::About) => {
-            // Handle About event
-        }
+        Ok(HotkeyEvent::SyncClipboardHistory) => window.emit("sync_popup", Some(())).unwrap(),
+        Ok(HotkeyEvent::Preferences) => window.emit("open_preferences_window", Some(())).unwrap(),
+        Ok(HotkeyEvent::About) => window.emit("open_about_window", Some(())).unwrap(),
         Ok(HotkeyEvent::Exit) => APP.get().unwrap().exit(1),
         Ok(
-            HotkeyEvent::RecentClipboard
+            e @ (HotkeyEvent::RecentClipboard
             | HotkeyEvent::StarredClipboard
             | HotkeyEvent::History
-            | HotkeyEvent::ViewMore,
+            | HotkeyEvent::ViewMore),
+        ) => window.emit("change_tab", Some(e.as_str())).unwrap(),
+        Ok(
+            e @ (HotkeyEvent::Key1
+            | HotkeyEvent::Key2
+            | HotkeyEvent::Key3
+            | HotkeyEvent::Key4
+            | HotkeyEvent::Key5
+            | HotkeyEvent::Key6
+            | HotkeyEvent::Key7
+            | HotkeyEvent::Key8
+            | HotkeyEvent::Key9),
         ) => {
-            // Handle grouped events: RecentClipboard, StarredClipboard, History, and ViewMore
+            let num = Regex::new(r"\d+")
+                .unwrap()
+                .find_iter(e.as_str())
+                .map(|m| m.as_str())
+                .collect::<String>()
+                .parse::<u64>()
+                .unwrap_or_default();
+            let _ = copy_clipboard_from_index(num - 1).await;
         }
-        Err(()) => {
-            // Handle invalid event string
-        }
+        Err(()) => println!("Error parsing hotkey event"),
     }
 }
 
 pub fn register_hotkeys() {
-    let hotkeys_store: std::sync::MutexGuard<'_, std::collections::HashMap<u32, Key>> =
-        HOTKEYS.get().unwrap().lock().unwrap();
+    let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
     let window = APP.get().unwrap().get_window("main").unwrap();
 
@@ -103,8 +118,7 @@ pub fn register_hotkeys() {
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    let hotkeys_store: std::sync::MutexGuard<'_, std::collections::HashMap<u32, Key>> =
-        HOTKEYS.get().unwrap().lock().unwrap();
+    let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
     for (_, hotkey) in hotkeys_store.iter() {
@@ -149,6 +163,30 @@ pub async fn upsert_hotkeys_in_store() -> anyhow::Result<()> {
         }
 
         hotkey_store.insert(key.id, key);
+    }
+
+    // Add 1..9 regular keys which are not global
+    for i in 1..=9 {
+        let hotkey_str = parse_shortcut(false, false, false, &i.to_string());
+        let key: HotKey = hotkey_str.parse()?;
+
+        let key_struct = Key {
+            id: key.id(),
+            global: false,               // These keys are not global
+            event: format!("key_{}", i), // Adjust this if you have specific events for the keys
+            key_str: hotkey_str,
+            ctrl: false,
+            alt: false,
+            shift: false,
+            key: i.to_string(),
+            hotkey: key,
+        };
+
+        if hotkey_store.get(&key_struct.id).is_some() {
+            let _ = hotkey_store.remove(&key_struct.id);
+        }
+
+        hotkey_store.insert(key_struct.id, key_struct);
     }
 
     Ok(())
