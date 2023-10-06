@@ -25,6 +25,7 @@ pub async fn update_hotkey(hotkey: Model) -> Result<Model, String> {
 
 #[tauri::command]
 pub async fn stop_hotkeys() -> Result<(), String> {
+    println!("stop_hotkeys");
     Ok(unregister_hotkeys(false))
 }
 

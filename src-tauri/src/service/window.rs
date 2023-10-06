@@ -1,15 +1,13 @@
+use crate::{
+    types::types::{Config, DataPath},
+    utils::{hotkey::hotkey_manager::register_hotkeys, setup::APP},
+};
 use std::{
     fs::{self, read_to_string},
     path::{Path, PathBuf},
 };
-
 use tauri::{api::dialog::blocking::FileDialogBuilder, Manager, Window};
 use tauri_plugin_positioner::{Position, WindowExt};
-
-use crate::{
-    types::types::{Config, DataPath},
-    utils::{hotkey::hotkey_listener::init_hotkey_listener, setup::APP},
-};
 
 pub fn get_main_window() -> Window {
     APP.get().unwrap().get_window("main").unwrap()
@@ -19,12 +17,12 @@ pub fn toggle_main_window() {
     let window = get_main_window();
     if window.is_visible().unwrap() {
         let _ = window.hide();
-        init_hotkey_listener(false);
+        register_hotkeys(false);
     } else {
         let _ = window.move_window(Position::BottomRight);
         let _ = window.show();
         let _ = window.set_focus();
-        init_hotkey_listener(true)
+        register_hotkeys(true)
         // init_event();
     }
 }
