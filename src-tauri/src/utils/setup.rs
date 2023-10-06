@@ -81,7 +81,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
 
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
 
-    init_hotkey_listener();
+    init_hotkey_listener(false);
 
     Ok(())
 }

@@ -6,20 +6,19 @@ use crate::{
 use global_hotkey::hotkey::HotKey;
 use tauri::Manager;
 
-pub fn register_hotkeys() {
+pub fn register_hotkeys(all: bool) {
     let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
     let window = APP.get().unwrap().get_window("main").unwrap();
 
     for (_, hotkey) in hotkeys_store.iter() {
-        if window.is_visible().is_ok() || hotkey.global {
+        if all || hotkey.global {
             if hotkey_manager.register(hotkey.hotkey.clone()).is_err() {
                 hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
                 hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
             }
         }
     }
-
 }
 
 pub fn unregister_hotkeys(all: bool) {

@@ -28,13 +28,14 @@ pub fn toggle_main_window() {
     let window = get_main_window();
     if window.is_visible().unwrap() {
         let _ = window.hide();
+        init_hotkey_listener(false);
     } else {
         let _ = window.move_window(Position::BottomRight);
         let _ = window.show();
         let _ = window.set_focus();
-        init_event();
+        init_hotkey_listener(true)
+        // init_event();
     }
-    init_hotkey_listener();
 }
 
 pub fn get_data_path() -> DataPath {
