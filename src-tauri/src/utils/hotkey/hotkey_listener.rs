@@ -59,6 +59,8 @@ pub async fn parse_hotkey_event(key: &Key) {
 
     let window = APP.get().unwrap().get_window("main").unwrap();
 
+    println!("event: {:?}", event);
+
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
         Ok(HotkeyEvent::TypeClipboard) => type_last_clipboard().await,

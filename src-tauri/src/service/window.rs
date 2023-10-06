@@ -11,15 +11,6 @@ use crate::{
     utils::{hotkey::hotkey_listener::init_hotkey_listener, setup::APP},
 };
 
-pub fn init_event() {
-    APP.get()
-        .unwrap()
-        .get_window("main")
-        .unwrap()
-        .emit("init_listener", Some(()))
-        .unwrap();
-}
-
 pub fn get_main_window() -> Window {
     APP.get().unwrap().get_window("main").unwrap()
 }
