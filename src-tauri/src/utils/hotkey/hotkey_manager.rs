@@ -1,15 +1,13 @@
 use crate::{
     service::hotkey::get_all_hotkeys_db,
     types::types::Key,
-    utils::setup::{APP, GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER},
+    utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER},
 };
 use global_hotkey::hotkey::HotKey;
-use tauri::Manager;
 
 pub fn register_hotkeys(all: bool) {
     let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
-    let window = APP.get().unwrap().get_window("main").unwrap();
 
     for (_, hotkey) in hotkeys_store.iter() {
         if all || hotkey.global {
@@ -26,9 +24,7 @@ pub fn unregister_hotkeys(all: bool) {
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
     for (_, hotkey) in hotkeys_store.iter() {
-        if all {
-            hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
-        } else if !hotkey.global {
+        if all || !hotkey.global {
             hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
         }
     }

@@ -1,9 +1,9 @@
 use crate::{
-    service::{
-        hotkey::{get_all_hotkeys_db, update_hotkey_db},
-        window::init_event,
+    service::hotkey::{get_all_hotkeys_db, update_hotkey_db},
+    utils::hotkey::{
+        hotkey_listener::init_hotkey_listener,
+        hotkey_manager::{register_hotkeys, unregister_hotkeys},
     },
-    utils::hotkey::hotkey_manager::unregister_hotkeys,
 };
 use entity::hotkey::Model;
 
@@ -18,7 +18,7 @@ pub async fn get_hotkeys() -> Result<Vec<Model>, String> {
 pub async fn update_hotkey(hotkey: Model) -> Result<Model, String> {
     let res = update_hotkey_db(hotkey).await;
 
-    init_event();
+    init_hotkey_listener(false);
 
     Ok(res.unwrap())
 }
@@ -26,4 +26,9 @@ pub async fn update_hotkey(hotkey: Model) -> Result<Model, String> {
 #[tauri::command]
 pub async fn stop_hotkeys() -> Result<(), String> {
     Ok(unregister_hotkeys(false))
+}
+
+#[tauri::command]
+pub async fn start_hotkeys() -> Result<(), String> {
+    Ok(register_hotkeys(true))
 }
