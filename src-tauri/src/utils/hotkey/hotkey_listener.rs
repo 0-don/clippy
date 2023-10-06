@@ -16,13 +16,13 @@ use tauri::regex::Regex;
 use tauri::Manager;
 use tokio::sync::oneshot;
 
-pub fn init_hotkey_listener() -> () {
+pub fn init_hotkey_listener(all: bool) -> () {
     let receiver = GlobalHotKeyEvent::receiver();
 
-    tauri::async_runtime::spawn(async {
+    tauri::async_runtime::spawn(async move {
         unregister_hotkeys(true);
         let _ = upsert_hotkeys_in_store().await;
-        register_hotkeys()
+        register_hotkeys(all)
     });
 
     // If there's an existing sender, send a stop signal to the previous task
