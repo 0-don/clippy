@@ -32,6 +32,7 @@ pub fn toggle_main_window() {
         let _ = window.move_window(Position::BottomRight);
         let _ = window.show();
         let _ = window.set_focus();
+        init_event();
     }
     init_hotkey_listener();
 }

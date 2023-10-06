@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
@@ -22,10 +23,11 @@ const Index = () => {
 
     const init_listener = await listen("init_listener", init);
 
-    // setTimeout(async () => {
-    //   await invoke("stop_hotkeys");
-    //   setGlobalHotkeyEvent(false);
-    // }, 5000);
+    setTimeout(async () => {
+      await invoke("stop_hotkeys");
+      console.log("stop_hotkeys");
+      setGlobalHotkeyEvent(false);
+    }, 5000);
 
     return async () => {
       init_listener();

@@ -21,6 +21,7 @@ function createHotkeyStore() {
     hotkeys().find((h) => h.event === event);
 
   const initHotkeys = async () => {
+    setGlobalHotkeyEvent(true);
     // await unregisterAll();
 
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
@@ -29,18 +30,6 @@ function createHotkeyStore() {
     }));
 
     setHotkeys(hotkeys);
-
-    // // Display and hide the app window
-    // const windowHotkey = hotkeys.find(
-    //   (h) => h.event === "window_display_toggle",
-    // );
-
-    // if (windowHotkey?.status && !(await isRegistered(windowHotkey.shortcut))) {
-    //   register(windowHotkey.shortcut, () => {
-    //     AppStore.updateSidebarIcons("Recent Clipboards");
-    //     invoke("window_display_toggle");
-    //   }).catch(() => {});
-    // }
   };
 
   return {

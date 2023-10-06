@@ -62,6 +62,7 @@ function createSettingsStore() {
 
   const init = async () => {
     await initSettings();
+
     HotkeyStore.initHotkeys();
     darkMode();
   };
