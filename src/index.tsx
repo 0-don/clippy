@@ -1,13 +1,14 @@
-import { listen } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api";
+import { appWindow } from "@tauri-apps/api/window";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./components/pages/app/App";
 import HotkeyStore from "./store/HotkeyStore";
 import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
-import { invoke } from "@tauri-apps/api";
 
 const Index = () => {
+  let timer: NodeJS.Timeout;
   const { setGlobalHotkeyEvent } = HotkeyStore;
   const { init } = SettingsStore;
 
@@ -16,27 +17,21 @@ const Index = () => {
   onMount(async () => {
     window.onfocus = async () => {
       setGlobalHotkeyEvent(true);
-
-      setTimeout(async () => {
+      clearInterval(timer);
+      timer = setTimeout(async () => {
         setGlobalHotkeyEvent(false);
+        await invoke("stop_hotkeys");
       }, 5000);
     };
 
     window.onblur = async () => {
-      await invoke("window_display_toggle");
+      if (timer) {
+        appWindow.hide();
+        return clearInterval(timer);
+      }
+
+      await invoke("stop_hotkeys");
       setGlobalHotkeyEvent(false);
-    };
-
-    // const focus = await appWindow.onFocusChanged(
-    //   async ({ payload }) =>
-    //     !payload && (await invoke("window_display_toggle")),
-    // );
-
-    const init_listener = await listen("init_listener", init);
-
-    return async () => {
-      init_listener();
-      focus();
     };
   });
 

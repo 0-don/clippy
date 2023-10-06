@@ -49,16 +49,6 @@ define_hotkey_event! {
 
 pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
 
-// pub static VIEW_MORE_EVENTS: [&'static str; 4] =
-//     ["sync_clipboard_history", "preferences", "about", "exit"];
-
-// pub static SIDEBAR_ICON_EVENTS: [&'static str; 4] = [
-//     "recent_clipboards",
-//     "starred_clipboards",
-//     "history",
-//     "view_more",
-// ];
-
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     APP.set(app.handle()).expect("error initializing tauri app");
     let _ = HOTKEY_MANAGER.set(GlobalHotKeyManager::new().unwrap());
