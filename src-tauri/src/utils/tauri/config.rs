@@ -11,7 +11,7 @@ use std::sync::{Arc, Mutex};
 use tauri::{LogicalSize, Manager, Window};
 use tokio::sync::oneshot;
 
-pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
+pub static GLOBAL_EVENTS: [&'static str; 1] = ["window_display_toggle"];
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
