@@ -1,14 +1,12 @@
-use crate::{
-    connection,
-    service::clipboard::insert_clipboard_db,
-    utils::setup::{APP, CLIPBOARD},
-};
+use crate::{connection, service::clipboard::insert_clipboard_db};
 
 use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::io::Cursor;
 use tauri::{regex::Regex, Manager};
+
+use super::tauri::config::{CLIPBOARD, APP};
 
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let mut text: Option<String> = CLIPBOARD

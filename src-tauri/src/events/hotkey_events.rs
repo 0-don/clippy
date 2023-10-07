@@ -4,12 +4,7 @@ use crate::{
         clipboard::copy_clipboard_from_index,
         window::{sync_clipboard_history, toggle_main_window},
     },
-    types::types::Key,
-    utils::{
-        clipboard::clipboard_helper::type_last_clipboard,
-        hotkey::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        setup::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX},
-    },
+    types::types::Key, utils::{hotkey_manager::{unregister_hotkeys, upsert_hotkeys_in_store, register_hotkeys}, tauri::config::{HOTKEY_STOP_TX, HOTKEYS, HotkeyEvent, APP}, clipboard_manager::type_last_clipboard},
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
@@ -37,7 +32,6 @@ pub fn init_hotkey_listener(all: bool) -> () {
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
-            
                 let hotkey = {
                     let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
                     hotkeys.get(&event.id).cloned()

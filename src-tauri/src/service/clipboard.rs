@@ -1,9 +1,6 @@
 extern crate alloc;
 
-use crate::{
-    connection,
-    utils::setup::{APP, CLIPBOARD},
-};
+use crate::{connection, utils::tauri::config::{CLIPBOARD, APP}};
 use alloc::borrow::Cow;
 use arboard::ImageData;
 use entity::clipboard::{self, ActiveModel, Model};
