@@ -1,5 +1,4 @@
 use crate::{
-    printlog,
     service::hotkey::get_all_hotkeys_db,
     types::types::Key,
     utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER},
@@ -7,7 +6,6 @@ use crate::{
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
-    printlog!("hotkey register");
     tauri::async_runtime::spawn(async move {
         let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
         let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
@@ -25,7 +23,6 @@ pub fn register_hotkeys(all: bool) {
 
 pub fn unregister_hotkeys(all: bool) {
     tauri::async_runtime::spawn(async move {
-        printlog!("hotkey unregister");
         let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
         let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 

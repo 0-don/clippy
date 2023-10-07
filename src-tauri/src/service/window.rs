@@ -1,9 +1,6 @@
 use crate::{
     types::types::{Config, DataPath},
-    utils::{
-        hotkey::hotkey_manager::{register_hotkeys, unregister_hotkeys},
-        setup::APP,
-    },
+    utils::{hotkey::hotkey_manager::register_hotkeys, setup::APP},
 };
 use std::{
     fs::{self, read_to_string},
@@ -26,7 +23,6 @@ pub fn toggle_main_window(state: Option<bool>) {
                 println!("toggle_main_window true");
                 let _ = window.move_window(Position::BottomRight);
                 let _ = window.show();
-                let _ = window.set_focus();
             }
         }
         Some(false) => {
@@ -36,14 +32,13 @@ pub fn toggle_main_window(state: Option<bool>) {
             }
         }
         None => {
-            println!("toggle_main_window");
             if is_visible {
+                println!("hiding via hotkey");
                 let _ = window.hide();
-                unregister_hotkeys(false);
             } else {
+                println!("showing via hotkey");
                 let _ = window.move_window(Position::BottomRight);
                 let _ = window.show();
-                let _ = window.set_focus();
                 register_hotkeys(true);
             }
         }

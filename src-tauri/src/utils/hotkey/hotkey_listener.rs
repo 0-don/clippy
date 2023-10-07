@@ -37,6 +37,7 @@ pub fn init_hotkey_listener(all: bool) -> () {
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
+                println!("hotkey trigger");
                 let hotkey = {
                     let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
                     hotkeys.get(&event.id).cloned()
@@ -50,7 +51,7 @@ pub fn init_hotkey_listener(all: bool) -> () {
                 break;
             }
 
-            std::thread::sleep(Duration::from_millis(100));
+            std::thread::sleep(Duration::from_millis(1));
         }
     });
 }
@@ -63,13 +64,7 @@ pub async fn parse_hotkey_event(key: &Key) {
     printlog!("event: {:?}", event);
 
     match event {
-        Ok(HotkeyEvent::WindowDisplayToggle) => {
-            if window.is_visible().unwrap() {
-                window.hide().unwrap();
-            } else {
-                toggle_main_window(None)
-            }
-        }
+        Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(None),
         Ok(HotkeyEvent::TypeClipboard) => type_last_clipboard().await,
         Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history().await.unwrap(),
         Ok(e @ HotkeyEvent::Preferences) => window.emit("open_window", Some(e.as_str())).unwrap(),
