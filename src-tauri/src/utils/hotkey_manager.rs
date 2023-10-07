@@ -31,7 +31,7 @@ pub fn unregister_hotkeys(all: bool) {
     });
 }
 
-pub async fn upsert_hotkeys_in_store() -> anyhow::Result<()> {
+pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
     let hotkeys = get_all_hotkeys_db().await?;
     let mut hotkey_store = HOTKEYS.get().unwrap().lock().unwrap();
 
