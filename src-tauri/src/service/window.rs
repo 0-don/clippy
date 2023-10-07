@@ -6,7 +6,7 @@ use std::{
     fs::{self, read_to_string},
     path::{Path, PathBuf},
 };
-use tauri::{api::dialog::blocking::FileDialogBuilder, Manager, Window};
+use tauri::{api::dialog::blocking::FileDialogBuilder, Manager, Window, WindowEvent};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 pub fn get_main_window() -> Window {
@@ -15,6 +15,7 @@ pub fn get_main_window() -> Window {
 
 pub fn toggle_main_window() {
     let window = get_main_window();
+
     if window.is_visible().unwrap() {
         let _ = window.hide();
         register_hotkeys(false);
