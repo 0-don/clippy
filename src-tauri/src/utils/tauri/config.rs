@@ -64,7 +64,7 @@ pub fn create_config() {
     );
 }
 
-pub fn init_config(app: &mut tauri::App) {
+pub fn init_globals(app: &mut tauri::App) {
     APP.set(app.handle())
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
     HOTKEY_MANAGER

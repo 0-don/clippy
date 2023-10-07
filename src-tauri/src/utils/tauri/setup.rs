@@ -1,14 +1,12 @@
-use super::config::{create_config, init_config, init_window};
+use super::config::{create_config, init_globals, init_window};
 use crate::events::{
     clipboard_events::Handler, hotkey_events::init_hotkey_listener,
     window_events::window_event_listener,
 };
 use clipboard_master::Master;
 
-// use window_shadows::set_shadow;
-
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
-    init_config(app);
+    init_globals(app);
     init_window(app);
 
     create_config();
