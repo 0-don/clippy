@@ -10,6 +10,7 @@ use std::sync::OnceLock;
 use std::sync::{Arc, Mutex};
 use tauri::{LogicalSize, Manager, Window};
 use tokio::sync::oneshot;
+use window_shadows::set_shadow;
 
 pub static GLOBAL_EVENTS: [&'static str; 1] = ["window_display_toggle"];
 
