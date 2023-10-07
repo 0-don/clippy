@@ -1,5 +1,5 @@
 import { listen } from "@tauri-apps/api/event";
-import { createResource, onCleanup, onMount } from "solid-js";
+import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./components/pages/app/App";
 import AppStore from "./store/AppStore";
@@ -12,18 +12,12 @@ const Index = () => {
 
   createResource(init);
 
-  onMount(async () => {
-    const globalHotkeyListen = await listen(
-      "set_global_hotkey_event",
-      ({ payload }) => setGlobalHotkeyEvent(!!payload),
+  onMount(() => {
+    listen("set_global_hotkey_event", ({ payload }) =>
+      setGlobalHotkeyEvent(!!payload),
     );
 
-    const initListen = await listen("init", init);
-
-    onCleanup(() => () => {
-      globalHotkeyListen();
-      initListen();
-    });
+    listen("init", init);
   });
 
   return <App />;
