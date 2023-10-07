@@ -1,7 +1,6 @@
 use crate::define_hotkey_event;
 use crate::service::window::get_data_path;
 use crate::types::types::{Config, Key};
-use anyhow::Ok;
 use arboard::Clipboard;
 use global_hotkey::GlobalHotKeyManager;
 use std::collections::HashMap;
