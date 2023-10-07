@@ -1,5 +1,4 @@
-import { invoke } from "@tauri-apps/api";
-import { appWindow } from "@tauri-apps/api/window";
+import { listen } from "@tauri-apps/api/event";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./components/pages/app/App";
@@ -14,7 +13,7 @@ const Index = () => {
 
   createResource(init);
 
-  onMount(() => {
+  onMount(async () => {
     // window.onfocus = async () => {
     //   setGlobalHotkeyEvent(true);
     //   clearInterval(timer);
@@ -24,12 +23,20 @@ const Index = () => {
     //   }, 5000);
     // };
 
+    const globalHotkeyListen = await listen(
+      "set_global_hotkey_event",
+      ({ payload }) => setGlobalHotkeyEvent(!!payload),
+    );
     // window.onblur = async () => {
     //   clearInterval(timer);
     //   invoke("stop_hotkeys");
     //   setGlobalHotkeyEvent(false);
     //   appWindow.hide();
     // };
+
+    return () => {
+      globalHotkeyListen();
+    };
   });
 
   return <App />;

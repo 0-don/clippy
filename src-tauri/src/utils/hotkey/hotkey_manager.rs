@@ -6,6 +6,7 @@ use crate::{
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
+    println!("hotkey register");
     let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
@@ -20,6 +21,7 @@ pub fn register_hotkeys(all: bool) {
 }
 
 pub fn unregister_hotkeys(all: bool) {
+    println!("hotkey unregister");
     let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
