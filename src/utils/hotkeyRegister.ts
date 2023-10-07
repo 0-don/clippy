@@ -6,10 +6,10 @@ import {
 } from "@tauri-apps/api/globalShortcut";
 import { exit } from "@tauri-apps/api/process";
 import { appWindow } from "@tauri-apps/api/window";
-import { Hotkey } from "../@types";
-import AppStore from "../store/AppStore";
-import ClipboardStore from "../store/ClipboardStore";
-import HotkeyStore from "../store/HotkeyStore";
+import { Hotkey } from "../../@types";
+import AppStore from "../AppStore";
+import ClipboardStore from "../ClipboardStore";
+import HotkeyStore from "../HotkeyStore";
 import { CLIPBOARD_HOTKEYS, SIDEBAR_ICON_NAMES } from "./constants";
 import { createAboutWindow, createSettingsWindow } from "./helpers";
 

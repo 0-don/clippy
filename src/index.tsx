@@ -2,14 +2,13 @@ import { listen } from "@tauri-apps/api/event";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./components/pages/app/App";
+import AppStore from "./store/AppStore";
 import HotkeyStore from "./store/HotkeyStore";
-import SettingsStore from "./store/SettingsStore";
 import "./styles.css";
 
 const Index = () => {
-  let timer: NodeJS.Timeout;
   const { setGlobalHotkeyEvent } = HotkeyStore;
-  const { init } = SettingsStore;
+  const { init } = AppStore;
 
   createResource(init);
 
@@ -19,7 +18,10 @@ const Index = () => {
       ({ payload }) => setGlobalHotkeyEvent(!!payload),
     );
 
-    const initListen = await listen("init", init);
+    const initListen = await listen("refresh_clipboards", () => {
+      console.log("refresh_clipboards");
+      init();
+    });
 
     return () => {
       globalHotkeyListen();

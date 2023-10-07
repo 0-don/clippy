@@ -21,9 +21,6 @@ function createHotkeyStore() {
     hotkeys().find((h) => h.event === event);
 
   const initHotkeys = async () => {
-    setGlobalHotkeyEvent(true);
-    // await unregisterAll();
-
     const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
       ...h,
       shortcut: parseShortcut(h),

@@ -3,6 +3,7 @@ import { Component, Show } from "solid-js";
 import { Hotkey } from "../../../@types";
 import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
+
 import { ViewMoreName } from "../../../utils/constants";
 import {
   createAboutWindow,

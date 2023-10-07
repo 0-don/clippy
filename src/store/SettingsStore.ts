@@ -8,7 +8,6 @@ import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { disable, enable } from "tauri-plugin-autostart-api";
 import { Settings } from "../@types";
-import HotkeyStore from "./HotkeyStore";
 
 type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
 
@@ -55,16 +54,6 @@ function createSettingsStore() {
     } catch (_) {}
   };
 
-  const darkMode = () =>
-    settings()?.dark_mode
-      ? document.querySelector("html")?.classList?.add?.("dark")
-      : document.querySelector("html")?.classList?.remove?.("dark");
-
-  const init = async () => {
-    await initSettings();
-    HotkeyStore.initHotkeys();
-    darkMode();
-  };
 
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
@@ -105,9 +94,8 @@ function createSettingsStore() {
     setTabs,
     setCurrentTab,
     getCurrentTab,
-    init,
     initSettings,
-    darkMode,
+  
     syncClipboard,
   };
 }
