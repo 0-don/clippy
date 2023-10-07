@@ -1,6 +1,9 @@
 use crate::{
     types::types::{Config, DataPath},
-    utils::{hotkey::hotkey_manager::register_hotkeys, setup::APP},
+    utils::{
+        hotkey::hotkey_manager::{register_hotkeys, unregister_hotkeys},
+        setup::APP,
+    },
 };
 use std::{
     fs::{self, read_to_string},
@@ -13,18 +16,36 @@ pub fn get_main_window() -> Window {
     APP.get().unwrap().get_window("main").unwrap()
 }
 
-pub fn toggle_main_window() {
+pub fn toggle_main_window(state: Option<bool>) {
     let window = get_main_window();
+    let is_visible = window.is_visible().unwrap();
 
-    if window.is_visible().unwrap() {
-        let _ = window.hide();
-        register_hotkeys(false);
-    } else {
-        let _ = window.move_window(Position::BottomRight);
-        let _ = window.show();
-        let _ = window.set_focus();
-        register_hotkeys(true)
-        // init_event();
+    match state {
+        Some(true) => {
+            if !is_visible {
+                let _ = window.move_window(Position::BottomRight);
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+            register_hotkeys(true);
+        }
+        Some(false) => {
+            if is_visible {
+                let _ = window.hide();
+            }
+            unregister_hotkeys(false);
+        }
+        None => {
+            if is_visible {
+                let _ = window.hide();
+                unregister_hotkeys(false);
+            } else {
+                let _ = window.move_window(Position::BottomRight);
+                let _ = window.show();
+                let _ = window.set_focus();
+                register_hotkeys(true);
+            }
+        }
     }
 }
 
