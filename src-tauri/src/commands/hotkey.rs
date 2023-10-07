@@ -3,7 +3,7 @@ use crate::{
     utils::hotkey::{
         hotkey_listener::init_hotkey_listener,
         hotkey_manager::{register_hotkeys, unregister_hotkeys},
-    },
+    }, printlog,
 };
 use entity::hotkey::Model;
 
@@ -25,7 +25,7 @@ pub async fn update_hotkey(hotkey: Model) -> Result<Model, String> {
 
 #[tauri::command]
 pub async fn stop_hotkeys() -> Result<(), String> {
-    println!("stop_hotkeys");
+    printlog!("stop_hotkeys");
     Ok(unregister_hotkeys(false))
 }
 

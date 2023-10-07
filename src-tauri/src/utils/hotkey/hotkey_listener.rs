@@ -8,7 +8,7 @@ use crate::{
         clipboard::clipboard_helper::type_last_clipboard,
         hotkey::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
         setup::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX},
-    },
+    }, printlog,
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
@@ -59,7 +59,7 @@ pub async fn parse_hotkey_event(key: &Key) {
 
     let window = APP.get().unwrap().get_window("main").unwrap();
 
-    println!("event: {:?}", event);
+    printlog!("event: {:?}", event);
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(None),
@@ -94,6 +94,6 @@ pub async fn parse_hotkey_event(key: &Key) {
                 .unwrap_or_default();
             let _ = copy_clipboard_from_index(num - 1).await;
         }
-        Err(()) => println!("Error parsing hotkey event"),
+        Err(()) => printlog!("Error parsing hotkey event"),
     }
 }

@@ -1,7 +1,7 @@
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::on_tray_event;
 
-use crate::service::window::toggle_main_window;
+use crate::{service::window::toggle_main_window, printlog};
 
 pub fn system_tray() -> SystemTray {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -22,8 +22,8 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
             "open" => toggle_main_window(None),
             "quit" => app.exit(1),
-            _ => println!("Unhandled tray event"),
+            _ => printlog!("Unhandled tray event"),
         },
-        _ => println!("Unhandled tray event"),
+        _ => printlog!("Unhandled tray event"),
     }
 }

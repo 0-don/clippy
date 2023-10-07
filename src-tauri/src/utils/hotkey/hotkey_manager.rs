@@ -1,12 +1,12 @@
 use crate::{
     service::hotkey::get_all_hotkeys_db,
     types::types::Key,
-    utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER},
+    utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER}, printlog,
 };
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
-    println!("hotkey register");
+    printlog!("hotkey register");
     let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
@@ -21,7 +21,7 @@ pub fn register_hotkeys(all: bool) {
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    println!("hotkey unregister");
+    printlog!("hotkey unregister");
     let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
     let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
