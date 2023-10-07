@@ -1,7 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { createRoot, createSignal } from "solid-js";
 import { Hotkey, HotkeyEvent } from "../@types";
-import { parseShortcut } from "../utils/hotkeyRegister";
 
 function createHotkeyStore() {
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
@@ -21,11 +20,7 @@ function createHotkeyStore() {
     hotkeys().find((h) => h.event === event);
 
   const initHotkeys = async () => {
-    const hotkeys = (await invoke<Hotkey[]>("get_hotkeys")).map((h) => ({
-      ...h,
-      shortcut: parseShortcut(h),
-    }));
-
+    const hotkeys = await invoke<Hotkey[]>("get_hotkeys");
     setHotkeys(hotkeys);
   };
 
