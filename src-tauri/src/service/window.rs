@@ -1,12 +1,12 @@
 use crate::{
     types::types::{Config, DataPath},
-    utils::{hotkey::hotkey_manager::register_hotkeys, setup::APP},
+    utils::{tauri::config::APP, hotkey_manager::register_hotkeys},
 };
 use std::{
     fs::{self, read_to_string},
     path::{Path, PathBuf},
 };
-use tauri::{api::dialog::blocking::FileDialogBuilder, Manager, Window};
+use tauri::{api::dialog::blocking::FileDialogBuilder, Window, Manager};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 pub fn get_main_window() -> Window {

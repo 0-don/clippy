@@ -2,13 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod commands;
+mod events;
 mod connection;
 mod service;
 mod types;
 mod utils;
 use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
-use utils::{setup, tray};
+use utils::tauri::{setup, tray};
 
 #[macro_export]
 macro_rules! printlog {

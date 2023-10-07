@@ -1,9 +1,7 @@
-use crate::{
-    service::hotkey::get_all_hotkeys_db,
-    types::types::Key,
-    utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER},
-};
+use crate::{service::hotkey::get_all_hotkeys_db, types::types::Key};
 use global_hotkey::hotkey::HotKey;
+
+use super::tauri::{config::{HOTKEYS, HOTKEY_MANAGER}, setup::GLOBAL_EVENTS};
 
 pub fn register_hotkeys(all: bool) {
     tauri::async_runtime::spawn(async move {

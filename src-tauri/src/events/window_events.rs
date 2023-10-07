@@ -1,8 +1,8 @@
-use super::setup::MAIN_WINDOW;
-use crate::utils::{hotkey::hotkey_manager::unregister_hotkeys, setup::WINDOW_STOP_TX};
 use core::time::Duration;
 use tauri::WindowEvent;
 use tokio::sync::oneshot;
+
+use crate::utils::{tauri::config::{MAIN_WINDOW, WINDOW_STOP_TX}, hotkey_manager::unregister_hotkeys};
 
 pub fn window_event_listener() {
     tauri::async_runtime::spawn(async move {

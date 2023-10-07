@@ -1,5 +1,3 @@
-pub mod clipboard;
-pub mod setup;
-pub mod tray;
-pub mod hotkey;
-pub mod window;
+pub mod tauri;
+pub mod clipboard_manager;
+pub mod hotkey_manager;

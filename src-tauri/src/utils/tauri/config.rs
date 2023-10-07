@@ -1,18 +1,14 @@
-use super::hotkey::hotkey_listener::init_hotkey_listener;
-use super::window::window_event_listener;
 use crate::define_hotkey_event;
-use crate::types::types::Key;
-use crate::{
-    service::window::get_data_path, types::types::Config,
-    utils::clipboard::clipboard_handler::Handler,
-};
+use crate::service::window::get_data_path;
+use crate::types::types::{Key, Config};
+use anyhow::Ok;
 use arboard::Clipboard;
-use clipboard_master::Master;
 use global_hotkey::GlobalHotKeyManager;
-
 use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
+use std::sync::OnceLock;
 use std::sync::{Arc, Mutex};
-use std::{fs, path::Path, sync::OnceLock};
 use tauri::{LogicalSize, Manager, Window};
 use tokio::sync::oneshot;
 // use window_shadows::set_shadow;
@@ -52,44 +48,6 @@ define_hotkey_event! {
     Key9 => "key_9",
 }
 
-pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
-
-pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
-    APP.set(app.handle()).expect("error initializing tauri app");
-    let _ = HOTKEY_MANAGER.set(GlobalHotKeyManager::new().unwrap());
-    let _ = HOTKEYS.set(Arc::new(Mutex::new(HashMap::new())));
-    let _ = CLIPBOARD.set(Arc::new(Mutex::new(Clipboard::new()?)));
-    HOTKEY_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
-        panic!("Failed to initialize HOTKEY_STOP_TX");
-    });
-    WINDOW_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
-        panic!("Failed to initialize WINDOW_STOP_TX");
-    });
-    MAIN_WINDOW_FOCUS_STATE
-        .set(Arc::new(Mutex::new(false)))
-        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW_FOCUS_STATE"));
-
-    create_config();
-
-    let window: tauri::Window = app.get_window("main").unwrap();
-    let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
-    #[cfg(any(windows, target_os = "macos"))]
-    set_shadow(&window, true).unwrap();
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
-    MAIN_WINDOW
-        .set(Arc::new(Mutex::new(window)))
-        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
-
-    window_event_listener();
-    tauri::async_runtime::spawn(async { Master::new(Handler).run() });
-    init_hotkey_listener(false);
-
-    Ok(())
-}
-
 pub fn create_config() {
     let data_path = get_data_path();
 
@@ -105,4 +63,38 @@ pub fn create_config() {
         &data_path.config_file_path,
         serde_json::to_string(&config).unwrap(),
     );
+}
+
+pub fn init_config(app: &mut tauri::App) -> anyhow::Result<()> {
+    APP.set(app.handle()).expect("error initializing tauri app");
+    let _ = HOTKEY_MANAGER.set(GlobalHotKeyManager::new().unwrap());
+    let _ = HOTKEYS.set(Arc::new(Mutex::new(HashMap::new())));
+    let _ = CLIPBOARD.set(Arc::new(Mutex::new(Clipboard::new()?)));
+    HOTKEY_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
+        panic!("Failed to initialize HOTKEY_STOP_TX");
+    });
+    WINDOW_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
+        panic!("Failed to initialize WINDOW_STOP_TX");
+    });
+    MAIN_WINDOW_FOCUS_STATE
+        .set(Arc::new(Mutex::new(false)))
+        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW_FOCUS_STATE"));
+
+    Ok(())
+}
+
+pub fn init_window(app: &mut tauri::App) -> anyhow::Result<()> {
+    let window: tauri::Window = app.get_window("main").unwrap();
+    let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
+    #[cfg(any(windows, target_os = "macos"))]
+    set_shadow(&window, true).unwrap();
+    #[cfg(debug_assertions)]
+    {
+        window.open_devtools();
+    }
+    MAIN_WINDOW
+        .set(Arc::new(Mutex::new(window)))
+        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
+
+    Ok(())
 }
