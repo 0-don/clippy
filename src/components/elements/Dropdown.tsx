@@ -16,7 +16,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
 
   const onOpenChange = (
     isOpen: boolean,
-    triggerMode?: Combobox.ComboboxTriggerMode
+    triggerMode?: Combobox.ComboboxTriggerMode,
   ) => isOpen && triggerMode === "manual" && setOptions(props.items);
 
   const onInputChange = (value: string) =>

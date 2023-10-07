@@ -2,8 +2,8 @@ import { invoke } from "@tauri-apps/api";
 import { BsDeviceHdd } from "solid-icons/bs";
 import { FiTrash2 } from "solid-icons/fi";
 import { Component, createSignal, onMount } from "solid-js";
-import { formatBytes } from "../../../utils/helpers";
 import { TextBlock } from "../../elements/TextBlock";
+import { formatBytes } from "../../../utils/helpers";
 
 interface SettingsHistoryProps {}
 
@@ -19,7 +19,7 @@ export const SettingsHistory: Component<SettingsHistoryProps> = ({}) => {
   });
 
   onMount(async () =>
-    setDatabaseInfo(await invoke<DatabaseInfo>("get_db_size"))
+    setDatabaseInfo(await invoke<DatabaseInfo>("get_db_size")),
   );
 
   return (
@@ -27,7 +27,7 @@ export const SettingsHistory: Component<SettingsHistoryProps> = ({}) => {
       <TextBlock Icon={BsDeviceHdd} title="Local Storage">
         <ul class="mx-5 list-disc px-5 pb-5">
           <li>{`${databaseInfo().records} local items (${formatBytes(
-            databaseInfo().size
+            databaseInfo().size,
           )}) are saved on this computer`}</li>
         </ul>
       </TextBlock>

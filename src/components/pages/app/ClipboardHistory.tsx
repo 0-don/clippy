@@ -8,6 +8,7 @@ import {
   onMount,
 } from "solid-js";
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
+
 import { removeAllHotkeyListeners } from "../../../utils/hotkeyRegister";
 import SwitchField from "../../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
@@ -45,7 +46,7 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
 
   return (
     <>
-      <div class="flex items-center dark:bg-zinc-800 px-3 py-2">
+      <div class="flex items-center px-3 py-2 dark:bg-zinc-800">
         <div class="relative w-full">
           <input
             placeholder="search"

@@ -12,8 +12,9 @@ import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
-import { formatBytes } from "../../../utils/helpers";
 import { removeAllHotkeyListeners } from "../../../utils/hotkeyRegister";
+import { formatBytes } from "../../../utils/helpers";
+
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);

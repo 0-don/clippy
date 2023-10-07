@@ -28,6 +28,11 @@ function createClipboardStore() {
   const getClipboards = async () =>
     await invoke<Clips[]>("get_clipboards", where());
 
+  const initClipboards = async () => {
+    const clipboards = await getClipboards();
+    setClipboards(clipboards);
+  };
+
   return {
     clipboards,
     setClipboards,
@@ -37,6 +42,7 @@ function createClipboardStore() {
     getClipboards,
     clipboardRef,
     setClipboardRef,
+    initClipboards,
   };
 }
 

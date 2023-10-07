@@ -1,4 +1,4 @@
-import { SidebarIconName, ViewMoreName } from "../utils/constants";
+import { SidebarIconName, ViewMoreName } from "../store/utils/constants";
 
 export type Clips = {
   id?: number | null;
