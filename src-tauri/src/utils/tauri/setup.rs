@@ -7,12 +7,10 @@ use clipboard_master::Master;
 
 // use window_shadows::set_shadow;
 
-pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
-
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     init_config(app);
     init_window(app);
-    
+
     create_config();
 
     window_event_listener();
