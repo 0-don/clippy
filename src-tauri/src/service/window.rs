@@ -27,13 +27,11 @@ pub fn toggle_main_window(state: Option<bool>) {
                 let _ = window.show();
                 let _ = window.set_focus();
             }
-            register_hotkeys(true);
         }
         Some(false) => {
             if is_visible {
                 let _ = window.hide();
             }
-            unregister_hotkeys(false);
         }
         None => {
             if is_visible {

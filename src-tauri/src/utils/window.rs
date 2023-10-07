@@ -21,7 +21,7 @@ pub fn window_event_listener() {
         window.on_window_event(|event| match event {
             WindowEvent::Focused(true) => {
                 let window = APP.get().unwrap().get_window("main").unwrap();
-                register_hotkeys(true);
+                // register_hotkeys(true);
                 println!("Window focused");
 
                 // // Equivalent to setGlobalHotkeyEvent(true);
@@ -55,9 +55,9 @@ pub fn window_event_listener() {
                 let mut timer_guard = TIMER.get().unwrap().lock().unwrap();
                 if let Some(existing_timer) = timer_guard.take() {
                     existing_timer.join().unwrap(); // Ensure the timer thread is stopped
+                    window.emit("set_global_hotkey_event", false).unwrap();
+                    unregister_hotkeys(false);
                 }
-                window.emit("set_global_hotkey_event", false).unwrap();
-                unregister_hotkeys(false);
                 toggle_main_window(Some(false));
                 // // Handle other logic
             }
