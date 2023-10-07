@@ -1,11 +1,8 @@
 extern crate alloc;
-use crate::{
-    service::clipboard::{
-        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboards_db,
-        star_clipboard_db,
-    },
-    utils::clipboard::clipboard_helper::type_last_clipboard,
-};
+use crate::{service::clipboard::{
+    clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboards_db,
+    star_clipboard_db,
+}, utils::clipboard_manager::type_last_clipboard};
 use entity::clipboard::Model;
 
 #[tauri::command]

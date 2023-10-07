@@ -1,6 +1,6 @@
 use entity::settings::Model;
 
-use crate::{service::settings::{get_settings_db, update_settings_db}, utils::hotkey::hotkey_listener::init_hotkey_listener};
+use crate::{service::settings::{update_settings_db, get_settings_db}, events::hotkey_events::init_hotkey_listener};
 
 #[tauri::command]
 pub async fn get_settings() -> Result<Model, String> {

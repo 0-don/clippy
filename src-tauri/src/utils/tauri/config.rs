@@ -1,6 +1,6 @@
 use crate::define_hotkey_event;
 use crate::service::window::get_data_path;
-use crate::types::types::{Key, Config};
+use crate::types::types::{Config, Key};
 use anyhow::Ok;
 use arboard::Clipboard;
 use global_hotkey::GlobalHotKeyManager;
@@ -65,11 +65,11 @@ pub fn create_config() {
     );
 }
 
-pub fn init_config(app: &mut tauri::App) -> anyhow::Result<()> {
+pub fn init_config(app: &mut tauri::App) {
     APP.set(app.handle()).expect("error initializing tauri app");
     let _ = HOTKEY_MANAGER.set(GlobalHotKeyManager::new().unwrap());
     let _ = HOTKEYS.set(Arc::new(Mutex::new(HashMap::new())));
-    let _ = CLIPBOARD.set(Arc::new(Mutex::new(Clipboard::new()?)));
+    let _ = CLIPBOARD.set(Arc::new(Mutex::new(Clipboard::new().unwrap())));
     HOTKEY_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
         panic!("Failed to initialize HOTKEY_STOP_TX");
     });
@@ -79,11 +79,9 @@ pub fn init_config(app: &mut tauri::App) -> anyhow::Result<()> {
     MAIN_WINDOW_FOCUS_STATE
         .set(Arc::new(Mutex::new(false)))
         .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW_FOCUS_STATE"));
-
-    Ok(())
 }
 
-pub fn init_window(app: &mut tauri::App) -> anyhow::Result<()> {
+pub fn init_window(app: &mut tauri::App) {
     let window: tauri::Window = app.get_window("main").unwrap();
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
     #[cfg(any(windows, target_os = "macos"))]
@@ -95,6 +93,4 @@ pub fn init_window(app: &mut tauri::App) -> anyhow::Result<()> {
     MAIN_WINDOW
         .set(Arc::new(Mutex::new(window)))
         .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
-
-    Ok(())
 }

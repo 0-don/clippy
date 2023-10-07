@@ -1,10 +1,4 @@
-use crate::{
-    service::hotkey::{get_all_hotkeys_db, update_hotkey_db},
-    utils::hotkey::{
-        hotkey_listener::init_hotkey_listener,
-        hotkey_manager::{register_hotkeys, unregister_hotkeys},
-    },
-};
+use crate::{service::hotkey::{get_all_hotkeys_db, update_hotkey_db}, events::hotkey_events::init_hotkey_listener, utils::hotkey_manager::{unregister_hotkeys, register_hotkeys}};
 use entity::hotkey::Model;
 
 #[tauri::command]
