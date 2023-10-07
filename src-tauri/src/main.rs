@@ -2,26 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod commands;
-mod events;
 mod connection;
+mod events;
 mod service;
 mod types;
 mod utils;
 use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
 use utils::tauri::{setup, tray};
-
-#[macro_export]
-macro_rules! printlog {
-    ($($arg:tt)*) => {
-        {
-            use chrono::{Local, DateTime};
-            let now: DateTime<Local> = Local::now();
-            let millis = now.timestamp_subsec_millis();
-            println!("{}.{:03}: {}", now.format("%Y-%m-%d %H:%M:%S"), millis, format!($($arg)*));
-        }
-    };
-}
 
 #[tokio::main]
 async fn main() {

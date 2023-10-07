@@ -21,6 +21,7 @@ tauri = { version = "1", features = [
   "notification-all",
   "window-create",
   "process-exit",
+  "system-tray",
 ] }
 global-hotkey = "0"
 serde = { version = "1", features = ["derive"] }
