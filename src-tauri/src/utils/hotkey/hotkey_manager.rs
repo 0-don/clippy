@@ -1,35 +1,40 @@
 use crate::{
+    printlog,
     service::hotkey::get_all_hotkeys_db,
     types::types::Key,
-    utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER}, printlog,
+    utils::setup::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER},
 };
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
     printlog!("hotkey register");
-    let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
-    let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
+    tauri::async_runtime::spawn(async move {
+        let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
+        let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
-    for (_, hotkey) in hotkeys_store.iter() {
-        if all || hotkey.global {
-            if hotkey_manager.register(hotkey.hotkey.clone()).is_err() {
-                hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
-                hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
+        for (_, hotkey) in hotkeys_store.iter() {
+            if all || hotkey.global {
+                if hotkey_manager.register(hotkey.hotkey.clone()).is_err() {
+                    hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
+                    hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
+                }
             }
         }
-    }
+    });
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    printlog!("hotkey unregister");
-    let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
-    let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
+    tauri::async_runtime::spawn(async move {
+        printlog!("hotkey unregister");
+        let hotkeys_store = HOTKEYS.get().unwrap().lock().unwrap();
+        let hotkey_manager = HOTKEY_MANAGER.get().unwrap();
 
-    for (_, hotkey) in hotkeys_store.iter() {
-        if all || !hotkey.global {
-            hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
+        for (_, hotkey) in hotkeys_store.iter() {
+            if all || !hotkey.global {
+                hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
+            }
         }
-    }
+    });
 }
 
 pub async fn upsert_hotkeys_in_store() -> anyhow::Result<()> {
