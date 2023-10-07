@@ -37,7 +37,7 @@ pub fn init_hotkey_listener(all: bool) -> () {
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
-                println!("hotkey trigger");
+            
                 let hotkey = {
                     let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
                     hotkeys.get(&event.id).cloned()

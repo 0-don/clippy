@@ -20,23 +20,19 @@ pub fn toggle_main_window(state: Option<bool>) {
     match state {
         Some(true) => {
             if !is_visible {
-                println!("toggle_main_window true");
                 let _ = window.move_window(Position::BottomRight);
                 let _ = window.show();
             }
         }
         Some(false) => {
             if is_visible {
-                println!("toggle_main_window false");
                 let _ = window.hide();
             }
         }
         None => {
             if is_visible {
-                println!("hiding via hotkey");
                 let _ = window.hide();
             } else {
-                println!("showing via hotkey");
                 let _ = window.move_window(Position::BottomRight);
                 let _ = window.show();
                 register_hotkeys(true);
