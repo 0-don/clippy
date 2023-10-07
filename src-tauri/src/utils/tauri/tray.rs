@@ -1,7 +1,6 @@
+use crate::{printlog, service::window::toggle_main_window};
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::on_tray_event;
-
-use crate::{service::window::toggle_main_window, printlog};
 
 pub fn system_tray() -> SystemTray {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
