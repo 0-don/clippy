@@ -1,4 +1,5 @@
 use super::hotkey::hotkey_listener::init_hotkey_listener;
+use super::window::window_event_listener;
 use crate::define_hotkey_event;
 use crate::types::types::Key;
 use crate::{
@@ -13,7 +14,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
 use std::{fs, path::Path, sync::OnceLock};
-use tauri::{LogicalSize, Manager, WindowEvent};
+use tauri::{LogicalSize, Manager};
 use tokio::sync::oneshot;
 // use window_shadows::set_shadow;
 
@@ -60,6 +61,9 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     HOTKEY_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
         panic!("Failed to initialize HOTKEY_STOP_TX");
     });
+    TIMER.set(Arc::new(Mutex::new(None))).unwrap_or_else(|_| {
+        panic!("Failed to initialize TIMER");
+    });
 
     create_config();
 
@@ -72,15 +76,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
         window.open_devtools();
     }
 
-    window.on_window_event(|event| match event {
-        WindowEvent::Focused(true) => {
-            println!("Window focused");
-        }
-        WindowEvent::Focused(false) => {
-            println!("Window unfocused");
-        }
-        _ => {}
-    });
+    window_event_listener();
 
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
 
