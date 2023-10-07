@@ -17,7 +17,10 @@ tauri-build = { version = "1", features = [] }
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1", features = ["full"] }
-tauri = { version = "1", features = [ "app-all", "notification-all", "dialog-open",
+tauri = { version = "1", features = [
+  "app-all",
+  "notification-all",
+  "dialog-open",
   "window-create",
   "process-exit",
   "global-shortcut-all",
@@ -37,6 +40,7 @@ tauri-plugin-positioner = { version = "1", features = ["system-tray"] }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 window-shadows = "0"
 enigo = "0"
+chrono = "0"
 
 
 [dependencies.sea-orm]

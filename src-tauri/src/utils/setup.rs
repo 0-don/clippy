@@ -12,9 +12,8 @@ use global_hotkey::GlobalHotKeyManager;
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-use std::thread::JoinHandle;
 use std::{fs, path::Path, sync::OnceLock};
-use tauri::{LogicalSize, Manager};
+use tauri::{LogicalSize, Manager, Window};
 use tokio::sync::oneshot;
 // use window_shadows::set_shadow;
 
@@ -22,12 +21,14 @@ pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
+pub static MAIN_WINDOW: OnceLock<Arc<Mutex<Window>>> = OnceLock::new();
 
 pub static HOTKEY_MANAGER: OnceLock<GlobalHotKeyManager> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static CLIPBOARD: OnceLock<Arc<Mutex<Clipboard>>> = OnceLock::new();
-pub static TIMER: OnceLock<Arc<Mutex<Option<JoinHandle<()>>>>> = OnceLock::new();
+pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
+pub static HOTKEY_TRIGGERED: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 
 define_hotkey_event! {
     WindowDisplayToggle => "window_display_toggle",
@@ -61,9 +62,12 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     HOTKEY_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
         panic!("Failed to initialize HOTKEY_STOP_TX");
     });
-    TIMER.set(Arc::new(Mutex::new(None))).unwrap_or_else(|_| {
-        panic!("Failed to initialize TIMER");
+    WINDOW_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
+        panic!("Failed to initialize WINDOW_STOP_TX");
     });
+    HOTKEY_TRIGGERED
+        .set(Arc::new(Mutex::new(false)))
+        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_TRIGGERED"));
 
     create_config();
 
@@ -75,11 +79,12 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     {
         window.open_devtools();
     }
+    MAIN_WINDOW
+        .set(Arc::new(Mutex::new(window)))
+        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
 
     window_event_listener();
-
     tauri::async_runtime::spawn(async { Master::new(Handler).run() });
-
     init_hotkey_listener(false);
 
     Ok(())

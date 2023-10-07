@@ -1,6 +1,8 @@
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io::Error;
 
+use crate::printlog;
+
 use super::clipboard_helper::ClipboardHelper;
 
 pub struct Handler;
@@ -19,7 +21,7 @@ impl ClipboardHandler for Handler {
     }
 
     fn on_clipboard_error(&mut self, error: Error) -> CallbackResult {
-        println!("Error: {}", error);
+        printlog!("Error: {}", error);
         CallbackResult::Next
     }
 }
