@@ -14,25 +14,22 @@ const Index = () => {
 
   createResource(init);
 
-  onMount(async () => {
-    window.onfocus = async () => {
-      setGlobalHotkeyEvent(true);
-      clearInterval(timer);
-      timer = setTimeout(async () => {
-        setGlobalHotkeyEvent(false);
-        await invoke("stop_hotkeys");
-      }, 5000);
-    };
+  onMount(() => {
+    // window.onfocus = async () => {
+    //   setGlobalHotkeyEvent(true);
+    //   clearInterval(timer);
+    //   timer = setTimeout(async () => {
+    //     setGlobalHotkeyEvent(false);
+    //     invoke("stop_hotkeys");
+    //   }, 5000);
+    // };
 
-    window.onblur = async () => {
-      if (timer) {
-        appWindow.hide();
-        return clearInterval(timer);
-      }
-
-      await invoke("stop_hotkeys");
-      setGlobalHotkeyEvent(false);
-    };
+    // window.onblur = async () => {
+    //   clearInterval(timer);
+    //   invoke("stop_hotkeys");
+    //   setGlobalHotkeyEvent(false);
+    //   appWindow.hide();
+    // };
   });
 
   return <App />;
