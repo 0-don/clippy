@@ -4,7 +4,12 @@ use crate::{
         clipboard::copy_clipboard_from_index,
         window::{sync_clipboard_history, toggle_main_window},
     },
-    types::types::Key, utils::{hotkey_manager::{unregister_hotkeys, upsert_hotkeys_in_store, register_hotkeys}, tauri::config::{HOTKEY_STOP_TX, HOTKEYS, HotkeyEvent, APP}, clipboard_manager::type_last_clipboard},
+    types::types::Key,
+    utils::{
+        clipboard_manager::type_last_clipboard,
+        hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
+        tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX},
+    },
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
@@ -45,7 +50,7 @@ pub fn init_hotkey_listener(all: bool) -> () {
                 break;
             }
 
-            std::thread::sleep(Duration::from_millis(1));
+            std::thread::sleep(Duration::from_millis(10));
         }
     });
 }

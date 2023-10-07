@@ -1,6 +1,9 @@
 use entity::settings::Model;
 
-use crate::{service::settings::{update_settings_db, get_settings_db}, events::hotkey_events::init_hotkey_listener};
+use crate::{
+    service::settings::{get_settings_db, update_settings_db},
+    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
+};
 
 #[tauri::command]
 pub async fn get_settings() -> Result<Model, String> {
@@ -11,9 +14,11 @@ pub async fn get_settings() -> Result<Model, String> {
 
 #[tauri::command]
 pub async fn update_settings(settings: Model) -> Result<Model, String> {
+    unregister_hotkeys(true);
+
     let res = update_settings_db(settings).await;
 
-    init_hotkey_listener(false);
+    register_hotkeys(false);
 
     Ok(res.unwrap())
 }
