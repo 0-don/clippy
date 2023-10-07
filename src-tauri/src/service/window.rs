@@ -23,6 +23,7 @@ pub fn toggle_main_window(state: Option<bool>) {
     match state {
         Some(true) => {
             if !is_visible {
+                println!("toggle_main_window true");
                 let _ = window.move_window(Position::BottomRight);
                 let _ = window.show();
                 let _ = window.set_focus();
@@ -30,10 +31,12 @@ pub fn toggle_main_window(state: Option<bool>) {
         }
         Some(false) => {
             if is_visible {
+                println!("toggle_main_window false");
                 let _ = window.hide();
             }
         }
         None => {
+            println!("toggle_main_window");
             if is_visible {
                 let _ = window.hide();
                 unregister_hotkeys(false);

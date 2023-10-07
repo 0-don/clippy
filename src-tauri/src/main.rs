@@ -16,7 +16,8 @@ macro_rules! printlog {
         {
             use chrono::{Local, DateTime};
             let now: DateTime<Local> = Local::now();
-            println!("{}: {}", now.format("%Y-%m-%d %H:%M:%S"), format!($($arg)*));
+            let millis = now.timestamp_subsec_millis();
+            println!("{}.{:03}: {}", now.format("%Y-%m-%d %H:%M:%S"), millis, format!($($arg)*));
         }
     };
 }

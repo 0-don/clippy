@@ -22,13 +22,13 @@ pub static MAIN_WINDOW_Y: i32 = 600;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<Window>>> = OnceLock::new();
+pub static MAIN_WINDOW_FOCUS_STATE: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 
 pub static HOTKEY_MANAGER: OnceLock<GlobalHotKeyManager> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static CLIPBOARD: OnceLock<Arc<Mutex<Clipboard>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
-pub static HOTKEY_TRIGGERED: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 
 define_hotkey_event! {
     WindowDisplayToggle => "window_display_toggle",
@@ -65,9 +65,9 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     WINDOW_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
         panic!("Failed to initialize WINDOW_STOP_TX");
     });
-    HOTKEY_TRIGGERED
+    MAIN_WINDOW_FOCUS_STATE
         .set(Arc::new(Mutex::new(false)))
-        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_TRIGGERED"));
+        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW_FOCUS_STATE"));
 
     create_config();
 

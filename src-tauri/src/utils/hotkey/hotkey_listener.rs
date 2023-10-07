@@ -1,4 +1,5 @@
 use crate::{
+    printlog,
     service::{
         clipboard::copy_clipboard_from_index,
         window::{sync_clipboard_history, toggle_main_window},
@@ -8,7 +9,7 @@ use crate::{
         clipboard::clipboard_helper::type_last_clipboard,
         hotkey::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
         setup::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX},
-    }, printlog,
+    },
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
@@ -62,7 +63,13 @@ pub async fn parse_hotkey_event(key: &Key) {
     printlog!("event: {:?}", event);
 
     match event {
-        Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(None),
+        Ok(HotkeyEvent::WindowDisplayToggle) => {
+            if window.is_visible().unwrap() {
+                window.hide().unwrap();
+            } else {
+                toggle_main_window(None)
+            }
+        }
         Ok(HotkeyEvent::TypeClipboard) => type_last_clipboard().await,
         Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history().await.unwrap(),
         Ok(e @ HotkeyEvent::Preferences) => window.emit("open_window", Some(e.as_str())).unwrap(),

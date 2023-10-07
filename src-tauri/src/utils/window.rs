@@ -1,7 +1,7 @@
 use super::setup::MAIN_WINDOW;
 use crate::{
-    service::window::toggle_main_window,
-    utils::{hotkey::hotkey_manager::unregister_hotkeys, setup::WINDOW_STOP_TX}, printlog,
+    printlog,
+    utils::{hotkey::hotkey_manager::unregister_hotkeys, setup::WINDOW_STOP_TX},
 };
 use core::time::Duration;
 use tauri::WindowEvent;
@@ -45,22 +45,18 @@ pub fn window_event_listener() {
                     *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
                 }
                 WindowEvent::Focused(false) => {
+                    // std::thread::sleep(Duration::from_millis(1000));
                     printlog!("Window unfocused");
-                    if window.lock().unwrap().is_visible().unwrap() {
-                        toggle_main_window(Some(false));
-                        unregister_hotkeys(false);
-                    }
+
                     // Use the sender to signal the timer thread to exit early
                     if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
                         let _ = tx.send(());
                     }
 
-                    // Acquire the lock only when you need it
-                    window
-                        .lock()
-                        .unwrap()
-                        .emit("set_global_hotkey_event", false)
-                        .unwrap();
+                    // toggle_main_window(Some(false));
+                    unregister_hotkeys(false);
+
+                    window.lock().unwrap().hide().unwrap();
                 }
                 _ => {}
             });
