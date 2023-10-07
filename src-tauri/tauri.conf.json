@@ -16,12 +16,6 @@
       "notification": {
         "all": true
       },
-      "app": {
-        "all": true
-      },
-      "dialog": {
-        "open": true
-      },
       "process": {
         "exit": true
       },
@@ -29,13 +23,7 @@
         "scope": ["$DESKTOP/*"]
       },
       "window": {
-        "create": true,
-        "hide": true,
-        "show": true,
-        "setFocus": true
-      },
-      "globalShortcut": {
-        "all": true
+        "create": true
       }
     },
     "systemTray": {
