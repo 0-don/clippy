@@ -7,6 +7,7 @@ import { SidebarIcon, SidebarIconName } from "../utils/constants";
 import ClipboardStore from "./ClipboardStore";
 import HotkeyStore from "./HotkeyStore";
 import SettingsStore from "./SettingsStore";
+
 function createAppStore() {
   const [sidebarIcons, setSidebarIcons] = createSignal<SidebarIcon[]>([
     { name: "Recent Clipboards", Icon: VsHistory, current: true },
@@ -33,9 +34,9 @@ function createAppStore() {
   const sIcon = () => sidebarIcons().find((s) => s.current);
 
   const init = async () => {
-    SettingsStore.initSettings();
     HotkeyStore.initHotkeys();
     ClipboardStore.initClipboards();
+    await SettingsStore.initSettings();
     darkMode();
   };
 
