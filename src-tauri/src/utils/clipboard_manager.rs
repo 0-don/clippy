@@ -6,7 +6,7 @@ use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::io::Cursor;
 use tauri::{regex::Regex, Manager};
 
-use super::tauri::config::{CLIPBOARD, APP};
+use super::tauri::config::{APP, CLIPBOARD};
 
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let mut text: Option<String> = CLIPBOARD
@@ -60,13 +60,13 @@ impl ClipboardHelper {
             return;
         }
 
-        let model = insert_clipboard_db(clipboard_helper.active_model).await;
+        let _ = insert_clipboard_db(clipboard_helper.active_model).await;
 
         APP.get()
             .unwrap()
             .get_window("main")
             .unwrap()
-            .emit("clipboard_listener", model.unwrap())
+            .emit("init", "")
             .unwrap();
     }
 

@@ -1,20 +1,19 @@
 use crate::{
     types::types::{Config, DataPath},
-    utils::{tauri::config::APP, hotkey_manager::register_hotkeys},
+    utils::{
+        hotkey_manager::register_hotkeys,
+        tauri::config::{APP, MAIN_WINDOW},
+    },
 };
 use std::{
     fs::{self, read_to_string},
     path::{Path, PathBuf},
 };
-use tauri::{api::dialog::blocking::FileDialogBuilder, Window, Manager};
+use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri_plugin_positioner::{Position, WindowExt};
 
-pub fn get_main_window() -> Window {
-    APP.get().unwrap().get_window("main").unwrap()
-}
-
 pub fn toggle_main_window(state: Option<bool>) {
-    let window = get_main_window();
+    let window = MAIN_WINDOW.get().unwrap().lock().unwrap();
     let is_visible = window.is_visible().unwrap();
 
     match state {
