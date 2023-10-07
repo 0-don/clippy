@@ -19,7 +19,6 @@ pub static MAIN_WINDOW_Y: i32 = 600;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<Window>>> = OnceLock::new();
-pub static MAIN_WINDOW_FOCUS_STATE: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 
 pub static HOTKEY_MANAGER: OnceLock<GlobalHotKeyManager> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
@@ -67,19 +66,23 @@ pub fn create_config() {
 }
 
 pub fn init_config(app: &mut tauri::App) {
-    APP.set(app.handle()).expect("error initializing tauri app");
-    let _ = HOTKEY_MANAGER.set(GlobalHotKeyManager::new().unwrap());
-    let _ = HOTKEYS.set(Arc::new(Mutex::new(HashMap::new())));
-    let _ = CLIPBOARD.set(Arc::new(Mutex::new(Clipboard::new().unwrap())));
-    HOTKEY_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
-        panic!("Failed to initialize HOTKEY_STOP_TX");
-    });
-    WINDOW_STOP_TX.set(Mutex::new(None)).unwrap_or_else(|_| {
-        panic!("Failed to initialize WINDOW_STOP_TX");
-    });
-    MAIN_WINDOW_FOCUS_STATE
-        .set(Arc::new(Mutex::new(false)))
-        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW_FOCUS_STATE"));
+    APP.set(app.handle())
+        .unwrap_or_else(|_| panic!("Failed to initialize APP"));
+    HOTKEY_MANAGER
+        .set(GlobalHotKeyManager::new().unwrap())
+        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_MANAGER"));
+    HOTKEYS
+        .set(Arc::new(Mutex::new(HashMap::new())))
+        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEYS"));
+    CLIPBOARD
+        .set(Arc::new(Mutex::new(Clipboard::new().unwrap())))
+        .unwrap_or_else(|_| panic!("Failed to initialize CLIPBOARD"));
+    HOTKEY_STOP_TX
+        .set(Mutex::new(None))
+        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_STOP_TX"));
+    WINDOW_STOP_TX
+        .set(Mutex::new(None))
+        .unwrap_or_else(|_| panic!("Failed to initialize WINDOW_STOP_TX"));
 }
 
 pub fn init_window(app: &mut tauri::App) {
