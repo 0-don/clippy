@@ -12,9 +12,7 @@ import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
-import { removeAllHotkeyListeners } from "../../../utils/hotkeyRegister";
 import { formatBytes } from "../../../utils/helpers";
-
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -149,10 +147,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
                   if (e.detail === 1) {
                     dbClickTimer = setTimeout(
-                      async () => {
-                        await invoke("copy_clipboard", { id });
-                        removeAllHotkeyListeners();
-                      },
+                      async () => await invoke("copy_clipboard", { id }),
                       clipboard.type === "image" ? 200 : 0,
                     );
                   }

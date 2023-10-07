@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api";
 import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
 import {
@@ -8,8 +9,6 @@ import {
   onMount,
 } from "solid-js";
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
-
-import { removeAllHotkeyListeners } from "../../../utils/hotkeyRegister";
 import SwitchField from "../../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
 
@@ -17,14 +16,13 @@ interface ClipboardHistoryProps {}
 
 export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
   let input: HTMLInputElement | undefined;
-
-  const [search, setSearch] = createSignal<string>("");
+  const [search, setSearch] = createSignal("");
   const [showImages, setShowImages] = createSignal(false);
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;
 
   onMount(() => {
     input?.focus();
-    removeAllHotkeyListeners();
+    invoke("stop_hotkeys");
   });
 
   createEffect(() => {
