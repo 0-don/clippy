@@ -1,9 +1,9 @@
 use crate::{
     connection,
-    service::clipboard::{insert_clipboard_db, get_last_clipboard_db},
+    service::clipboard::insert_clipboard_db,
     utils::setup::{APP, CLIPBOARD},
 };
-use enigo::{Enigo, KeyboardControllable};
+
 use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
@@ -157,14 +157,14 @@ impl ClipboardHelper {
 }
 
 pub async fn type_last_clipboard() {
-    let clipboard = get_last_clipboard_db().await;
+    // let clipboard = get_last_clipboard_db().await;
 
-    if clipboard.is_ok() {
-        let r#type = &clipboard.as_ref().unwrap().r#type;
+    // if clipboard.is_ok() {
+    //     let r#type = &clipboard.as_ref().unwrap().r#type;
 
-        if r#type != "image" {
-            let mut enigo = Enigo::new();
-            enigo.key_sequence(clipboard.unwrap().content.unwrap().as_str());
-        }
-    }
+    //     if r#type != "image" {
+    //         let mut enigo = Enigo::new();
+    //         enigo.key_sequence(clipboard.unwrap().content.unwrap().as_str());
+    //     }
+    // }
 }
