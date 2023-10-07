@@ -1,5 +1,4 @@
 use crate::{
-    printlog,
     service::{
         clipboard::copy_clipboard_from_index,
         window::{sync_clipboard_history, toggle_main_window},
@@ -60,7 +59,7 @@ pub async fn parse_hotkey_event(key: &Key) {
 
     let window = APP.get().unwrap().get_window("main").unwrap();
 
-    printlog!("event: {:?}", event);
+    println!("event: {:?}", event);
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(None),
@@ -95,6 +94,6 @@ pub async fn parse_hotkey_event(key: &Key) {
                 .unwrap_or_default();
             let _ = copy_clipboard_from_index(num - 1).await;
         }
-        Err(()) => printlog!("Error parsing hotkey event"),
+        Err(()) => println!("Error parsing hotkey event"),
     }
 }

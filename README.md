@@ -18,6 +18,7 @@
     <img src="public/clippy-showcase.webp" alt="Logo" >
   </p>
 </p>
+<!-- npx npm-check-updates -u -->
 
 successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 

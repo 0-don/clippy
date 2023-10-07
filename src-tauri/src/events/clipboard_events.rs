@@ -1,4 +1,4 @@
-use crate::{printlog, utils::clipboard_manager::ClipboardHelper};
+use crate::utils::clipboard_manager::ClipboardHelper;
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io::Error;
 
@@ -18,7 +18,7 @@ impl ClipboardHandler for Handler {
     }
 
     fn on_clipboard_error(&mut self, error: Error) -> CallbackResult {
-        printlog!("Error: {}", error);
+        println!("Error: {}", error);
         CallbackResult::Next
     }
 }
