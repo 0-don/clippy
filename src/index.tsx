@@ -5,10 +5,11 @@ import App from "./components/pages/app/App";
 import AppStore from "./store/AppStore";
 import HotkeyStore from "./store/HotkeyStore";
 import "./styles.css";
+import { TabId } from "./utils/constants";
 
 const Index = () => {
   const { setGlobalHotkeyEvent } = HotkeyStore;
-  const { init } = AppStore;
+  const { init, setCurrentTab } = AppStore;
 
   createResource(init);
 
@@ -18,6 +19,10 @@ const Index = () => {
     );
 
     listen("init", init);
+
+    listen("change_tab", ({ payload }: { payload: TabId }) => {
+      setCurrentTab(payload);
+    });
   });
 
   return <App />;

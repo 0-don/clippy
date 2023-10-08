@@ -6,11 +6,11 @@ interface AppSidebarProps {}
 
 export const AppSidebar: Component<AppSidebarProps> = ({}) => {
   const { hotkeys, globalHotkeyEvent, getHotkey } = HotkeyStore;
-  const { sidebarIcons, updateSidebarIcons } = AppStore;
+  const { setCurrentTab, tabs } = AppStore;
   return (
     <Show when={hotkeys().length}>
-      <For each={sidebarIcons()}>
-        {({ current, Icon, name }) => {
+      <For each={tabs()}>
+        {({ current, Icon, name, id }) => {
           const currentHotkey = hotkeys()?.find((key) => key.name === name);
 
           return (
@@ -21,13 +21,13 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
                     ? "text-black dark:text-white"
                     : "text-zinc-600 dark:text-gray-dark"
                 } cursor-pointer text-xl hover:text-black dark:hover:text-white`}
-                onClick={() => updateSidebarIcons(name)}
+                onClick={() => setCurrentTab(id)}
                 title={name}
               />
               <Show
                 when={getHotkey(currentHotkey!.event) && globalHotkeyEvent()}
               >
-                <div class="absolute -left-2 -top-3 rounded-sm dark:bg-zinc-600 text-white bg-zinc-800 px-1 text-[12px] font-semibold">
+                <div class="absolute -left-2 -top-3 rounded-sm bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
                   {currentHotkey!.key}
                 </div>
               </Show>

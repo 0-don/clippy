@@ -9,19 +9,28 @@ export const VIEW_MORE_NAMES = [
 
 export type ViewMoreName = (typeof VIEW_MORE_NAMES)[number];
 
-export const SIDEBAR_ICON_NAMES = [
+export const TAB_NAMES = [
   "Recent Clipboards",
   "Starred Clipboards",
   "History",
   "View more",
 ] as const;
 
-export type SidebarIconName = (typeof SIDEBAR_ICON_NAMES)[number];
+export const TAB_IDS = [
+  "recent_clipboards",
+  "starred_clipboards",
+  "history",
+  "view_more",
+] as const;
 
-export type SidebarIcon = {
-  name: SidebarIconName;
+export type TabName = (typeof TAB_NAMES)[number];
+export type TabId = (typeof TAB_IDS)[number];
+
+export type Tabs = {
+  name: TabName;
   Icon: IconTypes;
   current: boolean;
+  id: TabId;
 };
 
 export const CLIPBOARD_HOTKEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];

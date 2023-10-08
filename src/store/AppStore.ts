@@ -3,35 +3,45 @@ import { CgMore } from "solid-icons/cg";
 import { TbSearch } from "solid-icons/tb";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
-import { SidebarIcon, SidebarIconName } from "../utils/constants";
+import { TabId, Tabs } from "../utils/constants";
 import ClipboardStore from "./ClipboardStore";
 import HotkeyStore from "./HotkeyStore";
 import SettingsStore from "./SettingsStore";
 
 function createAppStore() {
-  const [sidebarIcons, setSidebarIcons] = createSignal<SidebarIcon[]>([
-    { name: "Recent Clipboards", Icon: VsHistory, current: true },
-    { name: "Starred Clipboards", Icon: BsStarFill, current: false },
+  const [tabs, setTabs] = createSignal<Tabs[]>([
+    {
+      name: "Recent Clipboards",
+      Icon: VsHistory,
+      current: true,
+      id: "recent_clipboards",
+    },
+    {
+      name: "Starred Clipboards",
+      Icon: BsStarFill,
+      current: false,
+      id: "starred_clipboards",
+    },
     {
       name: "History",
       Icon: TbSearch,
       current: false,
+      id: "history",
     },
     {
       name: "View more",
       Icon: CgMore,
       current: false,
+      id: "view_more",
     },
   ]);
 
-  const updateSidebarIcons = (name: SidebarIconName) =>
-    setSidebarIcons((prev) =>
-      prev.map((s) => ({ ...s, current: s.name === name })),
-    );
+  const setCurrentTab = (id: TabId) =>
+    setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
 
-  const getCurrentSidebarIcon = () => sidebarIcons().find((s) => s.current);
+  const getCurrentTab = () => tabs().find((s) => s.current);
 
-  const sIcon = () => sidebarIcons().find((s) => s.current);
+  const tIcon = () => tabs().find((s) => s.current);
 
   const init = async () => {
     HotkeyStore.initHotkeys();
@@ -46,11 +56,11 @@ function createAppStore() {
       : document.querySelector("html")?.classList?.remove?.("dark");
 
   return {
-    sidebarIcons,
-    setSidebarIcons,
-    updateSidebarIcons,
-    getCurrentSidebarIcon,
-    sIcon,
+    tabs,
+    setTabs,
+    setCurrentTab,
+    getCurrentTab,
+    tIcon,
     init,
     darkMode,
   };
