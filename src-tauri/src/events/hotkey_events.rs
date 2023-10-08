@@ -7,7 +7,7 @@ use crate::{
     utils::{
         clipboard_manager::type_last_clipboard,
         hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX},
+        tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX, MAIN_WINDOW},
     },
 };
 use core::time::Duration;
@@ -57,7 +57,13 @@ pub fn init_hotkey_listener(all: bool) -> () {
 pub async fn parse_hotkey_event(key: &Key) {
     let event = key.event.parse::<HotkeyEvent>();
 
-    let window = APP.get().unwrap().get_window("main").unwrap();
+    let window = MAIN_WINDOW
+        .get()
+        .unwrap()
+        .lock()
+        .unwrap()
+        .get_window("main")
+        .unwrap();
 
     println!("event: {:?}", event);
 

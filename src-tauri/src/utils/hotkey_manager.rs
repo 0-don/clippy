@@ -21,6 +21,7 @@ pub fn register_hotkeys(all: bool) {
     // Get the data we need from the locked resource as quickly as possible
     let (hotkeys_data, hotkey_manager) = get_hotkeys_and_manager();
     let hotkeys_data: Vec<_> = hotkeys_data.iter().collect();
+    printlog!("register_hotkeys start");
 
     let mut instant_hotkeys = Vec::new();
     let mut delayed_hotkeys = Vec::new();
@@ -44,11 +45,13 @@ pub fn register_hotkeys(all: bool) {
         for hotkey in delayed_hotkeys {
             let _ = hotkey_manager.register(hotkey);
         }
+        printlog!("register_hotkeys end");
     });
 }
 
 pub fn unregister_hotkeys(all: bool) {
     tauri::async_runtime::spawn(async move {
+        printlog!("unregister_hotkeys start");
         let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
 
         let mut hotkeys_to_unregister = Vec::new();
@@ -60,11 +63,10 @@ pub fn unregister_hotkeys(all: bool) {
             }
         }
 
-        // Use bulk unregistration if available
-        // If not available, use a loop similar to the registration function
         hotkey_manager
             .unregister_all(&hotkeys_to_unregister)
             .unwrap();
+        printlog!("unregister_hotkeys end");
     });
 }
 
