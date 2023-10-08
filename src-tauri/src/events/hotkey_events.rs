@@ -75,15 +75,24 @@ pub async fn parse_hotkey_event(key: &Key) {
             | HotkeyEvent::ViewMore),
         ) => window.emit("change_tab", Some(e.as_str())).unwrap(),
         Ok(
-            e @ (HotkeyEvent::Key1
-            | HotkeyEvent::Key2
-            | HotkeyEvent::Key3
-            | HotkeyEvent::Key4
-            | HotkeyEvent::Key5
-            | HotkeyEvent::Key6
-            | HotkeyEvent::Key7
-            | HotkeyEvent::Key8
-            | HotkeyEvent::Key9),
+            e @ (HotkeyEvent::Digit1
+            | HotkeyEvent::Digit2
+            | HotkeyEvent::Digit3
+            | HotkeyEvent::Digit4
+            | HotkeyEvent::Digit5
+            | HotkeyEvent::Digit6
+            | HotkeyEvent::Digit7
+            | HotkeyEvent::Digit8
+            | HotkeyEvent::Digit9
+            | HotkeyEvent::Num1
+            | HotkeyEvent::Num2
+            | HotkeyEvent::Num3
+            | HotkeyEvent::Num4
+            | HotkeyEvent::Num5
+            | HotkeyEvent::Num6
+            | HotkeyEvent::Num7
+            | HotkeyEvent::Num8
+            | HotkeyEvent::Num9),
         ) => {
             let num = Regex::new(r"\d+")
                 .unwrap()

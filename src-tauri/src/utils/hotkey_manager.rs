@@ -1,6 +1,6 @@
+use super::tauri::config::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER};
 use crate::{service::hotkey::get_all_hotkeys_db, types::types::Key};
 use global_hotkey::hotkey::HotKey;
-use super::tauri::config::{HOTKEYS, HOTKEY_MANAGER, GLOBAL_EVENTS};
 
 pub fn register_hotkeys(all: bool) {
     tauri::async_runtime::spawn(async move {
@@ -40,7 +40,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             hotkey.ctrl,
             hotkey.alt,
             hotkey.shift,
-            &hotkey.key.to_lowercase(),
+            format!("Key{}", &hotkey.key.to_uppercase()).as_str(),
         );
 
         let key: HotKey = hotkey_str.parse()?;
@@ -68,14 +68,20 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
 
     // Add 1..9 regular keys which are not global
     for i in 1..=9 {
-        let hotkey_str = parse_shortcut(false, false, false, &i.to_string());
+        let hotkey_str = parse_shortcut(
+            false,
+            false,
+            false,
+            format!("Digit{}", i.to_string()).as_str(),
+        );
+
         let key: HotKey = hotkey_str.parse()?;
 
         let key_struct = Key {
             id: key.id(),
             global: false,               // These keys are not global
             event: format!("key_{}", i), // Adjust this if you have specific events for the keys
-            key_str: hotkey_str,
+            key_str: hotkey_str.clone(),
             ctrl: false,
             alt: false,
             shift: false,
@@ -106,7 +112,7 @@ pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
     }
 
     format!(
-        "{}{}Key{}",
+        "{}{}{}",
         modifiers.join("+"),
         if !modifiers.is_empty() { "+" } else { "" },
         key.to_uppercase()
