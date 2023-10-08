@@ -16,7 +16,7 @@ pub fn window_event_listener() {
             .on_window_event(move |event| match event {
                 WindowEvent::Focused(true) => {
                     tauri::async_runtime::spawn(async move {
-                        // register_hotkeys(true);
+                        register_hotkeys(true);
                         window
                             .lock()
                             .unwrap()
@@ -46,18 +46,15 @@ pub fn window_event_listener() {
                 }
                 WindowEvent::Focused(false) => {
                     tauri::async_runtime::spawn(async move {
-                        // unregister_hotkeys(false);
-                        // std::thread::sleep(Duration::from_millis(200));
+                        unregister_hotkeys(false);
+                        std::thread::sleep(Duration::from_millis(200));
 
                         // Use the sender to signal the timer thread to exit early
                         if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
                             let _ = tx.send(());
-                            window.lock().unwrap().hide().unwrap();
                         }
 
-                        // // toggle_main_window(Some(false));
-
-                        //
+                        window.lock().unwrap().hide().unwrap();
 
                         window
                             .lock()
