@@ -20,9 +20,9 @@ const Index = () => {
 
     listen("init", init);
 
-    listen("change_tab", ({ payload }: { payload: TabId }) => {
-      setCurrentTab(payload);
-    });
+    listen("change_tab", ({ payload }: { payload: TabId }) =>
+      setCurrentTab(payload),
+    );
   });
 
   return <App />;

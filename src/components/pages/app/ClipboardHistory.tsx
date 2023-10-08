@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api";
 import { BsCardImage } from "solid-icons/bs";
 import { RiSystemSearchLine } from "solid-icons/ri";
 import {
@@ -22,7 +21,6 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
 
   onMount(() => {
     input?.focus();
-    invoke("stop_hotkeys");
   });
 
   createEffect(() => {
