@@ -11,7 +11,7 @@ import { ViewMore } from "./ViewMore";
 
 function App() {
   const { settings } = SettingsStore;
-  const { sIcon } = AppStore;
+  const { tIcon } = AppStore;
 
   return (
     <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
@@ -21,7 +21,7 @@ function App() {
       <div class="min-w-0 flex-1">
         <div class="flex w-full justify-between px-2 py-1">
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
-            {sIcon()?.name?.toLocaleUpperCase()}
+            {tIcon()?.name?.toLocaleUpperCase()}
           </p>
           <Show
             when={settings()?.synchronize}
@@ -30,19 +30,19 @@ function App() {
             <FiGlobe title="online" />
           </Show>
         </div>
-        <Show when={sIcon()?.name === "Recent Clipboards"}>
+        <Show when={tIcon()?.name === "Recent Clipboards"}>
           <RecentClipboards />
         </Show>
 
-        <Show when={sIcon()?.name === "Starred Clipboards"}>
+        <Show when={tIcon()?.name === "Starred Clipboards"}>
           <StarredClipboards />
         </Show>
 
-        <Show when={sIcon()?.name === "History"}>
+        <Show when={tIcon()?.name === "History"}>
           <ClipboardHistory />
         </Show>
 
-        <Show when={sIcon()?.name === "View more"}>
+        <Show when={tIcon()?.name === "View more"}>
           <ViewMore />
         </Show>
       </div>
