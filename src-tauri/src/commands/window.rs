@@ -9,7 +9,7 @@ use std::fs::{self, read_to_string};
 
 #[tauri::command]
 pub fn window_display_toggle() {
-    toggle_main_window(None);
+    toggle_main_window();
 }
 
 #[tauri::command]

@@ -17,9 +17,9 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
             position: _,
             size: _,
             ..
-        } => toggle_main_window(None),
+        } => toggle_main_window(),
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-            "open" => toggle_main_window(None),
+            "open" => toggle_main_window(),
             "quit" => app.exit(1),
             _ => panic!("Unhandled tray event"),
         },

@@ -11,6 +11,18 @@ use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
 use utils::tauri::{setup, tray};
 
+#[macro_export]
+macro_rules! printlog {
+    ($($arg:tt)*) => {
+        {
+            use chrono::{Local, DateTime};
+            let now: DateTime<Local> = Local::now();
+            let millis = now.timestamp_subsec_millis();
+            println!("{}.{:03}: {}", now.format("%Y-%m-%d %H:%M:%S"), millis, format!($($arg)*));
+        }
+    };
+}
+
 #[tokio::main]
 async fn main() {
     tauri::async_runtime::set(tokio::runtime::Handle::current());

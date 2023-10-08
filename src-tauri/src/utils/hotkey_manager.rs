@@ -1,8 +1,8 @@
-use std::{collections::HashMap, sync::MutexGuard};
-
 use super::tauri::config::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER};
-use crate::{service::hotkey::get_all_hotkeys_db, types::types::Key};
-use global_hotkey::{hotkey::HotKey, GlobalHotKeyManager};
+use crate::{printlog, service::hotkey::get_all_hotkeys_db, types::types::Key};
+use global_hotkey::hotkey::HotKey;
+use global_hotkey::GlobalHotKeyManager;
+use std::{collections::HashMap, sync::MutexGuard};
 
 fn get_hotkeys_and_manager() -> (
     MutexGuard<'static, HashMap<u32, Key>>,
@@ -18,49 +18,69 @@ fn get_hotkeys_and_manager() -> (
 }
 
 pub fn register_hotkeys(all: bool) {
-    tauri::async_runtime::spawn(async move {
-        let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
-        println!("{:?}", hotkeys_store);
-        for (_, hotkey) in hotkeys_store.iter() {
-            if all || hotkey.global {
-                if hotkey_manager.register(hotkey.hotkey).is_err() {
-                    hotkey_manager
-                        .unregister(hotkey.hotkey)
-                        .expect("Failed to unregister hotkey");
-                    hotkey_manager
-                        .register(hotkey.hotkey)
-                        .expect("Failed to register hotkey");
-                }
+    // Get the data we need from the locked resource as quickly as possible
+    let (hotkeys_data, hotkey_manager) = get_hotkeys_and_manager();
+    let hotkeys_data: Vec<_> = hotkeys_data.iter().collect();
+
+    printlog!("register_hotkeys start {}", hotkeys_data.len());
+
+    let mut hotkeys_to_register = Vec::new();
+    let mut failed_hotkeys = Vec::new();
+
+    // Collect the hotkeys we want to register
+    for (_, hotkey) in hotkeys_data.iter() {
+        if all || hotkey.global {
+            hotkeys_to_register.push(hotkey.hotkey);
+        }
+    }
+
+    // Use bulk registration
+    if hotkey_manager.register_all(&hotkeys_to_register).is_err() {
+        for &hotkey in hotkeys_to_register.iter() {
+            if hotkey_manager.register(hotkey).is_err() {
+                failed_hotkeys.push(hotkey);
             }
         }
-    });
+
+        // Handle failed registrations: try unregistering and registering again
+        for &hotkey in failed_hotkeys.iter() {
+            let _ = hotkey_manager.unregister(hotkey);
+            let _ = hotkey_manager.register(hotkey);
+        }
+    }
+
+    printlog!("register_hotkeys end {}", hotkeys_to_register.len());
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    tauri::async_runtime::spawn(async move {
-        let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
-        for (_, hotkey) in hotkeys_store.iter() {
-            if all || !hotkey.global {
-                hotkey_manager
-                    .unregister(hotkey.hotkey)
-                    .expect("Failed to unregister hotkey");
-            }
+    let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
+    printlog!("unregister_hotkeys start {}", hotkeys_store.len());
+
+    let mut hotkeys_to_unregister = Vec::new();
+
+    // Collect the hotkeys we want to unregister
+    for (_, hotkey) in hotkeys_store.iter() {
+        if all || !hotkey.global {
+            hotkeys_to_unregister.push(hotkey.hotkey);
         }
-    });
+    }
+
+    // Use bulk unregistration if available
+    // If not available, use a loop similar to the registration function
+    hotkey_manager
+        .unregister_all(&hotkeys_to_unregister)
+        .unwrap();
+
+    printlog!("unregister_hotkeys end {}", hotkeys_to_unregister.len());
 }
 
 fn insert_hotkey_into_store(key: Key) {
-    if HOTKEYS
-        .get()
-        .unwrap()
-        .lock()
-        .unwrap()
-        .get(&key.id)
-        .is_some()
-    {
-        let _ = HOTKEYS.get().unwrap().lock().unwrap().remove(&key.id);
+    let mut hotkeys_lock = HOTKEYS.get().unwrap().lock().unwrap();
+
+    if hotkeys_lock.get(&key.id).is_some() {
+        hotkeys_lock.remove(&key.id).unwrap();
     }
-    HOTKEYS.get().unwrap().lock().unwrap().insert(key.id, key);
+    hotkeys_lock.insert(key.id, key);
 }
 
 pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
