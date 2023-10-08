@@ -1,7 +1,6 @@
+use crate::{service::window::get_data_path, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{Database, DbConn};
-
-use crate::{service::window::get_data_path, types::types::Config};
 
 pub async fn establish_connection() -> Result<DbConn, DbErr> {
     let database_url = if cfg!(debug_assertions) {
