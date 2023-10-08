@@ -22,8 +22,6 @@ pub fn register_hotkeys(all: bool) {
     let (hotkeys_data, hotkey_manager) = get_hotkeys_and_manager();
     let hotkeys_data: Vec<_> = hotkeys_data.iter().collect();
 
-    printlog!("register_hotkeys start {}", hotkeys_data.len());
-
     let mut instant_hotkeys = Vec::new();
     let mut delayed_hotkeys = Vec::new();
 
@@ -38,19 +36,15 @@ pub fn register_hotkeys(all: bool) {
         }
     }
 
-    let count = instant_hotkeys.len() + delayed_hotkeys.len();
-    
     for hotkey in instant_hotkeys {
         let _ = hotkey_manager.register(hotkey);
     }
 
-    tauri::async_runtime::spawn(async move {
+    tauri::async_runtime::spawn(async {
         for hotkey in delayed_hotkeys {
             let _ = hotkey_manager.register(hotkey);
         }
     });
-
-    printlog!("register_hotkeys end {}", count);
 }
 
 pub fn unregister_hotkeys(all: bool) {
