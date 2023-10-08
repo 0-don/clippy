@@ -1,4 +1,5 @@
 use crate::{
+    printlog,
     service::{
         clipboard::copy_clipboard_from_index,
         window::{sync_clipboard_history, toggle_main_window},
@@ -36,6 +37,7 @@ pub fn init_hotkey_listener(all: bool) -> () {
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
+                printlog!("hotkey caught");
                 let hotkey = {
                     let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
                     hotkeys.get(&event.id).cloned()
@@ -65,7 +67,7 @@ pub async fn parse_hotkey_event(key: &Key) {
         .get_window("main")
         .unwrap();
 
-    println!("event: {:?}", event);
+    printlog!("event: {:?}", event);
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
@@ -79,7 +81,10 @@ pub async fn parse_hotkey_event(key: &Key) {
             | HotkeyEvent::StarredClipboard
             | HotkeyEvent::History
             | HotkeyEvent::ViewMore),
-        ) => window.emit("change_tab", Some(e.as_str())).unwrap(),
+        ) => {
+            printlog!("change_tab: {:?}", e);
+            window.emit("change_tab", Some(e.as_str())).unwrap();
+        }
         Ok(
             e @ (HotkeyEvent::Digit1
             | HotkeyEvent::Digit2
@@ -110,5 +115,5 @@ pub async fn parse_hotkey_event(key: &Key) {
             let _ = copy_clipboard_from_index(num - 1).await;
         }
         Err(()) => println!("Error parsing hotkey event"),
-    }
+    };
 }
