@@ -53,25 +53,27 @@ pub fn register_hotkeys(all: bool) {
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
-    printlog!("unregister_hotkeys start {}", hotkeys_store.len());
+    tauri::async_runtime::spawn(async move {
+        let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
+        printlog!("unregister_hotkeys start {}", hotkeys_store.len());
 
-    let mut hotkeys_to_unregister = Vec::new();
+        let mut hotkeys_to_unregister = Vec::new();
 
-    // Collect the hotkeys we want to unregister
-    for (_, hotkey) in hotkeys_store.iter() {
-        if all || !hotkey.global {
-            hotkeys_to_unregister.push(hotkey.hotkey);
+        // Collect the hotkeys we want to unregister
+        for (_, hotkey) in hotkeys_store.iter() {
+            if all || !hotkey.global {
+                hotkeys_to_unregister.push(hotkey.hotkey);
+            }
         }
-    }
 
-    // Use bulk unregistration if available
-    // If not available, use a loop similar to the registration function
-    hotkey_manager
-        .unregister_all(&hotkeys_to_unregister)
-        .unwrap();
+        // Use bulk unregistration if available
+        // If not available, use a loop similar to the registration function
+        hotkey_manager
+            .unregister_all(&hotkeys_to_unregister)
+            .unwrap();
 
-    printlog!("unregister_hotkeys end {}", hotkeys_to_unregister.len());
+        printlog!("unregister_hotkeys end {}", hotkeys_to_unregister.len());
+    });
 }
 
 fn insert_hotkey_into_store(key: Key) {
