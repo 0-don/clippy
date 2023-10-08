@@ -3,7 +3,7 @@ use tauri::WindowEvent;
 use tokio::sync::oneshot;
 
 use crate::utils::{
-    hotkey_manager::unregister_hotkeys,
+    hotkey_manager::{register_hotkeys, unregister_hotkeys},
     tauri::config::{MAIN_WINDOW, WINDOW_STOP_TX},
 };
 
@@ -16,26 +16,34 @@ pub fn window_event_listener() {
             .unwrap()
             .on_window_event(move |event| match event {
                 WindowEvent::Focused(true) => {
-                    // let (tx, rx) = oneshot::channel();
+                    let (tx, rx) = oneshot::channel();
 
-                    // tauri::async_runtime::spawn(async {
-                    //     let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
-                    //     match result {
-                    //         Ok(_) => return, // If we're signaled, exit early
-                    //         Err(_) => {
-                    //             // Acquire the lock only when you need it
-                    //             unregister_hotkeys(false);
-                    //             window
-                    //                 .lock()
-                    //                 .unwrap()
-                    //                 .emit("set_global_hotkey_event", false)
-                    //                 .unwrap();
-                    //         }
-                    //     }
-                    // });
+                    register_hotkeys(true);
+                    window
+                        .lock()
+                        .unwrap()
+                        .emit("set_global_hotkey_event", true)
+                        .unwrap();
 
-                    // // Store the sender in the WINDOW_STOP_TX global variable
-                    // *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
+                    tauri::async_runtime::spawn(async {
+                        println!("WindowEvent::Focused(true) triggered");
+                        let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
+                        match result {
+                            Ok(_) => return, // If we're signaled, exit early
+                            Err(_) => {
+                                // Acquire the lock only when you need it
+                                unregister_hotkeys(false);
+                                window
+                                    .lock()
+                                    .unwrap()
+                                    .emit("set_global_hotkey_event", false)
+                                    .unwrap();
+                            }
+                        }
+                    });
+
+                    // Store the sender in the WINDOW_STOP_TX global variable
+                    *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
                 }
                 WindowEvent::Focused(false) => {
                     // std::thread::sleep(Duration::from_millis(200));
