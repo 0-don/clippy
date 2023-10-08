@@ -24,38 +24,38 @@ pub fn register_hotkeys(all: bool) {
 
     printlog!("register_hotkeys start {}", hotkeys_data.len());
 
-    let mut hotkeys_to_register = Vec::new();
-    let mut failed_hotkeys = Vec::new();
+    let mut instant_hotkeys = Vec::new();
+    let mut delayed_hotkeys = Vec::new();
 
     // Collect the hotkeys we want to register
     for (_, hotkey) in hotkeys_data.iter() {
         if all || hotkey.global {
-            hotkeys_to_register.push(hotkey.hotkey);
-        }
-    }
-
-    // Use bulk registration
-    if hotkey_manager.register_all(&hotkeys_to_register).is_err() {
-        for &hotkey in hotkeys_to_register.iter() {
-            if hotkey_manager.register(hotkey).is_err() {
-                failed_hotkeys.push(hotkey);
+            if hotkey.event.contains("digit_") || hotkey.event.contains("num_") {
+                delayed_hotkeys.push(hotkey.hotkey);
+            } else {
+                instant_hotkeys.push(hotkey.hotkey);
             }
         }
-
-        // Handle failed registrations: try unregistering and registering again
-        for &hotkey in failed_hotkeys.iter() {
-            let _ = hotkey_manager.unregister(hotkey);
-            let _ = hotkey_manager.register(hotkey);
-        }
     }
 
-    printlog!("register_hotkeys end {}", hotkeys_to_register.len());
+    let count = instant_hotkeys.len() + delayed_hotkeys.len();
+    
+    for hotkey in instant_hotkeys {
+        let _ = hotkey_manager.register(hotkey);
+    }
+
+    tauri::async_runtime::spawn(async move {
+        for hotkey in delayed_hotkeys {
+            let _ = hotkey_manager.register(hotkey);
+        }
+    });
+
+    printlog!("register_hotkeys end {}", count);
 }
 
 pub fn unregister_hotkeys(all: bool) {
     tauri::async_runtime::spawn(async move {
         let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
-        printlog!("unregister_hotkeys start {}", hotkeys_store.len());
 
         let mut hotkeys_to_unregister = Vec::new();
 
@@ -71,8 +71,6 @@ pub fn unregister_hotkeys(all: bool) {
         hotkey_manager
             .unregister_all(&hotkeys_to_unregister)
             .unwrap();
-
-        printlog!("unregister_hotkeys end {}", hotkeys_to_unregister.len());
     });
 }
 
@@ -150,19 +148,15 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
 }
 
 pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
-    let modifiers: Vec<&str> = vec![
-        if ctrl { "Control" } else { "" },
-        if alt { "Alt" } else { "" },
-        if shift { "Shift" } else { "" },
-    ]
-    .into_iter()
-    .filter(|s| !s.is_empty())
-    .collect();
-
-    format!(
-        "{}{}{}",
-        modifiers.join("+"),
-        if !modifiers.is_empty() { "+" } else { "" },
-        key.to_uppercase()
-    )
+    let mut modifiers = String::new();
+    if ctrl {
+        modifiers += "Control+";
+    }
+    if alt {
+        modifiers += "Alt+";
+    }
+    if shift {
+        modifiers += "Shift+";
+    }
+    format!("{}{}", modifiers, key.to_uppercase())
 }
