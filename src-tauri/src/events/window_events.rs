@@ -1,7 +1,7 @@
-use crate::utils::{
+use crate::{utils::{
     hotkey_manager::{register_hotkeys, unregister_hotkeys},
     tauri::config::{MAIN_WINDOW, WINDOW_STOP_TX},
-};
+}, printlog};
 use core::time::Duration;
 use tauri::WindowEvent;
 use tokio::sync::oneshot;
@@ -47,7 +47,8 @@ pub fn window_event_listener() {
                 WindowEvent::Focused(false) => {
                     tauri::async_runtime::spawn(async move {
                         unregister_hotkeys(false);
-                        std::thread::sleep(Duration::from_millis(200));
+                        std::thread::sleep(Duration::from_millis(50));
+                        printlog!("----------- Window lost focus");
 
                         // Use the sender to signal the timer thread to exit early
                         if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {

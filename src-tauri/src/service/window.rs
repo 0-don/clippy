@@ -18,10 +18,8 @@ pub fn toggle_main_window() {
         .is_visible()
         .unwrap()
     {
-        println!("hide window");
         MAIN_WINDOW.get().unwrap().lock().unwrap().hide().unwrap();
     } else {
-        println!("show window");
         MAIN_WINDOW
             .get()
             .unwrap()
