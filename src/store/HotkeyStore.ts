@@ -3,7 +3,7 @@ import { createRoot, createSignal } from "solid-js";
 import { Hotkey, HotkeyEvent } from "../@types";
 
 function createHotkeyStore() {
-  const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(true);
+  const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(false);
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
 
   const updateHotkey = async (

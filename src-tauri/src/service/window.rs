@@ -1,42 +1,56 @@
 use crate::{
     types::types::{Config, DataPath},
     utils::{
-        hotkey_manager::register_hotkeys,
-        tauri::config::{APP, MAIN_WINDOW},
+        hotkey_manager::{register_hotkeys, unregister_hotkeys},
+        tauri::config::{APP, MAIN_WINDOW, WINDOW_STOP_TX},
     },
 };
+use core::time::Duration;
 use std::{
     fs::{self, read_to_string},
     path::{Path, PathBuf},
 };
 use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri_plugin_positioner::{Position, WindowExt};
+use tokio::sync::oneshot;
 
-pub fn toggle_main_window(state: Option<bool>) {
+pub fn toggle_main_window() {
     let window = MAIN_WINDOW.get().unwrap().lock().unwrap();
     let is_visible = window.is_visible().unwrap();
 
-    match state {
-        Some(true) => {
-            if !is_visible {
-                let _ = window.move_window(Position::BottomRight);
-                let _ = window.show();
+    if is_visible {
+        window.hide().unwrap();
+    } else {
+        window.move_window(Position::BottomRight).unwrap();
+        window.show().unwrap();
+        register_hotkeys(true);
+        window.emit("set_global_hotkey_event", true).unwrap();
+
+        let (tx, rx) = oneshot::channel();
+
+        tauri::async_runtime::spawn(async move {
+            println!("toggle_main_window timeout start");
+            let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
+            println!("toggle_main_window timeout end");
+            match result {
+                Ok(_) => return println!("cancceled"), // If we're signaled, exit early
+                Err(_) => {
+                    println!("toggle_main_window working");
+                    // Acquire the lock only when you need it
+                    unregister_hotkeys(false);
+                    MAIN_WINDOW
+                        .get()
+                        .unwrap()
+                        .lock()
+                        .unwrap()
+                        .emit("set_global_hotkey_event", false)
+                        .unwrap();
+                }
             }
-        }
-        Some(false) => {
-            if is_visible {
-                let _ = window.hide();
-            }
-        }
-        None => {
-            if is_visible {
-                let _ = window.hide();
-            } else {
-                let _ = window.move_window(Position::BottomRight);
-                let _ = window.show();
-                register_hotkeys(true);
-            }
-        }
+        });
+        println!("toggle_main_window txxxx");
+        // Store the sender in the WINDOW_STOP_TX global variable
+        *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
     }
 }
 
