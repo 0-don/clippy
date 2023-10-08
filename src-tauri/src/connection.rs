@@ -9,8 +9,6 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
         get_prod_database_url()
     };
 
-    // let database_url = if get_prod_database_url();
-
     let db = Database::connect(&database_url)
         .await
         .expect("Failed to setup the database");

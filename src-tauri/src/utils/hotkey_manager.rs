@@ -9,9 +9,9 @@ pub fn register_hotkeys(all: bool) {
 
         for (_, hotkey) in hotkeys_store.iter() {
             if all || hotkey.global {
-                if hotkey_manager.register(hotkey.hotkey.clone()).is_err() {
-                    hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
-                    hotkey_manager.register(hotkey.hotkey.clone()).unwrap();
+                if hotkey_manager.register(hotkey.hotkey).is_err() {
+                    hotkey_manager.unregister(hotkey.hotkey).unwrap();
+                    hotkey_manager.register(hotkey.hotkey).unwrap();
                 }
             }
         }
@@ -25,7 +25,7 @@ pub fn unregister_hotkeys(all: bool) {
 
         for (_, hotkey) in hotkeys_store.iter() {
             if all || !hotkey.global {
-                hotkey_manager.unregister(hotkey.hotkey.clone()).unwrap();
+                hotkey_manager.unregister(hotkey.hotkey).unwrap();
             }
         }
     });
@@ -68,32 +68,59 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
 
     // Add 1..9 regular keys which are not global
     for i in 1..=9 {
-        let hotkey_str = parse_shortcut(
+        let hotkey_digit = parse_shortcut(
             false,
             false,
             false,
-            format!("Digit{}", i.to_string()).as_str(),
+            format!("Digit{}", i.to_string()).to_uppercase().as_str(),
         );
 
-        let key: HotKey = hotkey_str.parse()?;
+        let key_digit: HotKey = hotkey_digit.parse()?;
 
-        let key_struct = Key {
-            id: key.id(),
+        let key_digit_struct = Key {
+            id: key_digit.id(),
             global: false,               // These keys are not global
-            event: format!("key_{}", i), // Adjust this if you have specific events for the keys
-            key_str: hotkey_str.clone(),
+            event: format!("digis{}", i), // Adjust this if you have specific events for the keys
+            key_str: hotkey_digit,
             ctrl: false,
             alt: false,
             shift: false,
             key: i.to_string(),
-            hotkey: key,
+            hotkey: key_digit,
         };
 
-        if hotkey_store.get(&key_struct.id).is_some() {
-            let _ = hotkey_store.remove(&key_struct.id);
+        if hotkey_store.get(&key_digit_struct.id).is_some() {
+            let _ = hotkey_store.remove(&key_digit_struct.id);
         }
 
-        hotkey_store.insert(key_struct.id, key_struct);
+        hotkey_store.insert(key_digit_struct.id, key_digit_struct);
+
+        let hotkey_num = parse_shortcut(
+            false,
+            false,
+            false,
+            format!("Digit{}", i.to_string()).to_uppercase().as_str(),
+        );
+
+        let key_num: HotKey = hotkey_num.parse()?;
+
+        let key_num_struct = Key {
+            id: key_num.id(),
+            global: false,               // These keys are not global
+            event: format!("key_{}", i), // Adjust this if you have specific events for the keys
+            key_str: hotkey_num,
+            ctrl: false,
+            alt: false,
+            shift: false,
+            key: i.to_string(),
+            hotkey: key_num,
+        };
+
+        if hotkey_store.get(&key_num_struct.id).is_some() {
+            let _ = hotkey_store.remove(&key_num_struct.id);
+        }
+
+        hotkey_store.insert(key_num_struct.id, key_num_struct);
     }
 
     Ok(())

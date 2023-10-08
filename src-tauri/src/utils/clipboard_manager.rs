@@ -30,7 +30,7 @@ pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
         ImageBuffer::from_raw(
             image.as_ref().unwrap().width.try_into().unwrap(),
             image.as_ref().unwrap().height.try_into().unwrap(),
-            image.clone().unwrap().bytes.into_owned(),
+            image.unwrap().bytes.into_owned(),
         )
     } else {
         None
