@@ -1,6 +1,6 @@
 use crate::{
     types::types::{Config, DataPath},
-    utils::tauri::config::{APP, MAIN_WINDOW, WINDOW_STOP_TX},
+    utils::tauri::config::{APP, MAIN_WINDOW},
 };
 use std::{
     fs::{self, read_to_string},
@@ -10,14 +10,26 @@ use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri_plugin_positioner::{Position, WindowExt};
 
 pub fn toggle_main_window() {
-    *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = None;
-    let window = MAIN_WINDOW.get().unwrap().lock().unwrap();
-
-    if window.is_visible().unwrap() {
-        window.hide().unwrap();
+    if MAIN_WINDOW
+        .get()
+        .unwrap()
+        .lock()
+        .unwrap()
+        .is_visible()
+        .unwrap()
+    {
+        println!("hide window");
+        MAIN_WINDOW.get().unwrap().lock().unwrap().hide().unwrap();
     } else {
-        window.move_window(Position::BottomRight).unwrap();
-        window.show().unwrap();
+        println!("show window");
+        MAIN_WINDOW
+            .get()
+            .unwrap()
+            .lock()
+            .unwrap()
+            .move_window(Position::BottomRight)
+            .unwrap();
+        MAIN_WINDOW.get().unwrap().lock().unwrap().show().unwrap();
     }
 }
 

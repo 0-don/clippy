@@ -15,51 +15,56 @@ pub fn window_event_listener() {
             .unwrap()
             .on_window_event(move |event| match event {
                 WindowEvent::Focused(true) => {
-                    register_hotkeys(true);
-                    window
-                        .lock()
-                        .unwrap()
-                        .emit("set_global_hotkey_event", true)
-                        .unwrap();
-
-                    let (tx, rx) = oneshot::channel();
                     tauri::async_runtime::spawn(async move {
-                        let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
-                        match result {
-                            Ok(_) => return, // If we're signaled, exit early
-                            Err(_) => {
-                                // Acquire the lock only when you need it
-                                unregister_hotkeys(false);
-                                window
-                                    .lock()
-                                    .unwrap()
-                                    .emit("set_global_hotkey_event", false)
-                                    .unwrap();
-                            }
-                        }
-                    });
+                        // register_hotkeys(true);
+                        window
+                            .lock()
+                            .unwrap()
+                            .emit("set_global_hotkey_event", true)
+                            .unwrap();
 
-                    // Store the sender in the WINDOW_STOP_TX global variable
-                    *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
+                        let (tx, rx) = oneshot::channel();
+                        tauri::async_runtime::spawn(async move {
+                            let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
+                            match result {
+                                Ok(_) => return, // If we're signaled, exit early
+                                Err(_) => {
+                                    // Acquire the lock only when you need it
+                                    unregister_hotkeys(false);
+                                    window
+                                        .lock()
+                                        .unwrap()
+                                        .emit("set_global_hotkey_event", false)
+                                        .unwrap();
+                                }
+                            }
+                        });
+
+                        // Store the sender in the WINDOW_STOP_TX global variable
+                        *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
+                    });
                 }
                 WindowEvent::Focused(false) => {
-                    std::thread::sleep(Duration::from_millis(200));
+                    tauri::async_runtime::spawn(async move {
+                        // unregister_hotkeys(false);
+                        // std::thread::sleep(Duration::from_millis(200));
 
-                    // Use the sender to signal the timer thread to exit early
-                    if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
-                        let _ = tx.send(());
-                    }
+                        // Use the sender to signal the timer thread to exit early
+                        if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
+                            let _ = tx.send(());
+                            window.lock().unwrap().hide().unwrap();
+                        }
 
-                    // toggle_main_window(Some(false));
-                    unregister_hotkeys(false);
+                        // // toggle_main_window(Some(false));
 
-                    window.lock().unwrap().hide().unwrap();
+                        //
 
-                    window
-                        .lock()
-                        .unwrap()
-                        .emit("set_global_hotkey_event", false)
-                        .unwrap();
+                        window
+                            .lock()
+                            .unwrap()
+                            .emit("set_global_hotkey_event", false)
+                            .unwrap();
+                    });
                 }
                 _ => {}
             });
