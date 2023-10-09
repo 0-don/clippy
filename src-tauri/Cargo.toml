@@ -33,6 +33,7 @@ tauri-plugin-positioner = { version = "1", features = ["system-tray"] }
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 window-shadows = "0"
 chrono = "0"
+enigo = "0"
 
 
 [dependencies.sea-orm]

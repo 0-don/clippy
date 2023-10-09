@@ -19,6 +19,7 @@
   </p>
 </p>
 <!-- npx npm-check-updates -u -->
+<!-- sea-orm-cli migrate fresh -v -d migration && sea-orm-cli generate entity -l -o ./entity/src --expanded-format --with-serde both -->
 
 successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 

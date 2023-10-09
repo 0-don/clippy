@@ -36,6 +36,20 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
+            event: Set("type_clipboard".to_string()),
+            ctrl: Set(true),
+            alt: Set(false),
+            shift: Set(false),
+            key: Set("B".to_string()),
+            status: Set(true),
+            name: Set("Type Clipboard".to_string()),
+            icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M4 7V4h16v3M9 20h6M12 4v16\\\"></path></svg>\"".to_string()),
+            ..Default::default()
+        }
+        .insert(db)
+        .await?;
+
+        hotkey::ActiveModel {
             event: Set("recent_clipboards".to_string()),
             ctrl: Set(false),
             alt: Set(false),
@@ -160,20 +174,6 @@ impl MigrationTrait for Migration {
         }
         .insert(db)
         .await?;
-
-        // hotkey::ActiveModel {
-        //     event: Set("type_clipboard".to_string()),
-        //     ctrl: Set(true),
-        //     alt: Set(false),
-        //     shift: Set(false),
-        //     key: Set("B".to_string()),
-        //     status: Set(true),
-        //     name: Set("Type Clipboard".to_string()),
-        //     icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M4 7V4h16v3M9 20h6M12 4v16\\\"></path></svg>\"".to_string()),
-        //     ..Default::default()
-        // }
-        // .insert(db)
-        // .await?;
 
         Ok(())
     }
