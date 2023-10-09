@@ -1,12 +1,14 @@
-use crate::{connection, service::clipboard::insert_clipboard_db};
-
+use super::tauri::config::{APP, CLIPBOARD};
+use crate::{
+    connection,
+    service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
+};
+use enigo::{Enigo, KeyboardControllable};
 use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::io::Cursor;
 use tauri::{regex::Regex, Manager};
-
-use super::tauri::config::{APP, CLIPBOARD};
 
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let mut text: Option<String> = CLIPBOARD
@@ -155,14 +157,16 @@ impl ClipboardHelper {
 }
 
 pub async fn type_last_clipboard() {
-    // let clipboard = get_last_clipboard_db().await;
+    let clipboard = get_last_clipboard_db().await;
 
-    // if clipboard.is_ok() {
-    //     let r#type = &clipboard.as_ref().unwrap().r#type;
+    if clipboard.is_ok() {
+        let clipboard = clipboard.unwrap();
+        let content = clipboard.content.unwrap();
+        let r#type = clipboard.r#type;
 
-    //     if r#type != "image" {
-    //         let mut enigo = Enigo::new();
-    //         enigo.key_sequence(clipboard.unwrap().content.unwrap().as_str());
-    //     }
-    // }
+        if r#type != "image" && content.len() < 32 {
+            let mut enigo = Enigo::new();
+            enigo.key_sequence(content.as_str());
+        }
+    }
 }
