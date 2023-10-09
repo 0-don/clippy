@@ -161,12 +161,13 @@ pub async fn type_last_clipboard() {
 
     if clipboard.is_ok() {
         let clipboard = clipboard.unwrap();
-        let content = clipboard.content.unwrap();
-        let r#type = clipboard.r#type;
+        let content = clipboard.clone().content.unwrap();
+        let r#type = clipboard.clone().r#type;
 
         if r#type != "image" && content.len() < 32 {
+            println!("clipboard: {:?}", clipboard.clone());
             let mut enigo = Enigo::new();
-            enigo.key_sequence(content.as_str());
+            enigo.key_sequence("a");
         }
     }
 }
