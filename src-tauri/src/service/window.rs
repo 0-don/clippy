@@ -25,6 +25,7 @@ pub fn toggle_main_window() {
         *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
     } else {
         window.move_window(Position::BottomRight).unwrap();
+        window.emit("change_tab", "recent_clipboards").unwrap();
         window.show().unwrap();
         register_hotkeys(true);
         window.emit("set_global_hotkey_event", true).unwrap();
