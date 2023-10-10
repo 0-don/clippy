@@ -22,6 +22,7 @@ pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<Window>>> = OnceLock::new();
 
 pub static HOTKEY_MANAGER: OnceLock<GlobalHotKeyManager> = OnceLock::new();
+pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static CLIPBOARD: OnceLock<Arc<Mutex<Clipboard>>> = OnceLock::new();
@@ -81,6 +82,9 @@ pub fn init_globals(app: &mut tauri::App) {
     HOTKEY_MANAGER
         .set(GlobalHotKeyManager::new().unwrap())
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_MANAGER"));
+    HOTKEY_RUNNING
+        .set(Arc::new(Mutex::new(false)))
+        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_RUNNING"));
     HOTKEYS
         .set(Arc::new(Mutex::new(HashMap::new())))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEYS"));
