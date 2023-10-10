@@ -8,7 +8,7 @@ use crate::{
     utils::{
         clipboard_manager::type_last_clipboard,
         hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_STOP_TX, MAIN_WINDOW},
+        tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW},
     },
 };
 use core::time::Duration;
@@ -83,6 +83,7 @@ pub async fn parse_hotkey_event(key: &Key) {
             | HotkeyEvent::ViewMore),
         ) => {
             printlog!("change_tab: {:?}", e);
+            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
             window.emit("change_tab", Some(e.as_str())).unwrap();
         }
         Ok(
