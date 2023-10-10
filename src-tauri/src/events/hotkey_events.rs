@@ -73,8 +73,12 @@ pub async fn parse_hotkey_event(key: &Key) {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
         Ok(HotkeyEvent::TypeClipboard) => type_last_clipboard().await,
         Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history().await.unwrap(),
-        Ok(e @ HotkeyEvent::Preferences) => window.emit("open_window", Some(e.as_str())).unwrap(),
-        Ok(e @ HotkeyEvent::About) => window.emit("open_window", Some(e.as_str())).unwrap(),
+        Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => {
+            printlog!("open_window: {:?}", e);
+            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
+            window.emit("open_window", Some(e.as_str())).unwrap()
+        }
+
         Ok(HotkeyEvent::Exit) => APP.get().unwrap().exit(1),
         Ok(
             e @ (HotkeyEvent::RecentClipboard
