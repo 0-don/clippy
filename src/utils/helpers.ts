@@ -1,4 +1,5 @@
 import { WebviewWindow } from "@tauri-apps/api/window";
+import { WindowName } from "../@types";
 
 export function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
@@ -34,4 +35,17 @@ export function createSettingsWindow() {
     width: 500,
     alwaysOnTop: true,
   });
+}
+
+export function openWindow(windowName: WindowName) {
+  switch (windowName) {
+    case "about":
+      createAboutWindow();
+      break;
+    case "settings":
+      createSettingsWindow();
+      break;
+    default:
+      break;
+  }
 }
