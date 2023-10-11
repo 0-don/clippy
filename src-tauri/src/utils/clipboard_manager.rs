@@ -3,12 +3,17 @@ use crate::{
     connection,
     service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
 };
+use core::time::Duration;
 use enigo::{Enigo, KeyboardControllable};
 use entity::clipboard::{self, ActiveModel};
 use image::{ImageBuffer, RgbaImage};
 use sea_orm::{EntityTrait, QueryOrder, Set};
-use std::io::Cursor;
-use tauri::{regex::Regex, Manager};
+use std::{io::Cursor, process::Command};
+use tauri::{
+    api::dialog::{MessageDialogBuilder, MessageDialogButtons, MessageDialogKind},
+    regex::Regex,
+    Manager,
+};
 
 pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
     let mut text: Option<String> = CLIPBOARD
@@ -165,9 +170,52 @@ pub async fn type_last_clipboard() {
         let r#type = clipboard.clone().r#type;
 
         if r#type != "image" && content.len() < 32 {
-            println!("clipboard: {:?}", clipboard.clone());
             let mut enigo = Enigo::new();
-            enigo.key_sequence("a");
+            enigo.key_sequence(&content);
         }
     }
+}
+
+pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error>> {
+    println!("type_last_clipboard_linux");
+    // Check if xdotool is installed
+    if !is_tool_installed("xdotool") {
+        MessageDialogBuilder::new(
+            "Missing Dependency",
+            "xdotool is not installed. Please install it to continue.",
+        )
+        .kind(MessageDialogKind::Error) // this will indicate that the message is an error
+        .buttons(MessageDialogButtons::Ok) // this will add an "Ok" button to the dialog
+        .show(|pressed_ok| {
+            if pressed_ok {
+                // Handle the case when the user presses the "Ok" button
+            }
+        });
+        return Ok(());
+    }
+
+    let clipboard = get_last_clipboard_db().await;
+
+    if clipboard.is_ok() {
+        let clipboard = clipboard?;
+        let content = clipboard.clone().content.unwrap();
+        let r#type = clipboard.clone().r#type;
+
+        if r#type != "image" && content.len() < 32 {
+            std::thread::sleep(Duration::from_millis(1000));
+            Command::new("xdotool")
+                .args(&["type", "--clearmodifiers", "--", &content])
+                .output()?;
+        }
+    }
+
+    return Ok(());
+}
+
+pub fn is_tool_installed(tool: &str) -> bool {
+    Command::new(tool)
+        .arg("--version")
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
 }
