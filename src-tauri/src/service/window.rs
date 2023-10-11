@@ -1,4 +1,5 @@
 use crate::{
+    service::{hotkey::with_hotkeys, settings::update_settings_synchronize},
     types::types::{Config, DataPath},
     utils::{
         hotkey_manager::{register_hotkeys, unregister_hotkeys},
@@ -94,8 +95,10 @@ pub async fn sync_clipboard_history_toggle() -> Result<(), ()> {
             &data_path.config_file_path,
             serde_json::to_string(&config).unwrap(),
         );
-
-
+        with_hotkeys(false, async move {
+            update_settings_synchronize(true).await.unwrap();
+        })
+        .await;
     } else {
         // copy backup file to default database location
         let _ = fs::copy(&config.db, &data_path.db_file_path);
@@ -108,9 +111,12 @@ pub async fn sync_clipboard_history_toggle() -> Result<(), ()> {
             &data_path.config_file_path,
             serde_json::to_string(&config).unwrap(),
         );
+
+        with_hotkeys(false, async move {
+            update_settings_synchronize(false).await.unwrap();
+        })
+        .await;
     }
 
     Ok(())
 }
-
-
