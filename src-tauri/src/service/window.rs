@@ -1,6 +1,6 @@
 use crate::{
     commands::settings::get_settings,
-    service::hotkey::with_hotkeys,
+    service::{hotkey::with_hotkeys, settings::update_settings_synchronize},
     types::types::{Config, DataPath},
     utils::{
         hotkey_manager::{register_hotkeys, unregister_hotkeys},
@@ -76,7 +76,7 @@ pub fn get_config() -> (Config, DataPath) {
     (config, data_path)
 }
 
-pub fn sync_clipboard_history_enable() {
+pub async fn sync_clipboard_history_enable() {
     // get local config from app data
     let (mut config, data_path) = get_config();
     let dir = FileDialogBuilder::new().pick_folder();
@@ -104,10 +104,12 @@ pub fn sync_clipboard_history_enable() {
             &data_path.config_file_path,
             serde_json::to_string(&config).unwrap(),
         );
+
+        update_settings_synchronize(true).await.unwrap();
     }
 }
 
-pub fn sync_clipboard_history_disable() {
+pub async fn sync_clipboard_history_disable() {
     let (mut config, data_path) = get_config();
     // copy backup file to default database location
     let _ = fs::copy(&config.db, &data_path.db_file_path);
@@ -120,6 +122,8 @@ pub fn sync_clipboard_history_disable() {
         &data_path.config_file_path,
         serde_json::to_string(&config).unwrap(),
     );
+
+    update_settings_synchronize(false).await.unwrap();
 }
 
 pub async fn sync_clipboard_history_toggle() {
@@ -127,9 +131,9 @@ pub async fn sync_clipboard_history_toggle() {
 
     with_hotkeys(false, async move {
         if settings.synchronize {
-            sync_clipboard_history_disable();
+            sync_clipboard_history_disable().await;
         } else {
-            sync_clipboard_history_enable();
+            sync_clipboard_history_enable().await;
         }
     })
     .await;
