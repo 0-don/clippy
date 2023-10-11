@@ -64,7 +64,7 @@ pub fn get_data_path() -> DataPath {
     }
 }
 
-pub async fn sync_clipboard_history() -> Result<(), ()> {
+pub async fn sync_clipboard_history_toggle() -> Result<(), ()> {
     let data_path = get_data_path();
 
     // get local config from app data
@@ -72,10 +72,13 @@ pub async fn sync_clipboard_history() -> Result<(), ()> {
         serde_json::from_str(&read_to_string(&data_path.config_file_path).unwrap()).unwrap();
     let dir = FileDialogBuilder::new().pick_folder();
 
+    println!("config: {:?}", dir);
     // check if user disabled backup or not
     if dir.is_some() {
         // path to backup file
         let dir_file = dir.unwrap().to_string_lossy().to_string();
+
+        println!("dir_file: {}", dir_file);
 
         // check if backup file exists
         if !Path::new(&dir_file).exists() {
@@ -91,6 +94,8 @@ pub async fn sync_clipboard_history() -> Result<(), ()> {
             &data_path.config_file_path,
             serde_json::to_string(&config).unwrap(),
         );
+
+
     } else {
         // copy backup file to default database location
         let _ = fs::copy(&config.db, &data_path.db_file_path);
@@ -107,3 +112,5 @@ pub async fn sync_clipboard_history() -> Result<(), ()> {
 
     Ok(())
 }
+
+
