@@ -18,8 +18,11 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
     on(
       () => settings()?.synchronize,
       () =>
-        setTimeout(async () => setUrl(await invoke<string>("get_db_path")), 100)
-    )
+        setTimeout(
+          async () => setUrl(await invoke<string>("get_db_path")),
+          100,
+        ),
+    ),
   );
 
   return (
@@ -33,7 +36,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div>
             <SwitchField
               checked={settings()?.synchronize || false}
-              onChange={syncClipboard}
+              onChange={() => syncClipboard()}
             />
           </div>
         </div>

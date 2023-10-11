@@ -1,7 +1,8 @@
 use crate::{
     service::{
         clipboard::count_clipboards_db,
-        window::{get_data_path, toggle_main_window},
+        hotkey::with_hotkeys,
+        window::{get_data_path, sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::{Config, DatabaseInfo},
 };
@@ -33,4 +34,13 @@ pub async fn get_db_path() -> Result<String, ()> {
         serde_json::from_str(&read_to_string(&data_path.config_file_path).unwrap()).unwrap();
 
     Ok(config.db)
+}
+
+#[tauri::command]
+pub async fn sync_clipboard_history() -> Result<(), ()> {
+    with_hotkeys(false, async move {
+        sync_clipboard_history_toggle().await.unwrap()
+    })
+    .await;
+    Ok(())
 }

@@ -1,5 +1,4 @@
 import { invoke } from "@tauri-apps/api";
-import { open } from "@tauri-apps/api/dialog";
 import { IconTypes } from "solid-icons";
 import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
@@ -54,7 +53,6 @@ function createSettingsStore() {
     } catch (_) {}
   };
 
-
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
@@ -65,26 +63,7 @@ function createSettingsStore() {
     } catch (_) {}
   };
 
-  const syncClipboard = async () => {
-    let dir: string | undefined;
-
-    const synchronize = !settings()?.synchronize;
-
-    if (synchronize) {
-      dir = (await open({
-        directory: true,
-        title: "Select Database Backup Location",
-      })) as string;
-    }
-
-    if (dir === null) return;
-
-    await updateSettings({
-      ...settings()!,
-      synchronize,
-    });
-    await invoke("sync_clipboard_history", { dir });
-  };
+  const syncClipboard = () => invoke("sync_clipboard_history") as Promise<void>;
 
   return {
     settings,
@@ -95,7 +74,7 @@ function createSettingsStore() {
     setCurrentTab,
     getCurrentTab,
     initSettings,
-  
+
     syncClipboard,
   };
 }

@@ -2,7 +2,7 @@ use crate::{
     printlog,
     service::{
         clipboard::copy_clipboard_from_index,
-        window::{sync_clipboard_history, toggle_main_window},
+        window::{sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::Key,
     utils::{
@@ -78,7 +78,7 @@ pub async fn parse_hotkey_event(key: &Key) {
                 type_last_clipboard().await;
             }
         }
-        Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history().await.unwrap(),
+        Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await.unwrap(),
         Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => {
             printlog!("open_window: {:?}", e);
             // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
