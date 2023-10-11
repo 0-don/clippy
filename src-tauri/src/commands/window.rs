@@ -1,7 +1,6 @@
 use crate::{
     service::{
         clipboard::count_clipboards_db,
-        hotkey::with_hotkeys,
         window::{get_data_path, sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::{Config, DatabaseInfo},
@@ -38,9 +37,7 @@ pub async fn get_db_path() -> Result<String, ()> {
 
 #[tauri::command]
 pub async fn sync_clipboard_history() -> Result<(), ()> {
-    with_hotkeys(false, async move {
-        sync_clipboard_history_toggle().await.unwrap()
-    })
-    .await;
+    sync_clipboard_history_toggle().await;
+
     Ok(())
 }

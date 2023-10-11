@@ -1,5 +1,6 @@
 use crate::{
-    service::{hotkey::with_hotkeys, settings::update_settings_synchronize},
+    commands::settings::get_settings,
+    service::hotkey::with_hotkeys,
     types::types::{Config, DataPath},
     utils::{
         hotkey_manager::{register_hotkeys, unregister_hotkeys},
@@ -7,7 +8,7 @@ use crate::{
     },
 };
 use std::{
-    fs::{self, read_to_string},
+    fs::{self},
     path::{Path, PathBuf},
 };
 use tauri::api::dialog::blocking::FileDialogBuilder;
@@ -65,21 +66,29 @@ pub fn get_data_path() -> DataPath {
     }
 }
 
-pub async fn sync_clipboard_history_toggle() -> Result<(), ()> {
+pub fn get_config() -> (Config, DataPath) {
     let data_path = get_data_path();
 
+    let json = std::fs::read_to_string(&data_path.config_file_path).unwrap();
+
+    let config: Config = serde_json::from_str(&json).unwrap();
+
+    (config, data_path)
+}
+
+pub fn sync_clipboard_history_enable() {
     // get local config from app data
-    let mut config: Config =
-        serde_json::from_str(&read_to_string(&data_path.config_file_path).unwrap()).unwrap();
+    let (mut config, data_path) = get_config();
     let dir = FileDialogBuilder::new().pick_folder();
 
     println!("config: {:?}", dir);
     // check if user disabled backup or not
     if dir.is_some() {
         // path to backup file
-        let dir_file = dir.unwrap().to_string_lossy().to_string();
+        let dir: String = dir.unwrap().to_string_lossy().to_string();
+        let dir_file = format!("{}/clippy.sqlite", &dir);
 
-        println!("dir_file: {}", dir_file);
+        println!("selected dir: {}", dir);
 
         // check if backup file exists
         if !Path::new(&dir_file).exists() {
@@ -95,28 +104,33 @@ pub async fn sync_clipboard_history_toggle() -> Result<(), ()> {
             &data_path.config_file_path,
             serde_json::to_string(&config).unwrap(),
         );
-        with_hotkeys(false, async move {
-            update_settings_synchronize(true).await.unwrap();
-        })
-        .await;
-    } else {
-        // copy backup file to default database location
-        let _ = fs::copy(&config.db, &data_path.db_file_path);
-
-        // overwrite config database default location
-        config.db = data_path.db_file_path;
-
-        // overwrite config file
-        let _ = fs::write(
-            &data_path.config_file_path,
-            serde_json::to_string(&config).unwrap(),
-        );
-
-        with_hotkeys(false, async move {
-            update_settings_synchronize(false).await.unwrap();
-        })
-        .await;
     }
+}
 
-    Ok(())
+pub fn sync_clipboard_history_disable() {
+    let (mut config, data_path) = get_config();
+    // copy backup file to default database location
+    let _ = fs::copy(&config.db, &data_path.db_file_path);
+
+    // overwrite config database default location
+    config.db = data_path.db_file_path;
+
+    // overwrite config file
+    let _ = fs::write(
+        &data_path.config_file_path,
+        serde_json::to_string(&config).unwrap(),
+    );
+}
+
+pub async fn sync_clipboard_history_toggle() {
+    let settings = get_settings().await.unwrap();
+
+    with_hotkeys(false, async move {
+        if settings.synchronize {
+            sync_clipboard_history_disable();
+        } else {
+            sync_clipboard_history_enable();
+        }
+    })
+    .await;
 }
