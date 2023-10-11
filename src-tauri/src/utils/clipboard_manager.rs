@@ -68,7 +68,7 @@ impl ClipboardHelper {
             .unwrap()
             .get_window("main")
             .unwrap()
-            .emit("init", "")
+            .emit("init", ())
             .unwrap();
     }
 

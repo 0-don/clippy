@@ -1,7 +1,7 @@
 use crate::{
     printlog,
     utils::{
-        hotkey_manager::unregister_hotkeys,
+        hotkey_manager::unregister_hotkeys_async,
         tauri::config::{HOTKEY_RUNNING, MAIN_WINDOW, WINDOW_STOP_TX},
     },
 };
@@ -26,7 +26,7 @@ pub fn window_event_listener() {
                             Ok(_) => return, // If we're signaled, exit early
                             Err(_) => {
                                 // Acquire the lock only when you need it
-                                unregister_hotkeys(false);
+                                unregister_hotkeys_async(false);
                                 MAIN_WINDOW
                                     .get()
                                     .unwrap()
