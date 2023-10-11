@@ -36,14 +36,14 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("type_clipboard".to_string()),
-            ctrl: Set(true),
+            event: Set("scroll_to_top".to_string()),
+            ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
-            key: Set("B".to_string()),
+            key: Set("E".to_string()),
             status: Set(true),
-            name: Set("Type Clipboard".to_string()),
-            icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M4 7V4h16v3M9 20h6M12 4v16\\\"></path></svg>\"".to_string()),
+            name: Set("Scroll to Top".to_string()),
+            icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M12 19V5M5 12l7-7 7 7\\\"></path></svg>\"".to_string()),
             ..Default::default()
         }
         .insert(db)
@@ -138,7 +138,7 @@ impl MigrationTrait for Migration {
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
-            key: Set("O".to_string()),
+            key: Set("I".to_string()),
             status: Set(true),
             name: Set("About".to_string()),
             icon: Set("\"<svg stroke-width=\\\"0\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path fill=\\\"currentColor\\\" d=\\\"M11 10.98a1 1 0 1 1 2 0v6a1 1 0 1 1-2 0v-6ZM12 6.051a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z\\\"></path><path fill=\\\"currentColor\\\" fill-rule=\\\"evenodd\\\" d=\\\"M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2ZM4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z\\\" clip-rule=\\\"evenodd\\\"></path></svg>\"".to_string()),
@@ -162,14 +162,14 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("scroll_to_top".to_string()),
-            ctrl: Set(false),
+            event: Set("type_clipboard".to_string()),
+            ctrl: Set(true),
             alt: Set(false),
             shift: Set(false),
-            key: Set("E".to_string()),
+            key: Set("B".to_string()),
             status: Set(true),
-            name: Set("Scroll to Top".to_string()),
-            icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M12 19V5M5 12l7-7 7 7\\\"></path></svg>\"".to_string()),
+            name: Set("Type Clipboard".to_string()),
+            icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M4 7V4h16v3M9 20h6M12 4v16\\\"></path></svg>\"".to_string()),
             ..Default::default()
         }
         .insert(db)
