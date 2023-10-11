@@ -1,9 +1,13 @@
+use crate::{
+    connection,
+    utils::{
+        hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
+        tauri::config::MAIN_WINDOW,
+    },
+};
 use core::future::Future;
-
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
-
-use crate::{connection, utils::{hotkey_manager::{unregister_hotkeys, upsert_hotkeys_in_store, register_hotkeys}, tauri::config::MAIN_WINDOW}};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
