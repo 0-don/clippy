@@ -76,12 +76,7 @@ pub async fn parse_hotkey_event(key: &Key) {
                 type_last_clipboard().await;
             }
         }
-        Ok(HotkeyEvent::SyncClipboardHistory) => {
-            with_hotkeys(false, async move {
-                sync_clipboard_history_toggle().await.unwrap()
-            })
-            .await;
-        }
+        Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
         Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => {
             printlog!("open_window: {:?}", e);
             // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
