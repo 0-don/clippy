@@ -2,12 +2,12 @@ use crate::{
     printlog,
     service::{
         clipboard::copy_clipboard_from_index,
+        hotkey::with_hotkeys,
         window::{sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::Key,
     utils::{
         clipboard_manager::{type_last_clipboard, type_last_clipboard_linux},
-        hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
         tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW},
     },
 };
@@ -21,9 +21,7 @@ pub fn init_hotkey_listener(all: bool) -> () {
     let receiver = GlobalHotKeyEvent::receiver();
 
     tauri::async_runtime::spawn(async move {
-        unregister_hotkeys(true);
-        let _ = upsert_hotkeys_in_store().await;
-        register_hotkeys(all)
+        with_hotkeys(all, async {}).await;
     });
 
     // If there's an existing sender, send a stop signal to the previous task
@@ -78,7 +76,12 @@ pub async fn parse_hotkey_event(key: &Key) {
                 type_last_clipboard().await;
             }
         }
-        Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await.unwrap(),
+        Ok(HotkeyEvent::SyncClipboardHistory) => {
+            with_hotkeys(false, async move {
+                sync_clipboard_history_toggle().await.unwrap()
+            })
+            .await;
+        }
         Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => {
             printlog!("open_window: {:?}", e);
             // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
