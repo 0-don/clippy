@@ -18,6 +18,16 @@ pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
             size: _,
             ..
         } => toggle_main_window(),
+        SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+        } => toggle_main_window(),
+        SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+        } => {}
         SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
             "open" => toggle_main_window(),
             "quit" => app.exit(1),

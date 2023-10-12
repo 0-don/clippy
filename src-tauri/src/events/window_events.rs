@@ -44,7 +44,7 @@ pub fn window_event_listener() {
                 WindowEvent::Focused(false) => {
                     tauri::async_runtime::spawn(async {
                         printlog!("window lost focus");
-                        std::thread::sleep(Duration::from_millis(100));
+                        // std::thread::sleep(Duration::from_millis(100));
                         if *HOTKEY_RUNNING.get().unwrap().lock().unwrap() {
                             *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
                             return;
