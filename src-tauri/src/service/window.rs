@@ -29,6 +29,7 @@ pub fn toggle_main_window() {
         window.move_window(Position::BottomRight).unwrap();
         window.emit("change_tab", "recent_clipboards").unwrap();
         window.show().unwrap();
+        window.set_focus().unwrap();
         register_hotkeys(true);
         window.emit("set_global_hotkey_event", true).unwrap();
     }
