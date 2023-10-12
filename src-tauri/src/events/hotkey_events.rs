@@ -8,6 +8,7 @@ use crate::{
     types::types::Key,
     utils::{
         clipboard_manager::{type_last_clipboard, type_last_clipboard_linux},
+        hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
         tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW},
     },
 };
@@ -20,9 +21,19 @@ use tokio::sync::oneshot;
 pub fn init_hotkey_listener(all: bool) -> () {
     let receiver = GlobalHotKeyEvent::receiver();
 
-    tauri::async_runtime::spawn(async move {
-        with_hotkeys(all, async {}).await;
-    });
+    if cfg!(target_os = "linux") {
+        tauri::async_runtime::spawn(async move {
+            with_hotkeys(all, async {}).await;
+        });
+    } else {
+        unregister_hotkeys(true);
+        tokio::task::block_in_place(|| {
+            tokio::runtime::Handle::current().block_on(async {
+                upsert_hotkeys_in_store().await.unwrap();
+            })
+        });
+        register_hotkeys(all);
+    }
 
     // If there's an existing sender, send a stop signal to the previous task
     if let Some(sender) = HOTKEY_STOP_TX.get().unwrap().lock().unwrap().take() {
