@@ -62,9 +62,7 @@ pub fn unregister_hotkeys(all: bool) {
         }
     }
 
-    hotkey_manager
-        .unregister_all(&hotkeys_to_unregister)
-        .unwrap();
+    let _ = hotkey_manager.unregister_all(&hotkeys_to_unregister);
     printlog!("unregister_hotkeys end");
 }
 
