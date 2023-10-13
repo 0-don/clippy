@@ -1,7 +1,6 @@
 use crate::{
     printlog,
     service::{
-        clipboard::copy_clipboard_from_index,
         hotkey::with_hotkeys,
         window::{sync_clipboard_history_toggle, toggle_main_window},
     },
@@ -14,7 +13,6 @@ use crate::{
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
-use tauri::regex::Regex;
 use tauri::Manager;
 use tokio::sync::oneshot;
 
@@ -106,35 +104,35 @@ pub async fn parse_hotkey_event(key: &Key) {
             *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
             window.emit("change_tab", Some(e.as_str())).unwrap();
         }
-        Ok(
-            e @ (HotkeyEvent::Digit1
-            | HotkeyEvent::Digit2
-            | HotkeyEvent::Digit3
-            | HotkeyEvent::Digit4
-            | HotkeyEvent::Digit5
-            | HotkeyEvent::Digit6
-            | HotkeyEvent::Digit7
-            | HotkeyEvent::Digit8
-            | HotkeyEvent::Digit9
-            | HotkeyEvent::Num1
-            | HotkeyEvent::Num2
-            | HotkeyEvent::Num3
-            | HotkeyEvent::Num4
-            | HotkeyEvent::Num5
-            | HotkeyEvent::Num6
-            | HotkeyEvent::Num7
-            | HotkeyEvent::Num8
-            | HotkeyEvent::Num9),
-        ) => {
-            let num = Regex::new(r"\d+")
-                .unwrap()
-                .find_iter(e.as_str())
-                .map(|m| m.as_str())
-                .collect::<String>()
-                .parse::<u64>()
-                .unwrap_or_default();
-            let _ = copy_clipboard_from_index(num - 1).await;
-        }
+        // Ok(
+        //     e @ (HotkeyEvent::Digit1
+        //     | HotkeyEvent::Digit2
+        //     | HotkeyEvent::Digit3
+        //     | HotkeyEvent::Digit4
+        //     | HotkeyEvent::Digit5
+        //     | HotkeyEvent::Digit6
+        //     | HotkeyEvent::Digit7
+        //     | HotkeyEvent::Digit8
+        //     | HotkeyEvent::Digit9
+        //     | HotkeyEvent::Num1
+        //     | HotkeyEvent::Num2
+        //     | HotkeyEvent::Num3
+        //     | HotkeyEvent::Num4
+        //     | HotkeyEvent::Num5
+        //     | HotkeyEvent::Num6
+        //     | HotkeyEvent::Num7
+        //     | HotkeyEvent::Num8
+        //     | HotkeyEvent::Num9),
+        // ) => {
+        //     let num = Regex::new(r"\d+")
+        //         .unwrap()
+        //         .find_iter(e.as_str())
+        //         .map(|m| m.as_str())
+        //         .collect::<String>()
+        //         .parse::<u64>()
+        //         .unwrap_or_default();
+        //     let _ = copy_clipboard_from_index(num - 1).await;
+        // }
         Err(()) => println!("Error parsing hotkey event"),
     };
 }

@@ -19,16 +19,15 @@ fn get_hotkeys_and_manager() -> (
 
 pub fn register_hotkeys(all: bool) {
     // Get the data we need from the locked resource as quickly as possible
-    let (hotkeys_data, hotkey_manager) = get_hotkeys_and_manager();
-    let hotkeys_data: Vec<_> = hotkeys_data.iter().collect();
+    let (mut hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
     printlog!("register_hotkeys start");
 
     let mut instant_hotkeys = Vec::new();
     let mut delayed_hotkeys = Vec::new();
 
     // Collect the hotkeys we want to register
-    for (_, hotkey) in hotkeys_data.iter() {
-        if all || hotkey.global {
+    for (_, hotkey) in hotkeys_store.iter() {
+        if all || hotkey.is_global {
             if hotkey.event.contains("digit_") || hotkey.event.contains("num_") {
                 delayed_hotkeys.push(hotkey.hotkey);
             } else {
@@ -38,19 +37,41 @@ pub fn register_hotkeys(all: bool) {
     }
 
     for hotkey in instant_hotkeys {
-        let _ = hotkey_manager.register(hotkey);
+        if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
+            if !hotkey.state {
+                let _ = hotkey_manager.register(hotkey.hotkey);
+                hotkey.state = true;
+            }
+        }
     }
 
     if cfg!(target_os = "linux") {
         tauri::async_runtime::spawn(async {
+            let mut hotkeys_store = HOTKEYS
+                .get()
+                .expect("Failed to get HOTKEYS")
+                .lock()
+                .expect("Failed to lock HOTKEYS");
             for hotkey in delayed_hotkeys {
-                let _ = hotkey_manager.register(hotkey);
+                if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
+                    printlog!("registering hotkey: {:?}", hotkey);
+                    if !hotkey.state {
+                        let _ = hotkey_manager.register(hotkey.hotkey);
+                        hotkey.state = true;
+                    }
+                }
             }
             printlog!("register_hotkeys end");
         });
     } else {
         for hotkey in delayed_hotkeys {
-            let _ = hotkey_manager.register(hotkey);
+            if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
+                printlog!("registering hotkey: {:?}", hotkey);
+                if !hotkey.state {
+                    let _ = hotkey_manager.register(hotkey.hotkey);
+                    hotkey.state = true;
+                }
+            }
         }
         printlog!("register_hotkeys end");
     }
@@ -58,24 +79,41 @@ pub fn register_hotkeys(all: bool) {
 
 pub fn unregister_hotkeys(all: bool) {
     printlog!("unregister_hotkeys start");
-    let (hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
+    let (mut hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
 
     let mut hotkeys_to_unregister = Vec::new();
 
     // Collect the hotkeys we want to unregister
     for (_, hotkey) in hotkeys_store.iter() {
-        if all || !hotkey.global {
+        if all || !hotkey.is_global {
             hotkeys_to_unregister.push(hotkey.hotkey);
         }
     }
 
     if cfg!(target_os = "linux") {
         tauri::async_runtime::spawn(async move {
-            let _ = hotkey_manager.unregister_all(&hotkeys_to_unregister);
+            let mut hotkeys_store = HOTKEYS
+                .get()
+                .expect("Failed to get HOTKEYS")
+                .lock()
+                .expect("Failed to lock HOTKEYS");
+            for hotkey in hotkeys_to_unregister {
+                if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
+                    if hotkey.state {
+                        hotkey_manager.unregister(hotkey.hotkey).unwrap();
+                        hotkey.state = false;
+                    }
+                }
+            }
         });
     } else {
         for hotkey in hotkeys_to_unregister {
-            let _ = hotkey_manager.unregister(hotkey);
+            if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
+                if hotkey.state {
+                    hotkey_manager.unregister(hotkey.hotkey).unwrap();
+                    hotkey.state = false;
+                }
+            }
         }
     }
 
@@ -109,7 +147,8 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
         let key: HotKey = hotkey_str.parse()?;
         let key_struct = Key {
             id: key.id(),
-            global: GLOBAL_EVENTS.contains(&hotkey.event.as_str()),
+            state: false,
+            is_global: GLOBAL_EVENTS.contains(&hotkey.event.as_str()),
             event: hotkey.event,
             key_str: hotkey_str,
             ctrl: hotkey.ctrl,
@@ -122,40 +161,40 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
     }
 
     // Add 1..9 regular keys which are not global
-    for i in 1..=9 {
-        let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
-        let key_digit: HotKey = hotkey_digit.parse()?;
-        let hotkey_num = parse_shortcut(false, false, false, &format!("Numpad{}", i));
-        let key_num: HotKey = hotkey_num.parse()?;
+    // for i in 1..=9 {
+    //     let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
+    //     let key_digit: HotKey = hotkey_digit.parse()?;
+    //     let hotkey_num = parse_shortcut(false, false, false, &format!("Numpad{}", i));
+    //     let key_num: HotKey = hotkey_num.parse()?;
 
-        let key_structs = vec![
-            Key {
-                id: key_digit.id(),
-                global: false,
-                event: format!("digit_{}", i),
-                key_str: hotkey_digit.clone(),
-                ctrl: false,
-                alt: false,
-                shift: false,
-                key: i.to_string(),
-                hotkey: key_digit,
-            },
-            Key {
-                id: key_num.id(),
-                global: false,
-                event: format!("num_{}", i),
-                key_str: hotkey_num,
-                ctrl: false,
-                alt: false,
-                shift: false,
-                key: i.to_string(),
-                hotkey: key_num,
-            },
-        ];
-        for key_struct in key_structs {
-            insert_hotkey_into_store(key_struct);
-        }
-    }
+    //     let key_structs = vec![
+    //         Key {
+    //             id: key_digit.id(),
+    //             global: false,
+    //             event: format!("digit_{}", i),
+    //             key_str: hotkey_digit.clone(),
+    //             ctrl: false,
+    //             alt: false,
+    //             shift: false,
+    //             key: i.to_string(),
+    //             hotkey: key_digit,
+    //         },
+    //         Key {
+    //             id: key_num.id(),
+    //             global: false,
+    //             event: format!("num_{}", i),
+    //             key_str: hotkey_num,
+    //             ctrl: false,
+    //             alt: false,
+    //             shift: false,
+    //             key: i.to_string(),
+    //             hotkey: key_num,
+    //         },
+    //     ];
+    //     for key_struct in key_structs {
+    //         insert_hotkey_into_store(key_struct);
+    //     }
+    // }
 
     Ok(())
 }
