@@ -31,6 +31,7 @@ pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLo
 define_hotkey_event! {
     WindowDisplayToggle => "window_display_toggle",
     TypeClipboard => "type_clipboard",
+    ScrollToTop => "scroll_to_top",
     SyncClipboardHistory => "sync_clipboard_history",
     Preferences => "preferences",
     About => "about",
