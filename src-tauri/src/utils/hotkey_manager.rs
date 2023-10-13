@@ -52,6 +52,7 @@ pub fn register_hotkeys(all: bool) {
         for hotkey in delayed_hotkeys {
             let _ = hotkey_manager.register(hotkey);
         }
+        printlog!("register_hotkeys end");
     }
 }
 
@@ -68,7 +69,16 @@ pub fn unregister_hotkeys(all: bool) {
         }
     }
 
-    let _ = hotkey_manager.unregister_all(&hotkeys_to_unregister);
+    if cfg!(target_os = "linux") {
+        tauri::async_runtime::spawn(async move {
+            let _ = hotkey_manager.unregister_all(&hotkeys_to_unregister);
+        });
+    } else {
+        for hotkey in hotkeys_to_unregister {
+            let _ = hotkey_manager.unregister(hotkey);
+        }
+    }
+
     printlog!("unregister_hotkeys end");
 }
 
