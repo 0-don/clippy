@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api";
+import { listen } from "@tauri-apps/api/event";
 import { BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -7,7 +8,7 @@ import { BsImages } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
-import { Component, For, Show, createSignal } from "solid-js";
+import { Component, For, Show, createSignal, onMount } from "solid-js";
 import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
@@ -51,6 +52,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       setClipboards((prev) => [...prev, ...newClipboards]);
     }
   };
+
+  onMount(() => listen("init", () => clipboardRef()!.scrollTo(0, 0)));
 
   const IconFunctions = ({ id, ...clipboard }: Clips) => (
     <>

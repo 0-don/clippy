@@ -80,6 +80,7 @@ pub async fn parse_hotkey_event(key: &Key) {
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
+        Ok(e @ HotkeyEvent::ScrollToTop) => window.emit(e.as_str(), ()).unwrap(),
         Ok(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {
                 type_last_clipboard_linux().await.unwrap();
@@ -89,8 +90,6 @@ pub async fn parse_hotkey_event(key: &Key) {
         }
         Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
         Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => {
-            printlog!("open_window: {:?}", e);
-            // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
             window.emit("open_window", Some(e.as_str())).unwrap()
         }
 
@@ -101,7 +100,6 @@ pub async fn parse_hotkey_event(key: &Key) {
             | HotkeyEvent::History
             | HotkeyEvent::ViewMore),
         ) => {
-            printlog!("change_tab: {:?}", e);
             *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
             window.emit("change_tab", Some(e.as_str())).unwrap();
         }

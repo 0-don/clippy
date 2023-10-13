@@ -49,12 +49,9 @@ where
         .emit("init", ())
         .unwrap();
 
-    APP.get()
-        .unwrap()
-        .get_window("settings")
-        .unwrap()
-        .emit("init", ())
-        .unwrap();
+    if let Some(window) = APP.get().unwrap().get_window("settings") {
+        window.emit("init", ()).unwrap();
+    }
 
     result
 }
