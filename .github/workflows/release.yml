@@ -16,36 +16,41 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
       - name: get version
         run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
       - name: check if tag exists
         id: check-tag
         uses: actions/github-script@v6
         with:
           script: |
-            let tags = await github.rest.repos.listTags({
+            const tags = await github.rest.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo,
               per_page: 100
-            })
-            let exists = tags.data.some(tag => tag.name === `clippy-v${process.env.PACKAGE_VERSION}`)
-            return exists
+            });
+            const exists = tags.data.some(tag => tag.name === `clippy-v${process.env.PACKAGE_VERSION}`);
+            return exists;
+
       - name: get release by tag
         id: get-release
         if: steps.check-tag.outputs.result == 'true'
         uses: actions/github-script@v6
         with:
           script: |
-            let release = await github.rest.repos.getReleaseByTag({
+            const release = await github.rest.repos.getReleaseByTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag: `clippy-v${process.env.PACKAGE_VERSION}`
-            })
-            return release.data.id
+            });
+            return release.data.id;
+
       - name: delete release
         if: steps.get-release.outputs.result
         uses: actions/github-script@v6
@@ -55,7 +60,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: steps.get-release.outputs.result
-            })
+            });
+
       - name: delete tag
         if: steps.get-release.outputs.result
         uses: actions/github-script@v6
@@ -65,8 +71,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: `tags/clippy-v${process.env.PACKAGE_VERSION}`
-            })
-
+            });
   create-release:
     needs: handle-existing-release
     permissions:
