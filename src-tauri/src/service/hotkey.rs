@@ -2,12 +2,13 @@ use crate::{
     connection,
     utils::{
         hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        tauri::config::MAIN_WINDOW,
+        tauri::config::{APP, MAIN_WINDOW},
     },
 };
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
+use tauri::Manager;
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
@@ -44,6 +45,13 @@ where
         .get()
         .unwrap()
         .lock()
+        .unwrap()
+        .emit("init", ())
+        .unwrap();
+
+    APP.get()
+        .unwrap()
+        .get_window("settings")
         .unwrap()
         .emit("init", ())
         .unwrap();
