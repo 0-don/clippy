@@ -187,6 +187,7 @@ pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
             .hide()
             .unwrap();
 
+        APP.get().unwrap().global_shortcut_manager();
         return Ok(true);
     }
 
