@@ -50,11 +50,12 @@ jobs:
               tag: `clippy-v${process.env.PACKAGE_VERSION}`
             });
             return release.data.id;
-            
+
       - name: delete release
         if: steps.get-release.outputs.result
         uses: actions/github-script@v6
         env:
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
           RELEASE_ID: ${{ steps.get-release.outputs.result }}
         with:
           script: |
@@ -136,7 +137,7 @@ jobs:
         run: yarn install # change this to npm or pnpm depending on which one you use
       - uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
 
