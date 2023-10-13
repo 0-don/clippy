@@ -80,7 +80,8 @@ pub async fn parse_hotkey_event(key: &Key) {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
         Ok(e @ HotkeyEvent::ScrollToTop) => {
             *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
-            window.emit(e.as_str(), ()).unwrap()
+            window.emit(e.as_str(), ()).unwrap();
+            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
         Ok(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {
@@ -103,6 +104,7 @@ pub async fn parse_hotkey_event(key: &Key) {
         ) => {
             *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
             window.emit("change_tab", Some(e.as_str())).unwrap();
+            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
         // Ok(
         //     e @ (HotkeyEvent::Digit1
