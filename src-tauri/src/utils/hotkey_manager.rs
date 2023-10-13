@@ -41,12 +41,18 @@ pub fn register_hotkeys(all: bool) {
         let _ = hotkey_manager.register(hotkey);
     }
 
-    tauri::async_runtime::spawn(async {
+    if cfg!(target_os = "linux") {
+        tauri::async_runtime::spawn(async {
+            for hotkey in delayed_hotkeys {
+                let _ = hotkey_manager.register(hotkey);
+            }
+            printlog!("register_hotkeys end");
+        });
+    } else {
         for hotkey in delayed_hotkeys {
             let _ = hotkey_manager.register(hotkey);
         }
-        printlog!("register_hotkeys end");
-    });
+    }
 }
 
 pub fn unregister_hotkeys(all: bool) {
