@@ -53,7 +53,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     }
   };
 
-  onMount(() => listen("init", () => clipboardRef()!.scrollTo(0, 0)));
+  onMount(() => listen("scroll_to_top", () => clipboardRef()!.scrollTo(0, 0)));
 
   const IconFunctions = ({ id, ...clipboard }: Clips) => (
     <>
