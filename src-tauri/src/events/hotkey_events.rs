@@ -80,7 +80,10 @@ pub async fn parse_hotkey_event(key: &Key) {
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
-        Ok(e @ HotkeyEvent::ScrollToTop) => window.emit(e.as_str(), ()).unwrap(),
+        Ok(e @ HotkeyEvent::ScrollToTop) => {
+            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
+            window.emit(e.as_str(), ()).unwrap()
+        }
         Ok(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {
                 type_last_clipboard_linux().await.unwrap();
