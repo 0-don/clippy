@@ -44,6 +44,8 @@ async fn main() {
             clipboard::clear_clipboards,
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
+            hotkey::stop_hotkeys,
+            hotkey::start_hotkeys,
             settings::get_settings,
             settings::update_settings,
             window::window_display_toggle,

@@ -10,6 +10,7 @@ import {
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
 import SwitchField from "../../elements/SwitchField";
 import { Clipboards } from "./Clipboards";
+import { invoke } from "@tauri-apps/api";
 
 interface ClipboardHistoryProps {}
 
@@ -19,8 +20,9 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
   const [showImages, setShowImages] = createSignal(false);
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;
 
-  onMount(() => {
+  onMount(async() => {
     input?.focus();
+    await invoke("stop_hotkey");
   });
 
   createEffect(() => {
