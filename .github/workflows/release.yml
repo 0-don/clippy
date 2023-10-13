@@ -50,16 +50,18 @@ jobs:
               tag: `clippy-v${process.env.PACKAGE_VERSION}`
             });
             return release.data.id;
-
+            
       - name: delete release
         if: steps.get-release.outputs.result
         uses: actions/github-script@v6
+        env:
+          RELEASE_ID: ${{ steps.get-release.outputs.result }}
         with:
           script: |
             await github.rest.repos.deleteRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: steps.get-release.outputs.result
+              release_id: process.env.RELEASE_ID
             });
 
       - name: delete tag
@@ -72,6 +74,7 @@ jobs:
               repo: context.repo.repo,
               ref: `tags/clippy-v${process.env.PACKAGE_VERSION}`
             });
+
   create-release:
     needs: handle-existing-release
     permissions:
