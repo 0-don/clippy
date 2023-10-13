@@ -4,116 +4,54 @@ use global_hotkey::hotkey::HotKey;
 use global_hotkey::GlobalHotKeyManager;
 use std::{collections::HashMap, sync::MutexGuard};
 
-fn get_hotkeys_and_manager() -> (
-    MutexGuard<'static, HashMap<u32, Key>>,
-    &'static GlobalHotKeyManager,
-) {
-    let hotkeys_store = HOTKEYS
+fn get_hotkey_manager() -> MutexGuard<'static, GlobalHotKeyManager> {
+    HOTKEY_MANAGER
+        .get()
+        .expect("Failed to get HOTKEY_MANAGER")
+        .lock()
+        .expect("Failed to lock HOTKEY_MANAGER")
+}
+
+fn get_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
+    HOTKEYS
         .get()
         .expect("Failed to get HOTKEYS")
         .lock()
-        .expect("Failed to lock HOTKEYS");
-    let hotkey_manager = HOTKEY_MANAGER.get().expect("Failed to get HOTKEY_MANAGER");
-    (hotkeys_store, hotkey_manager)
+        .expect("Failed to lock HOTKEYS")
 }
 
 pub fn register_hotkeys(all: bool) {
-    // Get the data we need from the locked resource as quickly as possible
-    let (mut hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
     printlog!("register_hotkeys start");
 
-    let mut instant_hotkeys = Vec::new();
-    let mut delayed_hotkeys = Vec::new();
-
-    // Collect the hotkeys we want to register
-    for (_, hotkey) in hotkeys_store.iter() {
-        if all || hotkey.is_global {
-            if hotkey.event.contains("digit_") || hotkey.event.contains("num_") {
-                delayed_hotkeys.push(hotkey.hotkey);
-            } else {
-                instant_hotkeys.push(hotkey.hotkey);
-            }
+    for (_, hotkey) in get_hotkey_store().iter_mut() {
+        if !hotkey.state && (all || hotkey.is_global) {
+            printlog!(
+                "register_hotkeys {:?} {:?} {:?}",
+                hotkey.event,
+                hotkey.key_str,
+                hotkey.state,
+            );
+            get_hotkey_manager().register(hotkey.hotkey);
+            hotkey.state = true;
         }
     }
 
-    for hotkey in instant_hotkeys {
-        if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
-            if !hotkey.state {
-                let _ = hotkey_manager.register(hotkey.hotkey);
-                hotkey.state = true;
-            }
-        }
-    }
-
-    if cfg!(target_os = "linux") {
-        tauri::async_runtime::spawn(async {
-            let mut hotkeys_store = HOTKEYS
-                .get()
-                .expect("Failed to get HOTKEYS")
-                .lock()
-                .expect("Failed to lock HOTKEYS");
-            for hotkey in delayed_hotkeys {
-                if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
-                    printlog!("registering hotkey: {:?}", hotkey);
-                    if !hotkey.state {
-                        let _ = hotkey_manager.register(hotkey.hotkey);
-                        hotkey.state = true;
-                    }
-                }
-            }
-            printlog!("register_hotkeys end");
-        });
-    } else {
-        for hotkey in delayed_hotkeys {
-            if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
-                printlog!("registering hotkey: {:?}", hotkey);
-                if !hotkey.state {
-                    let _ = hotkey_manager.register(hotkey.hotkey);
-                    hotkey.state = true;
-                }
-            }
-        }
-        printlog!("register_hotkeys end");
-    }
+    printlog!("register_hotkeys end");
 }
 
 pub fn unregister_hotkeys(all: bool) {
     printlog!("unregister_hotkeys start");
-    let (mut hotkeys_store, hotkey_manager) = get_hotkeys_and_manager();
 
-    let mut hotkeys_to_unregister = Vec::new();
-
-    // Collect the hotkeys we want to unregister
-    for (_, hotkey) in hotkeys_store.iter() {
-        if all || !hotkey.is_global {
-            hotkeys_to_unregister.push(hotkey.hotkey);
-        }
-    }
-
-    if cfg!(target_os = "linux") {
-        tauri::async_runtime::spawn(async move {
-            let mut hotkeys_store = HOTKEYS
-                .get()
-                .expect("Failed to get HOTKEYS")
-                .lock()
-                .expect("Failed to lock HOTKEYS");
-            for hotkey in hotkeys_to_unregister {
-                if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
-                    if hotkey.state {
-                        hotkey_manager.unregister(hotkey.hotkey).unwrap();
-                        hotkey.state = false;
-                    }
-                }
-            }
-        });
-    } else {
-        for hotkey in hotkeys_to_unregister {
-            if let Some(hotkey) = hotkeys_store.get_mut(&hotkey.id()) {
-                if hotkey.state {
-                    hotkey_manager.unregister(hotkey.hotkey).unwrap();
-                    hotkey.state = false;
-                }
-            }
+    for (_, hotkey) in get_hotkey_store().iter_mut() {
+        if hotkey.state && (all || !hotkey.is_global) {
+            printlog!(
+                "unregister_hotkeys {:?} {:?} {:?}",
+                hotkey.event,
+                hotkey.key_str,
+                hotkey.state,
+            );
+            get_hotkey_manager().unregister(hotkey.hotkey);
+            hotkey.state = false;
         }
     }
 
