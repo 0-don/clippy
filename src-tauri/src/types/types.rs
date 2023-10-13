@@ -22,7 +22,8 @@ pub struct DatabaseInfo {
 #[derive(Debug, Clone)]
 pub struct Key {
     pub id: u32,
-    pub global: bool,
+    pub state: bool,
+    pub is_global: bool,
     pub key_str: String,
     pub event: String,
     pub ctrl: bool,
