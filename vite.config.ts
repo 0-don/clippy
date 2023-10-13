@@ -1,3 +1,4 @@
+import { join, resolve } from "path";
 import { defineConfig } from "vite";
 import checker from "vite-plugin-checker";
 import solidPlugin from "vite-plugin-solid";
@@ -22,4 +23,13 @@ export default defineConfig({
   // 3. to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ["VITE_", "TAURI_"],
+  build: {
+    rollupOptions: {
+      input: {
+        main: join(resolve(), "index.html"),
+        about: join(resolve(), "pages/about.html"),
+        settings: join(resolve(), "pages/settings.html"),
+      },
+    },
+  },
 });
