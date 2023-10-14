@@ -32,25 +32,25 @@ pub fn window_event_listener() {
                     printlog!("window focus");
 
                     let (tx, rx) = oneshot::channel();
-                    tauri::async_runtime::spawn(async move {
-                        let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
-                        match result {
-                            Ok(_) => return, // If we're signaled, exit early
-                            Err(_) => {
-                                // Acquire the lock only when you need it
+                    // tauri::async_runtime::spawn(async move {
+                    //     let result = tokio::time::timeout(Duration::from_secs(5), rx).await;
+                    //     match result {
+                    //         Ok(_) => return, // If we're signaled, exit early
+                    //         Err(_) => {
+                    //             // Acquire the lock only when you need it
 
-                                unregister_hotkeys(false);
+                    //             unregister_hotkeys(false);
 
-                                MAIN_WINDOW
-                                    .get()
-                                    .unwrap()
-                                    .lock()
-                                    .unwrap()
-                                    .emit("set_global_hotkey_event", false)
-                                    .unwrap();
-                            }
-                        }
-                    });
+                    //             MAIN_WINDOW
+                    //                 .get()
+                    //                 .unwrap()
+                    //                 .lock()
+                    //                 .unwrap()
+                    //                 .emit("set_global_hotkey_event", false)
+                    //                 .unwrap();
+                    //         }
+                    //     }
+                    // });
 
                     // Store the sender in the WINDOW_STOP_TX global variable
                     *WINDOW_STOP_TX.get().unwrap().lock().unwrap() = Some(tx);
@@ -71,16 +71,16 @@ pub fn window_event_listener() {
                         std::thread::sleep(Duration::from_millis(150));
                     }
 
-                    // if *HOTKEY_RUNNING.get().unwrap().lock().unwrap() {
-                    //     *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
-                    //     return;
-                    // }
+                    if *HOTKEY_RUNNING.get().unwrap().lock().unwrap() {
+                        *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
+                        return;
+                    }
 
-                    // if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
-                    //     let _ = tx.send(());
-                    // }
+                    if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
+                        let _ = tx.send(());
+                    }
 
-                    MAIN_WINDOW.get().unwrap().lock().unwrap().hide().unwrap();
+                    // MAIN_WINDOW.get().unwrap().lock().unwrap().hide().unwrap();
                     // unregister_hotkeys(false);
                 }
                 _ => {}
