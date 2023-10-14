@@ -17,23 +17,23 @@ use tauri_plugin_positioner::{Position, WindowExt};
 pub fn toggle_main_window() {
     let window = MAIN_WINDOW.get().unwrap().lock().unwrap();
     if window.is_visible().unwrap() {
-        if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
-            let _ = tx.send(());
-        }
+        // if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
+        //     let _ = tx.send(());
+        // }
 
         window.hide().unwrap();
-        unregister_hotkeys(false);
-        window.emit("set_global_hotkey_event", false).unwrap();
-        *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
+        // unregister_hotkeys(false);
+        // window.emit("set_global_hotkey_event", false).unwrap();
+        // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
     } else {
         window.move_window(Position::BottomRight).unwrap();
-        window.emit("change_tab", "recent_clipboards").unwrap();
+        // window.emit("change_tab", "recent_clipboards").unwrap();
         window.show().unwrap();
         if !cfg!(target_os = "linux") {
             window.set_focus().unwrap();
         }
-        register_hotkeys(true);
-        window.emit("set_global_hotkey_event", true).unwrap();
+        // register_hotkeys(true);
+        // window.emit("set_global_hotkey_event", true).unwrap();
     }
 }
 

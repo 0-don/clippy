@@ -22,6 +22,7 @@ tauri = { version = "1", features = [
   "window-create",
   "process-exit",
   "system-tray",
+  "devtools",
 ] }
 global-hotkey = "0"
 serde = { version = "1", features = ["derive"] }
