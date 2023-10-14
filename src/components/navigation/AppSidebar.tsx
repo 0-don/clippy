@@ -11,7 +11,7 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
     <Show when={hotkeys().length}>
       <For each={tabs()}>
         {({ current, Icon, name, id }) => {
-          const currentHotkey = hotkeys()?.find((key) => key.name === name);
+          const currentHotkey = hotkeys()?.find((key) => key?.name === name);
 
           return (
             <div class="relative" title={currentHotkey?.name}>
@@ -25,7 +25,11 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
                 title={name}
               />
               <Show
-                when={getHotkey(currentHotkey!.event) && globalHotkeyEvent()}
+                when={
+                  currentHotkey?.event &&
+                  getHotkey(currentHotkey?.event) &&
+                  globalHotkeyEvent()
+                }
               >
                 <div class="absolute -left-2 -top-3 rounded-sm bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
                   {currentHotkey!.key}

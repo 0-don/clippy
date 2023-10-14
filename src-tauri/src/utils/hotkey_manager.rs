@@ -72,6 +72,7 @@ fn insert_hotkey_into_store(key: Key) {
 }
 
 pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
+    printlog!("wow");
     HOTKEYS.get().unwrap().lock().unwrap().clear();
     let hotkeys = get_all_hotkeys_db().await?;
 
