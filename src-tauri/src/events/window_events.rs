@@ -10,6 +10,9 @@ use tokio::sync::oneshot;
 pub fn window_event_listener() {
     get_main_window().on_window_event(move |event| match event {
         WindowEvent::Focused(true) => {
+            if !get_main_window().is_visible().unwrap_or(false) {
+                return;
+            }
             // printlog!("window focus");
 
             let (tx, rx) = oneshot::channel();
@@ -32,6 +35,9 @@ pub fn window_event_listener() {
             *get_window_stop_tx() = Some(tx);
         }
         WindowEvent::Focused(false) => {
+            if !get_main_window().is_visible().unwrap_or(false) {
+                return;
+            }
             tauri::async_runtime::spawn(async {
                 if cfg!(target_os = "linux") {
                     std::thread::sleep(Duration::from_millis(100));
