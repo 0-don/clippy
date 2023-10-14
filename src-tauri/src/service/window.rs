@@ -5,7 +5,7 @@ use crate::{
     utils::{
         hotkey_manager::{register_hotkeys, unregister_hotkeys},
         tauri::config::{APP, HOTKEY_RUNNING, MAIN_WINDOW, WINDOW_STOP_TX},
-    },
+    }, printlog,
 };
 use std::{
     fs::{self},
@@ -23,6 +23,7 @@ pub fn toggle_main_window() {
         .is_visible()
         .unwrap()
     {
+        printlog!("hiding window");
         if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
             let _ = tx.send(());
         }
@@ -36,8 +37,9 @@ pub fn toggle_main_window() {
             .unwrap()
             .emit("set_global_hotkey_event", false)
             .unwrap();
-        *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
+        // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
     } else {
+        printlog!("displaying window");
         MAIN_WINDOW
             .get()
             .unwrap()
