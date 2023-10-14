@@ -21,41 +21,41 @@ fn get_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
 }
 
 pub fn register_hotkeys(all: bool) {
-    printlog!("register_hotkeys start");
+    // printlog!("register_hotkeys start");
 
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if !hotkey.state && (all || hotkey.is_global) {
-            printlog!(
-                "register_hotkeys {:?} {:?} {:?}",
-                hotkey.event,
-                hotkey.key_str,
-                hotkey.state,
-            );
+            // printlog!(
+            //     "register_hotkeys {:?} {:?} {:?}",
+            //     hotkey.event,
+            //     hotkey.key_str,
+            //     hotkey.state,
+            // );
             get_hotkey_manager().register(hotkey.hotkey);
             hotkey.state = true;
         }
     }
 
-    printlog!("register_hotkeys end");
+    // printlog!("register_hotkeys end");
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    printlog!("unregister_hotkeys start");
+    // printlog!("unregister_hotkeys start");
 
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if hotkey.state && (all || !hotkey.is_global) {
-            printlog!(
-                "unregister_hotkeys {:?} {:?} {:?}",
-                hotkey.event,
-                hotkey.key_str,
-                hotkey.state,
-            );
+            // printlog!(
+            //     "unregister_hotkeys {:?} {:?} {:?}",
+            //     hotkey.event,
+            //     hotkey.key_str,
+            //     hotkey.state,
+            // );
             get_hotkey_manager().unregister(hotkey.hotkey);
             hotkey.state = false;
         }
     }
 
-    printlog!("unregister_hotkeys end");
+    // printlog!("unregister_hotkeys end");
 }
 
 pub fn unregister_hotkeys_async(all: bool) {
@@ -72,7 +72,6 @@ fn insert_hotkey_into_store(key: Key) {
 }
 
 pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
-    printlog!("wow");
     HOTKEYS.get().unwrap().lock().unwrap().clear();
     let hotkeys = get_all_hotkeys_db().await?;
 
