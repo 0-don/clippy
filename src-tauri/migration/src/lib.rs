@@ -4,7 +4,6 @@ mod m000001_create_clipboard;
 mod m000002_create_settings;
 mod m000003_create_hotkey;
 mod m000004_seed;
-
 pub struct Migrator;
 
 #[async_trait::async_trait]
