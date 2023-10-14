@@ -1,6 +1,7 @@
 use crate::{
     printlog,
     service::{
+        clipboard::copy_clipboard_from_index,
         global::{
             get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
         },
@@ -16,6 +17,7 @@ use crate::{
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
+use tauri::regex::Regex;
 use tokio::sync::oneshot;
 
 pub fn init_hotkey_listener(all: bool) -> () {
@@ -99,35 +101,35 @@ pub async fn parse_hotkey_event(key: &Key) {
                 .unwrap();
             // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
-        // Ok(
-        //     e @ (HotkeyEvent::Digit1
-        //     | HotkeyEvent::Digit2
-        //     | HotkeyEvent::Digit3
-        //     | HotkeyEvent::Digit4
-        //     | HotkeyEvent::Digit5
-        //     | HotkeyEvent::Digit6
-        //     | HotkeyEvent::Digit7
-        //     | HotkeyEvent::Digit8
-        //     | HotkeyEvent::Digit9
-        //     | HotkeyEvent::Num1
-        //     | HotkeyEvent::Num2
-        //     | HotkeyEvent::Num3
-        //     | HotkeyEvent::Num4
-        //     | HotkeyEvent::Num5
-        //     | HotkeyEvent::Num6
-        //     | HotkeyEvent::Num7
-        //     | HotkeyEvent::Num8
-        //     | HotkeyEvent::Num9),
-        // ) => {
-        //     let num = Regex::new(r"\d+")
-        //         .unwrap()
-        //         .find_iter(e.as_str())
-        //         .map(|m| m.as_str())
-        //         .collect::<String>()
-        //         .parse::<u64>()
-        //         .unwrap_or_default();
-        //     let _ = copy_clipboard_from_index(num - 1).await;
-        // }
-        Err(()) => println!("Error parsing hotkey event"),
+        Ok(
+            e @ (HotkeyEvent::Digit1
+            | HotkeyEvent::Digit2
+            | HotkeyEvent::Digit3
+            | HotkeyEvent::Digit4
+            | HotkeyEvent::Digit5
+            | HotkeyEvent::Digit6
+            | HotkeyEvent::Digit7
+            | HotkeyEvent::Digit8
+            | HotkeyEvent::Digit9
+            | HotkeyEvent::Num1
+            | HotkeyEvent::Num2
+            | HotkeyEvent::Num3
+            | HotkeyEvent::Num4
+            | HotkeyEvent::Num5
+            | HotkeyEvent::Num6
+            | HotkeyEvent::Num7
+            | HotkeyEvent::Num8
+            | HotkeyEvent::Num9),
+        ) => {
+            let num = Regex::new(r"\d+")
+                .unwrap()
+                .find_iter(e.as_str())
+                .map(|m| m.as_str())
+                .collect::<String>()
+                .parse::<u64>()
+                .unwrap_or_default();
+            let _ = copy_clipboard_from_index(num - 1).await;
+        }
+        Err(()) => panic!("Error parsing hotkey event"),
     };
 }
