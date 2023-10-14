@@ -1,6 +1,9 @@
 use crate::{
     printlog,
     service::{
+        global::{
+            get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
+        },
         hotkey::with_hotkeys,
         window::{sync_clipboard_history_toggle, toggle_main_window},
     },
@@ -8,12 +11,11 @@ use crate::{
     utils::{
         clipboard_manager::{type_last_clipboard, type_last_clipboard_linux},
         hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        tauri::config::{HotkeyEvent, APP, HOTKEYS, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW},
+        tauri::config::HotkeyEvent,
     },
 };
 use core::time::Duration;
 use global_hotkey::GlobalHotKeyEvent;
-use tauri::Manager;
 use tokio::sync::oneshot;
 
 pub fn init_hotkey_listener(all: bool) -> () {
@@ -34,21 +36,18 @@ pub fn init_hotkey_listener(all: bool) -> () {
     }
 
     // If there's an existing sender, send a stop signal to the previous task
-    if let Some(sender) = HOTKEY_STOP_TX.get().unwrap().lock().unwrap().take() {
+    if let Some(sender) = get_hotkey_stop_tx().take() {
         let _ = sender.send(());
     }
 
     let (new_stop_tx, mut stop_rx) = oneshot::channel();
-    *HOTKEY_STOP_TX.get().unwrap().lock().unwrap() = Some(new_stop_tx);
+    *get_hotkey_stop_tx() = Some(new_stop_tx);
 
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
                 printlog!("hotkey caught");
-                let hotkey = {
-                    let hotkeys = HOTKEYS.get().unwrap().lock().unwrap();
-                    hotkeys.get(&event.id).cloned()
-                };
+                let hotkey = get_hotkey_store().get(&event.id).cloned();
                 if let Some(hotkey) = hotkey {
                     parse_hotkey_event(&hotkey).await;
                 }
@@ -66,21 +65,13 @@ pub fn init_hotkey_listener(all: bool) -> () {
 pub async fn parse_hotkey_event(key: &Key) {
     let event = key.event.parse::<HotkeyEvent>();
 
-    let window = MAIN_WINDOW
-        .get()
-        .unwrap()
-        .lock()
-        .unwrap()
-        .get_window("main")
-        .unwrap();
-
     printlog!("event: {:?}", event);
 
     match event {
         Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
         Ok(e @ HotkeyEvent::ScrollToTop) => {
-            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
-            window.emit(e.as_str(), ()).unwrap();
+            *get_hotkey_running() = true;
+            get_main_window().emit(e.as_str(), ()).unwrap();
             // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
         Ok(HotkeyEvent::TypeClipboard) => {
@@ -91,19 +82,21 @@ pub async fn parse_hotkey_event(key: &Key) {
             }
         }
         Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
-        Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => {
-            window.emit("open_window", Some(e.as_str())).unwrap()
-        }
+        Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => get_main_window()
+            .emit("open_window", Some(e.as_str()))
+            .unwrap(),
 
-        Ok(HotkeyEvent::Exit) => APP.get().unwrap().exit(1),
+        Ok(HotkeyEvent::Exit) => get_app().exit(1),
         Ok(
             e @ (HotkeyEvent::RecentClipboard
             | HotkeyEvent::StarredClipboard
             | HotkeyEvent::History
             | HotkeyEvent::ViewMore),
         ) => {
-            *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = true;
-            window.emit("change_tab", Some(e.as_str())).unwrap();
+            *get_hotkey_running() = true;
+            get_main_window()
+                .emit("change_tab", Some(e.as_str()))
+                .unwrap();
             // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
         // Ok(

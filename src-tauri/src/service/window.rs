@@ -1,11 +1,11 @@
 use crate::{
     commands::settings::get_settings,
-    service::{hotkey::with_hotkeys, settings::update_settings_synchronize},
+    printlog,
+    service::{
+        global::get_window_stop_tx, hotkey::with_hotkeys, settings::update_settings_synchronize,
+    },
     types::types::{Config, DataPath},
-    utils::{
-        hotkey_manager::{register_hotkeys, unregister_hotkeys},
-        tauri::config::{APP, HOTKEY_RUNNING, MAIN_WINDOW, WINDOW_STOP_TX},
-    }, printlog,
+    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
 use std::{
     fs::{self},
@@ -14,71 +14,42 @@ use std::{
 use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri_plugin_positioner::{Position, WindowExt};
 
+use super::global::{get_app, get_main_window};
+
 pub fn toggle_main_window() {
-    if MAIN_WINDOW
-        .get()
-        .unwrap()
-        .lock()
-        .unwrap()
-        .is_visible()
-        .unwrap()
-    {
+    if get_main_window().is_visible().unwrap() {
         printlog!("hiding window");
-        if let Some(tx) = WINDOW_STOP_TX.get().unwrap().lock().unwrap().take() {
+        if let Some(tx) = get_window_stop_tx().take() {
             let _ = tx.send(());
         }
 
-        MAIN_WINDOW.get().unwrap().lock().unwrap().hide().unwrap();
+        get_main_window().hide().unwrap();
         unregister_hotkeys(false);
-        MAIN_WINDOW
-            .get()
-            .unwrap()
-            .lock()
-            .unwrap()
+        get_main_window()
             .emit("set_global_hotkey_event", false)
             .unwrap();
         // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
     } else {
         printlog!("displaying window");
-        MAIN_WINDOW
-            .get()
-            .unwrap()
-            .lock()
-            .unwrap()
+        get_main_window()
             .move_window(Position::BottomRight)
             .unwrap();
-        MAIN_WINDOW
-            .get()
-            .unwrap()
-            .lock()
-            .unwrap()
+        get_main_window()
             .emit("change_tab", "recent_clipboards")
             .unwrap();
-        MAIN_WINDOW.get().unwrap().lock().unwrap().show().unwrap();
+        get_main_window().show().unwrap();
         if !cfg!(target_os = "linux") {
-            MAIN_WINDOW
-                .get()
-                .unwrap()
-                .lock()
-                .unwrap()
-                .set_focus()
-                .unwrap();
+            get_main_window().set_focus().unwrap();
         }
         register_hotkeys(true);
-        MAIN_WINDOW
-            .get()
-            .unwrap()
-            .lock()
-            .unwrap()
+        get_main_window()
             .emit("set_global_hotkey_event", true)
             .unwrap();
     }
 }
 
 pub fn get_data_path() -> DataPath {
-    let config_path = APP
-        .get()
-        .unwrap()
+    let config_path = get_app()
         .path_resolver()
         .app_data_dir()
         .unwrap()

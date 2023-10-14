@@ -1,37 +1,26 @@
-use super::tauri::config::{GLOBAL_EVENTS, HOTKEYS, HOTKEY_MANAGER};
-use crate::{printlog, service::hotkey::get_all_hotkeys_db, types::types::Key};
+use super::tauri::config::GLOBAL_EVENTS;
+use crate::{
+    printlog,
+    service::{
+        global::{get_hotkey_manager, get_hotkey_store},
+        hotkey::get_all_hotkeys_db,
+    },
+    types::types::Key,
+};
 use global_hotkey::hotkey::HotKey;
-use global_hotkey::GlobalHotKeyManager;
-use std::{collections::HashMap, sync::MutexGuard};
-
-fn get_hotkey_manager() -> MutexGuard<'static, GlobalHotKeyManager> {
-    HOTKEY_MANAGER
-        .get()
-        .expect("Failed to get HOTKEY_MANAGER")
-        .lock()
-        .expect("Failed to lock HOTKEY_MANAGER")
-}
-
-fn get_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
-    HOTKEYS
-        .get()
-        .expect("Failed to get HOTKEYS")
-        .lock()
-        .expect("Failed to lock HOTKEYS")
-}
 
 pub fn register_hotkeys(all: bool) {
     // printlog!("register_hotkeys start");
 
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if !hotkey.state && (all || hotkey.is_global) {
-            // printlog!(
-            //     "register_hotkeys {:?} {:?} {:?}",
-            //     hotkey.event,
-            //     hotkey.key_str,
-            //     hotkey.state,
-            // );
-            get_hotkey_manager().register(hotkey.hotkey);
+            printlog!(
+                "register_hotkeys {:?} {:?} {:?}",
+                hotkey.event,
+                hotkey.key_str,
+                hotkey.state,
+            );
+            let _ = get_hotkey_manager().register(hotkey.hotkey);
             hotkey.state = true;
         }
     }
@@ -44,13 +33,13 @@ pub fn unregister_hotkeys(all: bool) {
 
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if hotkey.state && (all || !hotkey.is_global) {
-            // printlog!(
-            //     "unregister_hotkeys {:?} {:?} {:?}",
-            //     hotkey.event,
-            //     hotkey.key_str,
-            //     hotkey.state,
-            // );
-            get_hotkey_manager().unregister(hotkey.hotkey);
+            printlog!(
+                "unregister_hotkeys {:?} {:?} {:?}",
+                hotkey.event,
+                hotkey.key_str,
+                hotkey.state,
+            );
+            let _ = get_hotkey_manager().unregister(hotkey.hotkey);
             hotkey.state = false;
         }
     }
@@ -63,7 +52,7 @@ pub fn unregister_hotkeys_async(all: bool) {
 }
 
 fn insert_hotkey_into_store(key: Key) {
-    let mut hotkeys_lock = HOTKEYS.get().unwrap().lock().unwrap();
+    let mut hotkeys_lock = get_hotkey_store();
 
     if hotkeys_lock.get(&key.id).is_some() {
         hotkeys_lock.remove(&key.id).unwrap();
@@ -72,7 +61,7 @@ fn insert_hotkey_into_store(key: Key) {
 }
 
 pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
-    HOTKEYS.get().unwrap().lock().unwrap().clear();
+    get_hotkey_store().clear();
     let hotkeys = get_all_hotkeys_db().await?;
 
     for hotkey in hotkeys {

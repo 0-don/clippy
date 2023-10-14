@@ -1,14 +1,11 @@
+use super::global::{get_app_window, get_main_window};
 use crate::{
     connection,
-    utils::{
-        hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        tauri::config::{APP, MAIN_WINDOW},
-    },
+    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
-use tauri::Manager;
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
@@ -41,15 +38,9 @@ where
 
     register_hotkeys(register_all);
 
-    MAIN_WINDOW
-        .get()
-        .unwrap()
-        .lock()
-        .unwrap()
-        .emit("init", ())
-        .unwrap();
+    get_main_window().emit("init", ()).unwrap();
 
-    if let Some(window) = APP.get().unwrap().get_window("settings") {
+    if let Some(window) = get_app_window("settings") {
         window.emit("init", ()).unwrap();
     }
 
