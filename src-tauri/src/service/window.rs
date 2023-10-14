@@ -13,7 +13,6 @@ use std::{
 };
 use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri_plugin_positioner::{Position, WindowExt};
-
 use super::global::{get_app, get_main_window};
 
 pub fn toggle_main_window() {
