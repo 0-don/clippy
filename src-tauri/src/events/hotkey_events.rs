@@ -5,7 +5,6 @@ use crate::{
         global::{
             get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
         },
-        hotkey::with_hotkeys,
         window::{sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::Key,
@@ -20,22 +19,16 @@ use global_hotkey::GlobalHotKeyEvent;
 use tauri::regex::Regex;
 use tokio::sync::oneshot;
 
-pub fn init_hotkey_listener(all: bool) -> () {
+pub fn init_hotkey_listener() -> () {
     let receiver = GlobalHotKeyEvent::receiver();
 
-    if cfg!(target_os = "linux") {
-        tauri::async_runtime::spawn(async move {
-            with_hotkeys(all, async {}).await;
-        });
-    } else {
-        unregister_hotkeys(true);
-        tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(async {
-                upsert_hotkeys_in_store().await.unwrap();
-            })
-        });
-        register_hotkeys(all);
-    }
+    unregister_hotkeys(true);
+    tokio::task::block_in_place(|| {
+        tokio::runtime::Handle::current().block_on(async {
+            upsert_hotkeys_in_store().await.unwrap();
+        })
+    });
+    register_hotkeys(false);
 
     // If there's an existing sender, send a stop signal to the previous task
     if let Some(sender) = get_hotkey_stop_tx().take() {
@@ -74,7 +67,6 @@ pub async fn parse_hotkey_event(key: &Key) {
         Ok(e @ HotkeyEvent::ScrollToTop) => {
             *get_hotkey_running() = true;
             get_main_window().emit(e.as_str(), ()).unwrap();
-            // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
         Ok(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {
@@ -99,7 +91,6 @@ pub async fn parse_hotkey_event(key: &Key) {
             get_main_window()
                 .emit("change_tab", Some(e.as_str()))
                 .unwrap();
-            // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
         }
         Ok(
             e @ (HotkeyEvent::Digit1
