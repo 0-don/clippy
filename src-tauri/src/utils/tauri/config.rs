@@ -105,10 +105,10 @@ pub fn init_window(app: &mut tauri::App) {
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
     #[cfg(any(windows, target_os = "macos"))]
     set_shadow(&window, true).unwrap();
-    // #[cfg(debug_assertions)]
-    // {
+    #[cfg(debug_assertions)]
+    {
         window.open_devtools();
-    // }
+    }
     MAIN_WINDOW
         .set(Arc::new(Mutex::new(window)))
         .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
