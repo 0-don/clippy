@@ -1,7 +1,6 @@
+use crate::connection;
 use entity::settings::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
-
-use crate::connection;
 
 pub async fn get_settings_db() -> Result<Model, DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;
@@ -22,7 +21,6 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
 
     Ok(updated_settings)
 }
-
 
 pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
     let db: DatabaseConnection = connection::establish_connection().await?;

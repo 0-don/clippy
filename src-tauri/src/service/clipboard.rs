@@ -1,8 +1,6 @@
 extern crate alloc;
-use crate::{
-    connection,
-    utils::tauri::config::{APP, CLIPBOARD},
-};
+use super::global::{get_app, get_clipboard, get_main_window};
+use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
 use entity::clipboard::{self, ActiveModel, Model};
@@ -10,7 +8,6 @@ use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
 };
-use tauri::Manager;
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
     let db = connection::establish_connection().await?;
@@ -162,32 +159,15 @@ pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
                 bytes: Cow::from(image.as_bytes()),
             };
 
-            CLIPBOARD
-                .get()
-                .unwrap()
-                .lock()
-                .unwrap()
-                .set_image(img_data)
-                .unwrap();
+            get_clipboard().set_image(img_data).unwrap();
         } else {
             let content = clipboard.unwrap().content.unwrap();
-            CLIPBOARD
-                .get()
-                .unwrap()
-                .lock()
-                .unwrap()
-                .set_text(content)
-                .unwrap();
+            get_clipboard().set_text(content).unwrap();
         }
 
-        APP.get()
-            .unwrap()
-            .get_window("main")
-            .unwrap()
-            .hide()
-            .unwrap();
+        get_main_window().hide().unwrap();
 
-        APP.get().unwrap().global_shortcut_manager();
+        get_app().global_shortcut_manager();
         return Ok(true);
     }
 
