@@ -1,7 +1,7 @@
 use crate::{
     printlog,
     service::global::{get_hotkey_running, get_main_window, get_window_stop_tx},
-    utils::hotkey_manager::{unregister_hotkeys, unregister_hotkeys_async},
+    utils::hotkey_manager::unregister_hotkeys,
 };
 use core::time::Duration;
 use tauri::WindowEvent;
@@ -49,7 +49,7 @@ pub fn window_event_listener() {
 
                 get_main_window().hide().unwrap();
 
-                unregister_hotkeys_async(false);
+                unregister_hotkeys(false);
             });
         }
         _ => {}

@@ -15,9 +15,9 @@ pub fn register_hotkeys(all: bool) {
             printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str,);
             hotkey.state = true;
             let key = hotkey.hotkey.clone();
-            tauri::async_runtime::spawn(async move {
-                let _ = get_hotkey_manager().register(key);
-            });
+            // tauri::async_runtime::spawn(async move {
+            let _ = get_hotkey_manager().register(key);
+            // });
         }
     }
 }
@@ -28,15 +28,11 @@ pub fn unregister_hotkeys(all: bool) {
             printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str,);
             hotkey.state = false;
             let key = hotkey.hotkey.clone();
-            tauri::async_runtime::spawn(async move {
-                let _ = get_hotkey_manager().unregister(key);
-            });
+            // tauri::async_runtime::spawn(async move {
+            let _ = get_hotkey_manager().unregister(key);
+            // });
         }
     }
-}
-
-pub fn unregister_hotkeys_async(all: bool) {
-    tauri::async_runtime::spawn(async move { unregister_hotkeys(all) });
 }
 
 fn insert_hotkey_into_store(key: Key) {
