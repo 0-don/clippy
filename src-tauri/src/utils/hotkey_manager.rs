@@ -2,63 +2,87 @@ use super::tauri::config::GLOBAL_EVENTS;
 use crate::{
     printlog,
     service::{
-        global::{get_app, get_hotkey_manager, get_hotkey_store},
+        global::{get_hotkey_manager, get_hotkey_store},
         hotkey::get_all_hotkeys_db,
     },
     types::types::Key,
 };
 use global_hotkey::hotkey::HotKey;
+#[cfg(target_os = "windows")]
+use crate::service::global::get_app;
 
 pub fn register_hotkeys(all: bool) {
-    get_app()
-        .run_on_main_thread(move || {
-            for (_, hotkey) in get_hotkey_store().iter_mut() {
-                if !hotkey.state && (all || hotkey.is_global) {
-                    let key = hotkey.hotkey.clone();
-                    match get_hotkey_manager().register(key) {
-                        Ok(_) => {
-                            printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
-                        }
-                        Err(e) => {
-                            printlog!(
-                                "register_hotkeys error {:?} {:?} {:?}",
-                                e,
-                                hotkey.event,
-                                hotkey.key_str
-                            );
-                        }
-                    };
-                    hotkey.state = true;
-                }
-            }
-        })
-        .unwrap();
+    #[cfg(target_os = "windows")]
+    {
+        get_app()
+            .run_on_main_thread(move || {
+                register_hotkeys_inner(all);
+            })
+            .unwrap();
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        register_hotkeys_inner(all);
+    }
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    get_app()
-        .run_on_main_thread(move || {
-            for (_, hotkey) in get_hotkey_store().iter_mut() {
-                if hotkey.state && (all || !hotkey.is_global) {
-                    let key = hotkey.hotkey.clone();
-                    match get_hotkey_manager().unregister(key) {
-                        Ok(_) => {
-                            printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
-                        }
-                        Err(e) => {
-                            printlog!(
-                                "unregister_hotkeys error {:?} {:?} {:?}",
-                                e,
-                                hotkey.event,
-                                hotkey.key_str
-                            );
-                        }
-                    };
-                    hotkey.state = false;
+    #[cfg(target_os = "windows")]
+    {
+        get_app()
+            .run_on_main_thread(move || {
+                unregister_hotkeys_inner(all);
+            })
+            .unwrap();
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        unregister_hotkeys_inner(all);
+    }
+}
+
+fn register_hotkeys_inner(all: bool) {
+    for (_, hotkey) in get_hotkey_store().iter_mut() {
+        if !hotkey.state && (all || hotkey.is_global) {
+            let key = hotkey.hotkey.clone();
+            match get_hotkey_manager().register(key) {
+                Ok(_) => {
+                    printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
                 }
-            }
-        })
-        .unwrap();
+                Err(e) => {
+                    printlog!(
+                        "register_hotkeys error {:?} {:?} {:?}",
+                        e,
+                        hotkey.event,
+                        hotkey.key_str
+                    );
+                }
+            };
+            hotkey.state = true;
+        }
+    }
+}
+
+fn unregister_hotkeys_inner(all: bool) {
+    for (_, hotkey) in get_hotkey_store().iter_mut() {
+        if hotkey.state && (all || !hotkey.is_global) {
+            let key = hotkey.hotkey.clone();
+            match get_hotkey_manager().unregister(key) {
+                Ok(_) => {
+                    printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+                }
+                Err(e) => {
+                    printlog!(
+                        "unregister_hotkeys error {:?} {:?} {:?}",
+                        e,
+                        hotkey.event,
+                        hotkey.key_str
+                    );
+                }
+            };
+            hotkey.state = false;
+        }
+    }
 }
 
 fn insert_hotkey_into_store(key: Key) {
