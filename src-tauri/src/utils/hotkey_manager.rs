@@ -2,7 +2,7 @@ use super::tauri::config::GLOBAL_EVENTS;
 use crate::{
     printlog,
     service::{
-        global::{get_hotkey_manager, get_hotkey_store},
+        global::{get_app, get_hotkey_manager, get_hotkey_store},
         hotkey::get_all_hotkeys_db,
     },
     types::types::Key,
@@ -10,29 +10,55 @@ use crate::{
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
-    for (_, hotkey) in get_hotkey_store().iter_mut() {
-        if !hotkey.state && (all || hotkey.is_global) {
-            printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str,);
-            hotkey.state = true;
-            let key = hotkey.hotkey.clone();
-            // tauri::async_runtime::spawn(async move {
-            let _ = get_hotkey_manager().register(key);
-            // });
-        }
-    }
+    get_app()
+        .run_on_main_thread(move || {
+            for (_, hotkey) in get_hotkey_store().iter_mut() {
+                if !hotkey.state && (all || hotkey.is_global) {
+                    let key = hotkey.hotkey.clone();
+                    match get_hotkey_manager().register(key) {
+                        Ok(_) => {
+                            printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+                        }
+                        Err(e) => {
+                            printlog!(
+                                "register_hotkeys error {:?} {:?} {:?}",
+                                e,
+                                hotkey.event,
+                                hotkey.key_str
+                            );
+                        }
+                    };
+                    hotkey.state = true;
+                }
+            }
+        })
+        .unwrap();
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    for (_, hotkey) in get_hotkey_store().iter_mut() {
-        if hotkey.state && (all || !hotkey.is_global) {
-            printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str,);
-            hotkey.state = false;
-            let key = hotkey.hotkey.clone();
-            // tauri::async_runtime::spawn(async move {
-            let _ = get_hotkey_manager().unregister(key);
-            // });
-        }
-    }
+    get_app()
+        .run_on_main_thread(move || {
+            for (_, hotkey) in get_hotkey_store().iter_mut() {
+                if hotkey.state && (all || !hotkey.is_global) {
+                    let key = hotkey.hotkey.clone();
+                    match get_hotkey_manager().unregister(key) {
+                        Ok(_) => {
+                            printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+                        }
+                        Err(e) => {
+                            printlog!(
+                                "unregister_hotkeys error {:?} {:?} {:?}",
+                                e,
+                                hotkey.event,
+                                hotkey.key_str
+                            );
+                        }
+                    };
+                    hotkey.state = false;
+                }
+            }
+        })
+        .unwrap();
 }
 
 fn insert_hotkey_into_store(key: Key) {
