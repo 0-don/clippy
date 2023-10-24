@@ -47,10 +47,7 @@ function createSettingsStore() {
     if (upload) await invoke("update_settings", { settings });
     setSettings(settings);
 
-    try {
-      const env = (import.meta as any).env;
-      env.PROD && settings.startup ? await enable() : await disable();
-    } catch (_) {}
+    await invoke("toggle_autostart");
   };
 
   const initSettings = async () => {
