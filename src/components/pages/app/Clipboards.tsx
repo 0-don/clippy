@@ -7,7 +7,14 @@ import { BsImages } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
-import { Component, For, Show, createSignal, onMount } from "solid-js";
+import {
+  Component,
+  For,
+  Show,
+  createEffect,
+  createSignal,
+  onMount,
+} from "solid-js";
 import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
@@ -99,6 +106,16 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
+  const convertBlobToBase64 = (blob: Blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
+  };
   return (
     <Show
       when={clipboards().length}
@@ -136,13 +153,21 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             let { content, type, id, created_date, blob, width, height, size } =
               clipboard;
 
-            blob = blob
-              ? URL.createObjectURL(
+            const [base64String, setBase64String] = createSignal<string>("");
+
+            createEffect(() => {
+              if (blob) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setBase64String(reader.result as string);
+                };
+                reader.readAsDataURL(
                   new Blob([new Uint8Array(blob as Uint8Array)], {
                     type: "image/png",
                   }),
-                )
-              : null;
+                );
+              }
+            });
 
             return (
               <button
@@ -188,9 +213,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="truncate px-5">
-                      {blob ? (
+                      {base64String() ? (
                         <img
-                          src={blob as string}
+                          src={base64String() as string}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(
