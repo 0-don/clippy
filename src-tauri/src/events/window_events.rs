@@ -53,7 +53,9 @@ pub fn window_event_listener() {
                     let _ = tx.send(());
                 }
 
-                // get_main_window().hide().unwrap();
+                if !cfg!(debug_assertions) {
+                    get_main_window().hide().unwrap();
+                }
 
                 unregister_hotkeys(false);
             });
