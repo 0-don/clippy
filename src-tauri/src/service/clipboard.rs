@@ -1,5 +1,5 @@
 extern crate alloc;
-use super::global::{get_app, get_clipboard, get_main_window};
+use super::global::{get_clipboard, get_main_window};
 use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
@@ -167,7 +167,6 @@ pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
 
         get_main_window().hide().unwrap();
 
-        get_app().global_shortcut_manager();
         return Ok(true);
     }
 
