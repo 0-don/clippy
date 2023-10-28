@@ -125,6 +125,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             let { content, type, id, created_date, blob, width, height, size } =
               clipboard;
 
+            console.log(blob, typeof blob);
             blob = blob
               ? URL.createObjectURL(
                   new Blob([new Uint8Array(blob as Uint8Array)], {
