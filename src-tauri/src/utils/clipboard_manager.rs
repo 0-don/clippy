@@ -6,10 +6,9 @@ use crate::{
 use core::time::Duration;
 use enigo::{Enigo, KeyboardControllable};
 use entity::clipboard::{self, ActiveModel};
-use fast_image_resize as fr;
-use image::{ImageBuffer, Rgba};
+use image::{imageops, ImageBuffer, Rgba};
 use sea_orm::{EntityTrait, QueryOrder, Set};
-use std::{io::Cursor, num::NonZeroU32, process::Command};
+use std::{io::Cursor, process::Command};
 use tauri::{
     api::dialog::{MessageDialogBuilder, MessageDialogButtons, MessageDialogKind},
     regex::Regex,
@@ -144,49 +143,32 @@ impl ClipboardHelper<'_> {
                 None
             };
 
-            // Convert to fast_image_resize::Image
-            let width = NonZeroU32::new(image_buffer.as_ref().unwrap().width()).unwrap();
-            let height = NonZeroU32::new(image_buffer.as_ref().unwrap().height()).unwrap();
-            let src_image = fr::Image::from_vec_u8(
-                width,
-                height,
-                image_buffer.unwrap().into_raw(),
-                fr::PixelType::U8x4,
-            )
-            .unwrap();
-
             // Determine new dimensions
-            let (new_width, new_height) = if width.get() > SIZE || height.get() > SIZE {
-                let aspect_ratio = width.get() as f64 / height.get() as f64;
-                if width.get() > height.get() {
-                    (
-                        NonZeroU32::new(SIZE).unwrap(),
-                        NonZeroU32::new((SIZE as f64 / aspect_ratio) as u32).unwrap(),
-                    )
+            let (new_width, new_height) = if image_buffer.as_ref().unwrap().width() > SIZE
+                || image_buffer.as_ref().unwrap().height() > SIZE
+            {
+                let aspect_ratio = image_buffer.as_ref().unwrap().width() as f64
+                    / image_buffer.as_ref().unwrap().height() as f64;
+                if image_buffer.as_ref().unwrap().width() > image_buffer.as_ref().unwrap().height()
+                {
+                    (SIZE, (SIZE as f64 / aspect_ratio) as u32)
                 } else {
-                    (
-                        NonZeroU32::new((SIZE as f64 * aspect_ratio) as u32).unwrap(),
-                        NonZeroU32::new(SIZE).unwrap(),
-                    )
+                    ((SIZE as f64 * aspect_ratio) as u32, SIZE)
                 }
             } else {
-                (width, height)
+                (
+                    image_buffer.as_ref().unwrap().width(),
+                    image_buffer.as_ref().unwrap().height(),
+                )
             };
 
-            // Create destination image and resizer
-            let mut dst_image = fr::Image::new(new_width, new_height, src_image.pixel_type());
-            let mut resizer = fr::Resizer::new(fr::ResizeAlg::Nearest);
-            unsafe {
-                resizer.set_cpu_extensions(fr::CpuExtensions::Sse4_1);
-            }
-            resizer
-                .resize(&src_image.view(), &mut dst_image.view_mut())
-                .unwrap();
-
-            // Convert back to ImageBuffer for further processing
-            let resized_image: ImageBuffer<Rgba<u8>, Vec<u8>> =
-                ImageBuffer::from_raw(new_width.get(), new_height.get(), dst_image.into_vec())
-                    .unwrap();
+            // Resize the image using the `image` library
+            let resized_image = imageops::resize(
+                image_buffer.as_ref().unwrap(),
+                new_width,
+                new_height,
+                imageops::Nearest,
+            );
 
             let mut bytes: Vec<u8> = Vec::new();
             resized_image
