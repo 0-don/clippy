@@ -126,54 +126,38 @@ impl ClipboardHelper<'_> {
             Set("image".to_string())
         };
 
-        let active_model = if image.is_none() {
-            ActiveModel {
-                blob: Set(None),
-                ..Default::default()
-            }
-        } else {
+        let active_model = if let Some(img) = image {
             printlog!("image is start");
-            let image_buffer: Option<ImageBuffer<Rgba<u8>, Vec<u8>>> = if image.is_some() {
-                ImageBuffer::from_raw(
-                    image.as_ref().unwrap().width.try_into().unwrap(),
-                    image.as_ref().unwrap().height.try_into().unwrap(),
-                    image.as_ref().unwrap().bytes.clone().into(),
-                )
-            } else {
-                None
-            };
+
+            let image_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> = ImageBuffer::from_raw(
+                img.width.try_into().unwrap(),
+                img.height.try_into().unwrap(),
+                img.bytes.clone().into(),
+            )
+            .expect("Failed to create image buffer from raw data");
 
             // Determine new dimensions
-            let (new_width, new_height) = if image_buffer.as_ref().unwrap().width() > SIZE
-                || image_buffer.as_ref().unwrap().height() > SIZE
-            {
-                let aspect_ratio = image_buffer.as_ref().unwrap().width() as f64
-                    / image_buffer.as_ref().unwrap().height() as f64;
-                if image_buffer.as_ref().unwrap().width() > image_buffer.as_ref().unwrap().height()
-                {
-                    (SIZE, (SIZE as f64 / aspect_ratio) as u32)
+            let (new_width, new_height) = {
+                let aspect_ratio = image_buffer.width() as f64 / image_buffer.height() as f64;
+                if image_buffer.width() > SIZE || image_buffer.height() > SIZE {
+                    if image_buffer.width() > image_buffer.height() {
+                        (SIZE, (SIZE as f64 / aspect_ratio) as u32)
+                    } else {
+                        ((SIZE as f64 * aspect_ratio) as u32, SIZE)
+                    }
                 } else {
-                    ((SIZE as f64 * aspect_ratio) as u32, SIZE)
+                    (image_buffer.width(), image_buffer.height())
                 }
-            } else {
-                (
-                    image_buffer.as_ref().unwrap().width(),
-                    image_buffer.as_ref().unwrap().height(),
-                )
             };
 
             // Resize the image using the `image` library
-            let resized_image = imageops::resize(
-                image_buffer.as_ref().unwrap(),
-                new_width,
-                new_height,
-                imageops::Nearest,
-            );
+            let resized_image =
+                imageops::resize(&image_buffer, new_width, new_height, imageops::Nearest);
 
             let mut bytes: Vec<u8> = Vec::new();
             resized_image
                 .write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png)
-                .unwrap();
+                .expect("Failed to write resized image to buffer");
 
             printlog!("image is end");
             ActiveModel {
@@ -181,6 +165,11 @@ impl ClipboardHelper<'_> {
                 height: Set(Some(resized_image.height() as i32)),
                 width: Set(Some(resized_image.width() as i32)),
                 blob: Set(Some(bytes)),
+                ..Default::default()
+            }
+        } else {
+            ActiveModel {
+                blob: Set(None),
                 ..Default::default()
             }
         };
