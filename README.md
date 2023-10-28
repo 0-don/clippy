@@ -31,3 +31,7 @@ successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 - change database location
 - change keyboard bindings
 - dark mode / white mode
+
+
+#### note
+Linux has number hotkeys disabled, issue is tracked [here](https://github.com/tauri-apps/global-hotkey/issues/33)
