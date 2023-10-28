@@ -154,17 +154,17 @@ impl ClipboardHelper<'_> {
             .unwrap();
 
             // Determine new dimensions
-            let (new_width, new_height) = if width.get() > 1200 || height.get() > 1200 {
+            let (new_width, new_height) = if width.get() > 400 || height.get() > 400 {
                 let aspect_ratio = width.get() as f64 / height.get() as f64;
                 if width.get() > height.get() {
                     (
-                        NonZeroU32::new(1200).unwrap(),
-                        NonZeroU32::new((1200.0 / aspect_ratio) as u32).unwrap(),
+                        NonZeroU32::new(400).unwrap(),
+                        NonZeroU32::new((400.0 / aspect_ratio) as u32).unwrap(),
                     )
                 } else {
                     (
-                        NonZeroU32::new((1200.0 * aspect_ratio) as u32).unwrap(),
-                        NonZeroU32::new(1200).unwrap(),
+                        NonZeroU32::new((400.0 * aspect_ratio) as u32).unwrap(),
+                        NonZeroU32::new(400).unwrap(),
                     )
                 }
             } else {

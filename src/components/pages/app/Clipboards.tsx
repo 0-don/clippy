@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
-import { BaseDirectory, writeBinaryFile } from "@tauri-apps/api/fs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
@@ -22,6 +21,18 @@ interface ClipboardsProps {}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
   let dbClickTimer: NodeJS.Timeout;
+  // Create a new state to store blob URLs
+  const [blobURLs, setBlobURLs] = createSignal(new Map());
+
+  const revokeBlobURL = (id: string) => {
+    const urls = blobURLs();
+    const url = urls.get(id);
+    if (url) {
+      URL.revokeObjectURL(url);
+      urls.delete(id);
+      setBlobURLs(urls);
+    }
+  };
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
   const {
@@ -122,20 +133,12 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
         <For each={clipboards()}>
           {(clipboard, index) => {
-            const {
-              content,
-              type,
-              id,
-              created_date,
-              blob,
-              width,
-              height,
-              size,
-            } = clipboard;
+            let { content, type, id, created_date, blob, width, height, size } =
+              clipboard;
 
-            const src = blob
+            blob = blob
               ? URL.createObjectURL(
-                  new Blob([new Uint8Array(blob)], {
+                  new Blob([new Uint8Array(blob as Uint8Array)], {
                     type: "image/png",
                   }),
                 )
@@ -159,9 +162,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   clearTimeout(dbClickTimer);
                   e.stopPropagation();
                   if (type !== "image" || !blob) return;
-                  await writeBinaryFile(`clipboard-${id}.png`, blob, {
-                    dir: BaseDirectory.Desktop,
-                  });
+                  // await writeBinaryFile(`clipboard-${id}.png`, blob, {
+                  //   dir: BaseDirectory.Desktop,
+                  // });
                 }}
               >
                 <div class="flex justify-between py-3">
@@ -185,9 +188,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="truncate px-5">
-                      {src ? (
+                      {blob ? (
                         <img
-                          src={src}
+                          src={blob as string}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(
