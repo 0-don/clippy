@@ -88,6 +88,11 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
+  async function blobToImageBitmap(blob: number[]) {
+    const blobObject = new Blob([new Uint8Array(blob)], { type: "image/png" });
+    return createImageBitmap(blobObject);
+  }
+
   return (
     <Show
       when={clipboards().length}
@@ -124,15 +129,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
           {(clipboard, index) => {
             let { content, type, id, created_date, blob, width, height, size } =
               clipboard;
-
-            console.log(blob, typeof blob);
-            blob = blob
-              ? URL.createObjectURL(
-                  new Blob([new Uint8Array(blob as Uint8Array)], {
-                    type: "image/png",
-                  }),
-                )
-              : null;
 
             return (
               <button
@@ -179,7 +175,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       {blob ? (
                         <img
                           src={blob as string}
-                          class="relative max-h-64 w-full"
+                          width={width || 0}
+                          height={height || 0}
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(
                             Number(size || "0"),
