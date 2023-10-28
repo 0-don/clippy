@@ -848,6 +848,7 @@ dependencies = [
  "clipboard-master",
  "enigo",
  "entity",
+ "fast_image_resize",
  "global-hotkey",
  "image",
  "migration",
@@ -1456,6 +1457,16 @@ dependencies = [
  "rayon-core",
  "smallvec",
  "zune-inflate",
+]
+
+[[package]]
+name = "fast_image_resize"
+version = "0.9.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "507088b0e83fba46af2b97d5d51ca9409311e4cc1d5a6aa1bf11bbfb7a77a76e"
+dependencies = [
+ "num-traits",
+ "thiserror",
 ]
 
 [[package]]

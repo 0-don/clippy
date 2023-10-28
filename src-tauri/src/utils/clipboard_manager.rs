@@ -6,7 +6,7 @@ use crate::{
 use core::time::Duration;
 use enigo::{Enigo, KeyboardControllable};
 use entity::clipboard::{self, ActiveModel};
-use image::{ImageBuffer, RgbaImage};
+use image::{imageops::FilterType, ImageBuffer, Rgba};
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::{io::Cursor, process::Command};
 use tauri::{
@@ -15,7 +15,7 @@ use tauri::{
     Manager,
 };
 
-pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
+pub fn get_os_clipboard() -> (Option<String>, Option<arboard::ImageData<'static>>) {
     let mut text: Option<String> = CLIPBOARD
         .get()
         .unwrap()
@@ -31,27 +31,18 @@ pub fn get_os_clipboard() -> (Option<String>, Option<RgbaImage>) {
         text = None;
     }
 
-    let image = CLIPBOARD.get().unwrap().lock().unwrap().get_image().ok();
-
-    let image: Option<RgbaImage> = if image.is_some() {
-        ImageBuffer::from_raw(
-            image.as_ref().unwrap().width.try_into().unwrap(),
-            image.as_ref().unwrap().height.try_into().unwrap(),
-            image.unwrap().bytes.into_owned(),
-        )
-    } else {
-        None
-    };
+    let image: Option<arboard::ImageData<'_>> =
+        CLIPBOARD.get().unwrap().lock().unwrap().get_image().ok();
 
     return (text, image);
 }
 
 #[derive(Debug, Clone)]
-pub struct ClipboardHelper {
-    pub clipboard: (Option<String>, Option<RgbaImage>),
+pub struct ClipboardHelper<'a> {
+    pub clipboard: (Option<String>, Option<arboard::ImageData<'a>>),
     pub active_model: ActiveModel,
 }
-impl ClipboardHelper {
+impl ClipboardHelper<'_> {
     pub fn new() -> Self {
         ClipboardHelper {
             clipboard: (None, None),
@@ -137,16 +128,49 @@ impl ClipboardHelper {
             }
         } else {
             let mut bytes: Vec<u8> = Vec::new();
-            image
-                .as_ref()
-                .unwrap()
+
+            let image_buffer: Option<ImageBuffer<Rgba<u8>, Vec<u8>>> = if image.is_some() {
+                ImageBuffer::from_raw(
+                    image.as_ref().unwrap().width.try_into().unwrap(),
+                    image.as_ref().unwrap().height.try_into().unwrap(),
+                    image.as_ref().unwrap().bytes.clone().into(),
+                )
+            } else {
+                None
+            };
+
+            // Check the dimensions of the image
+            let (orig_width, orig_height) = (
+                image_buffer.as_ref().unwrap().width(),
+                image_buffer.as_ref().unwrap().height(),
+            );
+            let (new_width, new_height) = if orig_width > 1200 || orig_height > 1200 {
+                let aspect_ratio = orig_width as f64 / orig_height as f64;
+                if orig_width > orig_height {
+                    (1200, (1200 as f64 / aspect_ratio) as u32)
+                } else {
+                    ((1200 as f64 * aspect_ratio) as u32, 1200)
+                }
+            } else {
+                (orig_width, orig_height) // If both dimensions are under 1200, keep the original dimensions
+            };
+
+            // Resize the image
+            let resized_image = image::imageops::resize(
+                image_buffer.as_ref().unwrap(),
+                new_width,           // New width
+                new_height,          // New height
+                FilterType::Nearest, // Filter type
+            );
+
+            resized_image
                 .write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png)
                 .unwrap();
-
+            
             ActiveModel {
                 size: Set(Some(bytes.len().to_string())),
-                height: Set(Some(image.as_ref().unwrap().height() as i32)),
-                width: Set(Some(image.as_ref().unwrap().width() as i32)),
+                height: Set(Some(resized_image.height() as i32)),
+                width: Set(Some(resized_image.width() as i32)),
                 blob: Set(Some(bytes)),
                 ..Default::default()
             }
