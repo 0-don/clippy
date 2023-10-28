@@ -42,6 +42,7 @@ async fn main() {
             clipboard::star_clipboard,
             clipboard::copy_clipboard,
             clipboard::clear_clipboards,
+            clipboard::save_clipboard_image,
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
             hotkey::stop_hotkeys,
