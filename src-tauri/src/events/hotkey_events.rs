@@ -15,7 +15,7 @@ use crate::{
     },
 };
 use core::time::Duration;
-use global_hotkey::GlobalHotKeyEvent;
+use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
 use tauri::regex::Regex;
 use tokio::sync::oneshot;
 
@@ -41,10 +41,12 @@ pub fn init_hotkey_listener() -> () {
     tauri::async_runtime::spawn(async move {
         loop {
             if let Ok(event) = receiver.try_recv() {
-                printlog!("hotkey caught");
-                let hotkey = get_hotkey_store().get(&event.id).cloned();
-                if let Some(hotkey) = hotkey {
-                    parse_hotkey_event(&hotkey).await;
+                if event.state == HotKeyState::Pressed {
+                    printlog!("hotkey caught {:?}", event);
+                    let hotkey = get_hotkey_store().get(&event.id).cloned();
+                    if let Some(hotkey) = hotkey {
+                        parse_hotkey_event(&hotkey).await;
+                    }
                 }
             }
 
