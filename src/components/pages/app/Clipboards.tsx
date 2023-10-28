@@ -7,14 +7,7 @@ import { BsImages } from "solid-icons/bs";
 import { FiArrowUp, FiFileText } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
-import {
-  Component,
-  For,
-  Show,
-  createEffect,
-  createSignal,
-  onMount,
-} from "solid-js";
+import { Component, For, Show, createSignal, onMount } from "solid-js";
 import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
@@ -28,18 +21,7 @@ interface ClipboardsProps {}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
   let dbClickTimer: NodeJS.Timeout;
-  // Create a new state to store blob URLs
-  const [blobURLs, setBlobURLs] = createSignal(new Map());
 
-  const revokeBlobURL = (id: string) => {
-    const urls = blobURLs();
-    const url = urls.get(id);
-    if (url) {
-      URL.revokeObjectURL(url);
-      urls.delete(id);
-      setBlobURLs(urls);
-    }
-  };
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
   const {
@@ -106,16 +88,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
-  const convertBlobToBase64 = (blob: Blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.readAsDataURL(blob);
-    });
-  };
   return (
     <Show
       when={clipboards().length}
@@ -153,21 +125,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             let { content, type, id, created_date, blob, width, height, size } =
               clipboard;
 
-            const [base64String, setBase64String] = createSignal<string>("");
-
-            createEffect(() => {
-              if (blob) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                  setBase64String(reader.result as string);
-                };
-                reader.readAsDataURL(
+            blob = blob
+              ? URL.createObjectURL(
                   new Blob([new Uint8Array(blob as Uint8Array)], {
                     type: "image/png",
                   }),
-                );
-              }
-            });
+                )
+              : null;
 
             return (
               <button
@@ -187,9 +151,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   clearTimeout(dbClickTimer);
                   e.stopPropagation();
                   if (type !== "image" || !blob) return;
-                  // await writeBinaryFile(`clipboard-${id}.png`, blob, {
-                  //   dir: BaseDirectory.Desktop,
-                  // });
+                  await invoke("save_clipboard_image", { id });
                 }}
               >
                 <div class="flex justify-between py-3">
@@ -213,9 +175,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="truncate px-5">
-                      {base64String() ? (
+                      {blob ? (
                         <img
-                          src={base64String() as string}
+                          src={blob as string}
                           class="relative max-h-64 w-full"
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(
