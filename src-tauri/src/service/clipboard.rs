@@ -59,7 +59,7 @@ pub async fn get_clipboards_db(
             query.filter(clipboard::Column::Type.eq("image"))
         })
         .offset(cursor)
-        .limit(50)
+        .limit(10)
         .order_by_desc(clipboard::Column::Id)
         .all(&db)
         .await?;

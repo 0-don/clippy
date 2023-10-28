@@ -1,14 +1,15 @@
 use super::tauri::config::{APP, CLIPBOARD};
 use crate::{
-    connection,
+    connection, printlog,
     service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
 };
 use core::time::Duration;
 use enigo::{Enigo, KeyboardControllable};
 use entity::clipboard::{self, ActiveModel};
-use image::{imageops::FilterType, ImageBuffer, Rgba};
+use fast_image_resize as fr;
+use image::{ImageBuffer, Rgba};
 use sea_orm::{EntityTrait, QueryOrder, Set};
-use std::{io::Cursor, process::Command};
+use std::{io::Cursor, num::NonZeroU32, process::Command};
 use tauri::{
     api::dialog::{MessageDialogBuilder, MessageDialogButtons, MessageDialogKind},
     regex::Regex,
@@ -16,6 +17,7 @@ use tauri::{
 };
 
 pub fn get_os_clipboard() -> (Option<String>, Option<arboard::ImageData<'static>>) {
+    printlog!("get_os_clipboard");
     let mut text: Option<String> = CLIPBOARD
         .get()
         .unwrap()
@@ -33,6 +35,8 @@ pub fn get_os_clipboard() -> (Option<String>, Option<arboard::ImageData<'static>
 
     let image: Option<arboard::ImageData<'_>> =
         CLIPBOARD.get().unwrap().lock().unwrap().get_image().ok();
+
+    printlog!("get_os_clipboard end");
 
     return (text, image);
 }
@@ -127,8 +131,7 @@ impl ClipboardHelper<'_> {
                 ..Default::default()
             }
         } else {
-            let mut bytes: Vec<u8> = Vec::new();
-
+            printlog!("image is start");
             let image_buffer: Option<ImageBuffer<Rgba<u8>, Vec<u8>>> = if image.is_some() {
                 ImageBuffer::from_raw(
                     image.as_ref().unwrap().width.try_into().unwrap(),
@@ -139,34 +142,56 @@ impl ClipboardHelper<'_> {
                 None
             };
 
-            // Check the dimensions of the image
-            let (orig_width, orig_height) = (
-                image_buffer.as_ref().unwrap().width(),
-                image_buffer.as_ref().unwrap().height(),
-            );
-            let (new_width, new_height) = if orig_width > 1200 || orig_height > 1200 {
-                let aspect_ratio = orig_width as f64 / orig_height as f64;
-                if orig_width > orig_height {
-                    (1200, (1200 as f64 / aspect_ratio) as u32)
+            // Convert to fast_image_resize::Image
+            let width = NonZeroU32::new(image_buffer.as_ref().unwrap().width()).unwrap();
+            let height = NonZeroU32::new(image_buffer.as_ref().unwrap().height()).unwrap();
+            let src_image = fr::Image::from_vec_u8(
+                width,
+                height,
+                image_buffer.unwrap().into_raw(),
+                fr::PixelType::U8x4,
+            )
+            .unwrap();
+
+            // Determine new dimensions
+            let (new_width, new_height) = if width.get() > 1200 || height.get() > 1200 {
+                let aspect_ratio = width.get() as f64 / height.get() as f64;
+                if width.get() > height.get() {
+                    (
+                        NonZeroU32::new(1200).unwrap(),
+                        NonZeroU32::new((1200.0 / aspect_ratio) as u32).unwrap(),
+                    )
                 } else {
-                    ((1200 as f64 * aspect_ratio) as u32, 1200)
+                    (
+                        NonZeroU32::new((1200.0 * aspect_ratio) as u32).unwrap(),
+                        NonZeroU32::new(1200).unwrap(),
+                    )
                 }
             } else {
-                (orig_width, orig_height) // If both dimensions are under 1200, keep the original dimensions
+                (width, height)
             };
 
-            // Resize the image
-            let resized_image = image::imageops::resize(
-                image_buffer.as_ref().unwrap(),
-                new_width,           // New width
-                new_height,          // New height
-                FilterType::Nearest, // Filter type
-            );
+            // Create destination image and resizer
+            let mut dst_image = fr::Image::new(new_width, new_height, src_image.pixel_type());
+            let mut resizer = fr::Resizer::new(fr::ResizeAlg::Nearest);
+            unsafe {
+                resizer.set_cpu_extensions(fr::CpuExtensions::Sse4_1);
+            }
+            resizer
+                .resize(&src_image.view(), &mut dst_image.view_mut())
+                .unwrap();
 
+            // Convert back to ImageBuffer for further processing
+            let resized_image: ImageBuffer<Rgba<u8>, Vec<u8>> =
+                ImageBuffer::from_raw(new_width.get(), new_height.get(), dst_image.into_vec())
+                    .unwrap();
+
+            let mut bytes: Vec<u8> = Vec::new();
             resized_image
                 .write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png)
                 .unwrap();
-            
+
+            printlog!("image is end");
             ActiveModel {
                 size: Set(Some(bytes.len().to_string())),
                 height: Set(Some(resized_image.height() as i32)),

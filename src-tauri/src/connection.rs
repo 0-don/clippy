@@ -1,6 +1,11 @@
 use crate::{service::window::get_data_path, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{Database, DbConn};
+use std::sync::Once;
+use tokio::runtime::Runtime;
+
+#[allow(dead_code)]
+static INIT: Once = Once::new();
 
 pub async fn establish_connection() -> Result<DbConn, DbErr> {
     let database_url = if cfg!(debug_assertions) {
@@ -13,7 +18,15 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
         .await
         .expect("Failed to setup the database");
 
-    Migrator::up(&db, None).await.ok();
+    INIT.call_once(|| {
+        println!("Running migrations...");
+        let conn_for_migration = db.clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            Runtime::new().unwrap().block_on(async move {
+                Migrator::up(&conn_for_migration, None).await.unwrap();
+            })
+        });
+    });
 
     Ok(db)
 }

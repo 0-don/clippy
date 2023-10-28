@@ -1,4 +1,4 @@
-use crate::utils::clipboard_manager::ClipboardHelper;
+use crate::{utils::clipboard_manager::ClipboardHelper, printlog};
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io::Error;
 
@@ -6,10 +6,12 @@ pub struct Handler;
 
 impl ClipboardHandler for Handler {
     fn on_clipboard_change(&mut self) -> CallbackResult {
-        tokio::task::block_in_place(|| {
+        printlog!("*********Clipboard changed***********");
+        tokio::task::spawn_blocking(|| {
             tokio::runtime::Handle::current()
                 .block_on(async { ClipboardHelper::upsert_clipboard().await })
         });
+        printlog!("*********Clipboard updated**********");
 
         // first copy doesnt work, so we do it twice
         // tauri::async_runtime::spawn(async { upsert_clipboard().await });

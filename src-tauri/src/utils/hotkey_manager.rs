@@ -47,7 +47,7 @@ fn register_hotkeys_inner(all: bool) {
             let key = hotkey.hotkey.clone();
             match get_hotkey_manager().register(key) {
                 Ok(_) => {
-                    printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+                    // printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
                 }
                 Err(e) => {
                     printlog!(
@@ -69,7 +69,7 @@ fn unregister_hotkeys_inner(all: bool) {
             let key = hotkey.hotkey.clone();
             match get_hotkey_manager().unregister(key) {
                 Ok(_) => {
-                    printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+                    // printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
                 }
                 Err(e) => {
                     printlog!(
