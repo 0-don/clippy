@@ -88,11 +88,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
     </>
   );
 
-  async function blobToImageBitmap(blob: number[]) {
-    const blobObject = new Blob([new Uint8Array(blob)], { type: "image/png" });
-    return createImageBitmap(blobObject);
-  }
-
   return (
     <Show
       when={clipboards().length}
@@ -172,9 +167,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="truncate px-5">
-                      {blob ? (
+                      {clipboard.base64 ? (
                         <img
-                          src={blob as string}
+                          src={clipboard.base64}
                           width={width || 0}
                           height={height || 0}
                           alt={`${width}x${height} ${size}`}

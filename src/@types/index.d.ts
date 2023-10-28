@@ -7,7 +7,8 @@ export type Clips = {
   width?: number | null;
   height?: number | null;
   size?: string | null;
-  blob?: number[] | string;
+  blob?: number[];
+  base64?: string;
   star?: boolean;
   created_date?: Date;
 };

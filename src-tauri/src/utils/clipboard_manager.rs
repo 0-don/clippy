@@ -206,13 +206,9 @@ pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error
             "Missing Dependency",
             "xdotool is not installed. Please install it to continue.",
         )
-        .kind(MessageDialogKind::Error) // this will indicate that the message is an error
-        .buttons(MessageDialogButtons::Ok) // this will add an "Ok" button to the dialog
-        .show(|pressed_ok| {
-            if pressed_ok {
-                // Handle the case when the user presses the "Ok" button
-            }
-        });
+        .kind(MessageDialogKind::Error)
+        .buttons(MessageDialogButtons::Ok)
+        .show(|_| {});
         return Ok(());
     }
 

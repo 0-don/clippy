@@ -35,6 +35,7 @@ tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspac
 window-shadows = "0"
 chrono = "0"
 enigo = "0"
+base64 = "0"
 
 [dependencies.sea-orm]
 version = "^0"
