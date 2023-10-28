@@ -26,7 +26,16 @@ function createClipboardStore() {
   const resetWhere = () => setWhere(initialWhere);
 
   const getClipboards = async () =>
-    await invoke<Clips[]>("get_clipboards", where());
+    (await invoke<Clips[]>("get_clipboards", where())).map((c) => ({
+      ...c,
+      // blob: c.blob
+      //   ? URL.createObjectURL(
+      //       new Blob([new Uint8Array(c.blob as Uint8Array)], {
+      //         type: "image/png",
+      //       }),
+      //     )
+      //   : undefined,
+    }));
 
   const initClipboards = async () => {
     const clipboards = await getClipboards();
