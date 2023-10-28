@@ -67,6 +67,11 @@ pub async fn get_clipboards_db(
     let parsed_model: Vec<Model> = model
         .into_iter()
         .map(|mut m| {
+            if let Some(blob) = &m.blob {
+                let base64_string = base64::encode(blob);
+                m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
+                m.blob = None;
+            }
             if m.content.is_some() && m.content.as_ref().unwrap().len() > 100 {
                 m.content = m.content.unwrap()[..100].to_string().into();
             }

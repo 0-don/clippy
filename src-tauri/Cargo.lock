@@ -844,6 +844,7 @@ name = "clippy"
 version = "1.1.1"
 dependencies = [
  "arboard",
+ "base64 0.13.1",
  "chrono",
  "clipboard-master",
  "enigo",
