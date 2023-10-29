@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import { BsImages } from "solid-icons/bs";
-import { FiArrowUp, FiFileText } from "solid-icons/fi";
+import { FiArrowUp, FiFileText, FiLink } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull, VsSymbolColor } from "solid-icons/vs";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
@@ -150,6 +150,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   <div class="flex min-w-0">
                     <div class="flex items-center">
                       <div class="relative" title={id + ""}>
+                        {type === "link" && (
+                          <FiLink class="text-2xl text-zinc-700 dark:text-white" />
+                        )}
                         {type === "text" && (
                           <FiFileText class="text-2xl text-zinc-700 dark:text-white" />
                         )}
