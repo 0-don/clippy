@@ -1,16 +1,16 @@
-import { getVersion } from "@tauri-apps/api/app";
-import { createSignal, onMount } from "solid-js";
-import { render } from "solid-js/web";
-import icon from "./assets/clippy.png";
-import "./styles.css";
+import { getVersion } from '@tauri-apps/api/app'
+import { createSignal, onMount } from 'solid-js'
+import { render } from 'solid-js/web'
+import icon from './assets/clippy.png'
+import './styles.css'
 
 const About = () => {
-  const [version, setVersion] = createSignal("0.0.0");
+  const [version, setVersion] = createSignal('0.0.0')
 
   onMount(async () => {
-    const appVersion = await getVersion();
-    setVersion(appVersion);
-  });
+    const appVersion = await getVersion()
+    setVersion(appVersion)
+  })
 
   return (
     <div class="absolute flex h-full w-full flex-col items-center justify-center space-y-2 bg-white text-black dark:bg-dark  dark:text-white">
@@ -36,7 +36,7 @@ const About = () => {
       <p class="text-xs">Developed by Don Cryptus. Powered by Tauri.</p>
       <p class="text-xs text-gray-500">Copyright(C) DC. All right reserved.</p>
     </div>
-  );
-};
+  )
+}
 
-render(() => <About />, document.getElementById("root") as HTMLElement);
+render(() => <About />, document.getElementById('root') as HTMLElement)
