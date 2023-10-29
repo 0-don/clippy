@@ -1,17 +1,17 @@
-import { BsHddFill } from "solid-icons/bs";
-import { FiGlobe } from "solid-icons/fi";
-import { Show } from "solid-js";
-import AppStore from "../../../store/AppStore";
-import SettingsStore from "../../../store/SettingsStore";
-import { AppSidebar } from "../../navigation/AppSidebar";
-import { SearchBar } from "./SearchBar";
-import { RecentClipboards } from "./RecentClipboards";
-import { StarredClipboards } from "./StarredClipboards";
-import { ViewMore } from "./ViewMore";
+import { BsHddFill } from 'solid-icons/bs'
+import { FiGlobe } from 'solid-icons/fi'
+import { Show } from 'solid-js'
+import AppStore from '../../../store/AppStore'
+import SettingsStore from '../../../store/SettingsStore'
+import { AppSidebar } from '../../navigation/AppSidebar'
+import { RecentClipboards } from './RecentClipboards'
+import { SearchBar } from './SearchBar'
+import { StarredClipboards } from './StarredClipboards'
+import { ViewMore } from './ViewMore'
 
 function App() {
-  const { settings } = SettingsStore;
-  const { tIcon } = AppStore;
+  const { settings } = SettingsStore
+  const { tIcon } = AppStore
 
   return (
     <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
@@ -23,32 +23,29 @@ function App() {
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
             {tIcon()?.name?.toLocaleUpperCase()}
           </p>
-          <Show
-            when={settings()?.synchronize}
-            fallback={<BsHddFill title="offline" />}
-          >
+          <Show when={settings()?.synchronize} fallback={<BsHddFill title="offline" />}>
             <FiGlobe title="online" />
           </Show>
         </div>
 
-        <Show when={tIcon()?.name === "Recent Clipboards" || tIcon()?.name === "Starred Clipboards"}>
+        <Show when={tIcon()?.name === 'Recent Clipboards' || tIcon()?.name === 'Starred Clipboards'}>
           <SearchBar />
         </Show>
 
-        <Show when={tIcon()?.name === "Recent Clipboards"}> 
+        <Show when={tIcon()?.name === 'Recent Clipboards'}>
           <RecentClipboards />
         </Show>
 
-        <Show when={tIcon()?.name === "Starred Clipboards"}>
+        <Show when={tIcon()?.name === 'Starred Clipboards'}>
           <StarredClipboards />
         </Show>
 
-        <Show when={tIcon()?.name === "View more"}>
+        <Show when={tIcon()?.name === 'View more'}>
           <ViewMore />
         </Show>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

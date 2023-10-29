@@ -1,24 +1,21 @@
-import { exit } from "@tauri-apps/api/process";
-import { Component, Show } from "solid-js";
-import { Hotkey } from "../../../@types";
-import HotkeyStore from "../../../store/HotkeyStore";
-import SettingsStore from "../../../store/SettingsStore";
+import { exit } from '@tauri-apps/api/process'
+import { Component, Show } from 'solid-js'
+import { Hotkey } from '../../../@types'
+import HotkeyStore from '../../../store/HotkeyStore'
+import SettingsStore from '../../../store/SettingsStore'
 
-import { ViewMoreName } from "../../../utils/constants";
-import {
-  createAboutWindow,
-  createSettingsWindow,
-} from "../../../utils/helpers";
-import SwitchField from "../../elements/SwitchField";
+import { ViewMoreName } from '../../../utils/constants'
+import { createAboutWindow, createSettingsWindow } from '../../../utils/helpers'
+import SwitchField from '../../elements/SwitchField'
 
 interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
-  const { settings, syncClipboard } = SettingsStore;
-  const { hotkeys, globalHotkeyEvent } = HotkeyStore;
+  const { settings, syncClipboard } = SettingsStore
+  const { hotkeys, globalHotkeyEvent } = HotkeyStore
 
   const createButton = (name: ViewMoreName, onClick: () => void) => {
-    const hotkey = hotkeys().find((key) => key.name === name) as Hotkey;
+    const hotkey = hotkeys().find((key) => key.name === name) as Hotkey
 
     return (
       <button
@@ -38,28 +35,25 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
             </div>
             <p class="px-4 text-base font-semibold">{name}</p>
           </div>
-          {name === "Sync Clipboard History" && (
-            <SwitchField
-              checked={settings()?.synchronize}
-              onChange={async () => {}}
-            />
+          {name === 'Sync Clipboard History' && (
+            <SwitchField checked={settings()?.synchronize} onChange={async () => {}} />
           )}
         </div>
         <hr class="border-zinc-700" />
       </button>
-    );
-  };
+    )
+  }
 
   return (
     <>
       {/* Sync Clipboard History  */}
-      {createButton("Sync Clipboard History", syncClipboard)}
+      {createButton('Sync Clipboard History', syncClipboard)}
       {/* Preferences */}
-      {createButton("Preferences", createSettingsWindow)}
+      {createButton('Preferences', createSettingsWindow)}
       {/* About */}
-      {createButton("About", createAboutWindow)}
+      {createButton('About', createAboutWindow)}
       {/* Exit */}
-      {createButton("Exit", async () => await exit(1))}
+      {createButton('Exit', async () => await exit(1))}
     </>
-  );
-};
+  )
+}

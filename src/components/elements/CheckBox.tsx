@@ -1,15 +1,15 @@
-import { FiCheck } from "solid-icons/fi";
-import { Component } from "solid-js";
+import { FiCheck } from 'solid-icons/fi'
+import { Component } from 'solid-js'
 
 interface CheckBoxProps {
-  text: string;
-  checked: boolean;
-  onChange: (check: boolean) => void;
+  text: string
+  checked: boolean
+  onChange: (check: boolean) => void
 }
 
 export const CheckBox: Component<CheckBoxProps> = (props) => {
   return (
-    <button type="button" class="flex items-center" onClick={() =>props.onChange(!props.checked)}>
+    <button type="button" class="flex items-center" onClick={() => props.onChange(!props.checked)}>
       <div class="relative flex h-[1.1rem] w-[1.1rem] flex-shrink-0 items-center justify-center rounded-sm border border-gray-400 bg-white dark:border-gray-700 dark:bg-dark">
         <input
           type="checkbox"
@@ -21,9 +21,7 @@ export const CheckBox: Component<CheckBoxProps> = (props) => {
           <FiCheck class="m-0.5 text-sm text-white" />
         </div>
       </div>
-      <p class="ml-2 text-sm font-normal leading-4 text-gray-800 dark:text-gray-100">
-        {props.text}
-      </p>
+      <p class="ml-2 text-sm font-normal leading-4 text-gray-800 dark:text-gray-100">{props.text}</p>
     </button>
-  );
-};
+  )
+}
