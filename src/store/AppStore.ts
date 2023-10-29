@@ -23,12 +23,6 @@ function createAppStore() {
       id: "starred_clipboards",
     },
     {
-      name: "History",
-      Icon: TbSearch,
-      current: false,
-      id: "history",
-    },
-    {
       name: "View more",
       Icon: CgMore,
       current: false,
