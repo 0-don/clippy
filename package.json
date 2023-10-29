@@ -11,7 +11,12 @@
     "d": "tauri dev",
     "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src --expanded-format --with-serde both",
     "icon": "tauri icon",
-    "pre-commit": "prettier --write . --list-different"
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,scss}": [
+      "prettier --write --list-different"
+    ]
   },
   "dependencies": {
     "@kobalte/core": "^0.11.2",
@@ -27,6 +32,7 @@
     "@types/node": "^20.8.9",
     "autoprefixer": "^10.4.16",
     "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
     "prettier-plugin-organize-imports": "^3.2.3",
