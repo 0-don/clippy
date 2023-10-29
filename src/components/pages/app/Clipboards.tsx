@@ -106,7 +106,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             return (
               <button
                 type="button"
-                class="group w-full cursor-pointer px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
+                class="group w-full cursor-pointer select-none px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
                 onClick={(e) => {
                   e.stopPropagation();
 
