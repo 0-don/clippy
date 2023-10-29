@@ -20,7 +20,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
     return (
       <button
         type="button"
-        class="w-full cursor-pointer px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
+        class="w-full cursor-pointer select-none px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
         onClick={onClick}
       >
         <div class="flex items-center justify-between py-4">
