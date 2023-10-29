@@ -117,7 +117,7 @@ impl ClipboardHelper<'_> {
         let (text, image) = &self.clipboard;
 
         let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
-        let is_hex = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}(?:[0-9a-f]{2})?$").unwrap();
+        let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
         let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hwb)\((.*)\)").unwrap();
 
         let r#type = if text.is_some() && is_link.is_match(text.as_ref().unwrap()) {
