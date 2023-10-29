@@ -41,7 +41,6 @@ function createSettingsStore() {
   const updateSettings = async (settings: Settings, upload: boolean | undefined = true) => {
     if (upload) await invoke("update_settings", { settings });
     setSettings(settings);
-
     await invoke("toggle_autostart");
   };
 
@@ -66,7 +65,6 @@ function createSettingsStore() {
     setCurrentTab,
     getCurrentTab,
     initSettings,
-
     syncClipboard,
   };
 }
