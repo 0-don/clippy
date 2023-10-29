@@ -7,10 +7,7 @@ import "./styles.css";
 const About = () => {
   const [version, setVersion] = createSignal("0.0.0");
 
-  onMount(async () => {
-    const appVersion = await getVersion();
-    setVersion(appVersion);
-  });
+  onMount(async () => setVersion(await getVersion()));
 
   return (
     <div class="absolute flex h-full w-full flex-col items-center justify-center space-y-2 bg-white text-black dark:bg-dark  dark:text-white">
