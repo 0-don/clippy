@@ -2,6 +2,66 @@ use entity::{hotkey, settings};
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::sea_orm::entity::*;
 
+#[derive(Debug)]
+pub enum KeyboardLayout {
+    Qwerty,
+    Qwertz,
+}
+
+pub fn get_keyboard_layout() -> KeyboardLayout {
+    if cfg!(target_os = "linux") {
+        let output = std::process::Command::new("setxkbmap")
+            .arg("-query")
+            .output();
+
+        if let Ok(result) = output.as_ref() {
+            let output_str: Vec<String> = std::str::from_utf8(&result.stdout)
+                .unwrap()
+                .split("\n")
+                .map(|x| x.trim().to_lowercase())
+                .collect();
+
+            if output_str
+                .iter()
+                .any(|x| x.contains("de") && x.contains("layout:"))
+            {
+                println!("Linux QWERTY");
+                return KeyboardLayout::Qwerty;
+            }
+        }
+    } else if cfg!(target_os = "windows") {
+        let output = std::process::Command::new("reg")
+            .arg("query")
+            .arg(r"HKCU\Keyboard Layout\Preload")
+            .output();
+
+        if let Ok(result) = output.as_ref() {
+            let output_str = std::str::from_utf8(&result.stdout).unwrap();
+            if !output_str.contains("00000409") {
+                println!("Windows QWERTY");
+                return KeyboardLayout::Qwerty;
+            }
+        }
+    } else if cfg!(target_os = "macos") {
+        let output = std::process::Command::new("defaults")
+            .arg("read")
+            .arg("-g")
+            .arg("AppleCurrentKeyboardLayoutInputSourceID")
+            .output();
+
+        if let Ok(result) = output.as_ref() {
+            let output_str = std::str::from_utf8(&result.stdout).unwrap();
+            if !output_str.contains("com.apple.keylayout.US") {
+                println!("Mac QWERTY");
+                return KeyboardLayout::Qwerty;
+            }
+        }
+    }
+    // Default to QWERTZ for unsupported OS
+    println!("{} default QWERTZ", std::env::consts::OS);
+    KeyboardLayout::Qwertz
+}
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
@@ -20,12 +80,17 @@ impl MigrationTrait for Migration {
         .insert(db)
         .await?;
 
+        let key = match get_keyboard_layout() {
+            KeyboardLayout::Qwerty => "Y",
+            KeyboardLayout::Qwertz => "D",
+        };
+
         hotkey::ActiveModel {
             event: Set("window_display_toggle".to_string()),
             ctrl: Set(true),
             alt: Set(false),
             shift: Set(false),
-            key: Set("Y".to_string()),
+            key: Set(key.to_string()),
             status: Set(true),
             name: Set("Clippy Display Toggle".to_string()),
             icon: Set("\"<svg stroke-width=\\\"0\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path fill=\\\"currentColor\\\" d=\\\"M3 17h18v2H3v-2Zm0-6h3v3H3v-3Zm5 0h3v3H8v-3ZM3 5h3v3H3V5Zm10 0h3v3h-3V5Zm5 0h3v3h-3V5Zm-5 6h3v3h-3v-3Zm5 0h3v3h-3v-3ZM8 5h3v3H8V5Z\\\"></path></svg>\"".to_string()),

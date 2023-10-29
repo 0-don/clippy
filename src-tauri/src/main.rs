@@ -54,7 +54,6 @@ async fn main() {
             window::get_db_size,
             window::get_db_path,
             window::sync_clipboard_history,
-            
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
