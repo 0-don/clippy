@@ -1,23 +1,23 @@
-import { Component, For, Show } from 'solid-js'
-import AppStore from '../../store/AppStore'
-import HotkeyStore from '../../store/HotkeyStore'
+import { Component, For, Show } from "solid-js";
+import AppStore from "../../store/AppStore";
+import HotkeyStore from "../../store/HotkeyStore";
 
 interface AppSidebarProps {}
 
 export const AppSidebar: Component<AppSidebarProps> = ({}) => {
-  const { hotkeys, globalHotkeyEvent, getHotkey } = HotkeyStore
-  const { setCurrentTab, tabs } = AppStore
+  const { hotkeys, globalHotkeyEvent, getHotkey } = HotkeyStore;
+  const { setCurrentTab, tabs } = AppStore;
   return (
     <Show when={hotkeys().length}>
       <For each={tabs()}>
         {({ current, Icon, name, id }) => {
-          const currentHotkey = hotkeys()?.find((key) => key?.name === name)
+          const currentHotkey = hotkeys()?.find((key) => key?.name === name);
 
           return (
             <div class="relative" title={currentHotkey?.name}>
               <Icon
                 class={`${
-                  current ? 'text-black dark:text-white' : 'text-zinc-600 dark:text-gray-dark'
+                  current ? "text-black dark:text-white" : "text-zinc-600 dark:text-gray-dark"
                 } cursor-pointer text-xl hover:text-black dark:hover:text-white`}
                 onClick={() => setCurrentTab(id)}
                 title={name}
@@ -28,9 +28,9 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
                 </div>
               </Show>
             </div>
-          )
+          );
         }}
       </For>
     </Show>
-  )
-}
+  );
+};

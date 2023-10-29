@@ -1,11 +1,11 @@
-import { IconTypes } from 'solid-icons'
-import { Component, JSX } from 'solid-js'
+import { IconTypes } from "solid-icons";
+import { Component, JSX } from "solid-js";
 
 interface TextBlockProps {
-  children: JSX.Element
-  Icon: IconTypes
-  title: string
-  className?: string
+  children: JSX.Element;
+  Icon: IconTypes;
+  title: string;
+  className?: string;
 }
 
 export const TextBlock: Component<TextBlockProps> = (props) => {
@@ -17,5 +17,5 @@ export const TextBlock: Component<TextBlockProps> = (props) => {
       </div>
       {props.children}
     </div>
-  )
-}
+  );
+};

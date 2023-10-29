@@ -1,23 +1,23 @@
-import { Combobox, createFilter } from '@kobalte/core'
-import { FiCheck } from 'solid-icons/fi'
-import { VsArrowSwap } from 'solid-icons/vs'
-import { Component, createSignal } from 'solid-js'
-import { GlobalShortcutKeysType } from '../../utils/constants'
+import { Combobox, createFilter } from "@kobalte/core";
+import { FiCheck } from "solid-icons/fi";
+import { VsArrowSwap } from "solid-icons/vs";
+import { Component, createSignal } from "solid-js";
+import { GlobalShortcutKeysType } from "../../utils/constants";
 
 interface DropdownProps {
-  items: string[]
-  value: string
-  onChange: (char: GlobalShortcutKeysType | string) => void
+  items: string[];
+  value: string;
+  onChange: (char: GlobalShortcutKeysType | string) => void;
 }
 
 export const Dropdown: Component<DropdownProps> = (props) => {
-  const filter = createFilter({ sensitivity: 'base' })
-  const [options, setOptions] = createSignal(props.items)
+  const filter = createFilter({ sensitivity: "base" });
+  const [options, setOptions] = createSignal(props.items);
 
   const onOpenChange = (isOpen: boolean, triggerMode?: Combobox.ComboboxTriggerMode) =>
-    isOpen && triggerMode === 'manual' && setOptions(props.items)
+    isOpen && triggerMode === "manual" && setOptions(props.items);
 
-  const onInputChange = (value: string) => setOptions(props.items.filter((option) => filter.contains(option, value)))
+  const onInputChange = (value: string) => setOptions(props.items.filter((option) => filter.contains(option, value)));
 
   return (
     <Combobox.Root
@@ -30,7 +30,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
         <Combobox.Item
           item={p.item}
           class={`${
-            p.item.rawValue === props.value ? 'bg-indigo-600 text-white' : 'text-white'
+            p.item.rawValue === props.value ? "bg-indigo-600 text-white" : "text-white"
           } flex cursor-pointer items-center justify-between px-2 hover:bg-indigo-600`}
         >
           <Combobox.ItemLabel>{p.item.rawValue}</Combobox.ItemLabel>
@@ -54,5 +54,5 @@ export const Dropdown: Component<DropdownProps> = (props) => {
         </Combobox.Content>
       </Combobox.Portal>
     </Combobox.Root>
-  )
-}
+  );
+};

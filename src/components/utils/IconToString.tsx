@@ -1,11 +1,11 @@
-import { FiType } from 'solid-icons/fi'
-import { Component } from 'solid-js'
+import { FiType } from "solid-icons/fi";
+import { Component } from "solid-js";
 
 interface IconToStringProps {}
 
 export const IconToString: Component<IconToStringProps> = ({}) => {
-  const html = <FiType />
+  const html = <FiType />;
   // @ts-ignore
-  log({ icon: JSON.stringify(html.outerHTML) })
-  return <>{html}</>
-}
+  log({ icon: JSON.stringify(html.outerHTML) });
+  return <>{html}</>;
+};

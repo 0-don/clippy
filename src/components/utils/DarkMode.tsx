@@ -1,15 +1,15 @@
-import { Component, createEffect } from 'solid-js'
-import AppStore from '../../store/AppStore'
-import SettingsStore from '../../store/SettingsStore'
-import SwitchField from '../elements/SwitchField'
+import { Component, createEffect } from "solid-js";
+import AppStore from "../../store/AppStore";
+import SettingsStore from "../../store/SettingsStore";
+import SwitchField from "../elements/SwitchField";
 
 interface DarkModeProps {}
 
 export const DarkMode: Component<DarkModeProps> = ({}) => {
-  const { settings, updateSettings } = SettingsStore
-  const { darkMode } = AppStore
+  const { settings, updateSettings } = SettingsStore;
+  const { darkMode } = AppStore;
 
-  createEffect(darkMode)
+  createEffect(darkMode);
 
   return (
     <SwitchField
@@ -21,5 +21,5 @@ export const DarkMode: Component<DarkModeProps> = ({}) => {
         })
       }
     />
-  )
-}
+  );
+};

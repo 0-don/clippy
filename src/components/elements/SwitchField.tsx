@@ -1,15 +1,15 @@
-import { Switch } from '@kobalte/core'
-import { FiCheck } from 'solid-icons/fi'
-import { VsClose } from 'solid-icons/vs'
-import { Accessor, Component, Setter } from 'solid-js'
+import { Switch } from "@kobalte/core";
+import { FiCheck } from "solid-icons/fi";
+import { VsClose } from "solid-icons/vs";
+import { Accessor, Component, Setter } from "solid-js";
 
 type SwitchProps = {
-  checked?: Accessor<boolean> | boolean
-  onChange: (val: boolean) => Promise<void> | Setter<boolean> | undefined
-}
+  checked?: Accessor<boolean> | boolean;
+  onChange: (val: boolean) => Promise<void> | Setter<boolean> | undefined;
+};
 
 const SwitchField: Component<SwitchProps> = (props) => {
-  const getChecked = () => (typeof props.checked === 'function' ? props.checked() : props.checked)
+  const getChecked = () => (typeof props.checked === "function" ? props.checked() : props.checked);
 
   return (
     <Switch.Root class="mx-1 inline-flex cursor-pointer items-center" checked={getChecked()} onChange={props.onChange}>
@@ -20,7 +20,7 @@ const SwitchField: Component<SwitchProps> = (props) => {
         </Switch.Thumb>
       </Switch.Control>
     </Switch.Root>
-  )
-}
+  );
+};
 
-export default SwitchField
+export default SwitchField;
