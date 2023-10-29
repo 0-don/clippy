@@ -13,7 +13,7 @@ export type Clips = {
   created_date?: Date;
 };
 
-export type ClipboardType = "text" | "image" | "hex" | "rgb";
+export type ClipboardType = "text" | "image" | "hex" | "rgb" | "link";
 
 export type Hotkey = {
   id: number;
