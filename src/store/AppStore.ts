@@ -1,12 +1,12 @@
 import { BsStarFill } from "solid-icons/bs";
 import { CgMore } from "solid-icons/cg";
+import { TbSearch } from "solid-icons/tb";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { TabId, Tabs } from "../utils/constants";
 import ClipboardStore from "./ClipboardStore";
 import HotkeyStore from "./HotkeyStore";
 import SettingsStore from "./SettingsStore";
-import { TbSearch } from "solid-icons/tb";
 
 function createAppStore() {
   const [tabs, setTabs] = createSignal<Tabs[]>([
@@ -36,12 +36,9 @@ function createAppStore() {
     },
   ]);
 
-  const setCurrentTab = (id: TabId) =>
-    setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
+  const setCurrentTab = (id: TabId) => setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
 
   const getCurrentTab = () => tabs().find((s) => s.current);
-
-  const tIcon = () => tabs().find((s) => s.current);
 
   const init = async () => {
     HotkeyStore.initHotkeys();
@@ -60,7 +57,6 @@ function createAppStore() {
     setTabs,
     setCurrentTab,
     getCurrentTab,
-    tIcon,
     init,
     darkMode,
   };

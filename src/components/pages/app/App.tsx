@@ -4,15 +4,14 @@ import { Show } from "solid-js";
 import AppStore from "../../../store/AppStore";
 import SettingsStore from "../../../store/SettingsStore";
 import { AppSidebar } from "../../navigation/AppSidebar";
+import { ClipboardHistory } from "./ClipboardHistory";
 import { RecentClipboards } from "./RecentClipboards";
-import { SearchBar } from "./SearchBar";
 import { StarredClipboards } from "./StarredClipboards";
 import { ViewMore } from "./ViewMore";
-import { ClipboardHistory } from "./ClipboardHistory";
 
 function App() {
   const { settings } = SettingsStore;
-  const { tIcon } = AppStore;
+  const { getCurrentTab } = AppStore;
 
   return (
     <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
@@ -22,33 +21,26 @@ function App() {
       <div class="min-w-0 flex-1">
         <div class="flex w-full justify-between px-2 py-1">
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
-            {tIcon()?.name?.toLocaleUpperCase()}
+            {getCurrentTab()?.name?.toLocaleUpperCase()}
           </p>
-          <Show
-            when={settings()?.synchronize}
-            fallback={<BsHddFill title="offline" />}
-          >
+          <Show when={settings()?.synchronize} fallback={<BsHddFill title="offline" />}>
             <FiGlobe title="online" />
           </Show>
         </div>
 
-        <Show when={tIcon()?.name === "Starred Clipboards"}>
-          <SearchBar />
-        </Show>
-
-        <Show when={tIcon()?.name === "Recent Clipboards"}>
+        <Show when={getCurrentTab()?.name === "Recent Clipboards"}>
           <RecentClipboards />
         </Show>
 
-        <Show when={tIcon()?.name === "History"}>
-          <ClipboardHistory />
-        </Show>
-
-        <Show when={tIcon()?.name === "Starred Clipboards"}>
+        <Show when={getCurrentTab()?.name === "Starred Clipboards"}>
           <StarredClipboards />
         </Show>
 
-        <Show when={tIcon()?.name === "View more"}>
+        <Show when={getCurrentTab()?.name === "History"}>
+          <ClipboardHistory />
+        </Show>
+
+        <Show when={getCurrentTab()?.name === "View more"}>
           <ViewMore />
         </Show>
       </div>

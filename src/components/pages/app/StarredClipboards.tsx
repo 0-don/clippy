@@ -1,16 +1,14 @@
-import { Component, onMount } from "solid-js";
-import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
+import { Component } from "solid-js";
 import { Clipboards } from "./Clipboards";
+import { SearchBar } from "./SearchBar";
 
 interface StarredClipboardsProps {}
 
 export const StarredClipboards: Component<StarredClipboardsProps> = ({}) => {
-  const { setClipboards, getClipboards, setWhere } = ClipboardStore;
-
-  onMount(async () => {
-    setWhere(() => ({ ...initialWhere, star: true }));
-    setClipboards(await getClipboards());
-  });
-
-  return <Clipboards />;
+  return (
+    <>
+      <SearchBar />
+      <Clipboards />
+    </>
+  );
 };

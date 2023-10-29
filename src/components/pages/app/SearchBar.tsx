@@ -1,13 +1,8 @@
 import { invoke } from "@tauri-apps/api";
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
-import {
-  Component,
-  createEffect,
-  createSignal,
-  onCleanup,
-  onMount,
-} from "solid-js";
+import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import AppStore from "../../../store/AppStore";
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
 
@@ -17,6 +12,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
   let input: HTMLInputElement | undefined;
   const [search, setSearch] = createSignal("");
   const [showImages, setShowImages] = createSignal(false);
+  const { getCurrentTab } = AppStore;
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;
   const { setGlobalHotkeyEvent } = HotkeyStore;
 
@@ -35,6 +31,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
         ...initialWhere,
         search: text.length && !img ? text : undefined,
         img: img || undefined,
+        star: getCurrentTab()?.name === "Starred Clipboards" ? true : undefined,
       }));
       const clipboards = await getClipboards();
       setClipboards(clipboards);
@@ -66,9 +63,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
           />
           <div class="absolute inset-y-0 right-2 flex items-center">
             <FaRegularImage
-              class={` hover:text-indigo-600  ${
-                showImages() ? "text-indigo-600" : ""
-              }`}
+              class={` hover:text-indigo-600  ${showImages() ? "text-indigo-600" : ""}`}
               onClick={() => setShowImages(!showImages())}
             />
           </div>
