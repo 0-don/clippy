@@ -1,9 +1,9 @@
-import { TextBlock } from "@/components/elements/TextBlock";
-import { formatBytes } from "@/utils/helpers";
 import { invoke } from "@tauri-apps/api";
 import { BsDeviceHdd } from "solid-icons/bs";
 import { FiTrash2 } from "solid-icons/fi";
 import { Component, createSignal, onMount } from "solid-js";
+import { formatBytes } from "../../../utils/helpers";
+import { TextBlock } from "../../elements/TextBlock";
 
 interface SettingsHistoryProps {}
 
