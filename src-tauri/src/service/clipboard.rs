@@ -53,7 +53,41 @@ pub async fn get_clipboards_db(
             query.filter(clipboard::Column::Star.eq(starred))
         })
         .apply_if(search, |query, content| {
-            query.filter(clipboard::Column::Content.contains(&content))
+
+            // smart search
+            let filter = if content == "txt" || content == "text" { 
+
+                // display text entries
+                clipboard::Column::Content.contains(&content)
+                    .or(clipboard::Column::Type.eq("text"))
+            } else if content == "img" || content == "image" { 
+
+                // display image entries
+                clipboard::Column::Content.contains(&content)
+                    .or(clipboard::Column::Type.eq("image"))
+            } else if content == "lnk" || content == "link" { 
+
+                // display link entries
+                clipboard::Column::Content.contains(&content)
+                    .or(clipboard::Column::Type.eq("link"))
+            } else if content == "clr" || content == "color" { 
+
+                // display color entries
+                clipboard::Column::Content.contains(&content)
+                    .or(clipboard::Column::Type.eq("hex"))
+                    .or(clipboard::Column::Type.eq("rgb"))
+            } else if content == "hex" {
+                clipboard::Column::Content.contains(&content)
+                    .or(clipboard::Column::Type.eq("hex"))
+            } else if content == "rgb" {
+                clipboard::Column::Content.contains(&content)
+                    .or(clipboard::Column::Type.eq("rgb"))
+            } else {
+
+                // use default search
+                clipboard::Column::Content.contains(&content)
+            };
+            query.filter(filter)
         })
         .apply_if(img, |query, _| {
             query.filter(clipboard::Column::Type.eq("image"))
