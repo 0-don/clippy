@@ -14,14 +14,14 @@ function App() {
   const { getCurrentTab } = AppStore;
 
   return (
-    <div class="absolute flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
-      <div class="flex w-12 flex-col items-center space-y-7 bg-gray-200 px-3.5 pt-5 dark:bg-dark-light">
+    <div class="flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
+      <div class="flex w-12 flex-col items-center space-y-5 bg-gray-200 pt-5 dark:bg-dark-light">
         <AppSidebar />
       </div>
-      <div class="min-w-0 flex-1">
+      <div class="h-screen min-w-0 flex-1">
         <div class="flex w-full justify-between px-2 py-1">
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
-            {getCurrentTab()?.name?.toLocaleUpperCase()}
+            {getCurrentTab()?.name?.toUpperCase()}
           </p>
           <Show when={settings()?.synchronize} fallback={<BsHddFill title="offline" />}>
             <FiGlobe title="online" />
