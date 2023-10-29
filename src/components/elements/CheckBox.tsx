@@ -1,10 +1,10 @@
-import { FiCheck } from 'solid-icons/fi'
-import { Component } from 'solid-js'
+import { FiCheck } from "solid-icons/fi";
+import { Component } from "solid-js";
 
 interface CheckBoxProps {
-  text: string
-  checked: boolean
-  onChange: (check: boolean) => void
+  text: string;
+  checked: boolean;
+  onChange: (check: boolean) => void;
 }
 
 export const CheckBox: Component<CheckBoxProps> = (props) => {
@@ -23,5 +23,5 @@ export const CheckBox: Component<CheckBoxProps> = (props) => {
       </div>
       <p class="ml-2 text-sm font-normal leading-4 text-gray-800 dark:text-gray-100">{props.text}</p>
     </button>
-  )
-}
+  );
+};

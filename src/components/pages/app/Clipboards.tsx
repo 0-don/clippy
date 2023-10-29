@@ -1,75 +1,75 @@
-import { invoke } from '@tauri-apps/api'
-import { listen } from '@tauri-apps/api/event'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import utc from 'dayjs/plugin/utc'
-import { BsImages } from 'solid-icons/bs'
-import { FiArrowUp, FiFileText, FiLink } from 'solid-icons/fi'
-import { IoTrashOutline } from 'solid-icons/io'
-import { VsStarFull } from 'solid-icons/vs'
-import { Component, For, Show, createSignal, onMount } from 'solid-js'
-import { Clips } from '../../../@types'
-import clippy from '../../../assets/clippy.png'
-import ClipboardStore from '../../../store/ClipboardStore'
-import HotkeyStore from '../../../store/HotkeyStore'
-import { formatBytes } from '../../../utils/helpers'
+import { invoke } from "@tauri-apps/api";
+import { listen } from "@tauri-apps/api/event";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import utc from "dayjs/plugin/utc";
+import { BsImages } from "solid-icons/bs";
+import { FiArrowUp, FiFileText, FiLink } from "solid-icons/fi";
+import { IoTrashOutline } from "solid-icons/io";
+import { VsStarFull } from "solid-icons/vs";
+import { Component, For, Show, createSignal, onMount } from "solid-js";
+import { Clips } from "../../../@types";
+import clippy from "../../../assets/clippy.png";
+import ClipboardStore from "../../../store/ClipboardStore";
+import HotkeyStore from "../../../store/HotkeyStore";
+import { formatBytes } from "../../../utils/helpers";
 
-dayjs.extend(utc)
-dayjs.extend(relativeTime)
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
 
 interface ClipboardsProps {}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
-  let dbClickTimer: NodeJS.Timeout
+  let dbClickTimer: NodeJS.Timeout;
 
-  const [scrollToTop, setScrollToTop] = createSignal(false)
+  const [scrollToTop, setScrollToTop] = createSignal(false);
 
-  const { clipboards, setClipboards, getClipboards, setWhere, clipboardRef, setClipboardRef } = ClipboardStore
-  const { globalHotkeyEvent, hotkeys } = HotkeyStore
+  const { clipboards, setClipboards, getClipboards, setWhere, clipboardRef, setClipboardRef } = ClipboardStore;
+  const { globalHotkeyEvent, hotkeys } = HotkeyStore;
 
   const onScroll = async () => {
-    if (!clipboardRef()) return
+    if (!clipboardRef()) return;
 
     const bottom =
-      clipboardRef() && clipboardRef()!.scrollHeight - clipboardRef()!.scrollTop === clipboardRef()!.clientHeight
+      clipboardRef() && clipboardRef()!.scrollHeight - clipboardRef()!.scrollTop === clipboardRef()!.clientHeight;
 
-    clipboardRef()!.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false)
+    clipboardRef()!.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false);
 
     if (bottom) {
-      setWhere((prev) => ({ ...prev, cursor: clipboards().length }))
-      const newClipboards = await getClipboards()
-      setClipboards((prev) => [...prev, ...newClipboards])
+      setWhere((prev) => ({ ...prev, cursor: clipboards().length }));
+      const newClipboards = await getClipboards();
+      setClipboards((prev) => [...prev, ...newClipboards]);
     }
-  }
+  };
 
-  onMount(() => listen('scroll_to_top', () => clipboardRef()!.scrollTo(0, 0)))
+  onMount(() => listen("scroll_to_top", () => clipboardRef()!.scrollTo(0, 0)));
 
   const IconFunctions = ({ id, ...clipboard }: Clips) => (
     <>
       <VsStarFull
         onClick={async (e) => {
-          e.stopPropagation()
-          await invoke<boolean>('star_clipboard', {
+          e.stopPropagation();
+          await invoke<boolean>("star_clipboard", {
             id,
             star: !clipboard.star,
-          })
-          setClipboards((prev) => prev.map((o) => (o.id === id ? { ...o, star: !clipboard.star } : o)))
+          });
+          setClipboards((prev) => prev.map((o) => (o.id === id ? { ...o, star: !clipboard.star } : o)));
         }}
         class={`${
-          clipboard.star ? 'text-yellow-400 dark:text-yellow-300' : 'hidden text-zinc-700'
+          clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
         } z-10 text-xs hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
       />
       <IoTrashOutline
         onClick={async (e) => {
-          e.stopPropagation()
-          if (await invoke<boolean>('delete_clipboard', { id })) {
-            setClipboards((prev) => prev.filter((o) => o.id !== id))
+          e.stopPropagation();
+          if (await invoke<boolean>("delete_clipboard", { id })) {
+            setClipboards((prev) => prev.filter((o) => o.id !== id));
           }
         }}
         class="hidden text-xs text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
       />
     </>
-  )
+  );
 
   return (
     <Show
@@ -92,7 +92,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
               <FiArrowUp class="text-xl !text-white dark:!text-white " />
               <Show when={globalHotkeyEvent()}>
                 <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
-                  {hotkeys().find((key) => key.event === 'scroll_to_top')?.key}
+                  {hotkeys().find((key) => key.event === "scroll_to_top")?.key}
                 </div>
               </Show>
             </div>
@@ -101,49 +101,49 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
         <For each={clipboards()}>
           {(clipboard, index) => {
-            let { content, type, id, created_date, blob, width, height, size } = clipboard
+            let { content, type, id, created_date, blob, width, height, size } = clipboard;
 
             return (
               <button
                 type="button"
                 class="group w-full cursor-pointer px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
                 onClick={(e) => {
-                  e.stopPropagation()
+                  e.stopPropagation();
 
                   if (e.detail === 1) {
                     dbClickTimer = setTimeout(
-                      async () => await invoke('copy_clipboard', { id }),
-                      clipboard.type === 'image' ? 200 : 0
-                    )
+                      async () => await invoke("copy_clipboard", { id }),
+                      clipboard.type === "image" ? 200 : 0
+                    );
                   }
                 }}
                 onDblClick={async (e) => {
-                  clearTimeout(dbClickTimer)
-                  e.stopPropagation()
-                  if (type !== 'image' || !blob) return
-                  await invoke('save_clipboard_image', { id })
+                  clearTimeout(dbClickTimer);
+                  e.stopPropagation();
+                  if (type !== "image" || !blob) return;
+                  await invoke("save_clipboard_image", { id });
                 }}
               >
                 <div class="flex justify-between py-3">
                   <div class="flex min-w-0">
                     <div class="flex items-center">
-                      <div class="relative" title={id + ''}>
-                        {type === 'link' && <FiLink class="text-2xl text-zinc-700 dark:text-white" />}
-                        {type === 'text' && <FiFileText class="text-2xl text-zinc-700 dark:text-white" />}
-                        {type === 'image' && <BsImages class="text-2xl text-zinc-700 dark:text-white" />}
-                        {type === 'hex' && (
+                      <div class="relative" title={id + ""}>
+                        {type === "link" && <FiLink class="text-2xl text-zinc-700 dark:text-white" />}
+                        {type === "text" && <FiFileText class="text-2xl text-zinc-700 dark:text-white" />}
+                        {type === "image" && <BsImages class="text-2xl text-zinc-700 dark:text-white" />}
+                        {type === "hex" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
                             style={{
-                              'background-color': `${content?.includes('#') ? `${content}` : `#${content}`}`,
+                              "background-color": `${content?.includes("#") ? `${content}` : `#${content}`}`,
                             }}
                           />
                         )}
-                        {type === 'rgb' && (
+                        {type === "rgb" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
                             style={{
-                              'background-color': `${content}`,
+                              "background-color": `${content}`,
                             }}
                           />
                         )}
@@ -161,11 +161,11 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           width={width || 0}
                           height={height || 0}
                           alt={`${width}x${height} ${size}`}
-                          title={`${width}x${height} ${formatBytes(Number(size || '0'))}`}
+                          title={`${width}x${height} ${formatBytes(Number(size || "0"))}`}
                         />
                       ) : (
-                        <div class="flex" title={content || ''}>
-                          <p class="text-sm">{content || ' '}</p>
+                        <div class="flex" title={content || ""}>
+                          <p class="text-sm">{content || " "}</p>
                         </div>
                       )}
                       <div class="text-left text-xs text-zinc-400">{dayjs.utc(created_date!).fromNow()}</div>
@@ -175,10 +175,10 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                 </div>
                 <hr class="border-zinc-400 dark:border-zinc-700" />
               </button>
-            )
+            );
           }}
         </For>
       </div>
     </Show>
-  )
-}
+  );
+};

@@ -1,38 +1,38 @@
-import { invoke } from '@tauri-apps/api'
-import { FiSearch } from 'solid-icons/fi'
-import { Component, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
-import ClipboardStore, { initialWhere } from '../../../store/ClipboardStore'
-import HotkeyStore from '../../../store/HotkeyStore'
+import { invoke } from "@tauri-apps/api";
+import { FiSearch } from "solid-icons/fi";
+import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
+import HotkeyStore from "../../../store/HotkeyStore";
 
 interface SearchBarProps {}
 
 export const SearchBar: Component<SearchBarProps> = ({}) => {
-  let input: HTMLInputElement | undefined
-  const [search, setSearch] = createSignal('')
-  const { setClipboards, setWhere, getClipboards } = ClipboardStore
-  const { setGlobalHotkeyEvent } = HotkeyStore
+  let input: HTMLInputElement | undefined;
+  const [search, setSearch] = createSignal("");
+  const { setClipboards, setWhere, getClipboards } = ClipboardStore;
+  const { setGlobalHotkeyEvent } = HotkeyStore;
 
   onMount(async () => {
-    input?.focus()
-    setSearch('')
-    await invoke('stop_hotkeys')
-    setGlobalHotkeyEvent(false)
-  })
+    input?.focus();
+    setSearch("");
+    await invoke("stop_hotkeys");
+    setGlobalHotkeyEvent(false);
+  });
 
   createEffect(() => {
-    const text = search()
+    const text = search();
 
     const delayDebounceFn = setTimeout(async () => {
       setWhere(() => ({
         ...initialWhere,
         search: text.length > 0 ? text : undefined,
-      }))
-      const clipboards = await getClipboards()
-      setClipboards(clipboards)
-    }, 0)
+      }));
+      const clipboards = await getClipboards();
+      setClipboards(clipboards);
+    }, 0);
 
-    onCleanup(() => clearTimeout(delayDebounceFn))
-  })
+    onCleanup(() => clearTimeout(delayDebounceFn));
+  });
 
   return (
     <>
@@ -50,12 +50,12 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
             ref={input}
             value={search()}
             onInput={(e) => {
-              setSearch(e.target.value)
+              setSearch(e.target.value);
             }}
             // onblur={(e) => e.target.focus()} // make search input always in focus (conflict with shortcuts, needs to be fixed)
           />
         </div>
       </div>
     </>
-  )
-}
+  );
+};

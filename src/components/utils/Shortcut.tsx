@@ -1,17 +1,17 @@
-import { Component, Show } from 'solid-js'
-import { Hotkey } from '../../@types'
-import HotkeyStore from '../../store/HotkeyStore'
+import { Component, Show } from "solid-js";
+import { Hotkey } from "../../@types";
+import HotkeyStore from "../../store/HotkeyStore";
 
-import { GLOBAL_SHORTCUT_KEYS } from '../../utils/constants'
-import { CheckBox } from '../elements/CheckBox'
-import { Dropdown } from '../elements/Dropdown'
+import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
+import { CheckBox } from "../elements/CheckBox";
+import { Dropdown } from "../elements/Dropdown";
 
 interface ShortcutProps {
-  hotkey: Hotkey
+  hotkey: Hotkey;
 }
 
 export const Shortcut: Component<ShortcutProps> = (props) => {
-  const { updateHotkey } = HotkeyStore
+  const { updateHotkey } = HotkeyStore;
 
   return (
     <>
@@ -37,16 +37,16 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
           items={GLOBAL_SHORTCUT_KEYS as unknown as string[]}
           value={props.hotkey.key}
           onChange={(currentKey) => {
-            if (typeof currentKey === 'number') return
+            if (typeof currentKey === "number") return;
             updateHotkey({
               ...props.hotkey,
               key: currentKey,
-              status: currentKey !== 'none',
-            })
+              status: currentKey !== "none",
+            });
           }}
         />
         <p class="flex w-full justify-end truncate">{props.hotkey.name}</p>
       </div>
     </>
-  )
-}
+  );
+};

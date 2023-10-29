@@ -1,25 +1,25 @@
-import { invoke } from '@tauri-apps/api'
-import { BsGlobeAmericas } from 'solid-icons/bs'
-import { FiUpload } from 'solid-icons/fi'
-import { RiDeviceSave3Fill } from 'solid-icons/ri'
-import { TbDatabaseStar } from 'solid-icons/tb'
-import { Component, Show, createEffect, createSignal, on } from 'solid-js'
-import SettingsStore from '../../../store/SettingsStore'
-import SwitchField from '../../elements/SwitchField'
-import { TextBlock } from '../../elements/TextBlock'
+import { invoke } from "@tauri-apps/api";
+import { BsGlobeAmericas } from "solid-icons/bs";
+import { FiUpload } from "solid-icons/fi";
+import { RiDeviceSave3Fill } from "solid-icons/ri";
+import { TbDatabaseStar } from "solid-icons/tb";
+import { Component, Show, createEffect, createSignal, on } from "solid-js";
+import SettingsStore from "../../../store/SettingsStore";
+import SwitchField from "../../elements/SwitchField";
+import { TextBlock } from "../../elements/TextBlock";
 
 interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
-  const [url, setUrl] = createSignal<string>()
-  const { settings, syncClipboard } = SettingsStore
+  const [url, setUrl] = createSignal<string>();
+  const { settings, syncClipboard } = SettingsStore;
 
   createEffect(
     on(
       () => settings()?.synchronize,
-      () => setTimeout(async () => setUrl(await invoke<string>('get_db_path')), 100)
+      () => setTimeout(async () => setUrl(await invoke<string>("get_db_path")), 100)
     )
-  )
+  );
 
   return (
     <>
@@ -54,5 +54,5 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
         </TextBlock>
       </Show>
     </>
-  )
-}
+  );
+};
