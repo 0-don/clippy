@@ -34,4 +34,6 @@ successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 
 
 #### note
+Tested on Linux(x11), Windows
+
 Linux has number hotkeys disabled, issue is tracked [here](https://github.com/tauri-apps/global-hotkey/issues/33)
