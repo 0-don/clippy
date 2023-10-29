@@ -1,6 +1,6 @@
+import AppStore from "@/store/AppStore";
+import SettingsStore from "@/store/SettingsStore";
 import { Component, createEffect } from "solid-js";
-import AppStore from "../../store/AppStore";
-import SettingsStore from "../../store/SettingsStore";
 import SwitchField from "../elements/SwitchField";
 
 interface DarkModeProps {}

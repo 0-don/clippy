@@ -1,8 +1,8 @@
+import { TextBlock } from "@/components/elements/TextBlock";
+import { Shortcut } from "@/components/utils/Shortcut";
+import HotkeyStore from "@/store/HotkeyStore";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { Component, For } from "solid-js";
-import HotkeyStore from "../../../store/HotkeyStore";
-import { TextBlock } from "../../elements/TextBlock";
-import { Shortcut } from "../../utils/Shortcut";
 
 interface SettingsHotkeysProps {}
 
