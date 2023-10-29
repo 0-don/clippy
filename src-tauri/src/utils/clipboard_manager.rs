@@ -116,10 +116,13 @@ impl ClipboardHelper<'_> {
     pub fn parse_model(&mut self) -> ActiveModel {
         let (text, image) = &self.clipboard;
 
-        let re = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}$").unwrap();
+        let is_hex = Regex::new(r"^#?(?:[0-9a-f]{3}){1,2}(?:[0-9a-f]{2})?$").unwrap();
+        let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hwb)\((.*)\)").unwrap();
 
-        let r#type = if text.is_some() && re.is_match(text.as_ref().unwrap()) {
-            Set("color".to_string())
+        let r#type = if text.is_some() && is_hex.is_match(text.as_ref().unwrap()) {
+            Set("hex".to_string())
+        } else if text.is_some() && is_rgb.is_match(text.as_ref().unwrap()) {
+            Set("rgb".to_string())
         } else if text.is_some() {
             Set("text".to_string())
         } else {

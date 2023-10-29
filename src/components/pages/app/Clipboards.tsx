@@ -156,8 +156,25 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         {type === "image" && (
                           <BsImages class="text-2xl text-zinc-700 dark:text-white" />
                         )}
-                        {type === "color" && (
-                          <VsSymbolColor class="text-2xl text-zinc-700 dark:text-white" />
+                        {type === "hex" && (
+                          <div
+                            class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
+                            style={{
+                              "background-color": `${
+                                content?.includes("#")
+                                  ? `${content}`
+                                  : `#${content}`
+                              }`,
+                            }}
+                          />
+                        )}
+                        {type === "rgb" && (
+                          <div
+                            class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
+                            style={{
+                              "background-color": `${content}`,
+                            }}
+                          />
                         )}
                         <Show when={globalHotkeyEvent()}>
                           <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
@@ -179,18 +196,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         />
                       ) : (
                         <div class="flex" title={content || ""}>
-                          {type === "color" && (
-                            <div
-                              class="mr-1 h-5 w-5 border border-solid border-zinc-400 dark:border-black"
-                              style={{
-                                "background-color": `${
-                                  content?.includes("#")
-                                    ? `${content}`
-                                    : `#${content}`
-                                }`,
-                              }}
-                            />
-                          )}
                           <p class="text-sm">{content || " "}</p>
                         </div>
                       )}
