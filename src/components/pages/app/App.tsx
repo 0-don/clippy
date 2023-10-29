@@ -8,6 +8,7 @@ import { RecentClipboards } from "./RecentClipboards";
 import { SearchBar } from "./SearchBar";
 import { StarredClipboards } from "./StarredClipboards";
 import { ViewMore } from "./ViewMore";
+import { ClipboardHistory } from "./ClipboardHistory";
 
 function App() {
   const { settings } = SettingsStore;
@@ -23,17 +24,24 @@ function App() {
           <p class="bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white ">
             {tIcon()?.name?.toLocaleUpperCase()}
           </p>
-          <Show when={settings()?.synchronize} fallback={<BsHddFill title="offline" />}>
+          <Show
+            when={settings()?.synchronize}
+            fallback={<BsHddFill title="offline" />}
+          >
             <FiGlobe title="online" />
           </Show>
         </div>
 
-        <Show when={tIcon()?.name === "Recent Clipboards" || tIcon()?.name === "Starred Clipboards"}>
+        <Show when={tIcon()?.name === "Starred Clipboards"}>
           <SearchBar />
         </Show>
 
         <Show when={tIcon()?.name === "Recent Clipboards"}>
           <RecentClipboards />
+        </Show>
+
+        <Show when={tIcon()?.name === "History"}>
+          <ClipboardHistory />
         </Show>
 
         <Show when={tIcon()?.name === "Starred Clipboards"}>
