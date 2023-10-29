@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.1.1"
+version = "1.1.2"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["Don-Cryptus"]
 license = "MIT"
@@ -23,6 +23,7 @@ tauri = { version = "1", features = [
   "process-exit",
   "system-tray",
   "devtools",
+  "windows7-compat"
 ] }
 global-hotkey = "0"
 serde = { version = "1", features = ["derive"] }
