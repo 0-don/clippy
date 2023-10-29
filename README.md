@@ -23,7 +23,7 @@
 successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 
 ### features
-
+- display/hide **ctrl+y** (change in settings)
 - images & text support
 - keybinds for everything
 - add favorite clipboards
