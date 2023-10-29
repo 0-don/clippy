@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api";
-import { BsCardImage } from "solid-icons/bs";
-import { RiSystemSearchLine } from "solid-icons/ri";
+import { FiSearch } from "solid-icons/fi";
 import {
   Component,
   createEffect,
@@ -10,33 +9,29 @@ import {
 } from "solid-js";
 import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
-import SwitchField from "../../elements/SwitchField";
-import { Clipboards } from "./Clipboards";
 
-interface ClipboardHistoryProps {}
+interface SearchBarProps {}
 
-export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
+export const SearchBar: Component<SearchBarProps> = ({}) => {
   let input: HTMLInputElement | undefined;
   const [search, setSearch] = createSignal("");
-  const [showImages, setShowImages] = createSignal(false);
   const { setClipboards, setWhere, getClipboards } = ClipboardStore;
   const { setGlobalHotkeyEvent } = HotkeyStore;
 
   onMount(async () => {
     input?.focus();
+    setSearch("");
     await invoke("stop_hotkeys");
     setGlobalHotkeyEvent(false);
   });
 
   createEffect(() => {
     const text = search();
-    const img = showImages();
 
     const delayDebounceFn = setTimeout(async () => {
       setWhere(() => ({
         ...initialWhere,
-        search: text.length && !img ? text : undefined,
-        img: img || undefined,
+        search: text.length > 0 ? text : undefined
       }));
       const clipboards = await getClipboards();
       setClipboards(clipboards);
@@ -47,31 +42,26 @@ export const ClipboardHistory: Component<ClipboardHistoryProps> = ({}) => {
 
   return (
     <>
-      <div class="flex items-center px-3 py-2 dark:bg-zinc-800">
+      <div class="flex items-center dark:bg-zinc-800">
         <div class="relative w-full">
+          <div class="absolute inset-y-0 left-2 flex items-center">
+            <FiSearch class="dark:text-white opacity-50" />
+          </div>
           <input
-            placeholder="search"
-            class="w-full rounded-md border border-gray-300 px-3 py-0.5 focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
+            placeholder="Search Entries"
+            class="pl-8 pr-2 w-full border border-gray-300 py-4 focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
             type="text"
             autofocus
+            autocomplete="off"
             ref={input}
             value={search()}
             onInput={(e) => {
-              setShowImages(false);
               setSearch(e.target.value);
             }}
+            // onblur={(e) => e.target.focus()} // make search input always in focus (conflict with shortcuts, needs to be fixed)
           />
-          <div class="absolute inset-y-0 right-1 flex items-center">
-            <RiSystemSearchLine class="dark:text-white" />
-          </div>
-        </div>
-        <div class="flex items-center pl-2">
-          <BsCardImage class="text-2xl dark:text-white" />
-          <SwitchField checked={showImages} onChange={setShowImages} />
         </div>
       </div>
-
-      <Clipboards />
     </>
   );
 };

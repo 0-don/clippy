@@ -4,7 +4,7 @@ import { Show } from "solid-js";
 import AppStore from "../../../store/AppStore";
 import SettingsStore from "../../../store/SettingsStore";
 import { AppSidebar } from "../../navigation/AppSidebar";
-import { ClipboardHistory } from "./ClipboardHistory";
+import { SearchBar } from "./SearchBar";
 import { RecentClipboards } from "./RecentClipboards";
 import { StarredClipboards } from "./StarredClipboards";
 import { ViewMore } from "./ViewMore";
@@ -30,16 +30,17 @@ function App() {
             <FiGlobe title="online" />
           </Show>
         </div>
-        <Show when={tIcon()?.name === "Recent Clipboards"}>
+
+        <Show when={tIcon()?.name === "Recent Clipboards" || tIcon()?.name === "Starred Clipboards"}>
+          <SearchBar />
+        </Show>
+
+        <Show when={tIcon()?.name === "Recent Clipboards"}> 
           <RecentClipboards />
         </Show>
 
         <Show when={tIcon()?.name === "Starred Clipboards"}>
           <StarredClipboards />
-        </Show>
-
-        <Show when={tIcon()?.name === "History"}>
-          <ClipboardHistory />
         </Show>
 
         <Show when={tIcon()?.name === "View more"}>
