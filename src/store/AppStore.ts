@@ -6,6 +6,7 @@ import { TabId, Tabs } from "../utils/constants";
 import ClipboardStore from "./ClipboardStore";
 import HotkeyStore from "./HotkeyStore";
 import SettingsStore from "./SettingsStore";
+import { TbSearch } from "solid-icons/tb";
 
 function createAppStore() {
   const [tabs, setTabs] = createSignal<Tabs[]>([
@@ -22,6 +23,12 @@ function createAppStore() {
       id: "starred_clipboards",
     },
     {
+      name: "History",
+      Icon: TbSearch,
+      current: false,
+      id: "history",
+    },
+    {
       name: "View more",
       Icon: CgMore,
       current: false,
@@ -29,7 +36,8 @@ function createAppStore() {
     },
   ]);
 
-  const setCurrentTab = (id: TabId) => setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
+  const setCurrentTab = (id: TabId) =>
+    setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
 
   const getCurrentTab = () => tabs().find((s) => s.current);
 
