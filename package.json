@@ -22,7 +22,7 @@
     "@kobalte/core": "^0.11.2",
     "@tauri-apps/api": "^1.5.1",
     "dayjs": "^1.11.10",
-    "solid-icons": "^1.0.12",
+    "solid-icons": "^1.1.0",
     "solid-js": "^1.8.4",
     "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart"
   },
