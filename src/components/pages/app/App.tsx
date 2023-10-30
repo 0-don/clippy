@@ -15,7 +15,7 @@ function App() {
 
   return (
     <div class="flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
-      <div class="flex w-12 flex-col items-center bg-gray-200 pt-5 dark:bg-dark-light">
+      <div class="flex w-12 flex-col items-center space-y-3 bg-gray-200 pt-2 dark:bg-dark-light">
         <AppSidebar />
       </div>
       <div class="h-screen min-w-0 flex-1">
