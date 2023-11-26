@@ -1,4 +1,6 @@
 use super::tauri::config::GLOBAL_EVENTS;
+#[cfg(target_os = "windows")]
+use crate::service::global::get_app;
 use crate::{
     printlog,
     service::{
@@ -8,8 +10,6 @@ use crate::{
     types::types::Key,
 };
 use global_hotkey::hotkey::HotKey;
-#[cfg(target_os = "windows")]
-use crate::service::global::get_app;
 
 pub fn register_hotkeys(all: bool) {
     #[cfg(target_os = "windows")]
@@ -42,48 +42,76 @@ pub fn unregister_hotkeys(all: bool) {
 }
 
 fn register_hotkeys_inner(all: bool) {
+    let mut hotkeys_to_register = Vec::new();
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if !hotkey.state && (all || hotkey.is_global) {
-            let key = hotkey.hotkey.clone();
-            match get_hotkey_manager().register(key) {
-                Ok(_) => {
-                    // printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
-                }
-                Err(e) => {
-                    printlog!(
-                        "register_hotkeys error {:?} {:?} {:?}",
-                        e,
-                        hotkey.event,
-                        hotkey.key_str
-                    );
-                }
-            };
+            hotkeys_to_register.push(hotkey.hotkey.clone());
             hotkey.state = true;
         }
+    }
+
+    if let Err(e) = get_hotkey_manager().register_all(&hotkeys_to_register) {
+        printlog!("register_hotkeys error: {:?}", e);
     }
 }
 
 fn unregister_hotkeys_inner(all: bool) {
+    let mut hotkeys_to_unregister = Vec::new();
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if hotkey.state && (all || !hotkey.is_global) {
-            let key = hotkey.hotkey.clone();
-            match get_hotkey_manager().unregister(key) {
-                Ok(_) => {
-                    // printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
-                }
-                Err(e) => {
-                    printlog!(
-                        "unregister_hotkeys error {:?} {:?} {:?}",
-                        e,
-                        hotkey.event,
-                        hotkey.key_str
-                    );
-                }
-            };
+            hotkeys_to_unregister.push(hotkey.hotkey.clone());
             hotkey.state = false;
         }
     }
+
+    if let Err(e) = get_hotkey_manager().unregister_all(&hotkeys_to_unregister) {
+        printlog!("unregister_hotkeys error: {:?}", e);
+    }
 }
+
+// fn register_hotkeys_inner(all: bool) {
+//     for (_, hotkey) in get_hotkey_store().iter_mut() {
+//         if !hotkey.state && (all || hotkey.is_global) {
+//             let key = hotkey.hotkey.clone();
+//             match get_hotkey_manager().register(key) {
+//                 Ok(_) => {
+//                     printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+//                 }
+//                 Err(e) => {
+//                     printlog!(
+//                         "register_hotkeys error {:?} {:?} {:?}",
+//                         e,
+//                         hotkey.event,
+//                         hotkey.key_str
+//                     );
+//                 }
+//             };
+//             hotkey.state = true;
+//         }
+//     }
+// }
+
+// fn unregister_hotkeys_inner(all: bool) {
+//     for (_, hotkey) in get_hotkey_store().iter_mut() {
+//         if hotkey.state && (all || !hotkey.is_global) {
+//             let key = hotkey.hotkey.clone();
+//             match get_hotkey_manager().unregister(key) {
+//                 Ok(_) => {
+//                     printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
+//                 }
+//                 Err(e) => {
+//                     printlog!(
+//                         "unregister_hotkeys error {:?} {:?} {:?}",
+//                         e,
+//                         hotkey.event,
+//                         hotkey.key_str
+//                     );
+//                 }
+//             };
+//             hotkey.state = false;
+//         }
+//     }
+// }
 
 fn insert_hotkey_into_store(key: Key) {
     let mut hotkeys_lock = get_hotkey_store();
