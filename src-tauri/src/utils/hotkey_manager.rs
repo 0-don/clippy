@@ -150,44 +150,44 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
     }
 
     // Add 1..9 regular keys which are not global
-    if !cfg!(target_os = "linux") {
-        for i in 1..=9 {
-            let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
-            let key_digit: HotKey = hotkey_digit.parse()?;
-            let hotkey_num = parse_shortcut(false, false, false, &format!("Numpad{}", i));
-            let key_num: HotKey = hotkey_num.parse()?;
+    // if !cfg!(target_os = "linux") {
+    for i in 1..=9 {
+        let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
+        let key_digit: HotKey = hotkey_digit.parse()?;
+        let hotkey_num = parse_shortcut(false, false, false, &format!("Numpad{}", i));
+        let key_num: HotKey = hotkey_num.parse()?;
 
-            let key_structs = vec![
-                Key {
-                    id: key_digit.id(),
-                    state: false,
-                    is_global: false,
-                    event: format!("digit_{}", i),
-                    key_str: hotkey_digit.clone(),
-                    ctrl: false,
-                    alt: false,
-                    shift: false,
-                    key: i.to_string(),
-                    hotkey: key_digit,
-                },
-                Key {
-                    id: key_num.id(),
-                    state: false,
-                    is_global: false,
-                    event: format!("num_{}", i),
-                    key_str: hotkey_num,
-                    ctrl: false,
-                    alt: false,
-                    shift: false,
-                    key: i.to_string(),
-                    hotkey: key_num,
-                },
-            ];
-            for key_struct in key_structs {
-                insert_hotkey_into_store(key_struct);
-            }
+        let key_structs = vec![
+            Key {
+                id: key_digit.id(),
+                state: false,
+                is_global: false,
+                event: format!("digit_{}", i),
+                key_str: hotkey_digit.clone(),
+                ctrl: false,
+                alt: false,
+                shift: false,
+                key: i.to_string(),
+                hotkey: key_digit,
+            },
+            Key {
+                id: key_num.id(),
+                state: false,
+                is_global: false,
+                event: format!("num_{}", i),
+                key_str: hotkey_num,
+                ctrl: false,
+                alt: false,
+                shift: false,
+                key: i.to_string(),
+                hotkey: key_num,
+            },
+        ];
+        for key_struct in key_structs {
+            insert_hotkey_into_store(key_struct);
         }
     }
+    // }
 
     Ok(())
 }
