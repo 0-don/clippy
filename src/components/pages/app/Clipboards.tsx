@@ -120,7 +120,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                 onDblClick={async (e) => {
                   clearTimeout(dbClickTimer);
                   e.stopPropagation();
-                  if (type !== "image" || !blob) return;
+                  if (type !== "image") return;
                   await invoke("save_clipboard_image", { id });
                 }}
               >
