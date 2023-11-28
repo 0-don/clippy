@@ -225,7 +225,7 @@ pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error
         let content = clipboard.clone().content.unwrap();
         let r#type = clipboard.clone().r#type;
 
-        if r#type != "image" && content.len() < 32 {
+        if r#type != "image" && content.len() < 500 {
             std::thread::sleep(Duration::from_millis(300));
             Command::new("xdotool")
                 .args(&["type", "--clearmodifiers", "--", &content])
