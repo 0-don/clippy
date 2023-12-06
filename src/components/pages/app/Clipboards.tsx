@@ -101,7 +101,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
         <For each={clipboards()}>
           {(clipboard, index) => {
-            let { content, type, id, created_date, blob, width, height, size } = clipboard;
+            let { content, type, id, created_date, width, height, size } = clipboard;
 
             return (
               <button

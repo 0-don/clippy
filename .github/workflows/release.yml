@@ -7,89 +7,178 @@ on:
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
+env:
+  EMAIL: don.cryptus@gmail.com
+  ARCH: x86_64
 jobs:
-  create-release:
+  setup:
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-    runs-on: ubuntu-latest
     outputs:
-      release_id: ${{ steps.create-release.outputs.result }}
-
+      arch: ${{ env.ARCH }}
+      email: ${{ env.EMAIL }}
+      name: ${{ steps.get-package.outputs.name }}
+      name-bin: ${{ steps.get-package.outputs.name }}-bin
+      version: ${{ steps.get-package.outputs.version }}
+      description: ${{ steps.get-package.outputs.description }}
+      license: ${{ steps.get-package.outputs.license }}
+      deb-pkg-name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb 
+      deb-pkg-path: ./src-tauri/target/release/bundle/deb/
     steps:
       - uses: actions/checkout@v3
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - name: get version
-        run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-      - name: create release
-        id: create-release
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { data } = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: `clippy-v${process.env.PACKAGE_VERSION}`,
-              name: `Clippy v${process.env.PACKAGE_VERSION}`,
-              body: 'Take a look at the assets to download and install this app.',
-              draft: true,
-              prerelease: false
-            })
-            return data.id
+          node-version: 20
+      - name: get package info
+        id: get-package
+        run: |
+          echo "name=$(node -p "require('./package.json').name")" >> $GITHUB_OUTPUT
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          echo "description=$(node -p "require('./package.json').description")" >> $GITHUB_OUTPUT
+      # - uses: dev-drprasad/delete-tag-and-release@v1.0
+      #   with:
+      #     tag_name: ${{ steps.get-package.outputs.version }}
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
   build-tauri:
-    needs: create-release
+    needs: [setup]
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
-
     runs-on: ${{ matrix.platform }}
+    env:
+      BIN_PATH: ${{ needs.setup.outputs.name-bin }}
+      DESCRIPTION: ${{ needs.setup.outputs.description }}
+      LICENSE: ${{ needs.setup.outputs.license }}
+      DEB_PKG_NAME: ${{ needs.setup.outputs.deb-pkg-name }}
+      DEB_PKG_PATH: ${{ needs.setup.outputs.deb-pkg-path }}
+      DEB_PKG_RENAMED: ${{ needs.setup.outputs.name }}-${{ needs.setup.outputs.version }}-${{ needs.setup.outputs.arch }}.deb # leave as is it needs to be renamed for the arch build
+      ARCH_PKG_NAME: ${{ needs.setup.outputs.name-bin }}-${{ needs.setup.outputs.version }}-1-${{ needs.setup.outputs.arch }}.pkg.tar.zst
+      RPM_PKG_NAME: ${{ needs.setup.outputs.name }}-${{ needs.setup.outputs.version }}-1.${{ needs.setup.outputs.arch }}.rpm
+      PACKAGE_VERSION: ${{ needs.setup.outputs.version }}
+      PACKAGE_NAME: ${{ needs.setup.outputs.name }}
     steps:
-      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v4
+
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: install Rust stable
+          node-version: 20
+
+      - name: install rust stable
         uses: dtolnay/rust-toolchain@stable
+
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
           wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.20_amd64.deb
           sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.20_amd64.deb
-          sudo apt-get install -y openssl libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libxcb-shape0-dev libxcb-xfixes0-dev libxdo-dev
+          sudo apt-get install -y openssl
+          sudo apt-get install -y sudo
+          sudo apt-get install -y make
+          sudo apt-get install -y alien
+          sudo apt-get install -y libgtk-3-dev
+          sudo apt-get install -y libwebkit2gtk-4.0-dev
+          sudo apt-get install -y libappindicator3-dev
+          sudo apt-get install -y librsvg2-dev
+          sudo apt-get install -y patchelf
+          sudo apt-get install -y libxcb-shape0-dev
+          sudo apt-get install -y libxcb-xfixes0-dev
+          sudo apt-get install -y libxdo-dev
+
       - name: install frontend dependencies
         run: yarn install
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ needs.create-release.outputs.release_id }}
+          tagName: ${{ env.PACKAGE_VERSION }}
+          releaseName:  ${{ env.PACKAGE_VERSION }}
+          releaseDraft: false
+          prerelease: false
 
-  publish-release:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    needs: [create-release, build-tauri]
 
-    steps:
-      - name: publish release
-        id: publish-release
-        uses: actions/github-script@v6
-        env:
-          release_id: ${{ needs.create-release.outputs.release_id }}
+      - name: upload deb (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: svenstaro/upload-release-action@v2
         with:
-          script: |
-            github.rest.repos.updateRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: process.env.release_id,
-              draft: false,
-              prerelease: false
-            })
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
+          asset_name: ${{ env.DEB_PKG_NAME }}
+          tag: ${{ env.PACKAGE_VERSION }}
+          overwrite: true
+
+      - name: copy deb package && create PKGBUILD (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          mkdir ${{ env.BIN_PATH }}
+          cp -fr ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }} ${{ env.BIN_PATH }}/${{ env.DEB_PKG_RENAMED }} 
+          cat <<EOF > ./${{ env.BIN_PATH }}/PKGBUILD
+            # Maintainer: ${{ github.repository_owner }} <${{ env.EMAIL }}>
+            # Contributor: ${{ github.repository_owner }} <${{ env.EMAIL }}>
+            _packager="${{ github.repository_owner }} <${{ env.EMAIL }}>"
+            _deb_pkgname=${{ env.PACKAGE_NAME }}
+            pkgname=${{ env.BIN_PATH }}
+            pkgver=${{ env.PACKAGE_VERSION }}
+            md5sums=('$(md5sum ${{ env.BIN_PATH }}/${{ env.DEB_PKG_RENAMED }}  | awk '{print $1}')')
+            pkgrel=1
+            depends=('libappindicator-gtk3' 'webkit2gtk' 'gtk3')
+            pkgdesc='${{ env.DESCRIPTION }}'
+            arch=('${{ env.ARCH }}')
+            url="https://github.com/${{ github.repository }}"
+            license=('${{ env.LICENSE }}')
+            source=("\$url/releases/download/${{ env.PACKAGE_VERSION }}/${{ env.DEB_PKG_RENAMED }}")
+
+            build() {
+                rm control.tar.gz
+                tar xvf data.tar.gz
+            }
+
+            package() {
+                cp -fr usr/ \${pkgdir}
+            }
+          EOF
+          cat ${{ env.BIN_PATH }}/PKGBUILD
+          ls -la ${{ env.BIN_PATH }}
+
+      - name: create arch package (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: 2m/arch-pkgbuild-builder@v1.17
+        with:
+          debug: true
+          target: pkgbuild
+          pkgname: ${{ env.BIN_PATH }}/
+
+      - name: create rpm package (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update && sudo apt-get install -y sudo make alien
+          alien -r -k --scripts --target=x86_64 ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
+
+      - name: create checksums (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          md5sum ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME}} > ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}.md5sum
+          md5sum ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }} > ${{ env.DEB_PKG_NAME }}.md5sum
+          md5sum ${{ env.RPM_PKG_NAME }} > ${{ env.RPM_PKG_NAME }}.md5sum
+
+      - name: upload arch && rpm release (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.PACKAGE_VERSION }}
+          files: |
+            ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}
+            ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}.md5sum
+            ${{ env.DEB_PKG_NAME }}.md5sum
+            ${{ env.RPM_PKG_NAME }}
+            ${{ env.RPM_PKG_NAME }}.md5sum

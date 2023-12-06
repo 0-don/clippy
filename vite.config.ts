@@ -4,7 +4,7 @@ import checker from "vite-plugin-checker";
 import solidPlugin from "vite-plugin-solid";
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(async () => ({
   plugins: [
     solidPlugin(),
     checker({
@@ -20,9 +20,6 @@ export default defineConfig({
     port: 1420,
     strictPort: true,
   },
-  // 3. to make use of `TAURI_DEBUG` and other env variables
-  // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
-  envPrefix: ["VITE_", "TAURI_"],
   build: {
     rollupOptions: {
       input: {
@@ -32,4 +29,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
