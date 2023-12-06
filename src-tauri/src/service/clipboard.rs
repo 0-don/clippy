@@ -3,6 +3,7 @@ use super::global::{get_clipboard, get_main_window};
 use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
+use base64::{engine::general_purpose, Engine};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
@@ -53,39 +54,34 @@ pub async fn get_clipboards_db(
             query.filter(clipboard::Column::Star.eq(starred))
         })
         .apply_if(search, |query, content| {
+            // Use match statement for cleaner logic
+            let filter = match content.as_str() {
+                "txt" | "text" => clipboard::Column::Content
+                    .contains(&content)
+                    .or(clipboard::Column::Type.eq("text")),
 
-            // smart search
-            let filter = if content == "txt" || content == "text" { 
+                "img" | "image" => clipboard::Column::Content
+                    .contains(&content)
+                    .or(clipboard::Column::Type.eq("image")),
 
-                // display text entries
-                clipboard::Column::Content.contains(&content)
-                    .or(clipboard::Column::Type.eq("text"))
-            } else if content == "img" || content == "image" { 
+                "lnk" | "link" => clipboard::Column::Content
+                    .contains(&content)
+                    .or(clipboard::Column::Type.eq("link")),
 
-                // display image entries
-                clipboard::Column::Content.contains(&content)
-                    .or(clipboard::Column::Type.eq("image"))
-            } else if content == "lnk" || content == "link" { 
-
-                // display link entries
-                clipboard::Column::Content.contains(&content)
-                    .or(clipboard::Column::Type.eq("link"))
-            } else if content == "clr" || content == "color" { 
-
-                // display color entries
-                clipboard::Column::Content.contains(&content)
+                "clr" | "color" | "colour" => clipboard::Column::Content
+                    .contains(&content)
                     .or(clipboard::Column::Type.eq("hex"))
-                    .or(clipboard::Column::Type.eq("rgb"))
-            } else if content == "hex" {
-                clipboard::Column::Content.contains(&content)
-                    .or(clipboard::Column::Type.eq("hex"))
-            } else if content == "rgb" {
-                clipboard::Column::Content.contains(&content)
-                    .or(clipboard::Column::Type.eq("rgb"))
-            } else {
+                    .or(clipboard::Column::Type.eq("rgb")),
 
-                // use default search
-                clipboard::Column::Content.contains(&content)
+                "hex" => clipboard::Column::Content
+                    .contains(&content)
+                    .or(clipboard::Column::Type.eq("hex")),
+
+                "rgb" => clipboard::Column::Content
+                    .contains(&content)
+                    .or(clipboard::Column::Type.eq("rgb")),
+
+                _ => clipboard::Column::Content.contains(&content),
             };
             query.filter(filter)
         })
@@ -102,7 +98,7 @@ pub async fn get_clipboards_db(
         .into_iter()
         .map(|mut m| {
             if let Some(blob) = &m.blob {
-                let base64_string = base64::encode(blob);
+                let base64_string = general_purpose::STANDARD.encode(blob);
                 m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
                 m.blob = None;
             }

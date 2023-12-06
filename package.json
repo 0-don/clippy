@@ -1,6 +1,9 @@
 {
   "name": "clippy",
-  "version": "1.2.0",
+  "version": "1.2.1",
+  "description": "Clipboard Manager built with Rust & Typescript",
+  "license": "MIT",
+  "type": "module",
   "private": true,
   "scripts": {
     "start": "vite",
@@ -23,24 +26,24 @@
     "@tauri-apps/api": "^1.5.1",
     "dayjs": "^1.11.10",
     "solid-icons": "^1.1.0",
-    "solid-js": "^1.8.6",
+    "solid-js": "^1.8.7",
     "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart"
   },
   "devDependencies": {
     "@kobalte/tailwindcss": "^0.9.0",
-    "@tauri-apps/cli": "^1.5.6",
-    "@types/node": "^20.10.0",
+    "@tauri-apps/cli": "^1.5.7",
+    "@types/node": "^20.10.4",
     "autoprefixer": "^10.4.16",
     "husky": "^8.0.3",
-    "lint-staged": "^15.1.0",
-    "postcss": "^8.4.31",
+    "lint-staged": "^15.2.0",
+    "postcss": "^8.4.32",
     "prettier": "^3.1.0",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "prettier-plugin-tailwindcss": "^0.5.7",
-    "tailwindcss": "^3.3.5",
-    "typescript": "^5.3.2",
-    "vite": "^5.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.7",
     "vite-plugin-checker": "^0.6.2",
-    "vite-plugin-solid": "^2.7.2"
+    "vite-plugin-solid": "^2.8.0"
   }
 }
