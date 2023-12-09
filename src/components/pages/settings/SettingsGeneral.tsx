@@ -6,8 +6,8 @@ import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
 import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
-import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
+import { Toggle } from "../../elements/Toggle";
 import { DarkMode } from "../../utils/DarkMode";
 import { Shortcut } from "../../utils/Shortcut";
 
@@ -34,7 +34,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
             <h6 class="text-sm">Start Clippy on system startup.</h6>
           </div>
           <div>
-            <SwitchField
+            <Toggle
               checked={settings()?.startup}
               onChange={async (check: boolean) => updateSettings({ ...settings()!, startup: check })}
             />
@@ -47,7 +47,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
             <h6 class="text-sm">Show desktop notifications.</h6>
           </div>
           <div>
-            <SwitchField
+            <Toggle
               checked={settings()?.notification}
               onChange={(check: boolean) => updateSettings({ ...settings()!, notification: check })}
             />

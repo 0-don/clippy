@@ -3,10 +3,9 @@ import { Component, Show } from "solid-js";
 import { Hotkey } from "../../../@types";
 import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
-
 import { ViewMoreName } from "../../../utils/constants";
 import { createAboutWindow, createSettingsWindow } from "../../../utils/helpers";
-import SwitchField from "../../elements/SwitchField";
+import { Toggle } from "../../elements/Toggle";
 
 interface ViewMoreProps {}
 
@@ -35,9 +34,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
             </div>
             <p class="px-4 text-base font-semibold">{name}</p>
           </div>
-          {name === "Sync Clipboard History" && (
-            <SwitchField checked={settings()?.synchronize} onChange={async () => {}} />
-          )}
+          {name === "Sync Clipboard History" && <Toggle checked={settings()?.synchronize} onChange={async () => {}} />}
         </div>
         <hr class="border-zinc-700" />
       </button>

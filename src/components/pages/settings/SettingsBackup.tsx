@@ -5,8 +5,8 @@ import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { TbDatabaseStar } from "solid-icons/tb";
 import { Component, Show, createEffect, createSignal, on } from "solid-js";
 import SettingsStore from "../../../store/SettingsStore";
-import SwitchField from "../../elements/SwitchField";
 import { TextBlock } from "../../elements/TextBlock";
+import { Toggle } from "../../elements/Toggle";
 
 interface SettingsBackupProps {}
 
@@ -30,7 +30,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <h6 class="text-sm">Synchronize clipboard history</h6>
           </div>
           <div>
-            <SwitchField checked={settings()?.synchronize || false} onChange={() => syncClipboard()} />
+            <Toggle checked={settings()?.synchronize || false} onChange={() => syncClipboard()} />
           </div>
         </div>
       </TextBlock>
