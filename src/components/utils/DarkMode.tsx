@@ -1,7 +1,7 @@
 import { Component, createEffect } from "solid-js";
 import AppStore from "../../store/AppStore";
 import SettingsStore from "../../store/SettingsStore";
-import SwitchField from "../elements/SwitchField";
+import { Toggle } from "../elements/Toggle";
 
 interface DarkModeProps {}
 
@@ -12,7 +12,7 @@ export const DarkMode: Component<DarkModeProps> = ({}) => {
   createEffect(darkMode);
 
   return (
-    <SwitchField
+    <Toggle
       checked={settings()?.dark_mode}
       onChange={(dark_mode) =>
         updateSettings({

@@ -25,6 +25,7 @@ jobs:
       license: ${{ steps.get-package.outputs.license }}
       deb-pkg-name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb 
       deb-pkg-path: ./src-tauri/target/release/bundle/deb/
+      tag-exists: ${{ steps.get-package.outputs.tag_exists }}
     steps:
       - uses: actions/checkout@v3
       - name: setup node
@@ -37,12 +38,15 @@ jobs:
           echo "name=$(node -p "require('./package.json').name")" >> $GITHUB_OUTPUT
           echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
           echo "description=$(node -p "require('./package.json').description")" >> $GITHUB_OUTPUT
+
       # - uses: dev-drprasad/delete-tag-and-release@v1.0
       #   with:
       #     tag_name: ${{ steps.get-package.outputs.version }}
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      
 
   build-tauri:
+    if: ${{ needs.setup.outputs.tag-exists }} == 'true'
     needs: [setup]
     permissions:
       contents: write
@@ -52,6 +56,7 @@ jobs:
         platform: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     env:
+      TAG_EXISTS: ${{ needs.setup.outputs.tag-exists }}
       BIN_PATH: ${{ needs.setup.outputs.name-bin }}
       DESCRIPTION: ${{ needs.setup.outputs.description }}
       LICENSE: ${{ needs.setup.outputs.license }}
@@ -70,6 +75,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - uses: mukunku/tag-exists-action@v1.4.0
+        id: checkTag
+        with: 
+          tag: '${{ env.PACKAGE_VERSION }}'
+
+      - name: stop jobs if tag exist
+        if: steps.checkTag.outputs.exists == 'true'
+        run: exit 1
 
       - name: install rust stable
         uses: dtolnay/rust-toolchain@stable

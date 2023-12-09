@@ -21,7 +21,7 @@ const Settings = () => {
   return (
     <div class="absolute flex h-full w-full flex-col bg-white text-black dark:bg-dark dark:text-white">
       <Tabs />
-      <div class="p-5 dark:text-white">
+      <div class="px-5 pt-5 dark:text-white">
         <Show when={getCurrentTab()?.name === "General"}>
           <SettingsGeneral />
         </Show>
