@@ -5,7 +5,6 @@ import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
-import { disable, enable } from "tauri-plugin-autostart-api";
 import { Settings } from "../@types";
 
 type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
@@ -47,11 +46,6 @@ function createSettingsStore() {
   const initSettings = async () => {
     const settings = await invoke<Settings>("get_settings");
     setSettings(settings);
-
-    try {
-      const env = (import.meta as any).env;
-      env.PROD && settings.startup ? await enable() : await disable();
-    } catch (_) {}
   };
 
   const syncClipboard = () => invoke("sync_clipboard_history") as Promise<void>;

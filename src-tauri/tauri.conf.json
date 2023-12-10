@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "clippy",
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "tauri": {
     "allowlist": {
@@ -37,7 +37,13 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ]
+      ],
+      "deb": {
+        "depends": [
+          "libxdo3",
+          "xdotool"
+        ]
+      }
     },
     "security": {
       "csp": null

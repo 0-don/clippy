@@ -20,7 +20,7 @@ dayjs.extend(relativeTime);
 interface ClipboardsProps {}
 
 export const Clipboards: Component<ClipboardsProps> = ({}) => {
-  let dbClickTimer: NodeJS.Timeout;
+  let dbClickTimer: any;
 
   const [scrollToTop, setScrollToTop] = createSignal(false);
 

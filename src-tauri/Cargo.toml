@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.2.1"
+version = "1.2.2"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["Don-Cryptus"]
 license = "MIT"
@@ -22,7 +22,7 @@ tauri = { version = "1", features = [
   "window-create",
   "process-exit",
   "system-tray",
-  "devtools"
+  "devtools",
 ] }
 global-hotkey = "0"
 serde = { version = "1", features = ["derive"] }
@@ -36,7 +36,6 @@ window-shadows = "0"
 chrono = "0"
 enigo = "0"
 base64 = "0"
-
 [dependencies.sea-orm]
 version = "^0"
 features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"]

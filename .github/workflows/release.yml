@@ -25,7 +25,7 @@ jobs:
       license: ${{ steps.get-package.outputs.license }}
       deb-pkg-name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb 
       deb-pkg-path: ./src-tauri/target/release/bundle/deb/
-      tag-exists: ${{ steps.get-package.outputs.tag_exists }}
+      tag-name: v${{ steps.get-package.outputs.version }}
     steps:
       - uses: actions/checkout@v3
       - name: setup node
@@ -41,12 +41,11 @@ jobs:
 
       # - uses: dev-drprasad/delete-tag-and-release@v1.0
       #   with:
-      #     tag_name: ${{ steps.get-package.outputs.version }}
+      #     tag_name: v${{ steps.get-package.outputs.version }}
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       
 
   build-tauri:
-    if: ${{ needs.setup.outputs.tag-exists }} == 'true'
     needs: [setup]
     permissions:
       contents: write
@@ -56,7 +55,7 @@ jobs:
         platform: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     env:
-      TAG_EXISTS: ${{ needs.setup.outputs.tag-exists }}
+      TAG_NAME: ${{ needs.setup.outputs.tag-name }}
       BIN_PATH: ${{ needs.setup.outputs.name-bin }}
       DESCRIPTION: ${{ needs.setup.outputs.description }}
       LICENSE: ${{ needs.setup.outputs.license }}
@@ -76,14 +75,14 @@ jobs:
         with:
           node-version: 20
 
-      - uses: mukunku/tag-exists-action@v1.4.0
-        id: checkTag
-        with: 
-          tag: '${{ env.PACKAGE_VERSION }}'
+      # - uses: mukunku/tag-exists-action@v1.4.0
+      #   id: checkTag
+      #   with: 
+      #     tag: '${{ env.TAG_NAME }}'
 
-      - name: stop jobs if tag exist
-        if: steps.checkTag.outputs.exists == 'true'
-        run: exit 1
+      # - name: stop jobs if tag exist
+      #   if: steps.checkTag.outputs.exists == 'true'
+      #   run: exit 1
 
       - name: install rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -94,18 +93,7 @@ jobs:
           sudo apt-get update
           wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.20_amd64.deb
           sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.20_amd64.deb
-          sudo apt-get install -y openssl
-          sudo apt-get install -y sudo
-          sudo apt-get install -y make
-          sudo apt-get install -y alien
-          sudo apt-get install -y libgtk-3-dev
-          sudo apt-get install -y libwebkit2gtk-4.0-dev
-          sudo apt-get install -y libappindicator3-dev
-          sudo apt-get install -y librsvg2-dev
-          sudo apt-get install -y patchelf
-          sudo apt-get install -y libxcb-shape0-dev
-          sudo apt-get install -y libxcb-xfixes0-dev
-          sudo apt-get install -y libxdo-dev
+          sudo apt-get install -y openssl alien libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev libxcb-shape0-dev libxcb-xfixes0-dev libxdo-dev
 
       - name: install frontend dependencies
         run: yarn install
@@ -114,7 +102,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ env.PACKAGE_VERSION }}
+          tagName: ${{ env.TAG_NAME }}
           releaseName:  ${{ env.PACKAGE_VERSION }}
           releaseDraft: false
           prerelease: false
@@ -127,7 +115,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
           asset_name: ${{ env.DEB_PKG_NAME }}
-          tag: ${{ env.PACKAGE_VERSION }}
+          tag: ${{ env.TAG_NAME }}
           overwrite: true
 
       - name: copy deb package && create PKGBUILD (ubuntu only)
@@ -144,12 +132,12 @@ jobs:
             pkgver=${{ env.PACKAGE_VERSION }}
             md5sums=('$(md5sum ${{ env.BIN_PATH }}/${{ env.DEB_PKG_RENAMED }}  | awk '{print $1}')')
             pkgrel=1
-            depends=('libappindicator-gtk3' 'webkit2gtk' 'gtk3')
+            depends=('libappindicator-gtk3' 'webkit2gtk' 'gtk3' 'xdotool')
             pkgdesc='${{ env.DESCRIPTION }}'
             arch=('${{ env.ARCH }}')
             url="https://github.com/${{ github.repository }}"
             license=('${{ env.LICENSE }}')
-            source=("\$url/releases/download/${{ env.PACKAGE_VERSION }}/${{ env.DEB_PKG_RENAMED }}")
+            source=("\$url/releases/download/${{ env.TAG_NAME }}/${{ env.DEB_PKG_RENAMED }}")
 
             build() {
                 rm control.tar.gz
@@ -173,9 +161,7 @@ jobs:
 
       - name: create rpm package (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt-get update && sudo apt-get install -y sudo make alien
-          alien -r -k --scripts --target=x86_64 ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
+        run: sudo alien -r -k --scripts --target=x86_64 ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
 
       - name: create checksums (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -189,10 +175,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.PACKAGE_VERSION }}
+          tag_name: ${{ env.TAG_NAME }}
           files: |
             ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}
-            ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}.md5sum
-            ${{ env.DEB_PKG_NAME }}.md5sum
             ${{ env.RPM_PKG_NAME }}
-            ${{ env.RPM_PKG_NAME }}.md5sum
