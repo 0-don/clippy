@@ -1,6 +1,6 @@
 {
   "name": "clippy",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Clipboard Manager built with Rust & Typescript",
   "license": "MIT",
   "type": "module",
@@ -9,33 +9,22 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
     "tauri": "tauri",
     "d": "tauri dev",
     "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src --expanded-format --with-serde both",
-    "icon": "tauri icon",
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,css,scss}": [
-      "prettier --write --list-different"
-    ]
+    "icon": "tauri icon"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.1",
     "dayjs": "^1.11.10",
     "solid-icons": "^1.1.0",
-    "solid-js": "^1.8.7",
-    "tauri-plugin-autostart-api": "https://github.com/tauri-apps/tauri-plugin-autostart"
+    "solid-js": "^1.8.7"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.7",
-    "@types/node": "^20.10.4",
     "autoprefixer": "^10.4.16",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
     "postcss": "^8.4.32",
-    "prettier": "^3.1.0",
+    "prettier": "^3.1.1",
     "prettier-plugin-organize-imports": "^3.2.4",
     "prettier-plugin-tailwindcss": "^0.5.9",
     "tailwindcss": "^3.3.6",

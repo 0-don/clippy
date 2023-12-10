@@ -22,7 +22,8 @@
 
 successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 
-### features
+### Features
+
 - display/hide **ctrl+y** or **ctrl+d** (change in settings)
 - type out clipboard **ctrl+b** (where pasting isn't allowed)
 - images & text support
@@ -34,6 +35,35 @@ successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 - change keyboard bindings
 - dark mode / white mode
 
+### Prerequisites Fedora Linux
+
+```bash
+sudo dnf install javascriptcoregtk4.0 webkit2gtk4.0 libxdo libappindicator-gtk3 xdotool
+```
+
+### Prerequisites Development
+
+Before you begin, ensure you have met the following requirements:
+
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Node.js](https://nodejs.org/en/download/)
+- [Tauri](https://tauri.app/v1/guides/getting-started/prerequisites/)
+
+### Installation and Running the Application
+
+1. **Install Dependencies:**
+   First, install the necessary Node.js dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. **Run the Application in Watch Mode:**
+   To start the Tauri application in watch mode, use:
+   ```bash
+   npm run d
+   ```
 
 #### note
+
 Tested on Linux(x11), Windows

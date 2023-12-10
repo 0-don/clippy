@@ -27,7 +27,6 @@ pub fn toggle_main_window() {
         get_main_window()
             .emit("set_global_hotkey_event", false)
             .unwrap();
-        // *HOTKEY_RUNNING.get().unwrap().lock().unwrap() = false;
     } else {
         printlog!("displaying window");
         get_main_window()

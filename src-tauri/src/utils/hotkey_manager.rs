@@ -149,7 +149,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             key: hotkey.key,
             hotkey: key,
         };
-        println!("{:?}", hotkey_str.clone());
+
         insert_hotkey_into_store(key_struct);
     }
 
@@ -208,6 +208,15 @@ pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
 }
 
 fn format_key_for_parsing(key: &str) -> String {
+    if key.len() >= 2 && (key.starts_with('F') || key.starts_with('f')) {
+        if let Ok(number) = key[1..].parse::<u32>() {
+            if number >= 1 && number <= 24 {
+                // Adjust the range if necessary
+                return key.to_uppercase(); // This is a function key like F1, F2, ..., F24
+            }
+        }
+    }
+    
     match key.chars().next().unwrap_or_default() {
         '0'..='9' => format!("Digit{}", key), // For digits
         'A'..='Z' | 'a'..='z' => format!("Key{}", key.to_uppercase()), // For letters
