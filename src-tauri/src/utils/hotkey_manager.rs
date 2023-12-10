@@ -124,6 +124,7 @@ fn insert_hotkey_into_store(key: Key) {
 
 pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
     get_hotkey_store().clear();
+
     let hotkeys = get_all_hotkeys_db().await?;
 
     for hotkey in hotkeys {
@@ -131,26 +132,27 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             hotkey.ctrl,
             hotkey.alt,
             hotkey.shift,
-            &format!("Key{}", &hotkey.key.to_uppercase()),
+            &format_key_for_parsing(&hotkey.key.to_uppercase()),
         );
+
         let key: HotKey = hotkey_str.parse()?;
+
         let key_struct = Key {
             id: key.id(),
             state: false,
             is_global: GLOBAL_EVENTS.contains(&hotkey.event.as_str()),
             event: hotkey.event,
-            key_str: hotkey_str,
+            key_str: hotkey_str.clone(),
             ctrl: hotkey.ctrl,
             alt: hotkey.alt,
             shift: hotkey.shift,
             key: hotkey.key,
             hotkey: key,
         };
+        println!("{:?}", hotkey_str.clone());
         insert_hotkey_into_store(key_struct);
     }
 
-    // Add 1..9 regular keys which are not global
-    // if !cfg!(target_os = "linux") {
     for i in 1..=9 {
         let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
         let key_digit: HotKey = hotkey_digit.parse()?;
@@ -187,7 +189,6 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             insert_hotkey_into_store(key_struct);
         }
     }
-    // }
 
     Ok(())
 }
@@ -204,4 +205,14 @@ pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
         modifiers += "Shift+";
     }
     format!("{}{}", modifiers, key.to_uppercase())
+}
+
+fn format_key_for_parsing(key: &str) -> String {
+    match key.chars().next().unwrap_or_default() {
+        '0'..='9' => format!("Digit{}", key), // For digits
+        'A'..='Z' | 'a'..='z' => format!("Key{}", key.to_uppercase()), // For letters
+        // Add additional cases here for other key types like F1-F12
+        // ...
+        _ => key.to_uppercase(), // Default case for other keys
+    }
 }
