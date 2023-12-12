@@ -103,7 +103,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ env.TAG_NAME }}
-          releaseName:  ${{ env.PACKAGE_VERSION }}
+          releaseName:  ${{ env.TAG_NAME }}
           releaseDraft: false
           prerelease: false
 

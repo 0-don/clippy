@@ -1,5 +1,5 @@
 use super::tauri::config::GLOBAL_EVENTS;
-#[cfg(target_os = "windows")]
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::service::global::get_app;
 use crate::{
     printlog,
@@ -12,7 +12,7 @@ use crate::{
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
-    #[cfg(target_os = "windows")]
+    #[cfg(any(target_os = "windows", target_os = "macos"))]
     {
         get_app()
             .run_on_main_thread(move || {
@@ -20,14 +20,14 @@ pub fn register_hotkeys(all: bool) {
             })
             .unwrap();
     }
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(target_os = "linux")]
     {
         register_hotkeys_inner(all);
     }
 }
 
 pub fn unregister_hotkeys(all: bool) {
-    #[cfg(target_os = "windows")]
+    #[cfg(any(target_os = "windows", target_os = "macos"))]
     {
         get_app()
             .run_on_main_thread(move || {
@@ -35,7 +35,7 @@ pub fn unregister_hotkeys(all: bool) {
             })
             .unwrap();
     }
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(target_os = "linux")]
     {
         unregister_hotkeys_inner(all);
     }
@@ -196,7 +196,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
 pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
     let mut modifiers = String::new();
     if ctrl {
-        modifiers += "Control+";
+        modifiers += "CmdOrCtrl+";
     }
     if alt {
         modifiers += "Alt+";
@@ -204,7 +204,8 @@ pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
     if shift {
         modifiers += "Shift+";
     }
-    format!("{}{}", modifiers, key.to_uppercase())
+    let result = format!("{}{}", modifiers, key.to_uppercase());
+    result
 }
 
 fn format_key_for_parsing(key: &str) -> String {
@@ -216,7 +217,7 @@ fn format_key_for_parsing(key: &str) -> String {
             }
         }
     }
-    
+
     match key.chars().next().unwrap_or_default() {
         '0'..='9' => format!("Digit{}", key), // For digits
         'A'..='Z' | 'a'..='z' => format!("Key{}", key.to_uppercase()), // For letters

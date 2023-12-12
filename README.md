@@ -67,3 +67,4 @@ Before you begin, ensure you have met the following requirements:
 #### note
 
 Tested on Linux(x11), Windows
+on Mac still lots of issues with hotkeys you probably need to change the hotkey

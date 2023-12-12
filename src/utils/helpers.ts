@@ -31,7 +31,7 @@ export function createSettingsWindow() {
   new WebviewWindow("settings", {
     url: "./pages/settings.html",
     title: "Settings",
-    height: 425,
+    height: 450,
     width: 500,
     alwaysOnTop: true,
   });
