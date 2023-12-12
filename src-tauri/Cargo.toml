@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.2.2"
+version = "1.2.3"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["Don-Cryptus"]
 license = "MIT"
@@ -17,7 +17,7 @@ tauri-build = { version = "1", features = [] }
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1", features = ["full"] }
-tauri = { version = "1", features = [
+tauri = { version = "1", features = [ "macos-private-api",
   "notification-all",
   "window-create",
   "process-exit",
@@ -36,6 +36,7 @@ window-shadows = "0"
 chrono = "0"
 enigo = "0"
 base64 = "0"
+
 [dependencies.sea-orm]
 version = "^0"
 features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"]
@@ -53,3 +54,18 @@ custom-protocol = ["tauri/custom-protocol"]
 # lto = true
 # opt-level = "s"
 # strip = true
+
+
+[package.metadata.generate-rpm]
+assets = [
+  { source = "target/release/clippy", dest = "/usr/bin/clippy", mode = "755" },
+  { source = "icons/32x32.png", dest = "/usr/share/icons/hicolor/32x32/apps/clippy.png", mode = "644" },
+  { source = "icons/128x128.png", dest = "/usr/share/icons/hicolor/128x128/apps/clippy.png", mode = "644" },
+  { source = "icons/128x128@2x.png", dest = "/usr/share/icons/hicolor/256x256@2/apps/clippy.png", mode = "644" },
+]
+[package.metadata.generate-rpm.requires]
+"javascriptcoregtk4.0" = "*"
+"webkit2gtk4.0" = "*"
+"libxdo" = "*"
+"libappindicator-gtk3" = "*"
+"xdotool" = "*"
