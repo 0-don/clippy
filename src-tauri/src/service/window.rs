@@ -1,3 +1,4 @@
+use super::global::{get_app, get_main_window};
 use crate::{
     commands::settings::get_settings,
     printlog,
@@ -13,7 +14,6 @@ use std::{
 };
 use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri_plugin_positioner::{Position, WindowExt};
-use super::global::{get_app, get_main_window};
 
 pub fn toggle_main_window() {
     if get_main_window().is_visible().unwrap() {
@@ -28,7 +28,6 @@ pub fn toggle_main_window() {
             .emit("set_global_hotkey_event", false)
             .unwrap();
     } else {
-        printlog!("displaying window");
         get_main_window()
             .move_window(Position::BottomRight)
             .unwrap();
@@ -36,13 +35,17 @@ pub fn toggle_main_window() {
             .emit("change_tab", "recent_clipboards")
             .unwrap();
         get_main_window().show().unwrap();
-        if !cfg!(target_os = "linux") {
-            get_main_window().set_focus().unwrap();
-        }
+
         register_hotkeys(true);
         get_main_window()
             .emit("set_global_hotkey_event", true)
             .unwrap();
+
+        get_app()
+            .run_on_main_thread(|| get_main_window().set_focus().unwrap())
+            .unwrap();
+
+        printlog!("displaying window");
     }
 }
 

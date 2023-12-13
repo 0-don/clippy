@@ -8,28 +8,28 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 env:
-  EMAIL: don.cryptus@gmail.com
   ARCH: x86_64
+  DEPENDENCIES_ARCH: "'libappindicator-gtk3' 'webkit2gtk' 'gtk3' 'xdotool'"
+  DEPENDENCIES_RPM: "javascriptcoregtk4.0, webkit2gtk4.0, libxdo, libappindicator-gtk3, xdotool"
 jobs:
   setup:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     outputs:
-      arch: ${{ env.ARCH }}
-      email: ${{ env.EMAIL }}
       name: ${{ steps.get-package.outputs.name }}
-      name-bin: ${{ steps.get-package.outputs.name }}-bin
+      name_bin: ${{ steps.get-package.outputs.name }}-bin
       version: ${{ steps.get-package.outputs.version }}
       description: ${{ steps.get-package.outputs.description }}
       license: ${{ steps.get-package.outputs.license }}
-      deb-pkg-name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb 
-      deb-pkg-path: ./src-tauri/target/release/bundle/deb/
-      tag-name: v${{ steps.get-package.outputs.version }}
+      deb_pkg_name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb 
+      deb_pkg_path: ./src-tauri/target/release/bundle/deb/
+      deb_pkg_renamed: ${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-${{ env.ARCH }}.deb
+      arch_pkg_name: ${{ steps.get-package.outputs.name }}-bin-${{ steps.get-package.outputs.version }}-1-${{ env.ARCH }}.pkg.tar.zst
+      rpm_pkg_name: RPMS/${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-1.${{ env.ARCH }}.rpm
+      tag_name: v${{ steps.get-package.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: get package info
@@ -38,11 +38,7 @@ jobs:
           echo "name=$(node -p "require('./package.json').name")" >> $GITHUB_OUTPUT
           echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
           echo "description=$(node -p "require('./package.json').description")" >> $GITHUB_OUTPUT
-
-      # - uses: dev-drprasad/delete-tag-and-release@v1.0
-      #   with:
-      #     tag_name: v${{ steps.get-package.outputs.version }}
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+          echo "license=$(node -p "require('./package.json').license")" >> $GITHUB_OUTPUT
       
 
   build-tauri:
@@ -54,18 +50,6 @@ jobs:
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
-    env:
-      TAG_NAME: ${{ needs.setup.outputs.tag-name }}
-      BIN_PATH: ${{ needs.setup.outputs.name-bin }}
-      DESCRIPTION: ${{ needs.setup.outputs.description }}
-      LICENSE: ${{ needs.setup.outputs.license }}
-      DEB_PKG_NAME: ${{ needs.setup.outputs.deb-pkg-name }}
-      DEB_PKG_PATH: ${{ needs.setup.outputs.deb-pkg-path }}
-      DEB_PKG_RENAMED: ${{ needs.setup.outputs.name }}-${{ needs.setup.outputs.version }}-${{ needs.setup.outputs.arch }}.deb # leave as is it needs to be renamed for the arch build
-      ARCH_PKG_NAME: ${{ needs.setup.outputs.name-bin }}-${{ needs.setup.outputs.version }}-1-${{ needs.setup.outputs.arch }}.pkg.tar.zst
-      RPM_PKG_NAME: ${{ needs.setup.outputs.name }}-${{ needs.setup.outputs.version }}-1.${{ needs.setup.outputs.arch }}.rpm
-      PACKAGE_VERSION: ${{ needs.setup.outputs.version }}
-      PACKAGE_NAME: ${{ needs.setup.outputs.name }}
     steps:
 
       - uses: actions/checkout@v4
@@ -74,15 +58,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      # - uses: mukunku/tag-exists-action@v1.4.0
-      #   id: checkTag
-      #   with: 
-      #     tag: '${{ env.TAG_NAME }}'
-
-      # - name: stop jobs if tag exist
-      #   if: steps.checkTag.outputs.exists == 'true'
-      #   run: exit 1
 
       - name: install rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -93,7 +68,7 @@ jobs:
           sudo apt-get update
           wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.20_amd64.deb
           sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.20_amd64.deb
-          sudo apt-get install -y openssl alien libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev libxcb-shape0-dev libxcb-xfixes0-dev libxdo-dev
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev libxcb-shape0-dev libxcb-xfixes0-dev libxdo-dev
 
       - name: install frontend dependencies
         run: yarn install
@@ -102,42 +77,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ env.TAG_NAME }}
-          releaseName:  ${{ env.TAG_NAME }}
+          tagName: ${{ needs.setup.outputs.tag_name }}
+          releaseName:  ${{ needs.setup.outputs.tag_name  }}
           releaseDraft: false
           prerelease: false
 
 
-      - name: upload deb (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
-          asset_name: ${{ env.DEB_PKG_NAME }}
-          tag: ${{ env.TAG_NAME }}
-          overwrite: true
-
-      - name: copy deb package && create PKGBUILD (ubuntu only)
+      - name: copy deb package && create PKGBUILD file (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
-          mkdir ${{ env.BIN_PATH }}
-          cp -fr ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }} ${{ env.BIN_PATH }}/${{ env.DEB_PKG_RENAMED }} 
-          cat <<EOF > ./${{ env.BIN_PATH }}/PKGBUILD
-            # Maintainer: ${{ github.repository_owner }} <${{ env.EMAIL }}>
-            # Contributor: ${{ github.repository_owner }} <${{ env.EMAIL }}>
-            _packager="${{ github.repository_owner }} <${{ env.EMAIL }}>"
-            _deb_pkgname=${{ env.PACKAGE_NAME }}
-            pkgname=${{ env.BIN_PATH }}
-            pkgver=${{ env.PACKAGE_VERSION }}
-            md5sums=('$(md5sum ${{ env.BIN_PATH }}/${{ env.DEB_PKG_RENAMED }}  | awk '{print $1}')')
+          mkdir -p ${{ needs.setup.outputs.name_bin }}
+          cp -fr ${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
+          cat <<EOF > ./${{ needs.setup.outputs.name_bin }}/PKGBUILD
+            pkgname=${{ needs.setup.outputs.name_bin }}
+            pkgver=${{ needs.setup.outputs.version }}
+            md5sums=('$(md5sum ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }}  | awk '{print $1}')')
             pkgrel=1
-            depends=('libappindicator-gtk3' 'webkit2gtk' 'gtk3' 'xdotool')
-            pkgdesc='${{ env.DESCRIPTION }}'
+            depends=(${{ env.DEPENDENCIES_ARCH }})
+            pkgdesc='${{ needs.setup.outputs.description }}'
             arch=('${{ env.ARCH }}')
             url="https://github.com/${{ github.repository }}"
-            license=('${{ env.LICENSE }}')
-            source=("\$url/releases/download/${{ env.TAG_NAME }}/${{ env.DEB_PKG_RENAMED }}")
+            license=('${{ needs.setup.outputs.license }}')
+            source=("\$url/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.deb_pkg_renamed }}")
 
             build() {
                 rm control.tar.gz
@@ -148,8 +109,7 @@ jobs:
                 cp -fr usr/ \${pkgdir}
             }
           EOF
-          cat ${{ env.BIN_PATH }}/PKGBUILD
-          ls -la ${{ env.BIN_PATH }}
+          cat ${{ needs.setup.outputs.name_bin }}/PKGBUILD
 
       - name: create arch package (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -157,25 +117,56 @@ jobs:
         with:
           debug: true
           target: pkgbuild
-          pkgname: ${{ env.BIN_PATH }}/
+          pkgname: ${{ needs.setup.outputs.name_bin }}/
 
-      - name: create rpm package (ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
-        run: sudo alien -r -k --scripts --target=x86_64 ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }}
-
-      - name: create checksums (ubuntu only)
+      - name: copy deb package && create rpm.spec file (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
-          md5sum ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME}} > ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}.md5sum
-          md5sum ${{ env.DEB_PKG_PATH }}${{ env.DEB_PKG_NAME }} > ${{ env.DEB_PKG_NAME }}.md5sum
-          md5sum ${{ env.RPM_PKG_NAME }} > ${{ env.RPM_PKG_NAME }}.md5sum
+          mkdir -p ${{ needs.setup.outputs.name_bin }}
+          cp -fr ${{ needs.setup.outputs.deb_pkg_path }}/${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
+          cat <<EOF > ./${{ needs.setup.outputs.name_bin }}/rpm.spec
+          Name: ${{ needs.setup.outputs.name }}
+          Version: ${{ needs.setup.outputs.version }}
+          BuildArch: ${{ env.ARCH }}
+          Release: 1
+          Summary: ${{ needs.setup.outputs.description }}
+          Requires: ${{ env.DEPENDENCIES_RPM }}
+          License: ${{ needs.setup.outputs.license }}
+          Source0: ${{ needs.setup.outputs.deb_pkg_renamed }}
+
+          %description
+          ${{ needs.setup.outputs.description }}
+
+          %prep
+          ar x %{SOURCE0}
+
+          %build
+          rm -rf control.tar.gz
+          tar xvf data.tar.gz
+                      
+          %install
+          cp -fr usr/ %{buildroot}
+
+          %files
+          %{_bindir}/${{ needs.setup.outputs.name }}
+          /usr/share/applications/${{ needs.setup.outputs.name }}.desktop
+          /usr/share/icons/hicolor/**/*
+          EOF
+          cat ${{ needs.setup.outputs.name_bin }}/rpm.spec
+
+      - name: createa rpm package (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: Antikythera/build-rpm@latest
+        with:
+          spec_file: ${{ needs.setup.outputs.name_bin }}/rpm.spec
+          sources: ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
 
       - name: upload arch && rpm release (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.TAG_NAME }}
+          tag_name: ${{ needs.setup.outputs.tag_name  }}
           files: |
-            ${{ env.BIN_PATH }}/${{ env.ARCH_PKG_NAME }}
-            ${{ env.RPM_PKG_NAME }}
+            ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.arch_pkg_name }}
+            ${{ needs.setup.outputs.rpm_pkg_name }}
