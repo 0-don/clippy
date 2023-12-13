@@ -35,11 +35,6 @@ successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
 - change keyboard bindings
 - dark mode / white mode
 
-### Prerequisites Fedora Linux
-
-```bash
-sudo dnf install javascriptcoregtk4.0 webkit2gtk4.0 libxdo libappindicator-gtk3 xdotool
-```
 
 ### Prerequisites Development
 
@@ -66,5 +61,4 @@ Before you begin, ensure you have met the following requirements:
 
 #### note
 
-Tested on Linux(x11), Windows
-on Mac still lots of issues with hotkeys you probably need to change the hotkey
+Tested on Linux(x11), Windows, Mac (hotkeys needs to be changed in settings)
