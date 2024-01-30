@@ -2,9 +2,9 @@
 name = "clippy"
 version = "1.2.4"
 description = "Clipboard Manager built with Rust & Typescript"
-authors = ["Don-Cryptus"]
+authors = ["0-don"]
 license = "MIT"
-repository = "https://github.com/Don-Cryptus/clippy"
+repository = "https://github.com/0-don/clippy"
 edition = "2021"
 
 [workspace]

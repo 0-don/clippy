@@ -1,16 +1,16 @@
 <p align="center">
-  <a href="https://github.com/don-cryptus/clippy">
+  <a href="https://github.com/0-don/clippy">
     <img src="public/clippy2.png" alt="Logo" width=400 />
   </a>
   <p align="center">
     <br />
     Clipboard Manager made with Tauri, Solid & Sea-Orm.
     <br />
-    <a href="https://github.com/Don-Cryptus/clippy/releases/latest">Try it out</a>
+    <a href="https://github.com/0-don/clippy/releases/latest">Try it out</a>
     ·
-    <a href="https://github.com/Don-Cryptus/clippy/issues">Report Bug</a>
+    <a href="https://github.com/0-don/clippy/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Don-Cryptus/clippy/issues">Request Feature</a>
+    <a href="https://github.com/0-don/clippy/issues">Request Feature</a>
     <br />
   </p>
   <p align="center">
@@ -20,7 +20,7 @@
 <!-- npx npm-check-updates -u -->
 <!-- sea-orm-cli migrate fresh -v -d migration && sea-orm-cli generate entity -l -o ./entity/src --expanded-format --with-serde both -->
 
-successor of [the electron clippy](https://github.com/Don-Cryptus/clippy-ts)
+successor of [the electron clippy](https://github.com/0-don/clippy-ts)
 
 ### Features
 
