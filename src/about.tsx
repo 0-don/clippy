@@ -15,7 +15,7 @@ const About = () => {
       <h1 class="text-xl font-bold">{version()}</h1>
       <h2 class="text-base">No updates currently available</h2>
       <a
-        href="https://github.com/Don-Cryptus/clippy"
+        href="https://github.com/0-don/clippy"
         target="_blank"
         rel="noreferrer"
         class="inline-flex w-32 items-center justify-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 "
@@ -23,7 +23,7 @@ const About = () => {
         Github
       </a>
       <a
-        href="https://github.com/Don-Cryptus/clippy"
+        href="https://github.com/0-don/clippy"
         target="_blank"
         rel="noreferrer"
         class="inline-flex w-32 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 "
