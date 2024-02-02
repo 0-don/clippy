@@ -5,5 +5,5 @@ export default {
   printWidth: 120,
   tabWidth: 2,
   arrowParens: "always",
-  plugins: ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
+  plugins: ["prettier-plugin-tailwindcss"],
 };
