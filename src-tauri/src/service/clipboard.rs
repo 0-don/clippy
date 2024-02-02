@@ -3,7 +3,6 @@ use super::global::{get_clipboard, get_main_window};
 use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
-use base64::{engine::general_purpose, Engine};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
@@ -98,13 +97,20 @@ pub async fn get_clipboards_db(
         .into_iter()
         .map(|mut m| {
             if let Some(blob) = &m.blob {
-                let base64_string = general_purpose::STANDARD.encode(blob);
+                let base64_string = base64::encode(blob);
                 m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
                 m.blob = None;
             }
-            if m.content.is_some() && m.content.as_ref().unwrap().len() > 100 {
-                m.content = m.content.unwrap()[..100].to_string().into();
+
+            // Safely truncate content if it's longer than 100 characters
+            if let Some(content) = &m.content {
+                if content.chars().count() > 100 {
+                    // Take the first 100 characters, and collect them back into a String
+                    let truncated = content.chars().take(100).collect::<String>();
+                    m.content = Some(truncated);
+                }
             }
+
             m
         })
         .collect();
