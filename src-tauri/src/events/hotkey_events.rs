@@ -16,7 +16,7 @@ use crate::{
 };
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
-use tauri::regex::Regex;
+use regex::Regex;
 use tokio::sync::oneshot;
 
 pub fn init_hotkey_listener() -> () {

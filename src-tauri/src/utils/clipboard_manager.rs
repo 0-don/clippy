@@ -7,11 +7,11 @@ use core::time::Duration;
 use enigo::{Enigo, KeyboardControllable};
 use entity::clipboard::{self, ActiveModel};
 use image::{imageops, ImageBuffer, Rgba};
+use regex::Regex;
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::{io::Cursor, process::Command};
 use tauri::{
     api::dialog::{MessageDialogBuilder, MessageDialogButtons, MessageDialogKind},
-    regex::Regex,
     Manager,
 };
 
@@ -162,7 +162,7 @@ impl ClipboardHelper<'_> {
 
             let mut bytes: Vec<u8> = Vec::new();
             resized_image
-                .write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png)
+                .write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Png)
                 .expect("Failed to write resized image to buffer");
 
             printlog!("image is end");
