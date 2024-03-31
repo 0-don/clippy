@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.2.5"
+version = "1.2.6"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -17,7 +17,8 @@ tauri-build = { version = "1", features = [] }
 entity = { path = "entity" }
 migration = { path = "migration" }
 tokio = { version = "1", features = ["full"] }
-tauri = { version = "1", features = [ "macos-private-api",
+tauri = { version = "1", features = [
+  "macos-private-api",
   "notification-all",
   "window-create",
   "process-exit",
@@ -36,6 +37,7 @@ window-shadows = "0"
 chrono = "0"
 enigo = "0"
 base64 = "0"
+regex = "1"
 
 [dependencies.sea-orm]
 version = "^0"

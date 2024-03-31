@@ -58,7 +58,7 @@ pub async fn save_clipboard_image(id: i32) -> Result<bool, ()> {
     // Save the image to the desktop
     let mut file = File::create(image_path).unwrap();
     image
-        .write_to(&mut file, image::ImageOutputFormat::Png)
+        .write_to(&mut file, image::ImageFormat::Png)
         .unwrap();
 
     Ok(true)
