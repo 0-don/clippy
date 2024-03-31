@@ -97,7 +97,7 @@ pub async fn get_clipboards_db(
         .into_iter()
         .map(|mut m| {
             if let Some(blob) = &m.blob {
-                let base64_string = base64::encode(blob);
+                let base64_string = base64::encode_config(blob, base64::STANDARD);
                 m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
                 m.blob = None;
             }
