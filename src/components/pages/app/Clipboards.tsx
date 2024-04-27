@@ -13,6 +13,7 @@ import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
 import { formatBytes } from "../../../utils/helpers";
+import { hsvToRgbString, hwbToRgbString } from "../../../utils/convertors";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -143,7 +144,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
                             style={{
-                              "background-color": `${content}`,
+                              "background-color": `${
+                                content?.includes("hsv(")
+                                  ? hsvToRgbString(content)
+                                  : content?.includes("hwb(")
+                                    ? hwbToRgbString(content)
+                                    : content
+                              }`,
                             }}
                           />
                         )}
