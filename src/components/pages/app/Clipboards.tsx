@@ -167,6 +167,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           src={clipboard.base64}
                           width={width || 0}
                           height={height || 0}
+                          class="max-h-52"
                           alt={`${width}x${height} ${size}`}
                           title={`${width}x${height} ${formatBytes(Number(size || "0"))}`}
                         />
