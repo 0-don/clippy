@@ -58,7 +58,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         }}
         class={`${
           clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
-        } z-10 text-xs hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
+        } z-10 h-2/4 w-8 py-2 text-xs hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
       />
       <IoTrashOutline
         onClick={async (e) => {
@@ -67,7 +67,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             setClipboards((prev) => prev.filter((o) => o.id !== id));
           }
         }}
-        class="hidden text-xs text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
+        class="hidden h-2/4 w-8 py-2 text-xs text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
       />
     </>
   );
@@ -86,7 +86,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         <Show when={scrollToTop()}>
           <button
             type="button"
-            class="absolute bottom-5 right-4 rounded-full bg-neutral-700 px-2 py-1 hover:bg-gray-500"
+            class="absolute bottom-5 right-4 z-10 rounded-full bg-neutral-600 px-2 py-1 hover:bg-gray-500"
             onClick={() => clipboardRef()!.scrollTo(0, 0)}
           >
             <div class="relative flex items-center justify-center py-1">
@@ -107,7 +107,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             return (
               <button
                 type="button"
-                class="group w-full cursor-pointer select-none px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
+                class="group relative w-full cursor-pointer select-none px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
                 onClick={(e) => {
                   e.stopPropagation();
 
@@ -161,7 +161,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         </Show>
                       </div>
                     </div>
-                    <div class="truncate px-5">
+                    <div class="mr-4 truncate px-4">
                       {clipboard.base64 ? (
                         <img
                           src={clipboard.base64}
@@ -178,7 +178,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       <div class="text-left text-xs text-zinc-400">{dayjs.utc(created_date!).fromNow()}</div>
                     </div>
                   </div>
-                  <div class="flex w-12 flex-col items-end justify-between pl-1">{IconFunctions(clipboard)}</div>
+                  <div class="absolute right-0 top-0 h-full w-full">
+                    <div class="flex h-full flex-col items-end justify-start">{IconFunctions(clipboard)}</div>
+                  </div>
                 </div>
                 <hr class="border-zinc-400 dark:border-zinc-700" />
               </button>
