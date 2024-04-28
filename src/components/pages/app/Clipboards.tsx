@@ -12,8 +12,8 @@ import { Clips } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
+import { rgbCompatible } from "../../../utils/colors";
 import { formatBytes } from "../../../utils/helpers";
-import { hsvToRgbString, hwbToRgbString } from "../../../utils/convertors";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -58,7 +58,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         }}
         class={`${
           clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
-        } z-10 h-2/4 w-8 py-2 text-xs hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
+        } z-10 hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
       />
       <IoTrashOutline
         onClick={async (e) => {
@@ -67,7 +67,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             setClipboards((prev) => prev.filter((o) => o.id !== id));
           }
         }}
-        class="hidden h-2/4 w-8 py-2 text-xs text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
+        class="hidden text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
       />
     </>
   );
@@ -135,23 +135,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         {type === "hex" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
-                            style={{
-                              "background-color": `${content?.includes("#") ? `${content}` : `#${content}`}`,
-                            }}
+                            style={{ "background-color": `${content?.includes("#") ? `${content}` : `#${content}`}` }}
                           />
                         )}
                         {type === "rgb" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
-                            style={{
-                              "background-color": `${
-                                content?.includes("hsv(")
-                                  ? hsvToRgbString(content)
-                                  : content?.includes("hwb(")
-                                    ? hwbToRgbString(content)
-                                    : content
-                              }`,
-                            }}
+                            style={{ "background-color": `${rgbCompatible(content)}` }}
                           />
                         )}
                         <Show when={globalHotkeyEvent()}>
@@ -179,9 +169,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       <div class="text-left text-xs text-zinc-400">{dayjs.utc(created_date!).fromNow()}</div>
                     </div>
                   </div>
-                  <div class="absolute right-0 top-0 h-full w-full">
-                    <div class="flex h-full flex-col items-end justify-start">{IconFunctions(clipboard)}</div>
-                  </div>
+                  <div class="flex w-[3.25rem] flex-col items-end justify-between">{IconFunctions(clipboard)}</div>
                 </div>
                 <hr class="border-zinc-400 dark:border-zinc-700" />
               </button>

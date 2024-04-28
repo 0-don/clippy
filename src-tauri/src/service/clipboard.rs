@@ -4,7 +4,6 @@ use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
 use entity::clipboard::{self, ActiveModel, Model};
-use migration::IntoIndexColumn;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
@@ -49,78 +48,60 @@ pub async fn get_clipboards_db(
 ) -> Result<Vec<Model>, DbErr> {
     let db = connection::establish_connection().await?;
 
-    let mut query = clipboard::Entity::find();
+    let model = clipboard::Entity::find()
+        .apply_if(star, |query, starred| {
+            query.filter(clipboard::Column::Star.eq(starred))
+        })
+        .apply_if(search, |query, search| {
+            let filter = match search.as_str() {
+                "txt" | "text" => clipboard::Column::Content
+                    .contains(search)
+                    .or(clipboard::Column::Type.eq("text")),
 
-    // filter to get only pinned entries
-    if let Some(starred) = star {
-        query = query.filter(clipboard::Column::Star.eq(starred));
-    }
+                "img" | "image" => clipboard::Column::Content
+                    .contains(search)
+                    .or(clipboard::Column::Type.eq("image")),
 
-    // filter to get only images
-    if let Some(img) = img {
-        query = query.filter(clipboard::Column::Type.eq("image"));
-    }
+                "lnk" | "link" => clipboard::Column::Content
+                    .contains(search)
+                    .or(clipboard::Column::Type.eq("link")),
 
-    // smart search
-    if let Some(content) = search {
+                "clr" | "color" | "colour" => clipboard::Column::Content
+                    .contains(search)
+                    .or(clipboard::Column::Type.eq("hex"))
+                    .or(clipboard::Column::Type.eq("rgb")),
 
-        // display text entries
-        let filter = if content == "txt" || content == "text" { 
-            clipboard::Column::Content.contains(&content)
-                .or(clipboard::Column::Type.eq("text"))
+                "hex" => clipboard::Column::Content
+                    .contains(search)
+                    .or(clipboard::Column::Type.eq("hex")),
 
-        // display image entries
-        } else if content == "img" || content == "image" { 
-            clipboard::Column::Content.contains(&content)
-                .or(clipboard::Column::Type.eq("image"))
+                "rgb" => clipboard::Column::Content
+                    .contains(search)
+                    .or(clipboard::Column::Type.eq("rgb")),
 
-        // display link entries
-        } else if content == "lnk" || content == "link" { 
-            clipboard::Column::Content.contains(&content)
-                .or(clipboard::Column::Type.eq("link"))
-
-        // display color entries
-        } else if content == "clr" || content == "color" { 
-            clipboard::Column::Content.contains(&content)
-                .or(clipboard::Column::Type.eq("hex"))
-                .or(clipboard::Column::Type.eq("rgb"))
-        } else if content == "hex" {
-            clipboard::Column::Content.contains(&content)
-                .or(clipboard::Column::Type.eq("hex"))
-        } else if content == "rgb" {
-            clipboard::Column::Content.contains(&content)
-                .or(clipboard::Column::Type.eq("rgb"))
-
-        // use default search
-        } else {
-            clipboard::Column::Content.contains(&content)
-        };
-        
-        query = query.filter(filter)
-            .order_by_desc(clipboard::Column::Content.starts_with(&content));
-
-    } else {
-        // order the results by creation time by default
-        query = query.order_by_desc(clipboard::Column::Id);
-    }
-
-    query = query.offset(cursor).limit(10);
-
-    let model = query.all(&db).await?;
+                _ => clipboard::Column::Content.contains(search),
+            };
+            query.filter(filter)
+        })
+        .apply_if(img, |query, _img| {
+            query.filter(clipboard::Column::Type.eq("image"))
+        })
+        .offset(cursor)
+        .limit(10)
+        .order_by_desc(clipboard::Column::Id)
+        .all(&db)
+        .await?;
 
     let parsed_model: Vec<Model> = model
         .into_iter()
         .map(|mut m| {
-            if let Some(blob) = &m.blob {
+            if let Some(blob) = m.blob.take() {
                 let base64_string = base64::encode_config(blob, base64::STANDARD);
                 m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
-                m.blob = None;
             }
 
-            // Safely truncate content if it's longer than 100 characters
             if let Some(content) = &m.content {
                 if content.chars().count() > 100 {
-                    // Take the first 100 characters, and collect them back into a String
                     let truncated = content.chars().take(100).collect::<String>();
                     m.content = Some(truncated);
                 }
@@ -132,7 +113,6 @@ pub async fn get_clipboards_db(
 
     Ok(parsed_model)
 }
-
 pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
     let db = connection::establish_connection().await?;
 
