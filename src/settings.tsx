@@ -19,7 +19,7 @@ const Settings = () => {
   onMount(() => listen("init", init));
 
   return (
-    <div class="absolute flex h-full w-full flex-col bg-white text-black dark:bg-dark dark:text-white">
+    <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:bg-dark dark:text-white">
       <Tabs />
       <div class="px-5 pt-5 dark:text-white">
         <Show when={getCurrentTab()?.name === "General"}>

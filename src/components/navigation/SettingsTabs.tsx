@@ -8,7 +8,7 @@ export const Tabs: Component<TabsProps> = ({}) => {
 
   return (
     <div class="border-b border-gray-500">
-      <nav class="-mb-px flex justify-center space-x-8">
+      <nav class="-mb-px flex justify-center gap-2">
         <For each={tabs()}>
           {({ Icon, current, name }) => (
             <button

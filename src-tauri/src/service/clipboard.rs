@@ -4,6 +4,7 @@ use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
 use entity::clipboard::{self, ActiveModel, Model};
+use migration::IntoIndexColumn;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
@@ -48,50 +49,64 @@ pub async fn get_clipboards_db(
 ) -> Result<Vec<Model>, DbErr> {
     let db = connection::establish_connection().await?;
 
-    let model = clipboard::Entity::find()
-        .apply_if(star, |query, starred| {
-            query.filter(clipboard::Column::Star.eq(starred))
-        })
-        .apply_if(search, |query, content| {
-            // Use match statement for cleaner logic
-            let filter = match content.as_str() {
-                "txt" | "text" => clipboard::Column::Content
-                    .contains(&content)
-                    .or(clipboard::Column::Type.eq("text")),
+    let mut query = clipboard::Entity::find();
 
-                "img" | "image" => clipboard::Column::Content
-                    .contains(&content)
-                    .or(clipboard::Column::Type.eq("image")),
+    // filter to get only pinned entries
+    if let Some(starred) = star {
+        query = query.filter(clipboard::Column::Star.eq(starred));
+    }
 
-                "lnk" | "link" => clipboard::Column::Content
-                    .contains(&content)
-                    .or(clipboard::Column::Type.eq("link")),
+    // filter to get only images
+    if let Some(img) = img {
+        query = query.filter(clipboard::Column::Type.eq("image"));
+    }
 
-                "clr" | "color" | "colour" => clipboard::Column::Content
-                    .contains(&content)
-                    .or(clipboard::Column::Type.eq("hex"))
-                    .or(clipboard::Column::Type.eq("rgb")),
+    // smart search
+    if let Some(content) = search {
 
-                "hex" => clipboard::Column::Content
-                    .contains(&content)
-                    .or(clipboard::Column::Type.eq("hex")),
+        // display text entries
+        let filter = if content == "txt" || content == "text" { 
+            clipboard::Column::Content.contains(&content)
+                .or(clipboard::Column::Type.eq("text"))
 
-                "rgb" => clipboard::Column::Content
-                    .contains(&content)
-                    .or(clipboard::Column::Type.eq("rgb")),
+        // display image entries
+        } else if content == "img" || content == "image" { 
+            clipboard::Column::Content.contains(&content)
+                .or(clipboard::Column::Type.eq("image"))
 
-                _ => clipboard::Column::Content.contains(&content),
-            };
-            query.filter(filter)
-        })
-        .apply_if(img, |query, _| {
-            query.filter(clipboard::Column::Type.eq("image"))
-        })
-        .offset(cursor)
-        .limit(10)
-        .order_by_desc(clipboard::Column::Id)
-        .all(&db)
-        .await?;
+        // display link entries
+        } else if content == "lnk" || content == "link" { 
+            clipboard::Column::Content.contains(&content)
+                .or(clipboard::Column::Type.eq("link"))
+
+        // display color entries
+        } else if content == "clr" || content == "color" { 
+            clipboard::Column::Content.contains(&content)
+                .or(clipboard::Column::Type.eq("hex"))
+                .or(clipboard::Column::Type.eq("rgb"))
+        } else if content == "hex" {
+            clipboard::Column::Content.contains(&content)
+                .or(clipboard::Column::Type.eq("hex"))
+        } else if content == "rgb" {
+            clipboard::Column::Content.contains(&content)
+                .or(clipboard::Column::Type.eq("rgb"))
+
+        // use default search
+        } else {
+            clipboard::Column::Content.contains(&content)
+        };
+        
+        query = query.filter(filter)
+            .order_by_desc(clipboard::Column::Content.starts_with(&content));
+
+    } else {
+        // order the results by creation time by default
+        query = query.order_by_desc(clipboard::Column::Id);
+    }
+
+    query = query.offset(cursor).limit(10);
+
+    let model = query.all(&db).await?;
 
     let parsed_model: Vec<Model> = model
         .into_iter()

@@ -118,18 +118,23 @@ impl ClipboardHelper<'_> {
 
         let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
         let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
-        let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hwb)\((.*)\)").unwrap();
+        let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)").unwrap();
 
-        let r#type = if text.is_some() && is_link.is_match(text.as_ref().unwrap()) {
-            Set("link".to_string())
-        } else if text.is_some() && is_hex.is_match(text.as_ref().unwrap()) {
-            Set("hex".to_string())
-        } else if text.is_some() && is_rgb.is_match(text.as_ref().unwrap()) {
-            Set("rgb".to_string())
-        } else if text.is_some() {
-            Set("text".to_string())
-        } else {
-            Set("image".to_string())
+        let r#type = match text {
+            Some(text) => {
+                if is_link.is_match(text) {
+                    Set("link".to_string())
+                } else if is_hex.is_match(text) {
+                    Set("hex".to_string())
+                } else if is_rgb.is_match(text) {
+                    Set("rgb".to_string())
+                } else {
+                    Set("text".to_string())
+                }
+            }
+            None => {
+                Set("image".to_string())
+            }
         };
 
         let active_model = if let Some(img) = image {
