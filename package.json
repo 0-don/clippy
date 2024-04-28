@@ -16,14 +16,12 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
-    "color-convert": "^2.0.1",
     "dayjs": "^1.11.10",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.8.16"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.11",
-    "@types/color-convert": "^2.0.3",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
