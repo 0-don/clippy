@@ -82,7 +82,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         </div>
       }
     >
-      <div ref={(ref) => setClipboardRef(ref)} onScroll={onScroll} class="h-full overflow-auto pb-5">
+      <div ref={(ref) => setClipboardRef(ref)} onScroll={onScroll} class="overflow-y-auto pb-5">
         <Show when={scrollToTop()}>
           <button
             type="button"
