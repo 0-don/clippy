@@ -1,6 +1,6 @@
 {
   "name": "clippy",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Clipboard Manager built with Rust & Typescript",
   "license": "MIT",
   "type": "module",
@@ -15,20 +15,20 @@
     "icon": "tauri icon"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.5.3",
-    "dayjs": "^1.11.10",
+    "@tauri-apps/api": "^1.5.4",
+    "dayjs": "^1.11.11",
     "solid-icons": "^1.1.0",
-    "solid-js": "^1.8.16"
+    "solid-js": "^1.8.17"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.5.11",
+    "@tauri-apps/cli": "^1.5.12",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.13",
+    "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.3",
-    "vite": "^5.2.7",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
     "vite-plugin-checker": "^0.6.4",
     "vite-plugin-solid": "^2.10.2"
   }

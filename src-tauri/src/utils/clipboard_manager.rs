@@ -4,7 +4,7 @@ use crate::{
     service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
 };
 use core::time::Duration;
-use enigo::{Enigo, KeyboardControllable};
+use enigo::{Enigo, Keyboard, Settings};
 use entity::clipboard::{self, ActiveModel};
 use image::{imageops, ImageBuffer, Rgba};
 use regex::Regex;
@@ -203,8 +203,8 @@ pub async fn type_last_clipboard() {
         let r#type = clipboard.clone().r#type;
 
         if r#type != "image" && content.len() < 32 {
-            let mut enigo = Enigo::new();
-            enigo.key_sequence(&content);
+            let mut enigo = Enigo::new(&Settings::default()).unwrap();
+            let _ = enigo.text(&content);
         }
     }
 }
