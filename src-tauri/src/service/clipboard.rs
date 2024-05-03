@@ -3,7 +3,6 @@ use super::global::{get_clipboard, get_main_window};
 use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
-use base64::{engine::general_purpose, Engine};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
@@ -97,7 +96,7 @@ pub async fn get_clipboards_db(
         .into_iter()
         .map(|mut m| {
             if let Some(blob) = &m.blob {
-                let base64_string = general_purpose::STANDARD.encode(blob);
+                let base64_string = base64::encode_config(blob, base64::STANDARD);
                 m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
                 m.blob = None;
             }
