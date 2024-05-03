@@ -82,7 +82,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         </div>
       }
     >
-      <div ref={(ref) => setClipboardRef(ref)} onScroll={onScroll} class="h-full overflow-auto pb-5">
+      <div ref={(ref) => setClipboardRef(ref)} onScroll={onScroll} class="overflow-y-auto pb-5">
         <Show when={scrollToTop()}>
           <button
             type="button"
@@ -169,7 +169,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       <div class="text-left text-xs text-zinc-400">{dayjs.utc(created_date!).fromNow()}</div>
                     </div>
                   </div>
-                  <div class="flex w-[3.25rem] flex-col items-end justify-between">{IconFunctions(clipboard)}</div>
+                  <div class="absolute bottom-0 right-0 top-0 m-2 flex w-4">
+                    <div class="flex w-full flex-col items-end justify-between">{IconFunctions(clipboard)}</div>
+                  </div>
                 </div>
                 <hr class="border-zinc-400 dark:border-zinc-700" />
               </button>
