@@ -1,9 +1,9 @@
 extern crate alloc;
 extern crate image;
-use crate::service::clipboard::{
+use crate::{service::clipboard::{
     clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
     get_clipboards_db, star_clipboard_db,
-};
+}, utils::hotkey_manager::unregister_hotkeys};
 use entity::clipboard::Model;
 use std::fs::File;
 use tauri::api::path::desktop_dir;
@@ -22,6 +22,7 @@ pub async fn get_clipboards(
 #[tauri::command]
 pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
     let _ = copy_clipboard_from_id(id).await;
+    unregister_hotkeys(false);
     Ok(())
 }
 
