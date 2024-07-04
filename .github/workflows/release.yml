@@ -71,6 +71,11 @@ jobs:
       - name: install frontend dependencies
         run: yarn install
 
+      - name: Set NO_STRIP environment variable
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        run: echo "NO_STRIP=true" >> $GITHUB_ENV
+
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
