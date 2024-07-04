@@ -20,6 +20,7 @@ pub struct DatabaseInfo {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct Key {
     pub id: u32,
     pub state: bool,
