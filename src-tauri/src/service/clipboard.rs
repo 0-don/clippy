@@ -8,6 +8,7 @@ use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
 };
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
     let db = connection::establish_connection().await?;
@@ -96,7 +97,7 @@ pub async fn get_clipboards_db(
         .into_iter()
         .map(|mut m| {
             if let Some(blob) = &m.blob {
-                let base64_string = base64::encode_config(blob, base64::STANDARD);
+                let base64_string = STANDARD.encode(blob);
                 m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
                 m.blob = None;
             }
