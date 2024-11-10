@@ -1,6 +1,6 @@
-import { invoke } from "@tauri-apps/api";
 import { createRoot, createSignal } from "solid-js";
 import { Hotkey, HotkeyEvent } from "../@types";
+import { invoke } from "@tauri-apps/api/core";
 
 function createHotkeyStore() {
   const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(false);

@@ -3,12 +3,12 @@ use super::global::{get_clipboard, get_main_window};
 use crate::connection;
 use alloc::borrow::Cow;
 use arboard::ImageData;
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
 };
-use base64::{engine::general_purpose::STANDARD, Engine as _};
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
     let db = connection::establish_connection().await?;

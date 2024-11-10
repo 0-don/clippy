@@ -8,7 +8,7 @@ use crate::{
 use arboard::Clipboard;
 use global_hotkey::GlobalHotKeyManager;
 use std::{collections::HashMap, sync::MutexGuard};
-use tauri::{AppHandle, Manager, Window};
+use tauri::{AppHandle, Manager, WebviewWindow};
 use tokio::sync::oneshot;
 
 pub fn get_clipboard() -> MutexGuard<'static, Clipboard> {
@@ -35,7 +35,7 @@ pub fn get_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
         .expect("Failed to lock HOTKEYS")
 }
 
-pub fn get_main_window() -> MutexGuard<'static, Window> {
+pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
     MAIN_WINDOW
         .get()
         .expect("Failed to get MAIN_WINDOW")
@@ -71,6 +71,6 @@ pub fn get_app() -> &'static AppHandle {
     APP.get().expect("Failed to get APP")
 }
 
-pub fn get_app_window(str: &str) -> Option<Window> {
-    get_app().get_window(str)
+pub fn get_app_window(str: &str) -> Option<WebviewWindow> {
+    get_app().get_webview_window(str)
 }

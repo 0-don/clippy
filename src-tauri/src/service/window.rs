@@ -12,8 +12,9 @@ use std::{
     fs::{self},
     path::{Path, PathBuf},
 };
-use tauri::api::dialog::blocking::FileDialogBuilder;
-use tauri_plugin_positioner::{Position, WindowExt};
+use tauri::PhysicalPosition;
+use tauri::{Emitter, Manager};
+use tauri_plugin_dialog::DialogExt;
 
 pub fn toggle_main_window() {
     if get_main_window().is_visible().unwrap() {
@@ -28,9 +29,8 @@ pub fn toggle_main_window() {
             .emit("set_global_hotkey_event", false)
             .unwrap();
     } else {
-        get_main_window()
-            .move_window(Position::BottomRight)
-            .unwrap();
+        // get_main_window().move_window(Position::Center).unwrap();
+        position_window_near_cursor();
         get_main_window()
             .emit("change_tab", "recent_clipboards")
             .unwrap();
@@ -49,9 +49,70 @@ pub fn toggle_main_window() {
     }
 }
 
+pub fn position_window_near_cursor() {
+    let window = get_main_window();
+
+    if let Ok(cursor_position) = window.cursor_position() {
+        let window_size = window.outer_size().unwrap();
+
+        // Get current monitor or fallback to primary
+        let current_monitor = window
+            .available_monitors()
+            .unwrap()
+            .into_iter()
+            .find(|monitor| {
+                let pos = monitor.position();
+                let size = monitor.size();
+                let bounds = (
+                    pos.x as f64,
+                    pos.y as f64,
+                    pos.x as f64 + size.width as f64,
+                    pos.y as f64 + size.height as f64,
+                );
+
+                cursor_position.x >= bounds.0
+                    && cursor_position.x < bounds.2
+                    && cursor_position.y >= bounds.1
+                    && cursor_position.y < bounds.3
+            })
+            .unwrap_or_else(|| window.primary_monitor().unwrap().unwrap());
+
+        let scale_factor = current_monitor.scale_factor();
+        let monitor_pos = current_monitor.position();
+        let monitor_size = current_monitor.size();
+
+        // Calculate window position with offset
+        let pos = PhysicalPosition::new(
+            ((cursor_position.x + 10.0) * scale_factor) as i32,
+            ((cursor_position.y + 10.0) * scale_factor) as i32,
+        );
+
+        // Calculate monitor bounds in physical pixels
+        let monitor_bounds = (
+            (monitor_pos.x as f64 * scale_factor) as i32,
+            (monitor_pos.y as f64 * scale_factor) as i32,
+            (monitor_pos.x as f64 * scale_factor + monitor_size.width as f64 * scale_factor) as i32,
+            (monitor_pos.y as f64 * scale_factor + monitor_size.height as f64 * scale_factor)
+                as i32,
+        );
+
+        // Constrain window position within monitor bounds
+        let final_pos = PhysicalPosition::new(
+            pos.x
+                .max(monitor_bounds.0)
+                .min(monitor_bounds.2 - window_size.width as i32),
+            pos.y
+                .max(monitor_bounds.1)
+                .min(monitor_bounds.3 - window_size.height as i32),
+        );
+
+        window.set_position(final_pos).unwrap();
+    }
+}
+
 pub fn get_data_path() -> DataPath {
     let config_path = get_app()
-        .path_resolver()
+        .path()
         .app_data_dir()
         .unwrap()
         .to_string_lossy()
@@ -92,13 +153,11 @@ pub fn get_config() -> (Config, DataPath) {
 pub async fn sync_clipboard_history_enable() {
     // get local config from app data
     let (mut config, data_path) = get_config();
-    let dir = FileDialogBuilder::new().pick_folder();
 
-    println!("config: {:?}", dir);
-    // check if user disabled backup or not
-    if dir.is_some() {
-        // path to backup file
-        let dir: String = dir.unwrap().to_string_lossy().to_string();
+    // Use blocking_pick_folder for synchronous folder selection
+    if let Some(dir) = get_app().dialog().file().blocking_pick_folder() {
+        // Convert path to string
+        let dir = dir.to_string();
         let dir_file = format!("{}/clippy.sqlite", &dir);
 
         println!("selected dir: {}", dir);
@@ -110,7 +169,7 @@ pub async fn sync_clipboard_history_enable() {
         }
 
         // overwrite config database location
-        config.db = dir_file.to_string();
+        config.db = dir_file;
 
         // overwrite config file
         let _ = fs::write(
@@ -118,6 +177,7 @@ pub async fn sync_clipboard_history_enable() {
             serde_json::to_string(&config).unwrap(),
         );
 
+        // Now we can await this since we're in an async function
         update_settings_synchronize(true).await.unwrap();
     }
 }

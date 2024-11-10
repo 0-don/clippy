@@ -7,32 +7,44 @@ license = "MIT"
 repository = "https://github.com/0-don/clippy"
 edition = "2021"
 
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "tauri_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [workspace]
 members = [".", "migration", "entity"]
 
 [build-dependencies]
-tauri-build = { version = "1", features = [] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
+
 entity = { path = "entity" }
 migration = { path = "migration" }
-tokio = { version = "1", features = ["full"] }
-tauri = { version = "1", features = [
+
+tauri = { version = "2", features = [
   "macos-private-api",
-  "notification-all",
-  "window-create",
-  "process-exit",
-  "system-tray",
   "devtools",
+  "tray-icon",
 ] }
-global-hotkey = "0"
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-process = "2"
+tauri-plugin-positioner = { version = "2", features = ["tray-icon"] }
+tauri-plugin-autostart = "2"
+
+tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
+
+global-hotkey = "0"
 clipboard-master = "3"
 arboard = { version = "3" }
 image = "0"
-tauri-plugin-positioner = { version = "1", features = ["system-tray"] }
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+
 window-shadows = "0"
 chrono = "0"
 enigo = "0"
@@ -44,11 +56,6 @@ version = "^0"
 features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"]
 default-features = false
 
-[features]
-# this feature is used for production builds or when `devPath` points to the filesystem
-# DO NOT REMOVE!!
-custom-protocol = ["tauri/custom-protocol"]
-
 
 [profile.release]
 # panic = "abort"
@@ -57,14 +64,6 @@ custom-protocol = ["tauri/custom-protocol"]
 # opt-level = "s"
 # strip = true
 
-
-[package.metadata.generate-rpm]
-assets = [
-  { source = "target/release/clippy", dest = "/usr/bin/clippy", mode = "755" },
-  { source = "icons/32x32.png", dest = "/usr/share/icons/hicolor/32x32/apps/clippy.png", mode = "644" },
-  { source = "icons/128x128.png", dest = "/usr/share/icons/hicolor/128x128/apps/clippy.png", mode = "644" },
-  { source = "icons/128x128@2x.png", dest = "/usr/share/icons/hicolor/256x256@2/apps/clippy.png", mode = "644" },
-]
 [package.metadata.generate-rpm.requires]
 "javascriptcoregtk4.0" = "*"
 "webkit2gtk4.0" = "*"

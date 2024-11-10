@@ -10,10 +10,8 @@ use image::{imageops, ImageBuffer, Rgba};
 use regex::Regex;
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::{io::Cursor, process::Command};
-use tauri::{
-    api::dialog::{MessageDialogBuilder, MessageDialogButtons, MessageDialogKind},
-    Manager,
-};
+use tauri::{Emitter, Manager};
+use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
 
 const SIZE: u32 = 1280;
 
@@ -67,7 +65,7 @@ impl ClipboardHelper<'_> {
 
         APP.get()
             .unwrap()
-            .get_window("main")
+            .get_webview_window("main")
             .unwrap()
             .emit("init", ())
             .unwrap();
@@ -132,9 +130,7 @@ impl ClipboardHelper<'_> {
                     Set("text".to_string())
                 }
             }
-            None => {
-                Set("image".to_string())
-            }
+            None => Set("image".to_string()),
         };
 
         let active_model = if let Some(img) = image {
@@ -213,13 +209,14 @@ pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error
     println!("type_last_clipboard_linux");
     // Check if xdotool is installed
     if !is_tool_installed("xdotool") {
-        MessageDialogBuilder::new(
-            "Missing Dependency",
-            "xdotool is not installed. Please install it to continue.",
-        )
-        .kind(MessageDialogKind::Error)
-        .buttons(MessageDialogButtons::Ok)
-        .show(|_| {});
+        APP.get()
+            .unwrap()
+            .dialog()
+            .message("xdotool is not installed. Please install it to continue.")
+            .title("Missing Dependency")
+            .kind(MessageDialogKind::Error)
+            .buttons(MessageDialogButtons::Ok)
+            .blocking_show();
         return Ok(());
     }
 

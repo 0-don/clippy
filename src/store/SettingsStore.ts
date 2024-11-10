@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api";
 import { IconTypes } from "solid-icons";
 import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
@@ -6,6 +5,7 @@ import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { Settings } from "../@types";
+import { invoke } from "@tauri-apps/api/core";
 
 type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
 

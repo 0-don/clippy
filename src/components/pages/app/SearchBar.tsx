@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
 import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
@@ -63,7 +63,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
           />
           <div class="absolute inset-y-0 right-2 flex items-center">
             <FaRegularImage
-              class={` hover:text-indigo-600  ${showImages() ? "text-indigo-600" : ""}`}
+              class={`hover:text-indigo-600 ${showImages() ? "text-indigo-600" : ""}`}
               onClick={() => setShowImages(!showImages())}
             />
           </div>

@@ -10,9 +10,10 @@ use std::fs;
 use std::path::Path;
 use std::sync::OnceLock;
 use std::sync::{Arc, Mutex};
-use tauri::{LogicalSize, Manager, Window};
+use tauri::{LogicalSize, Manager, WebviewWindow};
 use tauri_plugin_autostart::AutoLaunchManager;
 use tokio::sync::oneshot;
+
 #[cfg(any(windows, target_os = "macos"))]
 use window_shadows::set_shadow;
 
@@ -22,7 +23,7 @@ pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
-pub static MAIN_WINDOW: OnceLock<Arc<Mutex<Window>>> = OnceLock::new();
+pub static MAIN_WINDOW: OnceLock<Arc<Mutex<WebviewWindow>>> = OnceLock::new();
 
 pub static HOTKEY_MANAGER: OnceLock<Arc<Mutex<GlobalHotKeyManager>>> = OnceLock::new();
 pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
@@ -81,7 +82,7 @@ pub fn create_config() {
 }
 
 pub fn init_globals(app: &mut tauri::App) {
-    APP.set(app.handle())
+    APP.set(app.handle().clone())
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
     HOTKEY_MANAGER
         .set(Arc::new(Mutex::new(GlobalHotKeyManager::new().unwrap())))
@@ -104,7 +105,7 @@ pub fn init_globals(app: &mut tauri::App) {
 }
 
 pub fn init_window(app: &mut tauri::App) {
-    let window: tauri::Window = app.get_window("main").unwrap();
+    let window: tauri::WebviewWindow = app.get_webview_window("main").unwrap();
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
     #[cfg(any(windows, target_os = "macos"))]
     set_shadow(&window, true).unwrap();

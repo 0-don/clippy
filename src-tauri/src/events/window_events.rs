@@ -4,7 +4,7 @@ use crate::{
     utils::hotkey_manager::unregister_hotkeys,
 };
 use core::time::Duration;
-use tauri::WindowEvent;
+use tauri::{Emitter, WindowEvent};
 use tokio::sync::oneshot;
 
 pub fn window_event_listener() {

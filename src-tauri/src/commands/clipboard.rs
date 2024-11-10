@@ -1,12 +1,15 @@
 extern crate alloc;
 extern crate image;
-use crate::{service::clipboard::{
-    clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
-    get_clipboards_db, star_clipboard_db,
-}, utils::hotkey_manager::unregister_hotkeys};
+use crate::{
+    service::clipboard::{
+        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
+        get_clipboards_db, star_clipboard_db,
+    },
+    utils::{hotkey_manager::unregister_hotkeys, tauri::config::APP},
+};
 use entity::clipboard::Model;
 use std::fs::File;
-use tauri::api::path::desktop_dir;
+use tauri::Manager;
 
 #[tauri::command]
 pub async fn get_clipboards(
@@ -54,13 +57,17 @@ pub async fn save_clipboard_image(id: i32) -> Result<bool, ()> {
     let image = image::load_from_memory(&clipboard.blob.unwrap()).unwrap();
 
     // Create a path for the new image file on the desktop
-    let image_path = desktop_dir().unwrap().join(format!("clipboard-{}.png", id));
+    let image_path = APP
+        .get()
+        .unwrap()
+        .path()
+        .desktop_dir()
+        .unwrap()
+        .join(format!("clipboard-{}.png", id));
 
     // Save the image to the desktop
     let mut file = File::create(image_path).unwrap();
-    image
-        .write_to(&mut file, image::ImageFormat::Png)
-        .unwrap();
+    image.write_to(&mut file, image::ImageFormat::Png).unwrap();
 
     Ok(true)
 }

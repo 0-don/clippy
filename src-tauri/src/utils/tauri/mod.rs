@@ -1,3 +1,3 @@
+pub mod config;
 pub mod setup;
 pub mod tray;
-pub mod config;

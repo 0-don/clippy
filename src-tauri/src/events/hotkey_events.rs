@@ -17,6 +17,7 @@ use crate::{
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
 use regex::Regex;
+use tauri::Emitter;
 use tokio::sync::oneshot;
 
 pub fn init_hotkey_listener() -> () {

@@ -1,38 +1,46 @@
 use crate::service::window::toggle_main_window;
-use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
-use tauri_plugin_positioner::on_tray_event;
+use tauri::{
+    menu::{Menu, MenuItem},
+    tray::{TrayIcon, TrayIconBuilder},
+};
 
-pub fn system_tray() -> SystemTray {
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let open: CustomMenuItem = CustomMenuItem::new("open".to_string(), "Open");
-    let tray_menu = SystemTrayMenu::new().add_item(open).add_item(quit);
-    let system_tray = SystemTray::new().with_menu(tray_menu);
-    system_tray
-}
+pub fn create_system_tray(app: &mut tauri::App) -> Result<TrayIcon, Box<dyn std::error::Error>> {
+    // Create menu items
+    let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+    let open = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
 
-pub fn system_tray_event(app: &tauri::AppHandle, event: SystemTrayEvent) {
-    on_tray_event(app, &event);
-    match event {
-        SystemTrayEvent::LeftClick {
-            position: _,
-            size: _,
-            ..
-        } => toggle_main_window(),
-        SystemTrayEvent::DoubleClick {
-            position: _,
-            size: _,
-            ..
-        } => toggle_main_window(),
-        SystemTrayEvent::RightClick {
-            position: _,
-            size: _,
-            ..
-        } => {}
-        SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-            "open" => toggle_main_window(),
-            "quit" => app.exit(1),
-            _ => panic!("Unhandled tray event"),
-        },
-        _ => panic!("Unhandled tray event"),
-    }
+    // Create the menu
+    let menu = Menu::with_items(app, &[&open, &quit])?;
+
+    // Build and return the tray
+    let tray = TrayIconBuilder::new()
+        .icon(app.default_window_icon().unwrap().clone())
+        .menu(&menu)
+        .on_menu_event(|app, event| {
+            // Use event.id.0 to get the string value
+            match event.id.0.as_str() {
+                "open" => toggle_main_window(),
+                "quit" => app.exit(0),
+                id => println!("Unhandled menu item: {:?}", id),
+            }
+        })
+        .on_tray_icon_event(|_tray, event| {
+            use tauri::tray::{MouseButton, MouseButtonState, TrayIconEvent};
+
+            match event {
+                TrayIconEvent::Click {
+                    button: MouseButton::Left,
+                    button_state: MouseButtonState::Up,
+                    ..
+                } => toggle_main_window(),
+                TrayIconEvent::DoubleClick {
+                    button: MouseButton::Left,
+                    ..
+                } => toggle_main_window(),
+                _ => (),
+            }
+        })
+        .build(app)?;
+
+    Ok(tray)
 }

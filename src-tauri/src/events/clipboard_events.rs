@@ -1,4 +1,4 @@
-use crate::{utils::clipboard_manager::ClipboardHelper, printlog};
+use crate::{printlog, utils::clipboard_manager::ClipboardHelper};
 use clipboard_master::{CallbackResult, ClipboardHandler};
 use std::io::Error;
 

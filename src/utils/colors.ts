@@ -68,7 +68,6 @@ export function hwbToRgbString(hwbString: string): string {
   const chroma: number = 1 - whiteness - blackness;
   const hueSegment: number = hue / 60;
   const x: number = chroma * (1 - Math.abs((hueSegment % 2) - 1));
-  const m: number = 1 - chroma;
 
   let red: number = 0;
   let green: number = 0;
