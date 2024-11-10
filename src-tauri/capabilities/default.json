@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the windows that are always available",
+  "windows": ["main", "about", "settings"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:webview:allow-create-webview-window",
+    "process:allow-exit",
+    "shell:allow-open",
+    "core:app:allow-version"
+  ]
+}

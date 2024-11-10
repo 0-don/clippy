@@ -1,58 +1,22 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "clippy",
+  "version": "1.2.9",
+  "identifier": "clippy",
   "build": {
     "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": false
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "clippy",
-    "version": "1.2.9"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "notification": {
-        "all": true
-      },
-      "process": {
-        "exit": true
-      },
-      "window": {
-        "create": true
-      }
-    },
-    "systemTray": {
-      "iconPath": "icons/32x32.png",
-      "iconAsTemplate": true
-    },
-    "macOSPrivateApi": true,
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "clippy",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "rpm": {
-        "depends": [
-          "libxdo",
-          "xdotool"
-        ]
-      },
-      "deb": {
-        "depends": [
-          "libxdo3"
-        ]
-      }
-    },
+  "app": {
     "security": {
       "csp": null
+    },
+    "macOSPrivateApi": true,
+    "trayIcon": {
+      "iconPath": "icons/32x32.png",
+      "iconAsTemplate": true
     },
     "windows": [
       {
@@ -67,5 +31,18 @@
         "transparent": true
       }
     ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "linux": {
+      "deb": {
+        "depends": ["libxdo3"]
+      },
+      "rpm": {
+        "depends": ["libxdo", "xdotool"]
+      }
+    }
   }
 }

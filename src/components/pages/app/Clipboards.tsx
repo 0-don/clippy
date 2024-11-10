@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -90,7 +90,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             onClick={() => clipboardRef()!.scrollTo(0, 0)}
           >
             <div class="relative flex items-center justify-center py-1">
-              <FiArrowUp class="text-xl !text-white dark:!text-white " />
+              <FiArrowUp class="text-xl !text-white dark:!text-white" />
               <Show when={globalHotkeyEvent()}>
                 <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
                   {hotkeys().find((key) => key.event === "scroll_to_top")?.key}

@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { BsGlobeAmericas } from "solid-icons/bs";
 import { FiUpload } from "solid-icons/fi";
 import { RiDeviceSave3Fill } from "solid-icons/ri";

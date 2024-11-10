@@ -1,4 +1,3 @@
-import { exit } from "@tauri-apps/api/process";
 import { Component, Show } from "solid-js";
 import { Hotkey } from "../../../@types";
 import HotkeyStore from "../../../store/HotkeyStore";
@@ -6,6 +5,7 @@ import SettingsStore from "../../../store/SettingsStore";
 import { ViewMoreName } from "../../../utils/constants";
 import { createAboutWindow, createSettingsWindow } from "../../../utils/helpers";
 import { Toggle } from "../../elements/Toggle";
+import { exit } from "@tauri-apps/plugin-process";
 
 interface ViewMoreProps {}
 

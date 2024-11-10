@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { BsDeviceHdd } from "solid-icons/bs";
 import { FiTrash2 } from "solid-icons/fi";
 import { Component, createSignal, onMount } from "solid-js";

@@ -1,6 +1,6 @@
-import { invoke } from "@tauri-apps/api";
 import { createRoot, createSignal } from "solid-js";
 import { Clips } from "../@types";
+import { invoke } from "@tauri-apps/api/core";
 
 type ClipboardWhere = {
   cursor?: number;
