@@ -14,9 +14,6 @@ use tauri::{LogicalSize, Manager, WebviewWindow};
 use tauri_plugin_autostart::AutoLaunchManager;
 use tokio::sync::oneshot;
 
-#[cfg(any(windows, target_os = "macos"))]
-use window_shadows::set_shadow;
-
 pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
 
 pub static MAIN_WINDOW_X: i32 = 375;
@@ -107,8 +104,13 @@ pub fn init_globals(app: &mut tauri::App) {
 pub fn init_window(app: &mut tauri::App) {
     let window: tauri::WebviewWindow = app.get_webview_window("main").unwrap();
     let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
+
     #[cfg(any(windows, target_os = "macos"))]
-    set_shadow(&window, true).unwrap();
+    {
+        let _ = window.set_decorations(false);
+        let _ = window.set_shadow(true);
+    }
+
     #[cfg(debug_assertions)]
     {
         window.open_devtools();
