@@ -1,4 +1,4 @@
-import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { invoke } from "@tauri-apps/api/core";
 import { WindowName } from "../@types";
 
 export function formatBytes(bytes: number, decimals = 2) {
@@ -17,37 +17,14 @@ export async function sleep(milis: number) {
   return new Promise((resolve) => setTimeout(resolve, milis));
 }
 
-export function createAboutWindow() {
-  const window = new WebviewWindow("about", {
-    url: "./pages/about.html",
-    title: "About",
-    width: 375,
-    height: 600,
-    alwaysOnTop: true,
-  });
-
-  window.once("tauri://error", (e) => console.error(e));
-}
-
-export function createSettingsWindow() {
-  const window = new WebviewWindow("settings", {
-    url: "./pages/settings.html",
-    title: "Settings",
-    height: 450,
-    width: 500,
-    alwaysOnTop: true,
-  });
-
-  window.once("tauri://error", (e) => console.error(e));
-}
-
-export function openWindow(windowName: WindowName) {
+export async function openWindow(windowName: WindowName) {
   switch (windowName) {
-    case "about":
-      createAboutWindow();
+    case "About":
+      // await createAboutWindow();
+      await invoke("open_new_window", { windowName });
       break;
-    case "settings":
-      createSettingsWindow();
+    case "Settings":
+      await invoke("open_new_window", { windowName });
       break;
     default:
       break;

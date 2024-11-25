@@ -13,14 +13,14 @@ const Index = () => {
   const { setGlobalHotkeyEvent } = HotkeyStore;
   const { init, setCurrentTab } = AppStore;
 
-  createResource(init);
+  createResource(init);1
 
   onMount(() => {
     listen("set_global_hotkey_event", ({ payload }) => setGlobalHotkeyEvent(!!payload));
 
     listen("init", init);
 
-    listen("open_window", ({ payload }: { payload: WindowName }) => openWindow(payload));
+    listen("open_window", async ({ payload }: { payload: WindowName }) => openWindow(payload));
 
     listen("change_tab", ({ payload }: { payload: TabId }) => setCurrentTab(payload));
   });

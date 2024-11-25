@@ -1,11 +1,11 @@
+import { invoke } from "@tauri-apps/api/core";
 import { IconTypes } from "solid-icons";
 import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
-import { Settings } from "../@types";
-import { invoke } from "@tauri-apps/api/core";
+import { Settings, WindowName } from "../@types";
 
 type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
 
@@ -48,7 +48,11 @@ function createSettingsStore() {
     setSettings(settings);
   };
 
-  const syncClipboard = () => invoke("sync_clipboard_history") as Promise<void>;
+  const syncClipboard = async () => invoke<void>("sync_clipboard_history") 
+
+  const openWindow = async (windowName: WindowName) => invoke("open_new_window", { windowName });
+
+  const exitApp = async () => invoke("exit_app");
 
   return {
     settings,
@@ -60,6 +64,8 @@ function createSettingsStore() {
     getCurrentTab,
     initSettings,
     syncClipboard,
+    openWindow,
+    exitApp,
   };
 }
 

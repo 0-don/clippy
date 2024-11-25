@@ -51,4 +51,4 @@ export type HotkeyEvent =
   | "toggle_dev_tools"
   | "scroll_to_top";
 
-export type WindowName = "about" | "settings";
+export type WindowName = "About" | "Settings";

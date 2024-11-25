@@ -47,6 +47,8 @@ pub fn run() {
             settings::update_settings,
             settings::toggle_autostart,
             window::window_display_toggle,
+            window::open_new_window,
+            window::exit_app,
             window::get_db_size,
             window::get_db_path,
             window::sync_clipboard_history,

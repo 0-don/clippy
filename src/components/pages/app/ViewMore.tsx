@@ -3,14 +3,12 @@ import { Hotkey } from "../../../@types";
 import HotkeyStore from "../../../store/HotkeyStore";
 import SettingsStore from "../../../store/SettingsStore";
 import { ViewMoreName } from "../../../utils/constants";
-import { createAboutWindow, createSettingsWindow } from "../../../utils/helpers";
 import { Toggle } from "../../elements/Toggle";
-import { exit } from "@tauri-apps/plugin-process";
 
 interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
-  const { settings, syncClipboard } = SettingsStore;
+  const { settings, syncClipboard, openWindow, exitApp } = SettingsStore;
   const { hotkeys, globalHotkeyEvent } = HotkeyStore;
 
   const createButton = (name: ViewMoreName, onClick: () => void) => {
@@ -23,7 +21,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
         onClick={onClick}
       >
         <div class="flex items-center justify-between py-4">
-          <div class="flex items-center ">
+          <div class="flex items-center">
             <div class="relative">
               <div innerHTML={JSON.parse(hotkey.icon)} class="text-2xl" />
               <Show when={globalHotkeyEvent() && hotkey.status}>
@@ -46,11 +44,11 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* Sync Clipboard History  */}
       {createButton("Sync Clipboard History", syncClipboard)}
       {/* Preferences */}
-      {createButton("Preferences", createSettingsWindow)}
+      {createButton("Preferences", async () => openWindow("Settings"))}
       {/* About */}
-      {createButton("About", createAboutWindow)}
+      {createButton("About", async () => openWindow("About"))}
       {/* Exit */}
-      {createButton("Exit", async () => await exit(1))}
+      {createButton("Exit", exitApp)}
     </>
   );
 };

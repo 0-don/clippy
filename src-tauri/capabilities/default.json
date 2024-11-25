@@ -5,9 +5,8 @@
   "windows": ["main", "about", "settings"],
   "permissions": [
     "core:event:allow-listen",
-    "core:webview:allow-create-webview-window",
-    "process:allow-exit",
     "shell:allow-open",
-    "core:app:allow-version"
+    "core:app:allow-version",
+    "core:window:allow-get-all-windows"
   ]
 }
