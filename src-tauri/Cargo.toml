@@ -45,7 +45,6 @@ clipboard-master = "3"
 arboard = { version = "3" }
 image = "0"
 
-window-shadows = "0"
 chrono = "0"
 enigo = "0"
 base64 = "0"

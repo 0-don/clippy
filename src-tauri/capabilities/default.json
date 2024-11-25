@@ -3,10 +3,5 @@
   "identifier": "default",
   "description": "Capability for the windows that are always available",
   "windows": ["main", "about", "settings"],
-  "permissions": [
-    "core:event:allow-listen",
-    "shell:allow-open",
-    "core:app:allow-version",
-    "core:window:allow-get-all-windows"
-  ]
+  "permissions": ["core:event:allow-listen"]
 }

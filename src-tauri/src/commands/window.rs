@@ -1,3 +1,6 @@
+use tauri::AppHandle;
+use tauri_plugin_shell::ShellExt;
+
 use crate::{
     service::{
         clipboard::count_clipboards_db,
@@ -20,6 +23,19 @@ pub fn open_new_window(window_name: WindowName) {
 #[tauri::command]
 pub fn exit_app() {
     std::process::exit(0);
+}
+
+#[tauri::command]
+pub fn get_app_version(app: AppHandle) -> String {
+    app.package_info().version.to_string()
+}
+
+#[tauri::command]
+pub fn open_browser_url(url: String, app: AppHandle) {
+    app.shell()
+        .open(url, None)
+        .map_err(|e| e.to_string())
+        .expect("failed to open browser");
 }
 
 #[tauri::command]
