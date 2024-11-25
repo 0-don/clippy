@@ -5,15 +5,15 @@ use crate::{
     service::{
         global::get_window_stop_tx, hotkey::with_hotkeys, settings::update_settings_synchronize,
     },
-    types::types::{Config, DataPath},
+    types::types::{Config, DataPath, WindowName},
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
 use std::{
     fs::{self},
     path::{Path, PathBuf},
 };
-use tauri::PhysicalPosition;
-use tauri::{Emitter, Manager};
+use tauri::{Emitter, Manager, WebviewUrl};
+use tauri::{PhysicalPosition, WebviewWindowBuilder};
 use tauri_plugin_dialog::DialogExt;
 
 pub fn toggle_main_window() {
@@ -210,4 +210,47 @@ pub async fn sync_clipboard_history_toggle() {
         }
     })
     .await;
+}
+
+pub fn create_about_window() {
+    let app = crate::service::global::get_app();
+
+    // Close existing window if it exists
+    if let Some(window) = app.get_webview_window("about") {
+        let _ = window.close();
+    }
+
+    WebviewWindowBuilder::new(app, "about", WebviewUrl::App("pages/about.html".into()))
+        .title("About")
+        .inner_size(375.0, 600.0)
+        .always_on_top(true)
+        .build()
+        .unwrap();
+}
+
+pub fn create_settings_window() {
+    let app = crate::service::global::get_app();
+
+    // Close existing window if it exists
+    if let Some(window) = app.get_webview_window("settings") {
+        let _ = window.close();
+    }
+
+    WebviewWindowBuilder::new(
+        app,
+        "settings",
+        WebviewUrl::App("pages/settings.html".into()),
+    )
+    .title("Settings")
+    .inner_size(500.0, 450.0)
+    .always_on_top(true)
+    .build()
+    .unwrap();
+}
+
+pub fn open_window(window_name: WindowName) {
+    match window_name {
+        WindowName::About => create_about_window(),
+        WindowName::Settings => create_settings_window(),
+    }
 }

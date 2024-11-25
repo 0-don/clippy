@@ -33,3 +33,9 @@ pub struct Key {
     pub key: String,
     pub hotkey: HotKey,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum WindowName {
+    About,
+    Settings,
+}

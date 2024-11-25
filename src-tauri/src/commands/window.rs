@@ -1,15 +1,25 @@
 use crate::{
     service::{
         clipboard::count_clipboards_db,
-        window::{get_data_path, sync_clipboard_history_toggle, toggle_main_window},
+        window::{get_data_path, open_window, sync_clipboard_history_toggle, toggle_main_window},
     },
-    types::types::{Config, DatabaseInfo},
+    types::types::{Config, DatabaseInfo, WindowName},
 };
 use std::fs::{self, read_to_string};
 
 #[tauri::command]
 pub fn window_display_toggle() {
     toggle_main_window();
+}
+
+#[tauri::command]
+pub fn open_new_window(window_name: WindowName) {
+    open_window(window_name);
+}
+
+#[tauri::command]
+pub fn exit_app() {
+    std::process::exit(0);
 }
 
 #[tauri::command]
