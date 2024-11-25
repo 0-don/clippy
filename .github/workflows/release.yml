@@ -13,7 +13,7 @@ env:
   DEPENDENCIES_RPM: "javascriptcoregtk4.1, webkit2gtk4.1, libxdo, libappindicator-gtk3, xdotool"
 jobs:
   setup:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       name: ${{ steps.get-package.outputs.name }}
       name_bin: ${{ steps.get-package.outputs.name }}-bin
@@ -53,7 +53,7 @@ jobs:
               args: "--target aarch64-apple-darwin"
             - platform: "macos-latest" # for Intel based macs.
               args: "--target x86_64-apple-darwin"
-            - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
+            - platform: "ubuntu-24.04" # for Tauri v1 you could replace this with ubuntu-20.04.
               args: ""
             - platform: "windows-latest"
               args: ""
@@ -74,16 +74,16 @@ jobs:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
+        if: matrix.platform == 'ubuntu-24.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libappindicator3-dev librsvg2-dev libxcb-shape0-dev libxcb-xfixes0-dev patchelf libxdo-dev libssl1.1 libjavascriptcoregtk-4.1-dev
+          sudo apt-get install -y libgtk-3-dev libappindicator3-dev librsvg2-dev libxcb-shape0-dev libxcb-xfixes0-dev patchelf libxdo-dev libjavascriptcoregtk-4.1-dev libwebkit2gtk-4.1-dev
 
       - name: install frontend dependencies
         run: yarn install
 
       - name: Set NO_STRIP environment variable
-        if: matrix.platform == 'ubuntu-22.04' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-24.04' || matrix.platform == 'macos-latest'
         run: echo "NO_STRIP=true" >> $GITHUB_ENV
 
 
@@ -99,7 +99,7 @@ jobs:
 
 
       - name: copy deb package && create PKGBUILD file (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.platform == 'ubuntu-24.04'
         run: |
           mkdir -p ${{ needs.setup.outputs.name_bin }}
           cp -fr ${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
@@ -127,7 +127,7 @@ jobs:
           cat ${{ needs.setup.outputs.name_bin }}/PKGBUILD
 
       - name: create arch package (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.platform == 'ubuntu-24.04'
         uses: 2m/arch-pkgbuild-builder@v1.17
         with:
           debug: true
@@ -135,7 +135,7 @@ jobs:
           pkgname: ${{ needs.setup.outputs.name_bin }}/
 
       # - name: copy deb package && create rpm.spec file (ubuntu only)
-      #   if: matrix.platform == 'ubuntu-22.04'
+      #   if: matrix.platform == 'ubuntu-24.04'
       #   run: |
       #     mkdir -p ${{ needs.setup.outputs.name_bin }}
       #     cp -fr ${{ needs.setup.outputs.deb_pkg_path }}/${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
@@ -170,14 +170,14 @@ jobs:
       #     cat ${{ needs.setup.outputs.name_bin }}/rpm.spec
 
       # - name: createa rpm package (ubuntu only)
-      #   if: matrix.platform == 'ubuntu-22.04'
+      #   if: matrix.platform == 'ubuntu-24.04'
       #   uses: Antikythera/build-rpm@latest
       #   with:
       #     spec_file: ${{ needs.setup.outputs.name_bin }}/rpm.spec
       #     sources: ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
 
       - name: upload arch && rpm release (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.platform == 'ubuntu-24.04'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
