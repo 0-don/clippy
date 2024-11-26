@@ -1,27 +1,21 @@
-use crate::{printlog, utils::clipboard_manager::ClipboardHelper};
-use clipboard_master::{CallbackResult, ClipboardHandler};
-use std::io::Error;
+use crate::utils::clipboard_manager::ClipboardHelper;
+use tauri::{Listener, Manager};
+use tauri_plugin_clipboard::Clipboard;
 
-pub struct Handler;
+pub fn init_clipboard_listener(app: &mut tauri::App) {
+    let clipboard = app.handle().state::<Clipboard>();
 
-impl ClipboardHandler for Handler {
-    fn on_clipboard_change(&mut self) -> CallbackResult {
-        printlog!("*********Clipboard changed***********");
-        tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current()
-                .block_on(async { ClipboardHelper::upsert_clipboard().await })
-        });
+    clipboard
+        .start_monitor(app.handle().clone())
+        .expect("Failed to start clipboard monitor");
 
-        printlog!("*********Clipboard updated**********");
-
-        // first copy doesnt work, so we do it twice
-        // tauri::async_runtime::spawn(async { upsert_clipboard().await });
-
-        CallbackResult::Next
-    }
-
-    fn on_clipboard_error(&mut self, error: Error) -> CallbackResult {
-        println!("Error: {}", error);
-        CallbackResult::Next
-    }
+    // Use runtime::Event for Tauri v2
+    let _listener = app.handle().listen(
+        "plugin:clipboard://clipboard-monitor/update",
+        move |_event| {
+            tauri::async_runtime::spawn(async {
+                ClipboardHelper::upsert_clipboard().await;
+            });
+        },
+    );
 }

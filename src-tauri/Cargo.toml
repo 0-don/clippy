@@ -33,6 +33,7 @@ tauri = { version = "2", features = [
 tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-process = "2"
+tauri-plugin-clipboard = "2"
 tauri-plugin-positioner = { version = "2", features = ["tray-icon"] }
 tauri-plugin-autostart = "2"
 
@@ -41,8 +42,6 @@ serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 
 global-hotkey = "0"
-clipboard-master = "3"
-arboard = { version = "3" }
 image = "0"
 
 chrono = "0"

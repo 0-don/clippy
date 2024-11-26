@@ -1,23 +1,13 @@
 use crate::{
     types::types::Key,
     utils::tauri::config::{
-        APP, CLIPBOARD, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW,
-        WINDOW_STOP_TX,
+        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
     },
 };
-use arboard::Clipboard;
 use global_hotkey::GlobalHotKeyManager;
 use std::{collections::HashMap, sync::MutexGuard};
 use tauri::{AppHandle, Manager, WebviewWindow};
 use tokio::sync::oneshot;
-
-pub fn get_clipboard() -> MutexGuard<'static, Clipboard> {
-    CLIPBOARD
-        .get()
-        .expect("Failed to get CLIPBOARD")
-        .lock()
-        .expect("Failed to lock CLIPBOARD")
-}
 
 pub fn get_hotkey_manager() -> MutexGuard<'static, GlobalHotKeyManager> {
     HOTKEY_MANAGER
