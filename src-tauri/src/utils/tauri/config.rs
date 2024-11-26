@@ -3,7 +3,6 @@ use crate::define_hotkey_event;
 use crate::service::global::get_app;
 use crate::service::window::get_data_path;
 use crate::types::types::{Config, Key};
-use arboard::Clipboard;
 use global_hotkey::GlobalHotKeyManager;
 use std::collections::HashMap;
 use std::fs;
@@ -26,7 +25,6 @@ pub static HOTKEY_MANAGER: OnceLock<Arc<Mutex<GlobalHotKeyManager>>> = OnceLock:
 pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
-pub static CLIPBOARD: OnceLock<Arc<Mutex<Clipboard>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 
 define_hotkey_event! {
@@ -90,9 +88,6 @@ pub fn init_globals(app: &mut tauri::App) {
     HOTKEYS
         .set(Arc::new(Mutex::new(HashMap::new())))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEYS"));
-    CLIPBOARD
-        .set(Arc::new(Mutex::new(Clipboard::new().unwrap())))
-        .unwrap_or_else(|_| panic!("Failed to initialize CLIPBOARD"));
     HOTKEY_STOP_TX
         .set(Mutex::new(None))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_STOP_TX"));

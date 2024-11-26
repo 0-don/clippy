@@ -1,14 +1,14 @@
 extern crate alloc;
-use super::global::{get_clipboard, get_main_window};
-use crate::connection;
-use alloc::borrow::Cow;
-use arboard::ImageData;
+use super::global::get_main_window;
+use crate::{connection, utils::tauri::config::APP};
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
 };
+use tauri::Manager;
+use tauri_plugin_clipboard::Clipboard;
 
 pub async fn insert_clipboard_db(clipboard: ActiveModel) -> Result<Model, DbErr> {
     let db = connection::establish_connection().await?;
@@ -116,6 +116,7 @@ pub async fn get_clipboards_db(
 
     Ok(parsed_model)
 }
+
 pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
     let db = connection::establish_connection().await?;
 
@@ -178,36 +179,23 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
 }
 
 pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
-    let clipboard = get_clipboard_db(id).await;
+    let clipboard_data = get_clipboard_db(id).await?;
+    let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
 
-    if clipboard.is_ok() {
-        // let mut clip = Clipboard::new().unwrap();
-        let r#type = &clipboard.as_ref().unwrap().r#type;
+    let result = match clipboard_data.r#type.as_str() {
+        "image" => match clipboard_data.blob {
+            Some(blob) => clipboard.write_image_binary(blob).is_ok(),
+            None => false,
+        },
+        _ => match clipboard_data.content {
+            Some(content) => clipboard.write_text(content).is_ok(),
+            None => false,
+        },
+    };
 
-        if r#type == "image" {
-            let clipboard_ref = clipboard.as_ref().unwrap();
-            let width = clipboard_ref.width.unwrap() as usize;
-            let height = clipboard_ref.height.unwrap() as usize;
-            let blob = clipboard_ref.blob.as_ref().unwrap();
-
-            let image = image::load_from_memory(blob).unwrap();
-
-            let img_data = ImageData {
-                width,
-                height,
-                bytes: Cow::from(image.as_bytes()),
-            };
-
-            get_clipboard().set_image(img_data).unwrap();
-        } else {
-            let content = clipboard.unwrap().content.unwrap();
-            get_clipboard().set_text(content).unwrap();
-        }
-
-        get_main_window().hide().unwrap();
-
-        return Ok(true);
+    if result {
+        get_main_window().hide().ok();
     }
 
-    Ok(false)
+    Ok(result)
 }

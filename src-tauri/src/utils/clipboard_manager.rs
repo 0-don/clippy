@@ -1,61 +1,41 @@
-use super::tauri::config::{APP, CLIPBOARD};
+use super::tauri::config::APP;
 use crate::{
-    connection, printlog,
+    connection,
     service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
 };
 use core::time::Duration;
 use enigo::{Enigo, Keyboard, Settings};
 use entity::clipboard::{self, ActiveModel};
-use image::{imageops, ImageBuffer, Rgba};
+use image::imageops;
 use regex::Regex;
 use sea_orm::{EntityTrait, QueryOrder, Set};
 use std::{io::Cursor, process::Command};
 use tauri::{Emitter, Manager};
+use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
 
-const SIZE: u32 = 1280;
-
-pub fn get_os_clipboard() -> (Option<String>, Option<arboard::ImageData<'static>>) {
-    printlog!("get_os_clipboard");
-    let mut text: Option<String> = CLIPBOARD
-        .get()
-        .unwrap()
-        .lock()
-        .unwrap()
-        .get_text()
-        .ok()
-        .unwrap_or("".into())
-        .trim()
-        .to_string()
-        .into();
-    if text.is_some() && text.as_ref().unwrap().len() == 0 {
-        text = None;
-    }
-
-    let image: Option<arboard::ImageData<'_>> =
-        CLIPBOARD.get().unwrap().lock().unwrap().get_image().ok();
-
-    printlog!("get_os_clipboard end");
-
-    return (text, image);
-}
+const MAX_IMAGE_SIZE: u32 = 1280;
 
 #[derive(Debug, Clone)]
-pub struct ClipboardHelper<'a> {
-    pub clipboard: (Option<String>, Option<arboard::ImageData<'a>>),
+pub struct ClipboardHelper {
     pub active_model: ActiveModel,
 }
-impl ClipboardHelper<'_> {
+
+impl ClipboardHelper {
     pub fn new() -> Self {
         ClipboardHelper {
-            clipboard: (None, None),
             active_model: ActiveModel::default(),
         }
     }
 
     pub async fn upsert_clipboard() {
+        let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
         let mut clipboard_helper = ClipboardHelper::new();
-        clipboard_helper.refresh_clipboard();
+
+        let text = clipboard.read_text().ok();
+        let image_data = clipboard.read_image_binary().ok();
+
+        clipboard_helper.parse_model(text, image_data);
 
         if clipboard_helper.check_if_last_is_same().await {
             return;
@@ -69,11 +49,6 @@ impl ClipboardHelper<'_> {
             .unwrap()
             .emit("init", ())
             .unwrap();
-    }
-
-    pub fn refresh_clipboard(&mut self) {
-        self.clipboard = get_os_clipboard();
-        self.active_model = self.parse_model();
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
@@ -111,68 +86,76 @@ impl ClipboardHelper<'_> {
         return false;
     }
 
-    pub fn parse_model(&mut self) -> ActiveModel {
-        let (text, image) = &self.clipboard;
-
+    pub fn parse_model(&mut self, text: Option<String>, image_data: Option<Vec<u8>>) {
         let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
         let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
         let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)").unwrap();
 
-        let r#type = match text {
-            Some(text) => {
-                if is_link.is_match(text) {
-                    Set("link".to_string())
-                } else if is_hex.is_match(text) {
-                    Set("hex".to_string())
-                } else if is_rgb.is_match(text) {
-                    Set("rgb".to_string())
-                } else {
-                    Set("text".to_string())
-                }
-            }
-            None => Set("image".to_string()),
-        };
-
-        let active_model = if let Some(img) = image {
-            printlog!("image is start");
-
-            let image_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> = ImageBuffer::from_raw(
-                img.width.try_into().unwrap(),
-                img.height.try_into().unwrap(),
-                img.bytes.clone().into(),
-            )
-            .expect("Failed to create image buffer from raw data");
-
-            // Determine new dimensions
-            let (new_width, new_height) = {
-                let aspect_ratio = image_buffer.width() as f64 / image_buffer.height() as f64;
-                if image_buffer.width() > SIZE || image_buffer.height() > SIZE {
-                    if image_buffer.width() > image_buffer.height() {
-                        (SIZE, (SIZE as f64 / aspect_ratio) as u32)
+        let r#type = if image_data.is_some() {
+            Set("image".to_string())
+        } else {
+            match &text {
+                Some(text) => {
+                    if is_link.is_match(text) {
+                        Set("link".to_string())
+                    } else if is_hex.is_match(text) {
+                        Set("hex".to_string())
+                    } else if is_rgb.is_match(text) {
+                        Set("rgb".to_string())
                     } else {
-                        ((SIZE as f64 * aspect_ratio) as u32, SIZE)
+                        Set("text".to_string())
+                    }
+                }
+                None => Set("text".to_string())  // Default to text if neither image nor text present
+            }
+        };
+        
+        let active_model = if let Some(img_bytes) = image_data {
+            // Process image data
+            if let Ok(image_buffer) = image::load_from_memory(&img_bytes) {
+                let image_buffer = image_buffer.to_rgba8();
+
+                // Determine new dimensions
+                let (new_width, new_height) = {
+                    let aspect_ratio = image_buffer.width() as f64 / image_buffer.height() as f64;
+                    if image_buffer.width() > MAX_IMAGE_SIZE || image_buffer.height() > MAX_IMAGE_SIZE {
+                        if image_buffer.width() > image_buffer.height() {
+                            (MAX_IMAGE_SIZE, (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32)
+                        } else {
+                            ((MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32, MAX_IMAGE_SIZE)
+                        }
+                    } else {
+                        (image_buffer.width(), image_buffer.height())
+                    }
+                };
+
+                // Resize image
+                let resized_image =
+                    imageops::resize(&image_buffer, new_width, new_height, imageops::Nearest);
+
+                let mut bytes: Vec<u8> = Vec::new();
+                if resized_image
+                    .write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Png)
+                    .is_ok()
+                {
+                    ActiveModel {
+                        size: Set(Some(bytes.len().to_string())),
+                        height: Set(Some(resized_image.height() as i32)),
+                        width: Set(Some(resized_image.width() as i32)),
+                        blob: Set(Some(bytes)),
+                        ..Default::default()
                     }
                 } else {
-                    (image_buffer.width(), image_buffer.height())
+                    ActiveModel {
+                        blob: Set(None),
+                        ..Default::default()
+                    }
                 }
-            };
-
-            // Resize the image using the `image` library
-            let resized_image =
-                imageops::resize(&image_buffer, new_width, new_height, imageops::Nearest);
-
-            let mut bytes: Vec<u8> = Vec::new();
-            resized_image
-                .write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Png)
-                .expect("Failed to write resized image to buffer");
-
-            printlog!("image is end");
-            ActiveModel {
-                size: Set(Some(bytes.len().to_string())),
-                height: Set(Some(resized_image.height() as i32)),
-                width: Set(Some(resized_image.width() as i32)),
-                blob: Set(Some(bytes)),
-                ..Default::default()
+            } else {
+                ActiveModel {
+                    blob: Set(None),
+                    ..Default::default()
+                }
             }
         } else {
             ActiveModel {
@@ -181,12 +164,12 @@ impl ClipboardHelper<'_> {
             }
         };
 
-        ActiveModel {
+        self.active_model = ActiveModel {
             r#type,
-            content: Set(text.to_owned()),
+            content: Set(text),
             star: Set(Some(false)),
             ..active_model
-        }
+        };
     }
 }
 

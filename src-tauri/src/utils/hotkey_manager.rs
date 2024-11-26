@@ -69,50 +69,6 @@ fn unregister_hotkeys_inner(all: bool) {
     }
 }
 
-// fn register_hotkeys_inner(all: bool) {
-//     for (_, hotkey) in get_hotkey_store().iter_mut() {
-//         if !hotkey.state && (all || hotkey.is_global) {
-//             let key = hotkey.hotkey.clone();
-//             match get_hotkey_manager().register(key) {
-//                 Ok(_) => {
-//                     printlog!("register_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
-//                 }
-//                 Err(e) => {
-//                     printlog!(
-//                         "register_hotkeys error {:?} {:?} {:?}",
-//                         e,
-//                         hotkey.event,
-//                         hotkey.key_str
-//                     );
-//                 }
-//             };
-//             hotkey.state = true;
-//         }
-//     }
-// }
-
-// fn unregister_hotkeys_inner(all: bool) {
-//     for (_, hotkey) in get_hotkey_store().iter_mut() {
-//         if hotkey.state && (all || !hotkey.is_global) {
-//             let key = hotkey.hotkey.clone();
-//             match get_hotkey_manager().unregister(key) {
-//                 Ok(_) => {
-//                     printlog!("unregister_hotkeys {:?} {:?}", hotkey.event, hotkey.key_str);
-//                 }
-//                 Err(e) => {
-//                     printlog!(
-//                         "unregister_hotkeys error {:?} {:?} {:?}",
-//                         e,
-//                         hotkey.event,
-//                         hotkey.key_str
-//                     );
-//                 }
-//             };
-//             hotkey.state = false;
-//         }
-//     }
-// }
-
 fn insert_hotkey_into_store(key: Key) {
     let mut hotkeys_lock = get_hotkey_store();
 
