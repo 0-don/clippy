@@ -3,6 +3,7 @@ use crate::define_hotkey_event;
 use crate::service::global::get_app;
 use crate::service::window::get_data_path;
 use crate::types::types::{Config, Key};
+use global_hotkey::hotkey::HotKey;
 use global_hotkey::GlobalHotKeyManager;
 use std::collections::HashMap;
 use std::fs;
@@ -12,7 +13,24 @@ use std::sync::{Arc, Mutex};
 use tauri::{LogicalSize, Manager, WebviewWindow};
 use tauri_plugin_autostart::AutoLaunchManager;
 use tokio::sync::oneshot;
+pub struct SafeHotKeyManager(GlobalHotKeyManager);
 
+unsafe impl Send for SafeHotKeyManager {}
+unsafe impl Sync for SafeHotKeyManager {}
+
+impl SafeHotKeyManager {
+    pub fn new(manager: GlobalHotKeyManager) -> Self {
+        Self(manager)
+    }
+
+    pub fn register_all(&self, hotkeys: &[HotKey]) -> global_hotkey::Result<()> {
+        self.0.register_all(hotkeys)
+    }
+
+    pub fn unregister_all(&self, hotkeys: &[HotKey]) -> global_hotkey::Result<()> {
+        self.0.unregister_all(hotkeys)
+    }
+}
 pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
 
 pub static MAIN_WINDOW_X: i32 = 375;
@@ -21,7 +39,7 @@ pub static MAIN_WINDOW_Y: i32 = 600;
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<WebviewWindow>>> = OnceLock::new();
 
-pub static HOTKEY_MANAGER: OnceLock<Arc<Mutex<GlobalHotKeyManager>>> = OnceLock::new();
+pub static HOTKEY_MANAGER: OnceLock<Arc<Mutex<SafeHotKeyManager>>> = OnceLock::new();
 pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
@@ -80,7 +98,9 @@ pub fn init_globals(app: &mut tauri::App) {
     APP.set(app.handle().clone())
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
     HOTKEY_MANAGER
-        .set(Arc::new(Mutex::new(GlobalHotKeyManager::new().unwrap())))
+        .set(Arc::new(Mutex::new(SafeHotKeyManager::new(
+            GlobalHotKeyManager::new().unwrap()
+        ))))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_MANAGER"));
     HOTKEY_RUNNING
         .set(Arc::new(Mutex::new(false)))
