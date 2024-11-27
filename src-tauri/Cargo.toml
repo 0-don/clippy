@@ -40,7 +40,6 @@ tauri-plugin-autostart = "2"
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
-
 global-hotkey = "0"
 image = "0"
 

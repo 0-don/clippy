@@ -1,15 +1,14 @@
 use crate::{
     types::types::Key,
     utils::tauri::config::{
-        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
+        SafeHotKeyManager, APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX
     },
 };
-use global_hotkey::GlobalHotKeyManager;
 use std::{collections::HashMap, sync::MutexGuard};
 use tauri::{AppHandle, Manager, WebviewWindow};
 use tokio::sync::oneshot;
 
-pub fn get_hotkey_manager() -> MutexGuard<'static, GlobalHotKeyManager> {
+pub fn get_hotkey_manager() -> MutexGuard<'static, SafeHotKeyManager> {
     HOTKEY_MANAGER
         .get()
         .expect("Failed to get HOTKEY_MANAGER")
