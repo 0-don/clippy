@@ -32,7 +32,6 @@ tauri = { version = "2", features = [
 ] }
 tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
-tauri-plugin-process = "2"
 tauri-plugin-clipboard = "2"
 tauri-plugin-positioner = { version = "2", features = ["tray-icon"] }
 tauri-plugin-autostart = "2"
@@ -49,7 +48,7 @@ base64 = "0"
 regex = "1"
 
 [dependencies.sea-orm]
-version = "^0"
+version = "^1"
 features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"]
 default-features = false
 

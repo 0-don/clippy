@@ -2,6 +2,7 @@ use entity::{hotkey, settings};
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::sea_orm::entity::*;
 
+
 #[derive(Debug)]
 pub enum KeyboardLayout {
     Qwerty,

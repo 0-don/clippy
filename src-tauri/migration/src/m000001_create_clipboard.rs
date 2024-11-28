@@ -40,7 +40,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Clipboard::Width).integer())
                     .col(ColumnDef::new(Clipboard::Height).integer())
                     .col(ColumnDef::new(Clipboard::Size).string())
-                    .col(ColumnDef::new(Clipboard::Blob).blob(BlobSize::Long))
+                    .col(ColumnDef::new(Clipboard::Blob).blob())
                     .col(ColumnDef::new(Clipboard::Base64).text())
                     .col(ColumnDef::new(Clipboard::Star).boolean().default(true))
                     .col(
