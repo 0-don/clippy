@@ -1,7 +1,6 @@
 extern crate alloc;
 use super::global::get_main_window;
 use crate::{connection, utils::tauri::config::APP};
-use base64::{engine::general_purpose::STANDARD, Engine as _};
 use entity::clipboard::{self, ActiveModel, Model};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
@@ -96,11 +95,7 @@ pub async fn get_clipboards_db(
     let parsed_model: Vec<Model> = model
         .into_iter()
         .map(|mut m| {
-            if let Some(blob) = &m.blob {
-                let base64_string = STANDARD.encode(blob);
-                m.base64 = Some(format!("data:image/png;base64,{}", base64_string));
-                m.blob = None;
-            }
+            m.image = None;
 
             // Safely truncate content if it's longer than 100 characters
             if let Some(content) = &m.content {
@@ -183,7 +178,7 @@ pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
     let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
 
     let result = match clipboard_data.r#type.as_str() {
-        "image" => match clipboard_data.blob {
+        "image" => match clipboard_data.image {
             Some(blob) => clipboard.write_image_binary(blob).is_ok(),
             None => false,
         },

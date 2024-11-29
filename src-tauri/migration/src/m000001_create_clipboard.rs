@@ -9,8 +9,8 @@ enum Clipboard {
     Width,
     Height,
     Size,
-    Blob,
-    Base64,
+    Image,
+    ImageThumbnailBase64,
     Star,
     CreatedDate,
 }
@@ -40,13 +40,13 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Clipboard::Width).integer())
                     .col(ColumnDef::new(Clipboard::Height).integer())
                     .col(ColumnDef::new(Clipboard::Size).string())
-                    .col(ColumnDef::new(Clipboard::Blob).blob())
-                    .col(ColumnDef::new(Clipboard::Base64).text())
+                    .col(ColumnDef::new(Clipboard::Image).blob())
+                    .col(ColumnDef::new(Clipboard::ImageThumbnailBase64).text())
                     .col(ColumnDef::new(Clipboard::Star).boolean().default(true))
                     .col(
                         ColumnDef::new(Clipboard::CreatedDate)
                             .date_time()
-                            .extra("DEFAULT CURRENT_TIMESTAMP".to_owned()), // .default("CURRENT_TIMESTAMP".to_owned()),
+                            .default(Expr::current_timestamp()),
                     )
                     .to_owned(),
             )

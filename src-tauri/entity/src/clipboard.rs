@@ -20,8 +20,8 @@ pub struct Model {
     pub width: Option<i32>,
     pub height: Option<i32>,
     pub size: Option<String>,
-    pub blob: Option<Vec<u8>>,
-    pub base64: Option<String>,
+    pub image: Option<Vec<u8>>,
+    pub image_thumbnail_base64: Option<String>,
     pub star: Option<bool>,
     pub created_date: Option<DateTime>,
 }
@@ -34,8 +34,8 @@ pub enum Column {
     Width,
     Height,
     Size,
-    Blob,
-    Base64,
+    Image,
+    ImageThumbnailBase64,
     Star,
     CreatedDate,
 }
@@ -65,8 +65,8 @@ impl ColumnTrait for Column {
             Self::Width => ColumnType::Integer.def().null(),
             Self::Height => ColumnType::Integer.def().null(),
             Self::Size => ColumnType::String(StringLen::None).def().null(),
-            Self::Blob => ColumnType::Blob.def().null(),
-            Self::Base64 => ColumnType::Text.def().null(),
+            Self::Image => ColumnType::Blob.def().null(),
+            Self::ImageThumbnailBase64 => ColumnType::Text.def().null(),
             Self::Star => ColumnType::Boolean.def().null(),
             Self::CreatedDate => ColumnType::DateTime.def().null(),
         }

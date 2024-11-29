@@ -152,9 +152,9 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="mr-4 truncate px-4">
-                      {clipboard.base64 ? (
+                      {clipboard.image_thumbnail_base64 ? (
                         <img
-                          src={clipboard.base64}
+                          src={`data:image/*;base64,${clipboard.image_thumbnail_base64}`}
                           width={width || 0}
                           height={height || 0}
                           class="max-h-52"
