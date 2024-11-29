@@ -33,11 +33,11 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Hotkey::Event).string().not_null())
-                    .col(ColumnDef::new(Hotkey::Ctrl).boolean())
-                    .col(ColumnDef::new(Hotkey::Alt).boolean())
-                    .col(ColumnDef::new(Hotkey::Shift).boolean())
+                    .col(ColumnDef::new(Hotkey::Ctrl).boolean().not_null())
+                    .col(ColumnDef::new(Hotkey::Alt).boolean().not_null())
+                    .col(ColumnDef::new(Hotkey::Shift).boolean().not_null())
                     .col(ColumnDef::new(Hotkey::Key).string().not_null())
-                    .col(ColumnDef::new(Hotkey::Status).boolean())
+                    .col(ColumnDef::new(Hotkey::Status).boolean().not_null())
                     .col(ColumnDef::new(Hotkey::Name).string().not_null())
                     .col(ColumnDef::new(Hotkey::Icon).string().not_null())
                     .to_owned(),

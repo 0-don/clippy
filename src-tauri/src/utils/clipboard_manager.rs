@@ -1,8 +1,9 @@
 use super::tauri::config::APP;
 use crate::{
-    connection,
+    connection, printlog,
     service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
 };
+use base64::{engine::general_purpose::STANDARD, Engine};
 use core::time::Duration;
 use enigo::{Enigo, Keyboard, Settings};
 use entity::clipboard::{self, ActiveModel};
@@ -35,7 +36,7 @@ impl ClipboardHelper {
         let text = clipboard.read_text().ok();
         let image_data = clipboard.read_image_binary().ok();
 
-        clipboard_helper.parse_model(text, image_data);
+        clipboard_helper.parse_model(text.clone(), image_data.clone());
 
         if clipboard_helper.check_if_last_is_same().await {
             return;
@@ -52,8 +53,17 @@ impl ClipboardHelper {
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
-        let text = self.active_model.content.as_ref();
-        let image = self.active_model.blob.as_ref();
+        let text = match &self.active_model.content {
+            sea_orm::ActiveValue::Set(val) => val.as_ref(),
+            _ => None,
+        };
+
+        let image = match &self.active_model.image {
+            sea_orm::ActiveValue::Set(val) => val.as_ref(),
+            _ => None,
+        };
+
+        printlog!("check_if_last_is_same");
 
         if text.is_none() && image.is_none() {
             return true;
@@ -73,17 +83,17 @@ impl ClipboardHelper {
 
         let last_clipboard = last_clipboard.unwrap();
 
-        if text.is_some() // check if text is same
-        && last_clipboard.content.is_some()
-        && text.as_ref().unwrap() == last_clipboard.content.as_ref().unwrap()
-            || image.is_some() // check if image is same
-            && last_clipboard.blob.is_some()
-            && image.as_ref().unwrap() == last_clipboard.blob.as_ref().unwrap()
+        if text.is_some()
+            && last_clipboard.content.is_some()
+            && text == last_clipboard.content.as_ref()
+            || image.is_some()
+                && last_clipboard.image.is_some()
+                && image == last_clipboard.image.as_ref()
         {
             return true;
         }
 
-        return false;
+        false
     }
 
     pub fn parse_model(&mut self, text: Option<String>, image_data: Option<Vec<u8>>) {
@@ -106,62 +116,71 @@ impl ClipboardHelper {
                         Set("text".to_string())
                     }
                 }
-                None => Set("text".to_string())  // Default to text if neither image nor text present
+                None => Set("text".to_string()), // Default to text if neither image nor text present
             }
         };
-        
+
         let active_model = if let Some(img_bytes) = image_data {
-            // Process image data
+            // Store original image
+            let original_size = img_bytes.len().to_string();
+
+            // Create thumbnail
             if let Ok(image_buffer) = image::load_from_memory(&img_bytes) {
                 let image_buffer = image_buffer.to_rgba8();
 
-                // Determine new dimensions
+                // Determine thumbnail dimensions
                 let (new_width, new_height) = {
                     let aspect_ratio = image_buffer.width() as f64 / image_buffer.height() as f64;
-                    if image_buffer.width() > MAX_IMAGE_SIZE || image_buffer.height() > MAX_IMAGE_SIZE {
+                    if image_buffer.width() > MAX_IMAGE_SIZE
+                        || image_buffer.height() > MAX_IMAGE_SIZE
+                    {
                         if image_buffer.width() > image_buffer.height() {
-                            (MAX_IMAGE_SIZE, (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32)
+                            (
+                                MAX_IMAGE_SIZE,
+                                (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32,
+                            )
                         } else {
-                            ((MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32, MAX_IMAGE_SIZE)
+                            (
+                                (MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32,
+                                MAX_IMAGE_SIZE,
+                            )
                         }
                     } else {
                         (image_buffer.width(), image_buffer.height())
                     }
                 };
 
-                // Resize image
-                let resized_image =
+                // Create thumbnail
+                let thumbnail =
                     imageops::resize(&image_buffer, new_width, new_height, imageops::Nearest);
 
-                let mut bytes: Vec<u8> = Vec::new();
-                if resized_image
-                    .write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Png)
+                // Convert thumbnail to base64
+                let mut thumbnail_bytes: Vec<u8> = Vec::new();
+                if thumbnail
+                    .write_to(
+                        &mut Cursor::new(&mut thumbnail_bytes),
+                        image::ImageFormat::Png,
+                    )
                     .is_ok()
                 {
+                    let base64_thumbnail = STANDARD.encode(&thumbnail_bytes);
+
                     ActiveModel {
-                        size: Set(Some(bytes.len().to_string())),
-                        height: Set(Some(resized_image.height() as i32)),
-                        width: Set(Some(resized_image.width() as i32)),
-                        blob: Set(Some(bytes)),
+                        size: Set(Some(original_size)),
+                        height: Set(Some(image_buffer.height() as i32)),
+                        width: Set(Some(image_buffer.width() as i32)),
+                        image: Set(Some(img_bytes)),
+                        image_thumbnail_base64: Set(Some(base64_thumbnail)),
                         ..Default::default()
                     }
                 } else {
-                    ActiveModel {
-                        blob: Set(None),
-                        ..Default::default()
-                    }
+                    ActiveModel::default()
                 }
             } else {
-                ActiveModel {
-                    blob: Set(None),
-                    ..Default::default()
-                }
+                ActiveModel::default()
             }
         } else {
-            ActiveModel {
-                blob: Set(None),
-                ..Default::default()
-            }
+            ActiveModel::default()
         };
 
         self.active_model = ActiveModel {

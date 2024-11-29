@@ -28,10 +28,10 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Settings::Startup).boolean())
-                    .col(ColumnDef::new(Settings::Notification).boolean())
-                    .col(ColumnDef::new(Settings::Synchronize).boolean())
-                    .col(ColumnDef::new(Settings::DarkMode).boolean())
+                    .col(ColumnDef::new(Settings::Startup).boolean().not_null())
+                    .col(ColumnDef::new(Settings::Notification).boolean().not_null())
+                    .col(ColumnDef::new(Settings::Synchronize).boolean().not_null())
+                    .col(ColumnDef::new(Settings::DarkMode).boolean().not_null())
                     .to_owned(),
             )
             .await
