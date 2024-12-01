@@ -2,7 +2,7 @@ import { SidebarIconName, ViewMoreName } from "../store/utils/constants";
 
 export type Clips = {
   id?: number | null;
-  type: ClipboardType;
+  type: ClipboardTyype;
   content?: string | null;
   width?: number | null;
   height?: number | null;

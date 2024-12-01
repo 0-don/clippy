@@ -1,4 +1,7 @@
+use sea_orm::Iterable;
 use sea_orm_migration::prelude::*;
+
+use crate::ClipboardType;
 
 #[derive(Iden)]
 enum Clipboard {
@@ -35,7 +38,15 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Clipboard::Type).string().not_null())
+                    .col(
+                        ColumnDef::new(Clipboard::Type).string().not_null().check(
+                            Expr::col(Clipboard::Type).is_in(
+                                ClipboardType::iter()
+                                    .map(|x| x.to_string())
+                                    .collect::<Vec<String>>(),
+                            ),
+                        ),
+                    )
                     .col(ColumnDef::new(Clipboard::Content).string())
                     .col(ColumnDef::new(Clipboard::Width).integer())
                     .col(ColumnDef::new(Clipboard::Height).integer())

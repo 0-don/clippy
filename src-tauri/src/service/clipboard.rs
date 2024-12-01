@@ -2,6 +2,7 @@ extern crate alloc;
 use super::global::get_main_window;
 use crate::{connection, utils::tauri::config::APP};
 use entity::clipboard::{self, ActiveModel, Model};
+use sea_orm::Iden;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder,
     QuerySelect, QueryTrait, Set,
@@ -56,35 +57,34 @@ pub async fn get_clipboards_db(
             let filter = match search.as_str() {
                 "txt" | "text" => clipboard::Column::Content
                     .contains(search)
-                    .or(clipboard::Column::Type.eq("text")),
-
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Text.to_string())),
                 "img" | "image" => clipboard::Column::Content
                     .contains(search)
-                    .or(clipboard::Column::Type.eq("image")),
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Image.to_string())),
 
                 "lnk" | "link" => clipboard::Column::Content
                     .contains(search)
-                    .or(clipboard::Column::Type.eq("link")),
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Link.to_string())),
 
                 "clr" | "color" | "colour" => clipboard::Column::Content
                     .contains(search)
-                    .or(clipboard::Column::Type.eq("hex"))
-                    .or(clipboard::Column::Type.eq("rgb")),
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Hex.to_string()))
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Rgb.to_string())),
 
                 "hex" => clipboard::Column::Content
                     .contains(search)
-                    .or(clipboard::Column::Type.eq("hex")),
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Hex.to_string())),
 
                 "rgb" => clipboard::Column::Content
                     .contains(search)
-                    .or(clipboard::Column::Type.eq("rgb")),
+                    .or(clipboard::Column::Type.eq(migration::ClipboardType::Rgb.to_string())),
 
                 _ => clipboard::Column::Content.contains(search),
             };
             query.filter(filter)
         })
         .apply_if(img, |query, _img| {
-            query.filter(clipboard::Column::Type.eq("image"))
+            query.filter(clipboard::Column::Type.eq(migration::ClipboardType::Image.to_string()))
         })
         .offset(cursor)
         .limit(10)
@@ -178,10 +178,12 @@ pub async fn copy_clipboard_from_id(id: i32) -> Result<bool, DbErr> {
     let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
 
     let result = match clipboard_data.r#type.as_str() {
-        "image" => match clipboard_data.image {
-            Some(blob) => clipboard.write_image_binary(blob).is_ok(),
-            None => false,
-        },
+        r#type if r#type == migration::ClipboardType::Image.to_string() => {
+            match clipboard_data.image {
+                Some(blob) => clipboard.write_image_binary(blob).is_ok(),
+                None => false,
+            }
+        }
         _ => match clipboard_data.content {
             Some(content) => clipboard.write_text(content).is_ok(),
             None => false,

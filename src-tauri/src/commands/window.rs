@@ -1,6 +1,3 @@
-use tauri::AppHandle;
-use tauri_plugin_shell::ShellExt;
-
 use crate::{
     service::{
         clipboard::count_clipboards_db,
@@ -9,6 +6,8 @@ use crate::{
     types::types::{Config, DatabaseInfo, WindowName},
 };
 use std::fs::{self, read_to_string};
+use tauri::AppHandle;
+use tauri_plugin_shell::ShellExt;
 
 #[tauri::command]
 pub fn window_display_toggle() {
