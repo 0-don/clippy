@@ -1,12 +1,14 @@
 extern crate alloc;
 extern crate image;
 use crate::{
-    printlog, service::clipboard::{
+    printlog,
+    service::clipboard::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
         get_clipboards_db, star_clipboard_db,
-    }, utils::{hotkey_manager::unregister_hotkeys, tauri::config::APP}
+    },
+    types::orm_query::ClipboardWithRelations,
+    utils::{hotkey_manager::unregister_hotkeys, tauri::config::APP},
 };
-use entity::clipboard::Model;
 use std::fs::File;
 use tauri::Manager;
 
@@ -16,13 +18,16 @@ pub async fn get_clipboards(
     search: Option<String>,
     star: Option<bool>,
     img: Option<bool>,
-) -> Result<Vec<Model>, ()> {
+) -> Result<Vec<ClipboardWithRelations>, ()> {
     printlog!("get_clipboards");
-    let clipboards = get_clipboards_db(cursor, search, star, img).await;
-    if clipboards.is_err() {
+    let clipboards_result = get_clipboards_db(cursor, search, star, img).await;
+    if clipboards_result.is_err() {
+        printlog!("get_clipboards error {:?}", clipboards_result);
         return Err(());
     }
-    Ok(clipboards.unwrap())
+    let clipboard = clipboards_result.unwrap();
+    printlog!("get_clipboards: {:?}", clipboard);
+    Ok(clipboard)
 }
 
 #[tauri::command]
@@ -57,7 +62,7 @@ pub async fn clear_clipboards() -> Result<bool, ()> {
 pub async fn save_clipboard_image(id: i32) -> Result<bool, ()> {
     let clipboard = get_clipboard_db(id).await.unwrap();
 
-    let image = image::load_from_memory(&clipboard.image.unwrap()).unwrap();
+    let image = image::load_from_memory(&clipboard.image.unwrap().data).unwrap();
 
     // Create a path for the new image file on the desktop
     let image_path = APP

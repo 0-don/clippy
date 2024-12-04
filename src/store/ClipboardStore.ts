@@ -30,6 +30,7 @@ function createClipboardStore() {
 
   const initClipboards = async () => {
     const clipboards = await getClipboards();
+    console.log("clipboards", clipboards);
     setClipboards(clipboards);
   };
 

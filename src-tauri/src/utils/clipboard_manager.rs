@@ -1,48 +1,53 @@
 use super::tauri::config::APP;
 use crate::{
-    connection, printlog,
-    service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
+    connection,
+    service::clipboard::insert_clipboard_db,
+    types::orm_query::{ClipboardManager, ClipboardWithRelations},
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use core::time::Duration;
-use enigo::{Enigo, Keyboard, Settings};
-use entity::clipboard::{self, ActiveModel};
+use entity::clipboard::{self};
 use image::imageops;
+use migration::{ClipboardTextType, ClipboardType};
 use regex::Regex;
+use sea_orm::RelationTrait;
+use sea_orm::{DbErr, Iden};
 use sea_orm::{EntityTrait, QueryOrder, Set};
-use std::{io::Cursor, process::Command};
+use sea_orm::{JoinType, QuerySelect};
+use std::io::Cursor;
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
-use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
 
 const MAX_IMAGE_SIZE: u32 = 1280;
 
-#[derive(Debug, Clone)]
-pub struct ClipboardHelper {
-    pub active_model: ActiveModel,
-}
-
-impl ClipboardHelper {
+impl ClipboardManager {
     pub fn new() -> Self {
-        ClipboardHelper {
-            active_model: ActiveModel::default(),
+        ClipboardManager {
+            clipboard_model: entity::clipboard::ActiveModel::default(),
+            clipboard_text_model: entity::clipboard_text::ActiveModel::default(),
+            clipboard_html_model: entity::clipboard_html::ActiveModel::default(),
+            clipboard_image_model: entity::clipboard_image::ActiveModel::default(),
+            clipboard_rtf_model: entity::clipboard_rtf::ActiveModel::default(),
+            clipboard_file_model: entity::clipboard_file::ActiveModel::default(),
         }
     }
 
     pub async fn upsert_clipboard() {
         let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
-        let mut clipboard_helper = ClipboardHelper::new();
+        let mut clipboard_manager = ClipboardManager::new();
 
         let text = clipboard.read_text().ok();
+        let html = clipboard.read_html().ok();
+        let rtf = clipboard.read_rtf().ok();
         let image_data = clipboard.read_image_binary().ok();
+        let files = clipboard.read_files().ok();
 
-        clipboard_helper.parse_model(text.clone(), image_data.clone());
+        clipboard_manager.parse_model(text, html, rtf, image_data, files);
 
-        if clipboard_helper.check_if_last_is_same().await {
+        if clipboard_manager.check_if_last_is_same().await {
             return;
         }
 
-        let _ = insert_clipboard_db(clipboard_helper.active_model).await;
+        insert_clipboard_db(clipboard_manager).await.unwrap();
 
         APP.get()
             .unwrap()
@@ -53,197 +58,203 @@ impl ClipboardHelper {
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
-        let text = match &self.active_model.content {
-            sea_orm::ActiveValue::Set(val) => val.as_ref(),
-            _ => None,
-        };
-
-        let image = match &self.active_model.image {
-            sea_orm::ActiveValue::Set(val) => val.as_ref(),
-            _ => None,
-        };
-
-        printlog!("check_if_last_is_same");
-
-        if text.is_none() && image.is_none() {
-            return true;
-        }
-
         let db = connection::establish_connection().await.unwrap();
 
-        let last_clipboard = clipboard::Entity::find()
+        let last_result: Result<Option<ClipboardWithRelations>, DbErr> = clipboard::Entity::find()
+            .select_only()
+            .column_as(clipboard::Column::Id, "clipboard_id")
+            .columns([
+                clipboard::Column::Type,
+                clipboard::Column::Star,
+                clipboard::Column::CreatedDate,
+            ])
+            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
+            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardHtml.def())
+            .join(
+                JoinType::LeftJoin,
+                clipboard::Relation::ClipboardImage.def(),
+            )
+            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardRtf.def())
+            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardFile.def())
             .order_by_desc(clipboard::Column::Id)
+            .into_model::<ClipboardWithRelations>()
             .one(&db)
-            .await
-            .unwrap();
+            .await;
 
-        if last_clipboard.is_none() {
-            return false;
-        }
+        if let Ok(Some(last_clipboard)) = last_result {
+            // Compare based on type
+            let current_type = match &self.clipboard_model.r#type {
+                sea_orm::ActiveValue::Set(val) => Some(val),
+                _ => None,
+            };
 
-        let last_clipboard = last_clipboard.unwrap();
+            if let Some(current_type) = current_type {
+                // If types don't match, it's definitely different
+                if current_type != &last_clipboard.clipboard.r#type {
+                    return false;
+                }
 
-        if text.is_some()
-            && last_clipboard.content.is_some()
-            && text == last_clipboard.content.as_ref()
-            || image.is_some()
-                && last_clipboard.image.is_some()
-                && image == last_clipboard.image.as_ref()
-        {
-            return true;
+                // Compare content based on type
+                match current_type.as_str() {
+                    type_str if type_str == ClipboardType::Text.to_string() => {
+                        if let Some(text_model) = last_clipboard.text {
+                            if let sea_orm::ActiveValue::Set(current_text) =
+                                &self.clipboard_text_model.data
+                            {
+                                return current_text == &text_model.data;
+                            }
+                        }
+                    }
+                    type_str if type_str == ClipboardType::Html.to_string() => {
+                        if let Some(html_model) = last_clipboard.html {
+                            if let sea_orm::ActiveValue::Set(current_html) =
+                                &self.clipboard_html_model.data
+                            {
+                                return current_html == &html_model.data;
+                            }
+                        }
+                    }
+                    type_str if type_str == ClipboardType::Rtf.to_string() => {
+                        if let Some(rtf_model) = last_clipboard.rtf {
+                            if let sea_orm::ActiveValue::Set(current_rtf) =
+                                &self.clipboard_rtf_model.data
+                            {
+                                return current_rtf == &rtf_model.data;
+                            }
+                        }
+                    }
+                    type_str if type_str == ClipboardType::Image.to_string() => {
+                        if let Some(image_model) = last_clipboard.image {
+                            if let sea_orm::ActiveValue::Set(current_image) =
+                                &self.clipboard_image_model.data
+                            {
+                                return current_image == &image_model.data;
+                            }
+                        }
+                    }
+                    type_str if type_str == ClipboardType::File.to_string() => {
+                        if let Some(file_model) = last_clipboard.file {
+                            if let sea_orm::ActiveValue::Set(current_file) =
+                                &self.clipboard_file_model.data
+                            {
+                                return current_file == &file_model.data;
+                            }
+                        }
+                    }
+                    _ => return false,
+                }
+            }
         }
 
         false
     }
 
-    pub fn parse_model(&mut self, text: Option<String>, image_data: Option<Vec<u8>>) {
-        let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
-        let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
-        let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)").unwrap();
+    pub fn parse_model(
+        &mut self,
+        text: Option<String>,
+        html: Option<String>,
+        rtf: Option<String>,
+        image_data: Option<Vec<u8>>,
+        files: Option<Vec<String>>,
+    ) {
+        let mut r#type = String::new();
 
-        let r#type = if image_data.is_some() {
-            Set("image".to_string())
-        } else {
-            match &text {
-                Some(text) => {
-                    if is_link.is_match(text) {
-                        Set("link".to_string())
-                    } else if is_hex.is_match(text) {
-                        Set("hex".to_string())
-                    } else if is_rgb.is_match(text) {
-                        Set("rgb".to_string())
-                    } else {
-                        Set("text".to_string())
-                    }
-                }
-                None => Set("text".to_string()), // Default to text if neither image nor text present
+        if text.is_some() {
+            r#type = ClipboardType::Text.to_string();
+
+            let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
+            let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
+            let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)").unwrap();
+
+            self.clipboard_text_model.r#type = Set(ClipboardTextType::Text.to_string());
+
+            if is_link.is_match(text.as_ref().unwrap()) {
+                self.clipboard_text_model.r#type = Set(ClipboardTextType::Link.to_string());
+            } else if is_hex.is_match(text.as_ref().unwrap()) {
+                self.clipboard_text_model.r#type = Set(ClipboardTextType::Hex.to_string());
+            } else if is_rgb.is_match(text.as_ref().unwrap()) {
+                self.clipboard_text_model.r#type = Set(ClipboardTextType::Rgb.to_string());
             }
-        };
 
-        let active_model = if let Some(img_bytes) = image_data {
-            // Store original image
-            let original_size = img_bytes.len().to_string();
+            self.clipboard_text_model.data = Set(text.unwrap());
+        }
 
-            // Create thumbnail
-            if let Ok(image_buffer) = image::load_from_memory(&img_bytes) {
-                let image_buffer = image_buffer.to_rgba8();
+        if html.is_some() {
+            r#type = ClipboardType::Html.to_string();
+            self.clipboard_html_model.data = Set(html.unwrap());
+        }
 
-                // Determine thumbnail dimensions
-                let (new_width, new_height) = {
-                    let aspect_ratio = image_buffer.width() as f64 / image_buffer.height() as f64;
-                    if image_buffer.width() > MAX_IMAGE_SIZE
-                        || image_buffer.height() > MAX_IMAGE_SIZE
-                    {
-                        if image_buffer.width() > image_buffer.height() {
-                            (
-                                MAX_IMAGE_SIZE,
-                                (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32,
-                            )
-                        } else {
-                            (
-                                (MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32,
-                                MAX_IMAGE_SIZE,
-                            )
-                        }
-                    } else {
-                        (image_buffer.width(), image_buffer.height())
-                    }
-                };
+        if rtf.is_some() {
+            r#type = ClipboardType::Rtf.to_string();
+            self.clipboard_rtf_model.data = Set(rtf.unwrap());
+        }
 
-                // Create thumbnail
-                let thumbnail =
-                    imageops::resize(&image_buffer, new_width, new_height, imageops::Nearest);
+        if image_data.is_some() {
+            r#type = ClipboardType::Image.to_string();
+            self.parse_image_model(image_data.unwrap());
+        }
 
-                // Convert thumbnail to base64
-                let mut thumbnail_bytes: Vec<u8> = Vec::new();
-                if thumbnail
-                    .write_to(
-                        &mut Cursor::new(&mut thumbnail_bytes),
-                        image::ImageFormat::Png,
-                    )
-                    .is_ok()
-                {
-                    let base64_thumbnail = STANDARD.encode(&thumbnail_bytes);
+        if files.is_some() {
+            r#type = ClipboardType::File.to_string();
+            println!("{:?}", files);
+            // self.clipboard_file_model.data = Set(files.unwrap());
+        }
 
-                    ActiveModel {
-                        size: Set(Some(original_size)),
-                        height: Set(Some(image_buffer.height() as i32)),
-                        width: Set(Some(image_buffer.width() as i32)),
-                        image: Set(Some(img_bytes)),
-                        image_thumbnail_base64: Set(Some(base64_thumbnail)),
-                        ..Default::default()
-                    }
-                } else {
-                    ActiveModel::default()
-                }
-            } else {
-                ActiveModel::default()
-            }
-        } else {
-            ActiveModel::default()
-        };
-
-        self.active_model = ActiveModel {
-            r#type,
-            content: Set(text),
+        self.clipboard_model = entity::clipboard::ActiveModel {
+            r#type: Set(r#type),
             star: Set(Some(false)),
-            ..active_model
+            ..Default::default()
         };
     }
-}
 
-pub async fn type_last_clipboard() {
-    let clipboard = get_last_clipboard_db().await;
+    fn parse_image_model(&mut self, img_bytes: Vec<u8>) {
+        if let Ok(image_buffer) = image::load_from_memory(&img_bytes) {
+            let image_buffer = image_buffer.to_rgba8();
+            let (width, height) = (image_buffer.width(), image_buffer.height());
 
-    if clipboard.is_ok() {
-        let clipboard = clipboard.unwrap();
-        let content = clipboard.clone().content.unwrap();
-        let r#type = clipboard.clone().r#type;
+            let (new_width, new_height) = calculate_thumbnail_dimensions(width, height);
 
-        if r#type != "image" && content.len() < 32 {
-            let mut enigo = Enigo::new(&Settings::default()).unwrap();
-            let _ = enigo.text(&content);
+            let thumbnail =
+                imageops::resize(&image_buffer, new_width, new_height, imageops::Nearest);
+            let mut thumbnail_bytes = Vec::new();
+
+            if thumbnail
+                .write_to(
+                    &mut Cursor::new(&mut thumbnail_bytes),
+                    image::ImageFormat::Png,
+                )
+                .is_ok()
+            {
+                let base64_thumbnail = STANDARD.encode(&thumbnail_bytes);
+
+                self.clipboard_image_model = entity::clipboard_image::ActiveModel {
+                    size: Set(Some(img_bytes.len().to_string())),
+                    data: Set(img_bytes),
+                    width: Set(Some(width as i32)),
+                    height: Set(Some(height as i32)),
+                    thumbnail: Set(Some(base64_thumbnail)),
+                    ..Default::default()
+                };
+            }
         }
     }
 }
 
-pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error>> {
-    println!("type_last_clipboard_linux");
-    // Check if xdotool is installed
-    if !is_tool_installed("xdotool") {
-        APP.get()
-            .unwrap()
-            .dialog()
-            .message("xdotool is not installed. Please install it to continue.")
-            .title("Missing Dependency")
-            .kind(MessageDialogKind::Error)
-            .buttons(MessageDialogButtons::Ok)
-            .blocking_show();
-        return Ok(());
-    }
-
-    let clipboard = get_last_clipboard_db().await;
-
-    if clipboard.is_ok() {
-        let clipboard = clipboard?;
-        let content = clipboard.clone().content.unwrap();
-        let r#type = clipboard.clone().r#type;
-
-        if r#type != "image" && content.len() < 500 {
-            std::thread::sleep(Duration::from_millis(300));
-            Command::new("xdotool")
-                .args(&["type", "--clearmodifiers", "--", &content])
-                .output()?;
+fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
+    let aspect_ratio = width as f64 / height as f64;
+    if width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE {
+        if width > height {
+            (
+                MAX_IMAGE_SIZE,
+                (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32,
+            )
+        } else {
+            (
+                (MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32,
+                MAX_IMAGE_SIZE,
+            )
         }
+    } else {
+        (width, height)
     }
-
-    return Ok(());
-}
-
-pub fn is_tool_installed(tool: &str) -> bool {
-    Command::new(tool)
-        .arg("--version")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
 }

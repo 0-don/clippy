@@ -16,12 +16,6 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i32,
     pub r#type: String,
-    pub content: Option<String>,
-    pub width: Option<i32>,
-    pub height: Option<i32>,
-    pub size: Option<String>,
-    pub image: Option<Vec<u8>>,
-    pub image_thumbnail_base64: Option<String>,
     pub star: Option<bool>,
     pub created_date: Option<DateTime>,
 }
@@ -30,12 +24,6 @@ pub struct Model {
 pub enum Column {
     Id,
     Type,
-    Content,
-    Width,
-    Height,
-    Size,
-    Image,
-    ImageThumbnailBase64,
     Star,
     CreatedDate,
 }
@@ -53,7 +41,13 @@ impl PrimaryKeyTrait for PrimaryKey {
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
-pub enum Relation {}
+pub enum Relation {
+    ClipboardFile,
+    ClipboardHtml,
+    ClipboardImage,
+    ClipboardRtf,
+    ClipboardText,
+}
 
 impl ColumnTrait for Column {
     type EntityName = Entity;
@@ -61,12 +55,6 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::Integer.def(),
             Self::Type => ColumnType::String(StringLen::None).def(),
-            Self::Content => ColumnType::String(StringLen::None).def().null(),
-            Self::Width => ColumnType::Integer.def().null(),
-            Self::Height => ColumnType::Integer.def().null(),
-            Self::Size => ColumnType::String(StringLen::None).def().null(),
-            Self::Image => ColumnType::Blob.def().null(),
-            Self::ImageThumbnailBase64 => ColumnType::Text.def().null(),
             Self::Star => ColumnType::Boolean.def().null(),
             Self::CreatedDate => ColumnType::DateTime.def().null(),
         }
@@ -75,7 +63,43 @@ impl ColumnTrait for Column {
 
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
-        panic!("No RelationDef")
+        match self {
+            Self::ClipboardFile => Entity::has_many(super::clipboard_file::Entity).into(),
+            Self::ClipboardHtml => Entity::has_many(super::clipboard_html::Entity).into(),
+            Self::ClipboardImage => Entity::has_many(super::clipboard_image::Entity).into(),
+            Self::ClipboardRtf => Entity::has_many(super::clipboard_rtf::Entity).into(),
+            Self::ClipboardText => Entity::has_many(super::clipboard_text::Entity).into(),
+        }
+    }
+}
+
+impl Related<super::clipboard_file::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ClipboardFile.def()
+    }
+}
+
+impl Related<super::clipboard_html::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ClipboardHtml.def()
+    }
+}
+
+impl Related<super::clipboard_image::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ClipboardImage.def()
+    }
+}
+
+impl Related<super::clipboard_rtf::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ClipboardRtf.def()
+    }
+}
+
+impl Related<super::clipboard_text::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ClipboardText.def()
     }
 }
 
