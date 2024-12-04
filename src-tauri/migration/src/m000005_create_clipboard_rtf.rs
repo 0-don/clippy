@@ -1,5 +1,8 @@
 use crate::m000001_create_clipboard::Clipboard;
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{integer, pk_auto, text},
+};
 
 #[derive(Iden)]
 pub enum ClipboardRtf {
@@ -19,19 +22,10 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(ClipboardRtf::Table)
-                    .col(
-                        ColumnDef::new(ClipboardRtf::Id)
-                            .integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(ClipboardRtf::ClipboardId)
-                            .integer()
-                            .not_null(),
-                    )
-                    .col(ColumnDef::new(ClipboardRtf::Data).text().not_null())
+                    .if_not_exists()
+                    .col(pk_auto(ClipboardRtf::Id))
+                    .col(integer(ClipboardRtf::ClipboardId))
+                    .col(text(ClipboardRtf::Data))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-rtf")

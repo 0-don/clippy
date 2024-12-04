@@ -15,15 +15,15 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i32,
-    pub r#type: String,
-    pub star: Option<bool>,
-    pub created_date: Option<DateTime>,
+    pub types: Json,
+    pub star: bool,
+    pub created_date: DateTime,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    Type,
+    Types,
     Star,
     CreatedDate,
 }
@@ -54,9 +54,9 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::Integer.def(),
-            Self::Type => ColumnType::String(StringLen::None).def(),
-            Self::Star => ColumnType::Boolean.def().null(),
-            Self::CreatedDate => ColumnType::DateTime.def().null(),
+            Self::Types => ColumnType::Json.def(),
+            Self::Star => ColumnType::Boolean.def(),
+            Self::CreatedDate => ColumnType::DateTime.def(),
         }
     }
 }

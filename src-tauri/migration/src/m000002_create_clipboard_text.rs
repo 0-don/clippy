@@ -1,6 +1,9 @@
 use crate::{m000001_create_clipboard::Clipboard, ClipboardTextType};
 use sea_orm::Iterable;
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{integer, pk_auto, string, text},
+};
 
 #[derive(Iden)]
 pub enum ClipboardText {
@@ -21,22 +24,11 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(ClipboardText::Table)
+                    .if_not_exists()
+                    .col(pk_auto(ClipboardText::Id))
+                    .col(integer(ClipboardText::ClipboardId))
                     .col(
-                        ColumnDef::new(ClipboardText::Id)
-                            .integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(ClipboardText::ClipboardId)
-                            .integer()
-                            .not_null(),
-                    )
-                    .col(
-                        ColumnDef::new(ClipboardText::Type)
-                            .string()
-                            .not_null()
+                        string(ClipboardText::Type)
                             .default(ClipboardTextType::iter().next().unwrap().to_string())
                             .check(
                                 Expr::col(ClipboardText::Type).is_in(
@@ -46,7 +38,7 @@ impl MigrationTrait for Migration {
                                 ),
                             ),
                     )
-                    .col(ColumnDef::new(ClipboardText::Data).text().not_null())
+                    .col(text(ClipboardText::Data))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-text")

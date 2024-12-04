@@ -26,7 +26,7 @@ pub async fn get_clipboards(
         return Err(());
     }
     let clipboard = clipboards_result.unwrap();
-    printlog!("get_clipboards: {:?}", clipboard);
+
     Ok(clipboard)
 }
 

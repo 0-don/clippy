@@ -1,5 +1,8 @@
 use crate::m000001_create_clipboard::Clipboard;
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{blob, integer, integer_null, pk_auto, string_null, text_null},
+};
 
 #[derive(Iden)]
 pub enum ClipboardImage {
@@ -24,24 +27,15 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(ClipboardImage::Table)
-                    .col(
-                        ColumnDef::new(ClipboardImage::Id)
-                            .integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(ClipboardImage::ClipboardId)
-                            .integer()
-                            .not_null(),
-                    )
-                    .col(ColumnDef::new(ClipboardImage::Data).blob().not_null())
-                    .col(ColumnDef::new(ClipboardImage::Extension).string())
-                    .col(ColumnDef::new(ClipboardImage::Width).integer())
-                    .col(ColumnDef::new(ClipboardImage::Height).integer())
-                    .col(ColumnDef::new(ClipboardImage::Size).string())
-                    .col(ColumnDef::new(ClipboardImage::Thumbnail).text())
+                    .if_not_exists()
+                    .col(pk_auto(ClipboardImage::Id))
+                    .col(integer(ClipboardImage::ClipboardId))
+                    .col(blob(ClipboardImage::Data))
+                    .col(string_null(ClipboardImage::Extension))
+                    .col(integer_null(ClipboardImage::Width))
+                    .col(integer_null(ClipboardImage::Height))
+                    .col(string_null(ClipboardImage::Size))
+                    .col(text_null(ClipboardImage::Thumbnail))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-image")

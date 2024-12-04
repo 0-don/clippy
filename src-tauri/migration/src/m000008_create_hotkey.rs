@@ -1,4 +1,7 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{boolean, pk_auto, string},
+};
 
 #[derive(Iden)]
 enum Hotkey {
@@ -25,21 +28,15 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Hotkey::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Hotkey::Id)
-                            .big_integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(ColumnDef::new(Hotkey::Event).string().not_null())
-                    .col(ColumnDef::new(Hotkey::Ctrl).boolean().not_null())
-                    .col(ColumnDef::new(Hotkey::Alt).boolean().not_null())
-                    .col(ColumnDef::new(Hotkey::Shift).boolean().not_null())
-                    .col(ColumnDef::new(Hotkey::Key).string().not_null())
-                    .col(ColumnDef::new(Hotkey::Status).boolean().not_null())
-                    .col(ColumnDef::new(Hotkey::Name).string().not_null())
-                    .col(ColumnDef::new(Hotkey::Icon).string().not_null())
+                    .col(pk_auto(Hotkey::Id))
+                    .col(string(Hotkey::Event))
+                    .col(boolean(Hotkey::Ctrl))
+                    .col(boolean(Hotkey::Alt))
+                    .col(boolean(Hotkey::Shift))
+                    .col(string(Hotkey::Key))
+                    .col(boolean(Hotkey::Status))
+                    .col(string(Hotkey::Name))
+                    .col(string(Hotkey::Icon))
                     .to_owned(),
             )
             .await
