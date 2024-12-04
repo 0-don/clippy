@@ -1,4 +1,7 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{boolean, pk_auto},
+};
 
 #[derive(Iden)]
 enum Settings {
@@ -21,17 +24,11 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Settings::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Settings::Id)
-                            .big_integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(ColumnDef::new(Settings::Startup).boolean().not_null())
-                    .col(ColumnDef::new(Settings::Notification).boolean().not_null())
-                    .col(ColumnDef::new(Settings::Synchronize).boolean().not_null())
-                    .col(ColumnDef::new(Settings::DarkMode).boolean().not_null())
+                    .col(pk_auto(Settings::Id))
+                    .col(boolean(Settings::Startup))
+                    .col(boolean(Settings::Notification))
+                    .col(boolean(Settings::Synchronize))
+                    .col(boolean(Settings::DarkMode))
                     .to_owned(),
             )
             .await

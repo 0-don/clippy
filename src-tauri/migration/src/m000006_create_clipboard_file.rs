@@ -1,5 +1,8 @@
 use crate::m000001_create_clipboard::Clipboard;
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{blob, date_time_null, integer, integer_null, pk_auto, string_null},
+};
 
 #[derive(Iden)]
 pub enum ClipboardFile {
@@ -24,24 +27,15 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(ClipboardFile::Table)
-                    .col(
-                        ColumnDef::new(ClipboardFile::Id)
-                            .integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(ClipboardFile::ClipboardId)
-                            .integer()
-                            .not_null(),
-                    )
-                    .col(ColumnDef::new(ClipboardFile::Data).blob().not_null())
-                    .col(ColumnDef::new(ClipboardFile::Name).string())
-                    .col(ColumnDef::new(ClipboardFile::Extension).string())
-                    .col(ColumnDef::new(ClipboardFile::Size).integer())
-                    .col(ColumnDef::new(ClipboardFile::CreatedDate).date_time())
-                    .col(ColumnDef::new(ClipboardFile::UpdatedDate).date_time())
+                    .if_not_exists()
+                    .col(pk_auto(ClipboardFile::Id))
+                    .col(integer(ClipboardFile::ClipboardId))
+                    .col(blob(ClipboardFile::Data))
+                    .col(string_null(ClipboardFile::Name))
+                    .col(string_null(ClipboardFile::Extension))
+                    .col(integer_null(ClipboardFile::Size))
+                    .col(date_time_null(ClipboardFile::CreatedDate))
+                    .col(date_time_null(ClipboardFile::UpdatedDate))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-file")

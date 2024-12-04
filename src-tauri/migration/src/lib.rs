@@ -1,5 +1,6 @@
 use sea_orm::EnumIter;
 pub use sea_orm_migration::prelude::*;
+use serde_json::{json, Value as JsonValue};
 
 mod m000001_create_clipboard;
 mod m000002_create_clipboard_text;
@@ -14,7 +15,7 @@ mod m000009_seed;
 
 pub struct Migrator;
 
-#[derive(Iden, EnumIter)]
+#[derive(Iden, EnumIter, PartialEq)]
 pub enum ClipboardType {
     #[iden = "text"]
     Text,
@@ -26,6 +27,40 @@ pub enum ClipboardType {
     Rtf,
     #[iden = "file"]
     File,
+}
+
+impl ClipboardType {
+    pub fn from_json_value(value: &JsonValue) -> Option<Vec<ClipboardType>> {
+        match value {
+            JsonValue::Array(arr) => {
+                let types: Vec<ClipboardType> = arr
+                    .iter()
+                    .filter_map(|v| match v {
+                        JsonValue::String(s) => match s.as_str() {
+                            s if s == Self::Text.to_string() => Some(Self::Text),
+                            s if s == Self::Image.to_string() => Some(Self::Image),
+                            s if s == Self::Html.to_string() => Some(Self::Html),
+                            s if s == Self::Rtf.to_string() => Some(Self::Rtf),
+                            s if s == Self::File.to_string() => Some(Self::File),
+                            _ => None,
+                        },
+                        _ => None,
+                    })
+                    .collect();
+
+                if types.is_empty() {
+                    None
+                } else {
+                    Some(types)
+                }
+            }
+            _ => None,
+        }
+    }
+
+    pub fn to_json_value(types: &Vec<ClipboardType>) -> JsonValue {
+        json!(types.iter().map(|t| t.to_string()).collect::<Vec<_>>())
+    }
 }
 
 #[derive(Iden, EnumIter)]

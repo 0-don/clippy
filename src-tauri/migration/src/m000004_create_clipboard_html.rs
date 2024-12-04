@@ -1,5 +1,8 @@
 use crate::m000001_create_clipboard::Clipboard;
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::{
+    prelude::*,
+    schema::{integer, pk_auto, text},
+};
 
 #[derive(Iden)]
 pub enum ClipboardHtml {
@@ -19,19 +22,10 @@ impl MigrationTrait for Migration {
             .create_table(
                 Table::create()
                     .table(ClipboardHtml::Table)
-                    .col(
-                        ColumnDef::new(ClipboardHtml::Id)
-                            .integer()
-                            .not_null()
-                            .auto_increment()
-                            .primary_key(),
-                    )
-                    .col(
-                        ColumnDef::new(ClipboardHtml::ClipboardId)
-                            .integer()
-                            .not_null(),
-                    )
-                    .col(ColumnDef::new(ClipboardHtml::Data).text().not_null())
+                    .if_not_exists()
+                    .col(pk_auto(ClipboardHtml::Id))
+                    .col(integer(ClipboardHtml::ClipboardId))
+                    .col(text(ClipboardHtml::Data))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-html")

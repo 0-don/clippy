@@ -58,13 +58,13 @@ impl ClipboardManager {
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
-        let db = connection::establish_connection().await.unwrap();
+        let db: sea_orm::DatabaseConnection = connection::establish_connection().await.unwrap();
 
         let last_result: Result<Option<ClipboardWithRelations>, DbErr> = clipboard::Entity::find()
             .select_only()
             .column_as(clipboard::Column::Id, "clipboard_id")
             .columns([
-                clipboard::Column::Type,
+                clipboard::Column::Types,
                 clipboard::Column::Star,
                 clipboard::Column::CreatedDate,
             ])
@@ -82,67 +82,90 @@ impl ClipboardManager {
             .await;
 
         if let Ok(Some(last_clipboard)) = last_result {
-            // Compare based on type
-            let current_type = match &self.clipboard_model.r#type {
-                sea_orm::ActiveValue::Set(val) => Some(val),
-                _ => None,
-            };
+            // Get types from last clipboard
+            let last_types = ClipboardType::from_json_value(&last_clipboard.clipboard.types);
 
-            if let Some(current_type) = current_type {
-                // If types don't match, it's definitely different
-                if current_type != &last_clipboard.clipboard.r#type {
+            // Get types from current clipboard model
+            let current_types =
+                ClipboardType::from_json_value(&self.clipboard_model.types.clone().unwrap());
+
+            if let (Some(last_types), Some(current_types)) = (last_types, current_types) {
+                // Compare if both arrays have same length
+                if last_types.len() != current_types.len() {
                     return false;
                 }
 
-                // Compare content based on type
-                match current_type.as_str() {
-                    type_str if type_str == ClipboardType::Text.to_string() => {
-                        if let Some(text_model) = last_clipboard.text {
-                            if let sea_orm::ActiveValue::Set(current_text) =
-                                &self.clipboard_text_model.data
-                            {
-                                return current_text == &text_model.data;
-                            }
-                        }
-                    }
-                    type_str if type_str == ClipboardType::Html.to_string() => {
-                        if let Some(html_model) = last_clipboard.html {
-                            if let sea_orm::ActiveValue::Set(current_html) =
-                                &self.clipboard_html_model.data
-                            {
-                                return current_html == &html_model.data;
-                            }
-                        }
-                    }
-                    type_str if type_str == ClipboardType::Rtf.to_string() => {
-                        if let Some(rtf_model) = last_clipboard.rtf {
-                            if let sea_orm::ActiveValue::Set(current_rtf) =
-                                &self.clipboard_rtf_model.data
-                            {
-                                return current_rtf == &rtf_model.data;
-                            }
-                        }
-                    }
-                    type_str if type_str == ClipboardType::Image.to_string() => {
-                        if let Some(image_model) = last_clipboard.image {
-                            if let sea_orm::ActiveValue::Set(current_image) =
-                                &self.clipboard_image_model.data
-                            {
-                                return current_image == &image_model.data;
-                            }
-                        }
-                    }
-                    type_str if type_str == ClipboardType::File.to_string() => {
-                        if let Some(file_model) = last_clipboard.file {
-                            if let sea_orm::ActiveValue::Set(current_file) =
-                                &self.clipboard_file_model.data
-                            {
-                                return current_file == &file_model.data;
-                            }
-                        }
-                    }
-                    _ => return false,
+                // Check if all types match between arrays
+                let types_match = last_types.iter().all(|t| current_types.contains(t))
+                    && current_types.iter().all(|t| last_types.contains(t));
+
+                if !types_match {
+                    return false;
                 }
+
+                // Compare content for each type
+                for clipboard_type in current_types {
+                    match clipboard_type {
+                        ClipboardType::Text => {
+                            if let Some(text_model) = &last_clipboard.text {
+                                if let sea_orm::ActiveValue::Set(current_text) =
+                                    &self.clipboard_text_model.data
+                                {
+                                    if current_text != &text_model.data {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        ClipboardType::Html => {
+                            if let Some(html_model) = &last_clipboard.html {
+                                if let sea_orm::ActiveValue::Set(current_html) =
+                                    &self.clipboard_html_model.data
+                                {
+                                    if current_html != &html_model.data {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        ClipboardType::Rtf => {
+                            if let Some(rtf_model) = &last_clipboard.rtf {
+                                if let sea_orm::ActiveValue::Set(current_rtf) =
+                                    &self.clipboard_rtf_model.data
+                                {
+                                    if current_rtf != &rtf_model.data {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        ClipboardType::Image => {
+                            if let Some(image_model) = &last_clipboard.image {
+                                if let sea_orm::ActiveValue::Set(current_image) =
+                                    &self.clipboard_image_model.data
+                                {
+                                    if current_image != &image_model.data {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        ClipboardType::File => {
+                            if let Some(file_model) = &last_clipboard.file {
+                                if let sea_orm::ActiveValue::Set(current_file) =
+                                    &self.clipboard_file_model.data
+                                {
+                                    if current_file != &file_model.data {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // If we get here, all types and their contents match
+                return true;
             }
         }
 
@@ -157,10 +180,10 @@ impl ClipboardManager {
         image_data: Option<Vec<u8>>,
         files: Option<Vec<String>>,
     ) {
-        let mut r#type = String::new();
+        let mut types: Vec<ClipboardType> = vec![];
 
-        if text.is_some() {
-            r#type = ClipboardType::Text.to_string();
+        if text.is_some() && !text.as_ref().unwrap().is_empty() {
+            types.push(ClipboardType::Text);
 
             let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
             let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
@@ -179,30 +202,32 @@ impl ClipboardManager {
             self.clipboard_text_model.data = Set(text.unwrap());
         }
 
-        if html.is_some() {
-            r#type = ClipboardType::Html.to_string();
+        if html.is_some() && !html.as_ref().unwrap().is_empty() {
+            types.push(ClipboardType::Html);
             self.clipboard_html_model.data = Set(html.unwrap());
         }
 
-        if rtf.is_some() {
-            r#type = ClipboardType::Rtf.to_string();
+        if rtf.is_some() && !rtf.as_ref().unwrap().is_empty() {
+            types.push(ClipboardType::Rtf);
             self.clipboard_rtf_model.data = Set(rtf.unwrap());
         }
 
-        if image_data.is_some() {
-            r#type = ClipboardType::Image.to_string();
+        if image_data.is_some() && !image_data.as_ref().unwrap().is_empty() {
+            types.push(ClipboardType::Image);
             self.parse_image_model(image_data.unwrap());
         }
 
-        if files.is_some() {
-            r#type = ClipboardType::File.to_string();
+        if files.is_some() && !files.as_ref().unwrap().is_empty() {
+            types.push(ClipboardType::File);
             println!("{:?}", files);
             // self.clipboard_file_model.data = Set(files.unwrap());
         }
 
+        println!("{:?}", ClipboardType::to_json_value(&types));
+
         self.clipboard_model = entity::clipboard::ActiveModel {
-            r#type: Set(r#type),
-            star: Set(Some(false)),
+            types: Set(ClipboardType::to_json_value(&types)),
+            star: Set(false),
             ..Default::default()
         };
     }

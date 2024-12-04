@@ -4,7 +4,6 @@ use crate::{
 };
 use enigo::{Enigo, Keyboard, Settings};
 use migration::ClipboardType;
-use sea_orm::Iden;
 use std::{process::Command, time::Duration};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_dialog::{MessageDialogButtons, MessageDialogKind};
@@ -61,20 +60,25 @@ pub fn is_tool_installed(tool: &str) -> bool {
 }
 
 fn get_clipboard_content(clipboard_data: &ClipboardWithRelations) -> Option<String> {
-    match clipboard_data.clipboard.r#type.as_str() {
-        type_str if type_str == ClipboardType::Text.to_string() => {
-            clipboard_data.text.as_ref().map(|model| model.data.clone())
+    let types = ClipboardType::from_json_value(&clipboard_data.clipboard.types)?;
+
+    types.iter().find_map(|clipboard_type| {
+        match clipboard_type {
+            ClipboardType::Text => {
+                clipboard_data.text.as_ref().map(|model| model.data.clone())
+            }
+            ClipboardType::Html => {
+                clipboard_data.text.as_ref()
+                    .map(|model| model.data.clone())
+                    .or_else(|| clipboard_data.html.as_ref().map(|model| model.data.clone()))
+            }
+            ClipboardType::Rtf => {
+                clipboard_data.text.as_ref()
+                    .map(|model| model.data.clone())
+                    .or_else(|| clipboard_data.rtf.as_ref().map(|model| model.data.clone()))
+            }
+            // Skip Image and File types as they don't have string content
+            _ => None,
         }
-        type_str if type_str == ClipboardType::Html.to_string() => clipboard_data
-            .text
-            .as_ref()
-            .map(|model| model.data.clone())
-            .or_else(|| clipboard_data.html.as_ref().map(|model| model.data.clone())),
-        type_str if type_str == ClipboardType::Rtf.to_string() => clipboard_data
-            .text
-            .as_ref()
-            .map(|model| model.data.clone())
-            .or_else(|| clipboard_data.rtf.as_ref().map(|model| model.data.clone())),
-        _ => None,
-    }
+    })
 }

@@ -15,3 +15,4 @@ bun.lockb
 # will have compiled files and executables
 target/
 context.txt
+sea_orm_*.txt
