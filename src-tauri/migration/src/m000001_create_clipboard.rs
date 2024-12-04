@@ -1,19 +1,12 @@
+use crate::ClipboardType;
 use sea_orm::Iterable;
 use sea_orm_migration::prelude::*;
 
-use crate::ClipboardType;
-
 #[derive(Iden)]
-enum Clipboard {
+pub enum Clipboard {
     Table,
     Id,
     Type,
-    Content,
-    Width,
-    Height,
-    Size,
-    Image,
-    ImageThumbnailBase64,
     Star,
     CreatedDate,
 }
@@ -39,20 +32,18 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(
-                        ColumnDef::new(Clipboard::Type).string().not_null().check(
-                            Expr::col(Clipboard::Type).is_in(
-                                ClipboardType::iter()
-                                    .map(|x| x.to_string())
-                                    .collect::<Vec<String>>(),
+                        ColumnDef::new(Clipboard::Type)
+                            .string()
+                            .not_null()
+                            .default(ClipboardType::iter().next().unwrap().to_string())
+                            .check(
+                                Expr::col(Clipboard::Type).is_in(
+                                    ClipboardType::iter()
+                                        .map(|x| x.to_string())
+                                        .collect::<Vec<String>>(),
+                                ),
                             ),
-                        ),
                     )
-                    .col(ColumnDef::new(Clipboard::Content).string())
-                    .col(ColumnDef::new(Clipboard::Width).integer())
-                    .col(ColumnDef::new(Clipboard::Height).integer())
-                    .col(ColumnDef::new(Clipboard::Size).string())
-                    .col(ColumnDef::new(Clipboard::Image).blob())
-                    .col(ColumnDef::new(Clipboard::ImageThumbnailBase64).text())
                     .col(ColumnDef::new(Clipboard::Star).boolean().default(true))
                     .col(
                         ColumnDef::new(Clipboard::CreatedDate)

@@ -1,4 +1,4 @@
-use crate::utils::clipboard_manager::ClipboardHelper;
+use crate::types::orm_query::ClipboardManager;
 use tauri::{Listener, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
@@ -14,7 +14,7 @@ pub fn init_clipboard_listener(app: &mut tauri::App) {
         "plugin:clipboard://clipboard-monitor/update",
         move |_event| {
             tauri::async_runtime::spawn(async {
-                ClipboardHelper::upsert_clipboard().await;
+                ClipboardManager::upsert_clipboard().await;
             });
         },
     );

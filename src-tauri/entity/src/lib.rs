@@ -3,5 +3,10 @@
 pub mod prelude;
 
 pub mod clipboard;
+pub mod clipboard_file;
+pub mod clipboard_html;
+pub mod clipboard_image;
+pub mod clipboard_rtf;
+pub mod clipboard_text;
 pub mod hotkey;
 pub mod settings;

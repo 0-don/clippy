@@ -5,11 +5,11 @@ use crate::{
         global::{
             get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
         },
+        keyboard::{type_last_clipboard, type_last_clipboard_linux},
         window::{sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::Key,
     utils::{
-        clipboard_manager::{type_last_clipboard, type_last_clipboard_linux},
         hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
         tauri::config::HotkeyEvent,
     },
