@@ -29,7 +29,7 @@ impl MigrationTrait for Migration {
                     .table(ClipboardImage::Table)
                     .if_not_exists()
                     .col(pk_auto(ClipboardImage::Id))
-                    .col(integer(ClipboardImage::ClipboardId))
+                    .col(integer(ClipboardImage::ClipboardId).unique_key())
                     .col(blob(ClipboardImage::Data))
                     .col(string_null(ClipboardImage::Extension))
                     .col(integer_null(ClipboardImage::Width))

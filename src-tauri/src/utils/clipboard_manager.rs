@@ -1,18 +1,14 @@
 use super::tauri::config::APP;
 use crate::{
-    connection,
-    service::clipboard::insert_clipboard_db,
-    types::orm_query::{ClipboardManager, ClipboardWithRelations},
+    service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
+    types::orm_query::ClipboardManager,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use entity::clipboard::{self};
 use image::imageops;
 use migration::{ClipboardTextType, ClipboardType};
 use regex::Regex;
-use sea_orm::RelationTrait;
-use sea_orm::{DbErr, Iden};
-use sea_orm::{EntityTrait, QueryOrder, Set};
-use sea_orm::{JoinType, QuerySelect};
+use sea_orm::Iden;
+use sea_orm::Set;
 use std::io::Cursor;
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
@@ -58,30 +54,9 @@ impl ClipboardManager {
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
-        let db: sea_orm::DatabaseConnection = connection::establish_connection().await.unwrap();
+        let last_result = get_last_clipboard_db().await;
 
-        let last_result: Result<Option<ClipboardWithRelations>, DbErr> = clipboard::Entity::find()
-            .select_only()
-            .column_as(clipboard::Column::Id, "clipboard_id")
-            .columns([
-                clipboard::Column::Types,
-                clipboard::Column::Star,
-                clipboard::Column::CreatedDate,
-            ])
-            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
-            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardHtml.def())
-            .join(
-                JoinType::LeftJoin,
-                clipboard::Relation::ClipboardImage.def(),
-            )
-            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardRtf.def())
-            .join(JoinType::LeftJoin, clipboard::Relation::ClipboardFile.def())
-            .order_by_desc(clipboard::Column::Id)
-            .into_model::<ClipboardWithRelations>()
-            .one(&db)
-            .await;
-
-        if let Ok(Some(last_clipboard)) = last_result {
+        if let Ok(last_clipboard) = last_result {
             // Get types from last clipboard
             let last_types = ClipboardType::from_json_value(&last_clipboard.clipboard.types);
 

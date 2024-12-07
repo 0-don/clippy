@@ -24,7 +24,7 @@ impl MigrationTrait for Migration {
                     .table(ClipboardHtml::Table)
                     .if_not_exists()
                     .col(pk_auto(ClipboardHtml::Id))
-                    .col(integer(ClipboardHtml::ClipboardId))
+                    .col(integer(ClipboardHtml::ClipboardId).unique_key())
                     .col(text(ClipboardHtml::Data))
                     .foreign_key(
                         ForeignKey::create()

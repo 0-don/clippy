@@ -48,7 +48,7 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::Integer.def(),
-            Self::ClipboardId => ColumnType::Integer.def(),
+            Self::ClipboardId => ColumnType::Integer.def().unique(),
             Self::Data => ColumnType::Text.def(),
         }
     }

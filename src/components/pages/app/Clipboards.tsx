@@ -8,7 +8,7 @@ import { FiArrowUp, FiFileText, FiLink } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull } from "solid-icons/vs";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
-import { Clips } from "../../../@types";
+import { ClipboardModel } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
 import ClipboardStore from "../../../store/ClipboardStore";
 import HotkeyStore from "../../../store/HotkeyStore";
@@ -45,16 +45,18 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
   onMount(() => listen("scroll_to_top", () => clipboardRef()!.scrollTo(0, 0)));
 
-  const IconFunctions = ({ id, ...clipboard }: Clips) => (
+  const IconFunctions = (clipboard: ClipboardModel) => (
     <>
       <VsStarFull
         onClick={async (e) => {
           e.stopPropagation();
           await invoke<boolean>("star_clipboard", {
-            id,
+            id: clipboard.id,
             star: !clipboard.star,
           });
-          setClipboards((prev) => prev.map((o) => (o.id === id ? { ...o, star: !clipboard.star } : o)));
+          setClipboards((prev) =>
+            prev.map((o) => (o.clipboard.id === clipboard.id ? { ...o, star: !o.clipboard.star } : o))
+          );
         }}
         class={`${
           clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
@@ -63,8 +65,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       <IoTrashOutline
         onClick={async (e) => {
           e.stopPropagation();
-          if (await invoke<boolean>("delete_clipboard", { id })) {
-            setClipboards((prev) => prev.filter((o) => o.id !== id));
+          if (await invoke<boolean>("delete_clipboard", { id: clipboard.id })) {
+            setClipboards((prev) => prev.filter((o) => o.clipboard.id !== clipboard.id));
           }
         }}
         class="hidden text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
@@ -101,19 +103,20 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
         </Show>
 
         <For each={clipboards()}>
-          {(clipboard, index) => {
-            let { content, type, id, created_date, width, height, size } = clipboard;
+          {({ clipboard, file, html, image, rtf, text }, index) => {
+            const type = text?.type || (image ? "image" : "text");
+            const content = text?.data;
+
             return (
               <button
                 type="button"
                 class="group relative w-full cursor-pointer select-none px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
                 onClick={(e) => {
                   e.stopPropagation();
-
                   if (e.detail === 1) {
                     dbClickTimer = setTimeout(
-                      async () => await invoke("copy_clipboard", { id }),
-                      clipboard.type === "image" ? 200 : 0
+                      async () => await invoke("copy_clipboard", { id: clipboard.id }),
+                      type === "image" ? 200 : 0
                     );
                   }
                 }}
@@ -121,13 +124,13 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   clearTimeout(dbClickTimer);
                   e.stopPropagation();
                   if (type !== "image") return;
-                  await invoke("save_clipboard_image", { id });
+                  await invoke("save_clipboard_image", { id: clipboard.id });
                 }}
               >
                 <div class="flex justify-between py-3">
                   <div class="flex min-w-0">
                     <div class="flex items-center">
-                      <div class="relative" title={id + ""}>
+                      <div class="relative" title={clipboard.id.toString()}>
                         {type === "link" && <FiLink class="text-2xl text-zinc-700 dark:text-white" />}
                         {type === "text" && <FiFileText class="text-2xl text-zinc-700 dark:text-white" />}
                         {type === "image" && <BsImages class="text-2xl text-zinc-700 dark:text-white" />}
@@ -140,7 +143,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                         {type === "rgb" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
-                            style={{ "background-color": `${rgbCompatible(content)}` }}
+                            style={{ "background-color": `${rgbCompatible(content || "")}` }}
                           />
                         )}
                         <Show when={globalHotkeyEvent()}>
@@ -151,21 +154,21 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       </div>
                     </div>
                     <div class="mr-4 truncate px-4">
-                      {clipboard.image_thumbnail_base64 ? (
+                      {image?.thumbnail ? (
                         <img
-                          src={`data:image/*;base64,${clipboard.image_thumbnail_base64}`}
-                          width={width || 0}
-                          height={height || 0}
+                          src={`data:image/*;base64,${image.thumbnail}`}
+                          width={image.width || 0}
+                          height={image.height || 0}
                           class="max-h-52"
-                          alt={`${width}x${height} ${size}`}
-                          title={`${width}x${height} ${formatBytes(Number(size || "0"))}`}
+                          alt={`${image.width}x${image.height} ${image.size}`}
+                          title={`${image.width}x${image.height} ${formatBytes(Number(image.size || "0"))}`}
                         />
                       ) : (
                         <div class="flex" title={content || ""}>
-                          <p class="text-sm">{content || " "}</p>
+                          <p class="text-sm">{content || " "}</p>
                         </div>
                       )}
-                      <div class="text-left text-xs text-zinc-400">{dayjs.utc(created_date!).fromNow()}</div>
+                      <div class="text-left text-xs text-zinc-400">{dayjs.utc(clipboard.created_date).fromNow()}</div>
                     </div>
                   </div>
                   <div class="absolute bottom-0 right-0 top-0 m-2 flex w-4">

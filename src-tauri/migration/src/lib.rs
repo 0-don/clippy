@@ -30,7 +30,7 @@ pub enum ClipboardType {
 }
 
 impl ClipboardType {
-    pub fn from_json_value(value: &JsonValue) -> Option<Vec<ClipboardType>> {
+    pub fn from_json_value(value: &JsonValue) -> Option<Vec<Self>> {
         match value {
             JsonValue::Array(arr) => {
                 let types: Vec<ClipboardType> = arr
@@ -58,7 +58,7 @@ impl ClipboardType {
         }
     }
 
-    pub fn to_json_value(types: &Vec<ClipboardType>) -> JsonValue {
+    pub fn to_json_value(types: &Vec<Self>) -> JsonValue {
         json!(types.iter().map(|t| t.to_string()).collect::<Vec<_>>())
     }
 }
