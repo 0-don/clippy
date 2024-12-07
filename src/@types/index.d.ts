@@ -1,19 +1,73 @@
 import { SidebarIconName, ViewMoreName } from "../store/utils/constants";
 
-export type Clips = {
-  id?: number | null;
-  type: ClipboardTyype;
-  content?: string | null;
-  width?: number | null;
-  height?: number | null;
-  size?: string | null;
-  image?: number[];
-  image_thumbnail_base64?: string;
-  star?: boolean;
-  created_date?: Date;
-};
+export type Json = any;
+export type DateTime = string;
 
-export type ClipboardType = "text" | "image" | "hex" | "rgb" | "link";
+export interface ClipboardModel {
+  id: number;
+  types: Json;
+  star: boolean;
+  created_date: DateTime;
+}
+
+export interface ClipboardTextModel {
+  id: number;
+  clipboard_id: number;
+  type: string;
+  data: string;
+}
+
+export interface ClipboardHtmlModel {
+  id: number;
+  clipboard_id: number;
+  data: string;
+}
+
+export interface ClipboardImageModel {
+  id: number;
+  clipboard_id: number;
+  data: Uint8Array;
+  extension: string | null;
+  width: number | null;
+  height: number | null;
+  size: string | null;
+  thumbnail: string | null;
+}
+
+export interface ClipboardRtfModel {
+  id: number;
+  clipboard_id: number;
+  data: string;
+}
+
+export interface ClipboardFileModel {
+  id: number;
+  clipboard_id: number;
+  data: Uint8Array;
+  name: string | null;
+  extension: string | null;
+  size: number | null;
+  created_date: DateTime | null;
+  updated_date: DateTime | null;
+}
+
+export interface ClipboardWithRelations {
+  clipboard: ClipboardModel;
+  text?: ClipboardTextModel;
+  html?: ClipboardHtmlModel;
+  image?: ClipboardImageModel;
+  rtf?: ClipboardRtfModel;
+  file?: ClipboardFileModel;
+}
+
+export interface ClipboardManager {
+  clipboard_model: Partial<ClipboardModel>;
+  clipboard_text_model: Partial<ClipboardTextModel>;
+  clipboard_html_model: Partial<ClipboardHtmlModel>;
+  clipboard_image_model: Partial<ClipboardImageModel>;
+  clipboard_rtf_model: Partial<ClipboardRtfModel>;
+  clipboard_file_model: Partial<ClipboardFileModel>;
+}
 
 export type Hotkey = {
   id: number;

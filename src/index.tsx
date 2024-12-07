@@ -13,7 +13,8 @@ const Index = () => {
   const { setGlobalHotkeyEvent } = HotkeyStore;
   const { init, setCurrentTab } = AppStore;
 
-  createResource(init);1
+  createResource(init);
+  1;
 
   onMount(() => {
     listen("set_global_hotkey_event", ({ payload }) => setGlobalHotkeyEvent(!!payload));

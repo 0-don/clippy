@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { createRoot, createSignal } from "solid-js";
-import { Clips } from "../@types";
+import { ClipboardWithRelations } from "../@types";
 
 type ClipboardWhere = {
   cursor?: number;
@@ -18,13 +18,13 @@ export const initialWhere: ClipboardWhere = {
 
 function createClipboardStore() {
   const [clipboardRef, setClipboardRef] = createSignal<HTMLDivElement | undefined>();
-  const [clipboards, setClipboards] = createSignal<Clips[]>([]);
+  const [clipboards, setClipboards] = createSignal<ClipboardWithRelations[]>([]);
   const [where, setWhere] = createSignal<ClipboardWhere>(initialWhere);
 
   const resetWhere = () => setWhere(initialWhere);
 
   const getClipboards = async () => {
-    const clipboards = await invoke<Clips[]>("get_clipboards", where());
+    const clipboards = await invoke<ClipboardWithRelations[]>("get_clipboards", where());
     return clipboards;
   };
 

@@ -4,14 +4,50 @@ use crate::{connection, utils::tauri::config::APP};
 use entity::clipboard::{self, Model};
 use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
 use migration::ClipboardType;
+use sea_orm::Condition;
+use sea_orm::Iden;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, LoaderTrait, PaginatorTrait, QueryFilter,
     QueryOrder, QuerySelect, QueryTrait, Set,
 };
-use sea_orm::{Condition, RelationTrait};
-use sea_orm::{Iden, JoinType};
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
+use tokio::try_join;
+
+pub async fn load_clipboards_with_relations(
+    clipboards: Vec<clipboard::Model>,
+) -> Vec<ClipboardWithRelations> {
+    let db = connection::establish_connection()
+        .await
+        .expect("Failed to establish connection");
+
+    let (texts, htmls, images, rtfs, files) = try_join!(
+        clipboards.load_one(clipboard_text::Entity, &db),
+        clipboards.load_one(clipboard_html::Entity, &db),
+        clipboards.load_one(clipboard_image::Entity, &db),
+        clipboards.load_one(clipboard_rtf::Entity, &db),
+        clipboards.load_many(clipboard_file::Entity, &db),
+    )
+    .expect("Failed to load clipboard relations");
+
+    // Zip everything together, taking first item from each Vec or None if empty
+    clipboards
+        .into_iter()
+        .zip(texts)
+        .zip(htmls)
+        .zip(images)
+        .zip(rtfs)
+        .zip(files)
+        .map(|(((((c, t), h), i), r), f)| ClipboardWithRelations {
+            clipboard: c,
+            text: t,
+            html: h,
+            image: i,
+            rtf: r,
+            file: f.into_iter().next(), // only files need into_iter().next() since it's load_many
+        })
+        .collect()
+}
 
 pub async fn insert_clipboard_db(
     active_model: ClipboardManager,
@@ -101,63 +137,45 @@ pub async fn insert_clipboard_db(
         file: clipboard_file_model,
     };
 
-    // printlog!("Clipboard inserted: {:?}", clip_db);
-
     Ok(clip_db)
 }
 
 pub async fn get_clipboard_db(id: i32) -> Result<ClipboardWithRelations, DbErr> {
-    let _db = connection::establish_connection().await?;
+    let db = connection::establish_connection().await?;
+    let clipboard = clipboard::Entity::find_by_id(id).one(&db).await?;
 
-    let clipboard = clipboard::Entity::find()
-        .select_only()
-        .column_as(clipboard::Column::Id, "clipboard_id")
-        .columns([
-            clipboard::Column::Types,
-            clipboard::Column::Star,
-            clipboard::Column::CreatedDate,
-        ])
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardHtml.def())
-        .join(
-            JoinType::LeftJoin,
-            clipboard::Relation::ClipboardImage.def(),
-        )
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardRtf.def())
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardFile.def())
-        .filter(clipboard::Column::Id.eq(id))
-        .into_model::<ClipboardWithRelations>()
-        .one(&_db)
-        .await?;
+    if clipboard.is_none() {
+        return Err(DbErr::RecordNotFound("clipboard not found".to_string()));
+    }
 
-    Ok(clipboard.unwrap())
+    Ok(load_clipboards_with_relations(vec![clipboard.unwrap()])
+        .await
+        .into_iter()
+        .next()
+        .unwrap())
 }
 
 pub async fn get_last_clipboard_db() -> Result<ClipboardWithRelations, DbErr> {
     let db = connection::establish_connection().await?;
 
     let last_clipboard = clipboard::Entity::find()
-        .select_only()
-        .column_as(clipboard::Column::Id, "clipboard_id")
-        .columns([
-            clipboard::Column::Types,
-            clipboard::Column::Star,
-            clipboard::Column::CreatedDate,
-        ])
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardHtml.def())
-        .join(
-            JoinType::LeftJoin,
-            clipboard::Relation::ClipboardImage.def(),
-        )
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardRtf.def())
-        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardFile.def())
         .order_by_desc(clipboard::Column::Id)
-        .into_model::<ClipboardWithRelations>()
         .one(&db)
         .await?;
 
-    Ok(last_clipboard.unwrap())
+    if last_clipboard.is_none() {
+        return Err(DbErr::RecordNotFound(
+            "last clipboard not found".to_string(),
+        ));
+    }
+
+    Ok(
+        load_clipboards_with_relations(vec![last_clipboard.unwrap()])
+            .await
+            .into_iter()
+            .next()
+            .unwrap(),
+    )
 }
 
 pub async fn get_clipboards_db(
@@ -169,7 +187,7 @@ pub async fn get_clipboards_db(
     let db = connection::establish_connection().await?;
 
     // First get the clipboards with filters
-    let clipboards = clipboard::Entity::find()
+    let clipboards: Vec<Model> = clipboard::Entity::find()
         .apply_if(star, |query, starred| {
             query.filter(clipboard::Column::Star.eq(starred))
         })
@@ -196,30 +214,8 @@ pub async fn get_clipboards_db(
         .all(&db)
         .await?;
 
-    // Then load all related data using load_many
-    let texts = clipboards.load_many(clipboard_text::Entity, &db).await?;
-    let htmls = clipboards.load_many(clipboard_html::Entity, &db).await?;
-    let images = clipboards.load_many(clipboard_image::Entity, &db).await?;
-    let rtfs = clipboards.load_many(clipboard_rtf::Entity, &db).await?;
-    let files = clipboards.load_many(clipboard_file::Entity, &db).await?;
-
     // Zip everything together, taking first item from each Vec or None if empty
-    Ok(clipboards
-        .into_iter()
-        .zip(texts)
-        .zip(htmls)
-        .zip(images)
-        .zip(rtfs)
-        .zip(files)
-        .map(|(((((c, t), h), i), r), f)| ClipboardWithRelations {
-            clipboard: c,
-            text: t.into_iter().next(),
-            html: h.into_iter().next(),
-            image: i.into_iter().next(),
-            rtf: r.into_iter().next(),
-            file: f.into_iter().next(),
-        })
-        .collect())
+    Ok(load_clipboards_with_relations(clipboards).await)
 }
 
 pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {

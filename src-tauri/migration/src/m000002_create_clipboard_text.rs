@@ -26,7 +26,7 @@ impl MigrationTrait for Migration {
                     .table(ClipboardText::Table)
                     .if_not_exists()
                     .col(pk_auto(ClipboardText::Id))
-                    .col(integer(ClipboardText::ClipboardId))
+                    .col(integer(ClipboardText::ClipboardId).unique_key())
                     .col(
                         string(ClipboardText::Type)
                             .default(ClipboardTextType::iter().next().unwrap().to_string())

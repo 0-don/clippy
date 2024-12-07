@@ -24,7 +24,7 @@ impl MigrationTrait for Migration {
                     .table(ClipboardRtf::Table)
                     .if_not_exists()
                     .col(pk_auto(ClipboardRtf::Id))
-                    .col(integer(ClipboardRtf::ClipboardId))
+                    .col(integer(ClipboardRtf::ClipboardId).unique_key())
                     .col(text(ClipboardRtf::Data))
                     .foreign_key(
                         ForeignKey::create()

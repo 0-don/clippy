@@ -65,10 +65,10 @@ impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
             Self::ClipboardFile => Entity::has_many(super::clipboard_file::Entity).into(),
-            Self::ClipboardHtml => Entity::has_many(super::clipboard_html::Entity).into(),
-            Self::ClipboardImage => Entity::has_many(super::clipboard_image::Entity).into(),
-            Self::ClipboardRtf => Entity::has_many(super::clipboard_rtf::Entity).into(),
-            Self::ClipboardText => Entity::has_many(super::clipboard_text::Entity).into(),
+            Self::ClipboardHtml => Entity::has_one(super::clipboard_html::Entity).into(),
+            Self::ClipboardImage => Entity::has_one(super::clipboard_image::Entity).into(),
+            Self::ClipboardRtf => Entity::has_one(super::clipboard_rtf::Entity).into(),
+            Self::ClipboardText => Entity::has_one(super::clipboard_text::Entity).into(),
         }
     }
 }
