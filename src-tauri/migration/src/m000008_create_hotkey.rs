@@ -1,3 +1,5 @@
+use crate::HotkeyEvent;
+use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,
     schema::{boolean, pk_auto, string},
@@ -29,7 +31,15 @@ impl MigrationTrait for Migration {
                     .table(Hotkey::Table)
                     .if_not_exists()
                     .col(pk_auto(Hotkey::Id))
-                    .col(string(Hotkey::Event))
+                    .col(
+                        string(Hotkey::Event).check(
+                            Expr::col(Hotkey::Event).is_in(
+                                HotkeyEvent::iter()
+                                    .map(|x| x.to_string())
+                                    .collect::<Vec<String>>(),
+                            ),
+                        ),
+                    )
                     .col(boolean(Hotkey::Ctrl))
                     .col(boolean(Hotkey::Alt))
                     .col(boolean(Hotkey::Shift))

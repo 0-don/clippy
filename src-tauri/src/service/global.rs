@@ -1,7 +1,7 @@
 use crate::{
-    types::types::Key,
+    types::{hotkey::SafeHotKeyManager, types::Key},
     utils::tauri::config::{
-        SafeHotKeyManager, APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX
+        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX
     },
 };
 use std::{collections::HashMap, sync::MutexGuard};

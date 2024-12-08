@@ -1,11 +1,14 @@
 import { SidebarIconName, ViewMoreName } from "../store/utils/constants";
 
-export type Json = any;
+export type ClipboardType = "text" | "image" | "html" | "rtf" | "file";
+
+export type ClipboardTextType = "text" | "link" | "hex" | "rgb";
+
 export type DateTime = string;
 
 export interface ClipboardModel {
   id: number;
-  types: Json;
+  types: ClipboardType[];
   star: boolean;
   created_date: DateTime;
 }
@@ -13,7 +16,7 @@ export interface ClipboardModel {
 export interface ClipboardTextModel {
   id: number;
   clipboard_id: number;
-  type: string;
+  type: ClipboardTextType;
   data: string;
 }
 
@@ -58,15 +61,6 @@ export interface ClipboardWithRelations {
   image?: ClipboardImageModel;
   rtf?: ClipboardRtfModel;
   file?: ClipboardFileModel;
-}
-
-export interface ClipboardManager {
-  clipboard_model: Partial<ClipboardModel>;
-  clipboard_text_model: Partial<ClipboardTextModel>;
-  clipboard_html_model: Partial<ClipboardHtmlModel>;
-  clipboard_image_model: Partial<ClipboardImageModel>;
-  clipboard_rtf_model: Partial<ClipboardRtfModel>;
-  clipboard_file_model: Partial<ClipboardFileModel>;
 }
 
 export type Hotkey = {

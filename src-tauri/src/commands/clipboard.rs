@@ -9,6 +9,7 @@ use crate::{
     types::orm_query::ClipboardWithRelations,
     utils::{hotkey_manager::unregister_hotkeys, tauri::config::APP},
 };
+use migration::ClipboardType;
 use std::fs::File;
 use tauri::Manager;
 
@@ -31,8 +32,9 @@ pub async fn get_clipboards(
 }
 
 #[tauri::command]
-pub async fn copy_clipboard(id: i32) -> Result<(), ()> {
-    let _ = copy_clipboard_from_id(id).await;
+pub async fn copy_clipboard(id: i32, r#type: ClipboardType) -> Result<(), ()> {
+    printlog!("type {:?}", r#type);
+    let _ = copy_clipboard_from_id(id, r#type).await;
     unregister_hotkeys(false);
     Ok(())
 }

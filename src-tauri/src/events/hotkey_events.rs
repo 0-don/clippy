@@ -9,14 +9,13 @@ use crate::{
         window::{sync_clipboard_history_toggle, toggle_main_window},
     },
     types::types::Key,
-    utils::{
-        hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-        tauri::config::HotkeyEvent,
-    },
+    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
+use migration::HotkeyEvent;
 use regex::Regex;
+use sea_orm::{Iden, Iterable};
 use tauri::Emitter;
 use tokio::sync::oneshot;
 
@@ -61,30 +60,31 @@ pub fn init_hotkey_listener() -> () {
 }
 
 pub async fn parse_hotkey_event(key: &Key) {
-    let event = key.event.parse::<HotkeyEvent>();
-
+    let event = HotkeyEvent::iter().find(|variant| variant.to_string() == key.event);
+    
     printlog!("event: {:?}", event);
 
     match event {
-        Ok(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
-        Ok(e @ HotkeyEvent::ScrollToTop) => {
+        Some(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
+        Some(e @ HotkeyEvent::ScrollToTop) => {
             *get_hotkey_running() = true;
-            get_main_window().emit(e.as_str(), ()).unwrap();
+            println!("scroll to top {:?}", e);
+            get_main_window().emit(e.to_string().as_str(), ()).unwrap();
         }
-        Ok(HotkeyEvent::TypeClipboard) => {
+        Some(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {
                 type_last_clipboard_linux().await.unwrap();
             } else {
                 type_last_clipboard().await;
             }
         }
-        Ok(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
-        Ok(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => get_main_window()
-            .emit("open_window", Some(e.as_str()))
+        Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
+        Some(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => get_main_window()
+            .emit("open_window", Some(e.to_string().as_str()))
             .unwrap(),
 
-        Ok(HotkeyEvent::Exit) => get_app().exit(1),
-        Ok(
+        Some(HotkeyEvent::Exit) => get_app().exit(1),
+        Some(
             e @ (HotkeyEvent::RecentClipboard
             | HotkeyEvent::StarredClipboard
             | HotkeyEvent::History
@@ -92,10 +92,10 @@ pub async fn parse_hotkey_event(key: &Key) {
         ) => {
             *get_hotkey_running() = true;
             get_main_window()
-                .emit("change_tab", Some(e.as_str()))
+                .emit("change_tab", Some(e.to_string().as_str()))
                 .unwrap();
         }
-        Ok(
+        Some(
             e @ (HotkeyEvent::Digit1
             | HotkeyEvent::Digit2
             | HotkeyEvent::Digit3
@@ -117,13 +117,13 @@ pub async fn parse_hotkey_event(key: &Key) {
         ) => {
             let num = Regex::new(r"\d+")
                 .unwrap()
-                .find_iter(e.as_str())
+                .find_iter(e.to_string().as_str())
                 .map(|m| m.as_str())
                 .collect::<String>()
                 .parse::<u64>()
                 .unwrap_or_default();
             let _ = copy_clipboard_from_index(num - 1).await;
         }
-        Err(()) => panic!("Error parsing hotkey event"),
+        None => panic!("Error parsing hotkey event: {}", key.event),
     };
 }
