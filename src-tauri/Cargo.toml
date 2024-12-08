@@ -57,8 +57,8 @@ default-features = false
 # strip = true
 
 [package.metadata.generate-rpm.requires]
-"javascriptcoregtk4.0" = "*"
-"webkit2gtk4.0" = "*"
-"libxdo" = "*"
+"webkit2gtk-4.1" = "*"
 "libappindicator-gtk3" = "*"
 "xdotool" = "*"
+"gtk3" = "*"
+"libxdo" = "*"

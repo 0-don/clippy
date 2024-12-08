@@ -104,9 +104,6 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
 
         <For each={clipboards()}>
           {({ clipboard, file, html, image, rtf, text }, index) => {
-            const type = text?.type || (image ? "image" : "text");
-            const content = text?.data;
-
             return (
               <button
                 type="button"
@@ -116,14 +113,14 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   if (e.detail === 1) {
                     dbClickTimer = setTimeout(
                       async () => await invoke("copy_clipboard", { id: clipboard.id }),
-                      type === "image" ? 200 : 0
+                      clipboard.types.includes("image") ? 200 : 0
                     );
                   }
                 }}
                 onDblClick={async (e) => {
                   clearTimeout(dbClickTimer);
                   e.stopPropagation();
-                  if (type !== "image") return;
+                  if (!clipboard.types.includes("image")) return;
                   await invoke("save_clipboard_image", { id: clipboard.id });
                 }}
               >
@@ -131,19 +128,23 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   <div class="flex min-w-0">
                     <div class="flex items-center">
                       <div class="relative" title={clipboard.id.toString()}>
-                        {type === "link" && <FiLink class="text-2xl text-zinc-700 dark:text-white" />}
-                        {type === "text" && <FiFileText class="text-2xl text-zinc-700 dark:text-white" />}
-                        {type === "image" && <BsImages class="text-2xl text-zinc-700 dark:text-white" />}
-                        {type === "hex" && (
+                        {text?.type === "link" && <FiLink class="text-2xl text-zinc-700 dark:text-white" />}
+                        {text?.type === "text" && <FiFileText class="text-2xl text-zinc-700 dark:text-white" />}
+                        {clipboard.types.includes("image") && (
+                          <BsImages class="text-2xl text-zinc-700 dark:text-white" />
+                        )}
+                        {text?.type === "hex" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
-                            style={{ "background-color": `${content?.includes("#") ? `${content}` : `#${content}`}` }}
+                            style={{
+                              "background-color": `${text.data.includes("#") ? `${text.data}` : `#${text.data}`}`,
+                            }}
                           />
                         )}
-                        {type === "rgb" && (
+                        {text?.type === "rgb" && (
                           <div
                             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
-                            style={{ "background-color": `${rgbCompatible(content || "")}` }}
+                            style={{ "background-color": `${rgbCompatible(text.data)}` }}
                           />
                         )}
                         <Show when={globalHotkeyEvent()}>
@@ -164,8 +165,8 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                           title={`${image.width}x${image.height} ${formatBytes(Number(image.size || "0"))}`}
                         />
                       ) : (
-                        <div class="flex" title={content || ""}>
-                          <p class="text-sm">{content || " "}</p>
+                        <div class="flex" title={text?.data || ""}>
+                          <p class="text-sm">{text?.data || " "}</p>
                         </div>
                       )}
                       <div class="text-left text-xs text-zinc-400">{dayjs.utc(clipboard.created_date).fromNow()}</div>
