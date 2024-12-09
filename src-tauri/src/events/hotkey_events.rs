@@ -1,12 +1,9 @@
 use crate::{
     printlog,
     service::{
-        clipboard::copy_clipboard_from_index,
-        global::{
+        clipboard::copy_clipboard_from_index, global::{
             get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
-        },
-        keyboard::{type_last_clipboard, type_last_clipboard_linux},
-        window::{sync_clipboard_history_toggle, toggle_main_window},
+        }, keyboard::{type_last_clipboard, type_last_clipboard_linux}, settings::sync_clipboard_history_toggle, window::toggle_main_window
     },
     types::types::Key,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
@@ -61,7 +58,7 @@ pub fn init_hotkey_listener() -> () {
 
 pub async fn parse_hotkey_event(key: &Key) {
     let event = HotkeyEvent::iter().find(|variant| variant.to_string() == key.event);
-    
+
     printlog!("event: {:?}", event);
 
     match event {

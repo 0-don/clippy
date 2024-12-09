@@ -23,8 +23,6 @@
         "fullscreen": false,
         "resizable": true,
         "title": "clippy",
-        "width": 375,
-        "height": 600,
         "alwaysOnTop": true,
         "visible": false,
         "decorations": false,

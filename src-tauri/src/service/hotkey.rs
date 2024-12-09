@@ -38,12 +38,8 @@ where
     upsert_hotkeys_in_store().await.unwrap();
 
     register_hotkeys(register_all);
-
     get_main_window().emit("init", ()).unwrap();
-
-    if let Some(window) = get_app_window("settings") {
-        window.emit("init", ()).unwrap();
-    }
+    get_app_window("settings").emit("init", ()).unwrap();
 
     result
 }
