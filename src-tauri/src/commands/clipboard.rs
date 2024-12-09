@@ -6,7 +6,7 @@ use crate::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
         get_clipboards_db, star_clipboard_db,
     },
-    types::orm_query::ClipboardWithRelations,
+    types::{orm_query::ClipboardWithRelations, types::CommandError},
     utils::{hotkey_manager::unregister_hotkeys, tauri::config::APP},
 };
 use migration::ClipboardType;
@@ -19,65 +19,57 @@ pub async fn get_clipboards(
     search: Option<String>,
     star: Option<bool>,
     img: Option<bool>,
-) -> Result<Vec<ClipboardWithRelations>, ()> {
+) -> Result<Vec<ClipboardWithRelations>, CommandError> {
     printlog!("get_clipboards");
-    let clipboards_result = get_clipboards_db(cursor, search, star, img).await;
-    if clipboards_result.is_err() {
-        printlog!("get_clipboards error {:?}", clipboards_result);
-        return Err(());
-    }
-    let clipboard = clipboards_result.unwrap();
-
-    Ok(clipboard)
+    Ok(get_clipboards_db(cursor, search, star, img).await?)
 }
 
 #[tauri::command]
-pub async fn copy_clipboard(id: i32, r#type: ClipboardType) -> Result<(), ()> {
+pub async fn copy_clipboard(id: i32, r#type: ClipboardType) -> Result<bool, CommandError> {
     printlog!("type {:?}", r#type);
-    let _ = copy_clipboard_from_id(id, r#type).await;
     unregister_hotkeys(false);
-    Ok(())
+    Ok(copy_clipboard_from_id(id, r#type).await?)
 }
 
 #[tauri::command]
-pub async fn star_clipboard(id: i32, star: bool) -> Result<bool, ()> {
-    let clipboard = star_clipboard_db(id, star).await;
-
-    Ok(clipboard.unwrap())
+pub async fn star_clipboard(id: i32, star: bool) -> Result<bool, CommandError> {
+    Ok(star_clipboard_db(id, star).await?)
 }
 
 #[tauri::command]
-pub async fn delete_clipboard(id: i32) -> Result<bool, ()> {
-    let clipboard = delete_clipboard_db(id).await;
-
-    Ok(clipboard.unwrap())
+pub async fn delete_clipboard(id: i32) -> Result<bool, CommandError> {
+    Ok(delete_clipboard_db(id).await?)
 }
 
 #[tauri::command]
-pub async fn clear_clipboards() -> Result<bool, ()> {
-    let deleted = clear_clipboards_db().await;
-
-    Ok(deleted.unwrap())
+pub async fn clear_clipboards() -> Result<bool, CommandError> {
+    Ok(clear_clipboards_db().await?)
 }
 
 #[tauri::command]
-pub async fn save_clipboard_image(id: i32) -> Result<bool, ()> {
-    let clipboard = get_clipboard_db(id).await.unwrap();
+pub async fn save_clipboard_image(id: i32) -> Result<bool, CommandError> {
+    let clipboard = get_clipboard_db(id).await?;
 
-    let image = image::load_from_memory(&clipboard.image.unwrap().data).unwrap();
+    let image = image::load_from_memory(
+        &clipboard
+            .image
+            .ok_or(CommandError::Option(
+                "No image data found in clipboard".to_string(),
+            ))?
+            .data,
+    )?;
 
     // Create a path for the new image file on the desktop
     let image_path = APP
         .get()
-        .unwrap()
+        .ok_or(CommandError::Option("No app handle found".to_string()))?
         .path()
-        .desktop_dir()
-        .unwrap()
+        .desktop_dir()?
         .join(format!("clipboard-{}.png", id));
 
     // Save the image to the desktop
-    let mut file = File::create(image_path).unwrap();
-    image.write_to(&mut file, image::ImageFormat::Png).unwrap();
+    let mut file = File::create(image_path)?;
+    image.write_to(&mut file, image::ImageFormat::Png)?;
 
     Ok(true)
 }

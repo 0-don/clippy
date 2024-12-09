@@ -1,20 +1,36 @@
+use std::sync::{Arc, Mutex};
+
 use super::global::{get_app, get_main_window};
 use crate::{
-    commands::settings::get_settings,
     printlog,
-    service::{
-        global::get_window_stop_tx, hotkey::with_hotkeys, settings::update_settings_synchronize,
+    service::global::get_window_stop_tx,
+    types::types::WindowName,
+    utils::{
+        hotkey_manager::{register_hotkeys, unregister_hotkeys},
+        tauri::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y},
     },
-    types::types::{Config, DataPath, WindowName},
-    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
-use std::{
-    fs::{self},
-    path::{Path, PathBuf},
-};
-use tauri::{Emitter, Manager, WebviewUrl};
+use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
-use tauri_plugin_dialog::DialogExt;
+
+pub fn init_window(app: &mut tauri::App) {
+    let window: tauri::WebviewWindow = app.get_webview_window("main").unwrap();
+    let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
+
+    #[cfg(any(windows, target_os = "macos"))]
+    {
+        let _ = window.set_decorations(false);
+        let _ = window.set_shadow(true);
+    }
+
+    #[cfg(debug_assertions)]
+    {
+        window.open_devtools();
+    }
+    MAIN_WINDOW
+        .set(Arc::new(Mutex::new(window)))
+        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
+}
 
 pub fn toggle_main_window() {
     if get_main_window().is_visible().unwrap() {
@@ -108,108 +124,6 @@ pub fn position_window_near_cursor() {
 
         window.set_position(final_pos).unwrap();
     }
-}
-
-pub fn get_data_path() -> DataPath {
-    let config_path = get_app()
-        .path()
-        .app_data_dir()
-        .unwrap()
-        .to_string_lossy()
-        .to_string();
-
-    let _ = fs::create_dir_all(&config_path);
-
-    // let config_file = Path::new(&config_dir).join("config.json");
-    let config_file_path = [&config_path, "config.json"]
-        .iter()
-        .collect::<PathBuf>()
-        .to_string_lossy()
-        .to_string();
-
-    let db_file_path = [&config_path, "clippy.sqlite"]
-        .iter()
-        .collect::<PathBuf>()
-        .to_string_lossy()
-        .to_string();
-
-    DataPath {
-        config_path,
-        db_file_path,
-        config_file_path,
-    }
-}
-
-pub fn get_config() -> (Config, DataPath) {
-    let data_path = get_data_path();
-
-    let json = std::fs::read_to_string(&data_path.config_file_path).unwrap();
-
-    let config: Config = serde_json::from_str(&json).unwrap();
-
-    (config, data_path)
-}
-
-pub async fn sync_clipboard_history_enable() {
-    // get local config from app data
-    let (mut config, data_path) = get_config();
-
-    // Use blocking_pick_folder for synchronous folder selection
-    if let Some(dir) = get_app().dialog().file().blocking_pick_folder() {
-        // Convert path to string
-        let dir = dir.to_string();
-        let dir_file = format!("{}/clippy.sqlite", &dir);
-
-        println!("selected dir: {}", dir);
-
-        // check if backup file exists
-        if !Path::new(&dir_file).exists() {
-            // copy current database to backup location
-            let _ = fs::copy(&config.db, &dir_file);
-        }
-
-        // overwrite config database location
-        config.db = dir_file;
-
-        // overwrite config file
-        let _ = fs::write(
-            &data_path.config_file_path,
-            serde_json::to_string(&config).unwrap(),
-        );
-
-        // Now we can await this since we're in an async function
-        update_settings_synchronize(true).await.unwrap();
-    }
-}
-
-pub async fn sync_clipboard_history_disable() {
-    let (mut config, data_path) = get_config();
-    // copy backup file to default database location
-    let _ = fs::copy(&config.db, &data_path.db_file_path);
-
-    // overwrite config database default location
-    config.db = data_path.db_file_path;
-
-    // overwrite config file
-    let _ = fs::write(
-        &data_path.config_file_path,
-        serde_json::to_string(&config).unwrap(),
-    );
-
-    update_settings_synchronize(false).await.unwrap();
-}
-
-pub async fn sync_clipboard_history_toggle() {
-    let settings = get_settings().await.unwrap();
-
-    with_hotkeys(false, async move {
-        if settings.synchronize {
-            sync_clipboard_history_disable().await;
-        } else {
-            sync_clipboard_history_enable().await;
-        }
-    })
-    .await;
 }
 
 pub fn create_about_window() {

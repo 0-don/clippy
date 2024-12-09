@@ -1,7 +1,7 @@
 use crate::{
     types::{hotkey::SafeHotKeyManager, types::Key},
     utils::tauri::config::{
-        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX
+        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
     },
 };
 use std::{collections::HashMap, sync::MutexGuard};
@@ -60,6 +60,8 @@ pub fn get_app() -> &'static AppHandle {
     APP.get().expect("Failed to get APP")
 }
 
-pub fn get_app_window(str: &str) -> Option<WebviewWindow> {
-    get_app().get_webview_window(str)
+pub fn get_app_window(str: &str) -> WebviewWindow {
+    get_app()
+        .get_webview_window(str)
+        .expect("Failed to get webview window")
 }

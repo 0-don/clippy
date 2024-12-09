@@ -29,6 +29,7 @@ tauri = { version = "2.0.0", features = ["macos-private-api", "devtools", "tray-
 tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-clipboard = "2"
+tauri-plugin-opener = "2"
 tauri-plugin-positioner = { version = "2", features = ["tray-icon"] }
 tauri-plugin-autostart = "2"
 

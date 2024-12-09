@@ -14,19 +14,21 @@ const About = () => {
       <img src={icon} alt="logo" width="300px" />
       <h1 class="text-xl font-bold">{version()}</h1>
       <h2 class="text-base">No updates currently available</h2>
-      <button
+      <a
+        href="#"
         onClick={() => invoke("open_browser_url", { url: "https://github.com/0-don/clippy" })}
-        class="inline-flex w-32 items-center justify-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+        class="inline-flex w-32 items-center justify-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-bold text-zinc-950 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
       >
         Github
-      </button>
-      <button
+      </a>
+      <a
+        href="#"
         onClick={() => invoke("open_browser_url", { url: "https://github.com/0-don/clippy" })}
-        class="inline-flex w-32 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+        class="inline-flex w-32 items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-bold !text-zinc-950 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
       >
         Official Website
-      </button>
-      <p class="text-xs">Developed by Don Cryptus. Powered by Tauri.</p>
+      </a>
+      <p class="text-xs">Developed by 0-. Powered by Tauri.</p>
       <p class="text-xs text-gray-500">Copyright(C) DC. All right reserved.</p>
     </div>
   );

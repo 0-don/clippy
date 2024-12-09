@@ -1,6 +1,6 @@
 use crate::commands::settings::get_settings;
 use crate::service::global::get_app;
-use crate::service::window::get_data_path;
+use crate::service::settings::get_data_path;
 use crate::types::hotkey::SafeHotKeyManager;
 use crate::types::types::{Config, Key};
 use global_hotkey::GlobalHotKeyManager;
@@ -9,7 +9,7 @@ use std::fs;
 use std::path::Path;
 use std::sync::OnceLock;
 use std::sync::{Arc, Mutex};
-use tauri::{LogicalSize, Manager, WebviewWindow};
+use tauri::{Manager, WebviewWindow};
 use tauri_plugin_autostart::AutoLaunchManager;
 use tokio::sync::oneshot;
 
@@ -66,33 +66,14 @@ pub fn init_globals(app: &mut tauri::App) {
         .unwrap_or_else(|_| panic!("Failed to initialize WINDOW_STOP_TX"));
 }
 
-pub fn init_window(app: &mut tauri::App) {
-    let window: tauri::WebviewWindow = app.get_webview_window("main").unwrap();
-    let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
-
-    #[cfg(any(windows, target_os = "macos"))]
-    {
-        let _ = window.set_decorations(false);
-        let _ = window.set_shadow(true);
-    }
-
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
-    MAIN_WINDOW
-        .set(Arc::new(Mutex::new(window)))
-        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
-}
-
 pub fn autostart() {
     tauri::async_runtime::spawn(async {
         let app: &tauri::AppHandle = get_app();
-        let settings = get_settings().await.unwrap();
+        let settings = get_settings().await.expect("Failed to get settings");
         let manager: tauri::State<'_, AutoLaunchManager> = app.state::<AutoLaunchManager>();
 
         // Use the manager as needed
-        if settings.startup && !manager.is_enabled().unwrap() {
+        if settings.startup && !manager.is_enabled().expect("Failed to check auto-launch") {
             manager.enable().expect("Failed to enable auto-launch");
         } else {
             manager.disable().expect("Failed to disable auto-launch");
