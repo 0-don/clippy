@@ -1,35 +1,41 @@
 use crate::{
     printlog,
     service::{
-        clipboard::copy_clipboard_from_index, global::{
+        clipboard::copy_clipboard_from_index,
+        global::{
             get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
-        }, keyboard::{type_last_clipboard, type_last_clipboard_linux}, settings::sync_clipboard_history_toggle, window::toggle_main_window
+        },
+        keyboard::{type_last_clipboard, type_last_clipboard_linux},
+        settings::sync_clipboard_history_toggle,
+        window::toggle_main_window,
     },
     types::types::Key,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
-use migration::HotkeyEvent;
+use migration::{CommandEvent, HotkeyEvent};
 use regex::Regex;
 use sea_orm::{Iden, Iterable};
 use tauri::Emitter;
 use tokio::sync::oneshot;
 
-pub fn init_hotkey_listener() -> () {
+pub fn init_hotkey_listener() {
     let receiver = GlobalHotKeyEvent::receiver();
 
     unregister_hotkeys(true);
     tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(async {
-            upsert_hotkeys_in_store().await.unwrap();
+            upsert_hotkeys_in_store()
+                .await
+                .expect("Failed to upsert hotkeys in store");
         })
     });
     register_hotkeys(false);
 
     // If there's an existing sender, send a stop signal to the previous task
     if let Some(sender) = get_hotkey_stop_tx().take() {
-        let _ = sender.send(());
+        sender.send(()).expect("Failed to send stop signal");
     }
 
     let (new_stop_tx, mut stop_rx) = oneshot::channel();
@@ -66,19 +72,26 @@ pub async fn parse_hotkey_event(key: &Key) {
         Some(e @ HotkeyEvent::ScrollToTop) => {
             *get_hotkey_running() = true;
             println!("scroll to top {:?}", e);
-            get_main_window().emit(e.to_string().as_str(), ()).unwrap();
+            get_main_window()
+                .emit(e.to_string().as_str(), ())
+                .expect("Failed to emit event");
         }
         Some(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {
-                type_last_clipboard_linux().await.unwrap();
+                type_last_clipboard_linux()
+                    .await
+                    .expect("Failed to type clipboard");
             } else {
                 type_last_clipboard().await;
             }
         }
         Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
         Some(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => get_main_window()
-            .emit("open_window", Some(e.to_string().as_str()))
-            .unwrap(),
+            .emit(
+                CommandEvent::OpenWindow.to_string().as_str(),
+                Some(e.to_string().as_str()),
+            )
+            .expect("Failed to emit event"),
 
         Some(HotkeyEvent::Exit) => get_app().exit(1),
         Some(
@@ -89,8 +102,11 @@ pub async fn parse_hotkey_event(key: &Key) {
         ) => {
             *get_hotkey_running() = true;
             get_main_window()
-                .emit("change_tab", Some(e.to_string().as_str()))
-                .unwrap();
+                .emit(
+                    CommandEvent::ChangeTab.to_string().as_str(),
+                    Some(e.to_string().as_str()),
+                )
+                .expect("Failed to emit event");
         }
         Some(
             e @ (HotkeyEvent::Digit1
@@ -113,13 +129,15 @@ pub async fn parse_hotkey_event(key: &Key) {
             | HotkeyEvent::Num9),
         ) => {
             let num = Regex::new(r"\d+")
-                .unwrap()
+                .expect("Failed to create regex")
                 .find_iter(e.to_string().as_str())
                 .map(|m| m.as_str())
                 .collect::<String>()
                 .parse::<u64>()
-                .unwrap_or_default();
-            let _ = copy_clipboard_from_index(num - 1).await;
+                .expect("Failed to parse number");
+            copy_clipboard_from_index(num - 1)
+                .await
+                .expect("Failed to copy clipboard");
         }
         None => panic!("Error parsing hotkey event: {}", key.event),
     };

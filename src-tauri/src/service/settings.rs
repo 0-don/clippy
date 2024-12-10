@@ -19,7 +19,7 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
 
     let settings = settings::Entity::find_by_id(1).one(&db).await?;
 
-    Ok(settings.unwrap())
+    Ok(settings.expect("Settings not found"))
 }
 
 pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
@@ -39,7 +39,7 @@ pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
 
     let settings = settings::Entity::find_by_id(1).one(&db).await?;
 
-    let mut settings = settings.unwrap();
+    let mut settings = settings.expect("Settings not found");
 
     settings.synchronize = sync;
 
@@ -56,11 +56,11 @@ pub fn get_data_path() -> DataPath {
     let config_path = get_app()
         .path()
         .app_data_dir()
-        .unwrap()
+        .expect("Failed to get app data dir")
         .to_string_lossy()
         .to_string();
 
-    let _ = fs::create_dir_all(&config_path);
+    fs::create_dir_all(&config_path).expect("Failed to create config directory");
 
     // let config_file = Path::new(&config_dir).join("config.json");
     let config_file_path = [&config_path, "config.json"]
@@ -85,9 +85,9 @@ pub fn get_data_path() -> DataPath {
 pub fn get_config() -> (Config, DataPath) {
     let data_path = get_data_path();
 
-    let json = std::fs::read_to_string(&data_path.config_file_path).unwrap();
+    let json = std::fs::read_to_string(&data_path.config_file_path).expect("Failed to read file");
 
-    let config: Config = serde_json::from_str(&json).unwrap();
+    let config: Config = serde_json::from_str(&json).expect("Failed to parse JSON");
 
     (config, data_path)
 }
@@ -107,7 +107,7 @@ pub async fn sync_clipboard_history_enable() {
         // check if backup file exists
         if !Path::new(&dir_file).exists() {
             // copy current database to backup location
-            let _ = fs::copy(&config.db, &dir_file);
+            fs::copy(&config.db, &dir_file).expect("Failed to copy database");
         }
 
         // overwrite config database location
@@ -116,33 +116,38 @@ pub async fn sync_clipboard_history_enable() {
         // overwrite config file
         let _ = fs::write(
             &data_path.config_file_path,
-            serde_json::to_string(&config).unwrap(),
+            serde_json::to_string(&config).expect("Failed to serialize config"),
         );
 
         // Now we can await this since we're in an async function
-        update_settings_synchronize(true).await.unwrap();
+        update_settings_synchronize(true)
+            .await
+            .expect("Failed to update settings");
     }
 }
 
 pub async fn sync_clipboard_history_disable() {
     let (mut config, data_path) = get_config();
     // copy backup file to default database location
-    let _ = fs::copy(&config.db, &data_path.db_file_path);
+    fs::copy(&config.db, &data_path.db_file_path).expect("Failed to copy database");
 
     // overwrite config database default location
     config.db = data_path.db_file_path;
 
     // overwrite config file
-    let _ = fs::write(
+    fs::write(
         &data_path.config_file_path,
-        serde_json::to_string(&config).unwrap(),
-    );
+        serde_json::to_string(&config).expect("Failed to serialize config"),
+    )
+    .expect("Failed to serialize config");
 
-    update_settings_synchronize(false).await.unwrap();
+    update_settings_synchronize(false)
+        .await
+        .expect("Failed to update settings");
 }
 
 pub async fn sync_clipboard_history_toggle() {
-    let settings = get_settings().await.unwrap();
+    let settings = get_settings().await.expect("Failed to get settings");
 
     with_hotkeys(false, async move {
         if settings.synchronize {

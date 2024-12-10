@@ -10,12 +10,18 @@ use crate::{
         tauri::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y},
     },
 };
+use migration::CommandEvent;
+use sea_orm::Iden;
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
 
 pub fn init_window(app: &mut tauri::App) {
-    let window: tauri::WebviewWindow = app.get_webview_window("main").unwrap();
-    let _ = window.set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y));
+    let window: tauri::WebviewWindow = app
+        .get_webview_window("main")
+        .expect("Failed to get window");
+    window
+        .set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y))
+        .expect("Failed to set window size");
 
     #[cfg(any(windows, target_os = "macos"))]
     {
@@ -29,37 +35,48 @@ pub fn init_window(app: &mut tauri::App) {
     }
     MAIN_WINDOW
         .set(Arc::new(Mutex::new(window)))
-        .unwrap_or_else(|_| panic!("Failed to initialize MAIN_WINDOW"));
+        .expect("Failed to set main window");
 }
 
 pub fn toggle_main_window() {
-    if get_main_window().is_visible().unwrap() {
+    if get_main_window()
+        .is_visible()
+        .expect("Failed to check if window is visible")
+    {
         printlog!("hiding window");
         if let Some(tx) = get_window_stop_tx().take() {
-            let _ = tx.send(());
+            tx.send(()).expect("Failed to send stop signal");
         }
 
-        get_main_window().hide().unwrap();
+        get_main_window().hide().expect("Failed to hide window");
         unregister_hotkeys(false);
         get_main_window()
-            .emit("set_global_hotkey_event", false)
-            .unwrap();
+            .emit(
+                CommandEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                false,
+            )
+            .expect("Failed to emit set global hotkey event");
     } else {
-        // get_main_window().move_window(Position::Center).unwrap();
         position_window_near_cursor();
         get_main_window()
-            .emit("change_tab", "recent_clipboards")
-            .unwrap();
-        get_main_window().show().unwrap();
+            .emit(
+                CommandEvent::ChangeTab.to_string().as_str(),
+                "recent_clipboards",
+            )
+            .expect("Failed to emit change tab event");
+        get_main_window().show().expect("Failed to show window");
 
         register_hotkeys(true);
         get_main_window()
-            .emit("set_global_hotkey_event", true)
-            .unwrap();
+            .emit(
+                CommandEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                true,
+            )
+            .expect("Failed to emit set global hotkey event");
 
         get_app()
-            .run_on_main_thread(|| get_main_window().set_focus().unwrap())
-            .unwrap();
+            .run_on_main_thread(|| get_main_window().set_focus().expect("Failed to set focus"))
+            .expect("Failed to run on main thread");
 
         printlog!("displaying window");
     }
@@ -69,12 +86,12 @@ pub fn position_window_near_cursor() {
     let window = get_main_window();
 
     if let Ok(cursor_position) = window.cursor_position() {
-        let window_size = window.outer_size().unwrap();
+        let window_size = window.outer_size().expect("Failed to get window size");
 
         // Get current monitor or fallback to primary
         let current_monitor = window
             .available_monitors()
-            .unwrap()
+            .expect("Failed to get available monitors")
             .into_iter()
             .find(|monitor| {
                 let pos = monitor.position();
@@ -91,7 +108,12 @@ pub fn position_window_near_cursor() {
                     && cursor_position.y >= bounds.1
                     && cursor_position.y < bounds.3
             })
-            .unwrap_or_else(|| window.primary_monitor().unwrap().unwrap());
+            .unwrap_or_else(|| {
+                window
+                    .primary_monitor()
+                    .expect("Failed to get primary monitor")
+                    .expect("Failed to get primary monitor")
+            });
 
         let scale_factor = current_monitor.scale_factor();
         let monitor_pos = current_monitor.position();
@@ -122,7 +144,9 @@ pub fn position_window_near_cursor() {
                 .min(monitor_bounds.3 - window_size.height as i32),
         );
 
-        window.set_position(final_pos).unwrap();
+        window
+            .set_position(final_pos)
+            .expect("Failed to set window position");
     }
 }
 
@@ -131,7 +155,7 @@ pub fn create_about_window() {
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window("about") {
-        let _ = window.close();
+        window.close().expect("Failed to close window");
     }
 
     WebviewWindowBuilder::new(app, "about", WebviewUrl::App("pages/about.html".into()))
@@ -139,7 +163,7 @@ pub fn create_about_window() {
         .inner_size(375.0, 600.0)
         .always_on_top(true)
         .build()
-        .unwrap();
+        .expect("Failed to build window");
 }
 
 pub fn create_settings_window() {
@@ -147,7 +171,7 @@ pub fn create_settings_window() {
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window("settings") {
-        let _ = window.close();
+        window.close().expect("Failed to close window");
     }
 
     WebviewWindowBuilder::new(
@@ -159,7 +183,7 @@ pub fn create_settings_window() {
     .inner_size(500.0, 450.0)
     .always_on_top(true)
     .build()
-    .unwrap();
+    .expect("Failed to build window");
 }
 
 pub fn open_window(window_name: WindowName) {
