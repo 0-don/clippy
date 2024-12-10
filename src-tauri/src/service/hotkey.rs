@@ -5,6 +5,8 @@ use crate::{
 };
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
+use migration::CommandEvent;
+use sea_orm::Iden;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
 use tauri::Emitter;
 
@@ -35,11 +37,17 @@ where
     unregister_hotkeys(true);
 
     let result = action.await;
-    upsert_hotkeys_in_store().await.unwrap();
+    upsert_hotkeys_in_store()
+        .await
+        .expect("Failed to upsert hotkeys in store");
 
     register_hotkeys(register_all);
-    get_main_window().emit("init", ()).unwrap();
-    get_app_window("settings").emit("init", ()).unwrap();
+    get_main_window()
+        .emit(CommandEvent::Init.to_string().as_str(), ())
+        .expect("Failed to emit init event");
+    get_app_window("settings")
+        .emit(CommandEvent::Init.to_string().as_str(), ())
+        .expect("Failed to emit init event");
 
     result
 }

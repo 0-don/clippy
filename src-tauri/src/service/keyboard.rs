@@ -1,12 +1,11 @@
-use crate::{
-    service::clipboard::get_last_clipboard_db, types::orm_query::ClipboardWithRelations,
-    utils::tauri::config::APP,
-};
+use crate::{service::clipboard::get_last_clipboard_db, types::orm_query::ClipboardWithRelations};
 use enigo::{Enigo, Keyboard, Settings};
 use migration::ClipboardType;
 use std::{process::Command, time::Duration};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_dialog::{MessageDialogButtons, MessageDialogKind};
+
+use super::global::get_app;
 
 pub async fn type_last_clipboard() {
     let clipboard = get_last_clipboard_db().await;
@@ -23,8 +22,7 @@ pub async fn type_last_clipboard() {
 
 pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error>> {
     if !is_tool_installed("xdotool") {
-        APP.get()
-            .unwrap()
+        get_app()
             .dialog()
             .message("xdotool is not installed. Please install it to continue.")
             .title("Missing Dependency")
@@ -64,19 +62,17 @@ fn get_clipboard_content(clipboard_data: &ClipboardWithRelations) -> Option<Stri
 
     types.iter().find_map(|clipboard_type| {
         match clipboard_type {
-            ClipboardType::Text => {
-                clipboard_data.text.as_ref().map(|model| model.data.clone())
-            }
-            ClipboardType::Html => {
-                clipboard_data.text.as_ref()
-                    .map(|model| model.data.clone())
-                    .or_else(|| clipboard_data.html.as_ref().map(|model| model.data.clone()))
-            }
-            ClipboardType::Rtf => {
-                clipboard_data.text.as_ref()
-                    .map(|model| model.data.clone())
-                    .or_else(|| clipboard_data.rtf.as_ref().map(|model| model.data.clone()))
-            }
+            ClipboardType::Text => clipboard_data.text.as_ref().map(|model| model.data.clone()),
+            ClipboardType::Html => clipboard_data
+                .text
+                .as_ref()
+                .map(|model| model.data.clone())
+                .or_else(|| clipboard_data.html.as_ref().map(|model| model.data.clone())),
+            ClipboardType::Rtf => clipboard_data
+                .text
+                .as_ref()
+                .map(|model| model.data.clone())
+                .or_else(|| clipboard_data.rtf.as_ref().map(|model| model.data.clone())),
             // Skip Image and File types as they don't have string content
             _ => None,
         }

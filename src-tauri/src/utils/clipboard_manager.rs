@@ -1,6 +1,8 @@
-use super::tauri::config::APP;
 use crate::{
-    service::clipboard::{get_last_clipboard_db, insert_clipboard_db},
+    service::{
+        clipboard::{get_last_clipboard_db, insert_clipboard_db},
+        global::get_app,
+    },
     types::orm_query::ClipboardManager,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
@@ -28,7 +30,7 @@ impl ClipboardManager {
     }
 
     pub async fn upsert_clipboard() {
-        let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
+        let clipboard = get_app().state::<Clipboard>();
         let mut clipboard_manager = ClipboardManager::new();
 
         let text = clipboard.read_text().ok();
@@ -45,8 +47,7 @@ impl ClipboardManager {
 
         insert_clipboard_db(clipboard_manager).await.unwrap();
 
-        APP.get()
-            .unwrap()
+        get_app()
             .get_webview_window("main")
             .unwrap()
             .emit("init", ())

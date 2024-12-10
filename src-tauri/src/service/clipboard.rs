@@ -1,5 +1,6 @@
 extern crate alloc;
 use crate::printlog;
+use crate::service::global::get_app;
 use crate::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use crate::{connection, utils::tauri::config::APP};
 use entity::clipboard::{self, Model};
@@ -148,11 +149,13 @@ pub async fn get_clipboard_db(id: i32) -> Result<ClipboardWithRelations, DbErr> 
         return Err(DbErr::RecordNotFound("clipboard not found".to_string()));
     }
 
-    Ok(load_clipboards_with_relations(vec![clipboard.unwrap()])
-        .await
-        .into_iter()
-        .next()
-        .unwrap())
+    Ok(
+        load_clipboards_with_relations(vec![clipboard.expect("Failed to load clipboard")])
+            .await
+            .into_iter()
+            .next()
+            .expect("Failed to load clipboard with relations"),
+    )
 }
 
 pub async fn get_last_clipboard_db() -> Result<ClipboardWithRelations, DbErr> {
@@ -170,11 +173,11 @@ pub async fn get_last_clipboard_db() -> Result<ClipboardWithRelations, DbErr> {
     }
 
     Ok(
-        load_clipboards_with_relations(vec![last_clipboard.unwrap()])
+        load_clipboards_with_relations(vec![last_clipboard.expect("Failed to load clipboard")])
             .await
             .into_iter()
             .next()
-            .unwrap(),
+            .expect("Failed to load clipboard with relations"),
     )
 }
 
@@ -297,8 +300,8 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
         return Ok(None);
     }
 
-    let model = model.unwrap();
-    let _ = copy_clipboard_from_id(model.id, ClipboardType::Text).await;
+    let model = model.expect("Failed to load clipboard");
+    copy_clipboard_from_id(model.id, ClipboardType::Text).await?;
 
     Ok(Some(model))
 }
@@ -306,7 +309,7 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
 pub async fn copy_clipboard_from_id(id: i32, requested_type: ClipboardType) -> Result<bool, DbErr> {
     printlog!("type {:?}", requested_type);
     let clipboard_data = get_clipboard_db(id).await?;
-    let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
+    let clipboard = get_app().state::<Clipboard>();
 
     let types = match ClipboardType::from_json_value(&clipboard_data.clipboard.types) {
         Some(types) => types,

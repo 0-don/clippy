@@ -17,6 +17,18 @@ mod m000009_seed;
 pub struct Migrator;
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+pub enum CommandEvent {
+    #[iden = "init"]
+    Init,
+    #[iden = "set_global_hotkey_event"]
+    SetGlobalHotkeyEvent,
+    #[iden = "change_tab"]
+    ChangeTab,
+    #[iden = "open_window"]
+    OpenWindow,
+}
+
+#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
 pub enum HotkeyEvent {
     #[iden = "window_display_toggle"]
     WindowDisplayToggle,
