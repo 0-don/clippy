@@ -1,4 +1,5 @@
 extern crate alloc;
+use crate::printlog;
 use crate::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use crate::{connection, utils::tauri::config::APP};
 use entity::clipboard::{self, Model};
@@ -183,6 +184,7 @@ pub async fn get_clipboards_db(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<Vec<ClipboardWithRelations>, DbErr> {
+    printlog!("get_clipboards");
     let db = connection::establish_connection().await?;
 
     // First get the clipboards with filters
@@ -302,6 +304,7 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
 }
 
 pub async fn copy_clipboard_from_id(id: i32, requested_type: ClipboardType) -> Result<bool, DbErr> {
+    printlog!("type {:?}", requested_type);
     let clipboard_data = get_clipboard_db(id).await?;
     let clipboard = APP.get().expect("APP not initialized").state::<Clipboard>();
 
