@@ -1,13 +1,13 @@
 use super::global::{get_app_window, get_main_window};
+use crate::prelude::*;
 use crate::{
     connection,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
+use common::enums::{CommandEvent, WebWindow};
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
-use migration::CommandEvent;
-use sea_orm::Iden;
-use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
+use sea_orm::{ActiveModelTrait, EntityTrait};
 use tauri::Emitter;
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
@@ -45,7 +45,7 @@ where
     get_main_window()
         .emit(CommandEvent::Init.to_string().as_str(), ())
         .expect("Failed to emit init event");
-    get_app_window("settings")
+    get_app_window(WebWindow::Settings)
         .emit(CommandEvent::Init.to_string().as_str(), ())
         .expect("Failed to emit init event");
 

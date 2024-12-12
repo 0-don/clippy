@@ -1,12 +1,13 @@
 use super::global::get_app;
 use crate::connection;
+use crate::prelude::*;
 use crate::{
     commands::settings::get_settings,
     service::hotkey::with_hotkeys,
     types::types::{Config, DataPath},
 };
 use entity::settings::{self, ActiveModel, Model};
-use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait};
+use sea_orm::{ActiveModelTrait, EntityTrait};
 use std::{
     fs::{self},
     path::{Path, PathBuf},

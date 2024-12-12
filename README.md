@@ -4,7 +4,7 @@
   </a>
   <p align="center">
     <br />
-    Clipboard Manager made with Tauri, Solid & Sea-Orm.
+    Clipboard Manager made with Tauri, Solid & Sea-Orm
     <br />
     <a href="https://github.com/0-don/clippy/releases/latest">Try it out</a>
     ·

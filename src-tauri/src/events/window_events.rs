@@ -3,65 +3,62 @@ use crate::{
     service::global::{get_hotkey_running, get_main_window, get_window_stop_tx},
     utils::hotkey_manager::unregister_hotkeys,
 };
-use core::time::Duration;
+use common::enums::CommandEvent;
+use crate::prelude::*;
 use tauri::{Emitter, WindowEvent};
 use tokio::sync::oneshot;
 
 pub fn window_event_listener() {
-    get_main_window().on_window_event(|event| match event {
-        WindowEvent::Focused(true) => {
-            if !get_main_window().is_visible().unwrap_or(false) {
-                return;
-            }
-            printlog!("window focus");
+    get_main_window().on_window_event(|event| {
+        if !get_main_window().is_visible().unwrap_or(false) {
+            return;
+        }
 
-            let (tx, rx) = oneshot::channel();
-            tauri::async_runtime::spawn(async move {
-                let result: Result<
-                    Result<(), oneshot::error::RecvError>,
-                    tokio::time::error::Elapsed,
-                > = tokio::time::timeout(Duration::from_secs(5), rx).await;
-                match result {
-                    Ok(_) => return, // If we're signaled, exit early
-                    Err(_) => {
-                        // Acquire the lock only when you need it
+        match event {
+            WindowEvent::Focused(true) => {
+                printlog!("window focus");
+                let (tx, rx) = oneshot::channel();
+                *get_window_stop_tx() = Some(tx);
+
+                tauri::async_runtime::spawn(async move {
+                    if tokio::time::timeout(std::time::Duration::from_secs(5), rx)
+                        .await
+                        .is_err()
+                    {
                         unregister_hotkeys(false);
                         get_main_window()
-                            .emit("set_global_hotkey_event", false)
-                            .unwrap();
+                            .emit(
+                                CommandEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                                false,
+                            )
+                            .expect("failed to emit event");
                         *get_hotkey_running() = false;
                     }
-                }
-            });
-
-            // Store the sender in the WINDOW_STOP_TX global variable
-            *get_window_stop_tx() = Some(tx);
-        }
-        WindowEvent::Focused(false) => {
-            if !get_main_window().is_visible().unwrap_or(false) {
-                return;
+                });
             }
-            printlog!("window lost focus");
-            tauri::async_runtime::spawn(async {
-                if cfg!(target_os = "linux") {
-                    std::thread::sleep(Duration::from_millis(100));
-                }
+            WindowEvent::Focused(false) => {
+                printlog!("window lost focus");
+                tauri::async_runtime::spawn(async {
+                    if cfg!(target_os = "linux") {
+                        std::thread::sleep(std::time::Duration::from_millis(100));
+                    }
 
-                if *get_hotkey_running() {
-                    return *get_hotkey_running() = false;
-                }
+                    if *get_hotkey_running() {
+                        return *get_hotkey_running() = false;
+                    }
 
-                if let Some(tx) = get_window_stop_tx().take() {
-                    let _ = tx.send(());
-                }
+                    if let Some(tx) = get_window_stop_tx().take() {
+                        let _ = tx.send(());
+                    }
 
-                if !cfg!(debug_assertions) {
-                    get_main_window().hide().unwrap();
-                }
+                    if !cfg!(debug_assertions) {
+                        get_main_window().hide().expect("failed to hide window");
+                    }
 
-                unregister_hotkeys(false);
-            });
+                    unregister_hotkeys(false);
+                });
+            }
+            _ => {}
         }
-        _ => {}
     });
 }

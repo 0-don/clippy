@@ -1,15 +1,13 @@
-extern crate alloc;
-use crate::printlog;
+use crate::prelude::*;
 use crate::service::global::get_app;
 use crate::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use crate::{connection, utils::tauri::config::APP};
+use common::enums::{ClipboardTextType, ClipboardType};
 use entity::clipboard::{self, Model};
 use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
-use migration::ClipboardType;
-use sea_orm::Iden;
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DbErr, EntityTrait, LoaderTrait, PaginatorTrait, QueryFilter,
-    QueryOrder, QuerySelect, QueryTrait, Set,
+    ActiveModelTrait, ColumnTrait, EntityTrait, LoaderTrait, PaginatorTrait, QueryFilter,
+    QueryOrder, QuerySelect, QueryTrait,
 };
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
@@ -196,40 +194,32 @@ pub async fn get_clipboards_db(
             query.filter(clipboard::Column::Star.eq(starred))
         })
         .apply_if(img, |query, _img| {
-            query.filter(
-                clipboard::Column::Types.contains(migration::ClipboardType::Image.to_string()),
-            )
+            query.filter(clipboard::Column::Types.contains(ClipboardType::Image.to_string()))
         })
         .apply_if(search, |query, search| {
             let filter = match search.as_str() {
                 "img" | "image" => {
-                    clipboard::Column::Types.contains(migration::ClipboardType::Image.to_string())
+                    clipboard::Column::Types.contains(ClipboardType::Image.to_string())
                 }
                 "txt" | "text" => clipboard_text::Column::Data
                     .contains(search)
-                    .or(clipboard_text::Column::Type
-                        .eq(migration::ClipboardTextType::Text.to_string())),
+                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Text.to_string())),
                 "lnk" | "link" => clipboard_text::Column::Data
                     .contains(search)
-                    .or(clipboard_text::Column::Type
-                        .eq(migration::ClipboardTextType::Link.to_string())),
+                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Link.to_string())),
 
                 "clr" | "color" | "colour" => clipboard_text::Column::Data
                     .contains(search)
-                    .or(clipboard_text::Column::Type
-                        .eq(migration::ClipboardTextType::Hex.to_string()))
-                    .or(clipboard_text::Column::Type
-                        .eq(migration::ClipboardTextType::Rgb.to_string())),
+                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Hex.to_string()))
+                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Rgb.to_string())),
 
                 "hex" => clipboard_text::Column::Data
                     .contains(search)
-                    .or(clipboard_text::Column::Type
-                        .eq(migration::ClipboardTextType::Hex.to_string())),
+                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Hex.to_string())),
 
                 "rgb" => clipboard_text::Column::Data
                     .contains(search)
-                    .or(clipboard_text::Column::Type
-                        .eq(migration::ClipboardTextType::Rgb.to_string())),
+                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Rgb.to_string())),
 
                 _ => clipboard_text::Column::Data.contains(search),
             };

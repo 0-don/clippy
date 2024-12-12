@@ -1,23 +1,22 @@
-use std::sync::{Arc, Mutex};
-
 use super::global::{get_app, get_main_window};
+use crate::prelude::*;
 use crate::{
     printlog,
     service::global::get_window_stop_tx,
     types::types::WindowName,
     utils::{
         hotkey_manager::{register_hotkeys, unregister_hotkeys},
-        tauri::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y},
+        tauri::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_SIZE},
     },
 };
-use migration::CommandEvent;
-use sea_orm::Iden;
+use common::enums::{CommandEvent, WebWindow};
+use std::sync::{Arc, Mutex};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
 
 pub fn init_window(app: &mut tauri::App) {
     let window: tauri::WebviewWindow = app
-        .get_webview_window("main")
+        .get_webview_window(WebWindow::Main.to_string().as_str())
         .expect("Failed to get window");
     window
         .set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y))
@@ -150,33 +149,56 @@ pub fn position_window_near_cursor() {
     }
 }
 
+pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
+    let aspect_ratio = width as f64 / height as f64;
+    if width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE {
+        if width > height {
+            (
+                MAX_IMAGE_SIZE,
+                (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32,
+            )
+        } else {
+            (
+                (MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32,
+                MAX_IMAGE_SIZE,
+            )
+        }
+    } else {
+        (width, height)
+    }
+}
+
 pub fn create_about_window() {
     let app = crate::service::global::get_app();
 
     // Close existing window if it exists
-    if let Some(window) = app.get_webview_window("about") {
+    if let Some(window) = app.get_webview_window(WebWindow::About.to_string().as_str()) {
         window.close().expect("Failed to close window");
     }
 
-    WebviewWindowBuilder::new(app, "about", WebviewUrl::App("pages/about.html".into()))
-        .title("About")
-        .inner_size(375.0, 600.0)
-        .always_on_top(true)
-        .build()
-        .expect("Failed to build window");
+    WebviewWindowBuilder::new(
+        app,
+        WebWindow::About.to_string().as_str(),
+        WebviewUrl::App("pages/about.html".into()),
+    )
+    .title("About")
+    .inner_size(375.0, 600.0)
+    .always_on_top(true)
+    .build()
+    .expect("Failed to build window");
 }
 
 pub fn create_settings_window() {
     let app = crate::service::global::get_app();
 
     // Close existing window if it exists
-    if let Some(window) = app.get_webview_window("settings") {
+    if let Some(window) = app.get_webview_window(WebWindow::Settings.to_string().as_str()) {
         window.close().expect("Failed to close window");
     }
 
     WebviewWindowBuilder::new(
         app,
-        "settings",
+        WebWindow::Settings.to_string().as_str(),
         WebviewUrl::App("pages/settings.html".into()),
     )
     .title("Settings")
