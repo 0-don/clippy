@@ -1,4 +1,4 @@
-use crate::HotkeyEvent;
+use common::enums::HotkeyEvent;
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,

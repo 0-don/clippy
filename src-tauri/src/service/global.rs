@@ -1,9 +1,11 @@
+use crate::prelude::*;
 use crate::{
     types::{hotkey::SafeHotKeyManager, types::Key},
     utils::tauri::config::{
         APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
     },
 };
+use common::enums::WebWindow;
 use std::{collections::HashMap, sync::MutexGuard};
 use tauri::{AppHandle, Manager, WebviewWindow};
 use tokio::sync::oneshot;
@@ -60,8 +62,8 @@ pub fn get_app() -> &'static AppHandle {
     APP.get().expect("Failed to get APP")
 }
 
-pub fn get_app_window(str: &str) -> WebviewWindow {
+pub fn get_app_window(window: WebWindow) -> WebviewWindow {
     get_app()
-        .get_webview_window(str)
+        .get_webview_window(window.to_string().as_str())
         .expect("Failed to get webview window")
 }

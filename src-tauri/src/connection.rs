@@ -1,6 +1,6 @@
+use crate::prelude::*;
 use crate::{service::settings::get_data_path, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
-use sea_orm::{Database, DbConn};
 use std::sync::Once;
 
 #[allow(dead_code)]
@@ -22,7 +22,9 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
         let conn_for_migration = db.clone();
         tokio::task::block_in_place(|| {
             tokio::runtime::Handle::current().block_on(async move {
-                Migrator::up(&conn_for_migration, None).await.unwrap();
+                Migrator::up(&conn_for_migration, None)
+                    .await
+                    .expect("Failed to run migrations");
             })
         });
     });
@@ -33,9 +35,10 @@ pub async fn establish_connection() -> Result<DbConn, DbErr> {
 fn get_prod_database_url() -> String {
     let data_path = get_data_path();
 
-    let json = std::fs::read_to_string(data_path.config_file_path).unwrap();
+    let json =
+        std::fs::read_to_string(data_path.config_file_path).expect("Failed to read config file");
 
-    let config: Config = serde_json::from_str(&json).unwrap();
+    let config: Config = serde_json::from_str(&json).expect("Failed to parse config file");
 
     let db = format!("sqlite://{}?mode=rwc", config.db);
 

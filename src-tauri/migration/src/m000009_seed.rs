@@ -1,66 +1,8 @@
+use common::enums::HotkeyEvent;
+use common::keyboard::{get_keyboard_layout, KeyboardLayout};
 use entity::{hotkey, settings};
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::sea_orm::entity::*;
-
-#[derive(Debug)]
-pub enum KeyboardLayout {
-    Qwerty,
-    Qwertz,
-}
-
-pub fn get_keyboard_layout() -> KeyboardLayout {
-    if cfg!(target_os = "linux") {
-        let output = std::process::Command::new("setxkbmap")
-            .arg("-query")
-            .output();
-
-        if let Ok(result) = output.as_ref() {
-            let output_str: Vec<String> = std::str::from_utf8(&result.stdout)
-                .unwrap()
-                .split("\n")
-                .map(|x| x.trim().to_lowercase())
-                .collect();
-
-            if output_str
-                .iter()
-                .any(|x| x.contains("de") && x.contains("layout:"))
-            {
-                println!("Linux QWERTY");
-                return KeyboardLayout::Qwerty;
-            }
-        }
-    } else if cfg!(target_os = "windows") {
-        let output = std::process::Command::new("reg")
-            .arg("query")
-            .arg(r"HKCU\Keyboard Layout\Preload")
-            .output();
-
-        if let Ok(result) = output.as_ref() {
-            let output_str = std::str::from_utf8(&result.stdout).unwrap();
-            if !output_str.contains("00000409") {
-                println!("Windows QWERTY");
-                return KeyboardLayout::Qwerty;
-            }
-        }
-    } else if cfg!(target_os = "macos") {
-        let output = std::process::Command::new("defaults")
-            .arg("read")
-            .arg("-g")
-            .arg("AppleCurrentKeyboardLayoutInputSourceID")
-            .output();
-
-        if let Ok(result) = output.as_ref() {
-            let output_str = std::str::from_utf8(&result.stdout).unwrap();
-            if !output_str.contains("com.apple.keylayout.US") {
-                println!("Mac QWERTY");
-                return KeyboardLayout::Qwerty;
-            }
-        }
-    }
-    // Default to QWERTZ for unsupported OS
-    println!("{} default QWERTZ", std::env::consts::OS);
-    KeyboardLayout::Qwertz
-}
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -86,7 +28,7 @@ impl MigrationTrait for Migration {
         };
 
         hotkey::ActiveModel {
-            event: Set("window_display_toggle".to_string()),
+            event: Set(HotkeyEvent::WindowDisplayToggle.to_string()),
             ctrl: Set(true),
             alt: Set(false),
             shift: Set(false),
@@ -100,7 +42,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("scroll_to_top".to_string()),
+            event: Set(HotkeyEvent::ScrollToTop.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -114,7 +56,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("recent_clipboards".to_string()),
+            event: Set(HotkeyEvent::RecentClipboards.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -128,7 +70,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("starred_clipboards".to_string()),
+            event: Set(HotkeyEvent::StarredClipboards.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -142,7 +84,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("history".to_string()),
+            event: Set(HotkeyEvent::History.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -156,7 +98,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("view_more".to_string()),
+            event: Set(HotkeyEvent::ViewMore.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -170,7 +112,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("sync_clipboard_history".to_string()),
+            event: Set(HotkeyEvent::SyncClipboardHistory.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -184,13 +126,13 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("preferences".to_string()),
+            event: Set(HotkeyEvent::Settings.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
             key: Set("O".to_string()),
             status: Set(true),
-            name: Set("Preferences".to_string()),
+            name: Set("Settings".to_string()),
             icon: Set("\"<svg stroke-width=\\\"0\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path fill=\\\"currentColor\\\" fill-rule=\\\"evenodd\\\" d=\\\"M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a.798.798 0 0 1-.517.608 7.45 7.45 0 0 0-.478.198.798.798 0 0 1-.796-.064l-.453-.324a1.875 1.875 0 0 0-2.416.2l-.243.243a1.875 1.875 0 0 0-.2 2.416l.324.453a.798.798 0 0 1 .064.796 7.448 7.448 0 0 0-.198.478.798.798 0 0 1-.608.517l-.55.092a1.875 1.875 0 0 0-1.566 1.849v.344c0 .916.663 1.699 1.567 1.85l.549.091c.281.047.508.25.608.517.06.162.127.321.198.478a.798.798 0 0 1-.064.796l-.324.453a1.875 1.875 0 0 0 .2 2.416l.243.243c.648.648 1.67.733 2.416.2l.453-.324a.798.798 0 0 1 .796-.064c.157.071.316.137.478.198.267.1.47.327.517.608l.092.55c.15.903.932 1.566 1.849 1.566h.344c.916 0 1.699-.663 1.85-1.567l.091-.549a.798.798 0 0 1 .517-.608 7.52 7.52 0 0 0 .478-.198.798.798 0 0 1 .796.064l.453.324a1.875 1.875 0 0 0 2.416-.2l.243-.243c.648-.648.733-1.67.2-2.416l-.324-.453a.798.798 0 0 1-.064-.796c.071-.157.137-.316.198-.478.1-.267.327-.47.608-.517l.55-.091a1.875 1.875 0 0 0 1.566-1.85v-.344c0-.916-.663-1.699-1.567-1.85l-.549-.091a.798.798 0 0 1-.608-.517 7.507 7.507 0 0 0-.198-.478.798.798 0 0 1 .064-.796l.324-.453a1.875 1.875 0 0 0-.2-2.416l-.243-.243a1.875 1.875 0 0 0-2.416-.2l-.453.324a.798.798 0 0 1-.796.064 7.462 7.462 0 0 0-.478-.198.798.798 0 0 1-.517-.608l-.091-.55a1.875 1.875 0 0 0-1.85-1.566h-.344ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z\\\" clip-rule=\\\"evenodd\\\"></path></svg>\"".to_string()),
             ..Default::default()
         }
@@ -198,7 +140,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("about".to_string()),
+            event: Set(HotkeyEvent::About.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -212,7 +154,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("exit".to_string()),
+            event: Set(HotkeyEvent::Exit.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
@@ -226,7 +168,7 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set("type_clipboard".to_string()),
+            event: Set(HotkeyEvent::TypeClipboard.to_string()),
             ctrl: Set(true),
             alt: Set(false),
             shift: Set(false),

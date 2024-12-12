@@ -1,6 +1,6 @@
 use crate::{service::clipboard::get_last_clipboard_db, types::orm_query::ClipboardWithRelations};
+use common::enums::ClipboardType;
 use enigo::{Enigo, Keyboard, Settings};
-use migration::ClipboardType;
 use std::{process::Command, time::Duration};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_dialog::{MessageDialogButtons, MessageDialogKind};
@@ -13,7 +13,7 @@ pub async fn type_last_clipboard() {
     if let Ok(clipboard_data) = clipboard {
         if let Some(content) = get_clipboard_content(&clipboard_data) {
             if content.len() < 32 {
-                let mut enigo = Enigo::new(&Settings::default()).unwrap();
+                let mut enigo = Enigo::new(&Settings::default()).expect("failed to create enigo");
                 let _ = enigo.text(&content);
             }
         }

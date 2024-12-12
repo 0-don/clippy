@@ -43,10 +43,10 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
     <>
       {/* Sync Clipboard History  */}
       {createButton("Sync Clipboard History", syncClipboard)}
-      {/* Preferences */}
-      {createButton("Preferences", async () => openWindow("Settings"))}
+      {/* Settings */}
+      {createButton("Settings", async () => openWindow("settings"))}
       {/* About */}
-      {createButton("About", async () => openWindow("About"))}
+      {createButton("About", async () => openWindow("about"))}
       {/* Exit */}
       {createButton("Exit", exitApp)}
     </>

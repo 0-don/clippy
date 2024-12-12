@@ -4,6 +4,7 @@ mod events;
 mod service;
 mod types;
 mod utils;
+mod prelude;
 use commands::{clipboard, hotkey, settings, window};
 use tauri_plugin_autostart::MacosLauncher;
 use utils::tauri::setup;

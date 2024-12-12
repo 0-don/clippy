@@ -1,4 +1,5 @@
-use crate::{m000001_create_clipboard::Clipboard, ClipboardTextType};
+use crate::m000001_create_clipboard::Clipboard;
+use common::enums::ClipboardTextType;
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,
@@ -29,7 +30,12 @@ impl MigrationTrait for Migration {
                     .col(integer(ClipboardText::ClipboardId).unique_key())
                     .col(
                         string(ClipboardText::Type)
-                            .default(ClipboardTextType::iter().next().unwrap().to_string())
+                            .default(
+                                ClipboardTextType::iter()
+                                    .next()
+                                    .expect("no default value")
+                                    .to_string(),
+                            )
                             .check(
                                 Expr::col(ClipboardText::Type).is_in(
                                     ClipboardTextType::iter()

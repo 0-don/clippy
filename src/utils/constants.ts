@@ -1,6 +1,6 @@
 import { IconTypes } from "solid-icons";
 
-export const VIEW_MORE_NAMES = ["Sync Clipboard History", "Preferences", "About", "Exit"] as const;
+export const VIEW_MORE_NAMES = ["Sync Clipboard History", "Settings", "About", "Exit"] as const;
 export const TAB_NAMES = ["Recent Clipboards", "Starred Clipboards", "History", "View more"] as const;
 export const TAB_IDS = ["recent_clipboards", "starred_clipboards", "history", "view_more"] as const;
 export const CLIPBOARD_HOTKEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];

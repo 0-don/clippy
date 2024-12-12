@@ -19,11 +19,11 @@ export async function sleep(milis: number) {
 
 export async function openWindow(windowName: WindowName) {
   switch (windowName) {
-    case "About":
+    case "about":
       // await createAboutWindow();
       await invoke("open_new_window", { windowName });
       break;
-    case "Settings":
+    case "settings":
       await invoke("open_new_window", { windowName });
       break;
     default:

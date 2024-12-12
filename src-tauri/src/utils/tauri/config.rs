@@ -17,6 +17,7 @@ pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_cl
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
+pub static MAX_IMAGE_SIZE: u32 = 1280;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<WebviewWindow>>> = OnceLock::new();
@@ -40,7 +41,7 @@ pub fn create_config() {
 
     let _ = fs::write(
         &data_path.config_file_path,
-        serde_json::to_string(&config).unwrap(),
+        serde_json::to_string(&config).expect("Failed to serialize config"),
     );
 }
 
@@ -49,7 +50,7 @@ pub fn init_globals(app: &mut tauri::App) {
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
     HOTKEY_MANAGER
         .set(Arc::new(Mutex::new(SafeHotKeyManager::new(
-            GlobalHotKeyManager::new().unwrap(),
+            GlobalHotKeyManager::new().expect("Failed to initialize GlobalHotKeyManager"),
         ))))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_MANAGER"));
     HOTKEY_RUNNING

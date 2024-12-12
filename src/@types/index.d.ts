@@ -93,10 +93,10 @@ export type HotkeyEvent =
   | "history"
   | "view_more"
   | "sync_clipboard_history"
-  | "preferences"
+  | "settings"
   | "about"
   | "exit"
   | "toggle_dev_tools"
   | "scroll_to_top";
 
-export type WindowName = "About" | "Settings";
+export type WindowName = "main" | "about" | "settings";

@@ -1,21 +1,19 @@
+use crate::prelude::*;
 use crate::{
     service::{
         clipboard::{get_last_clipboard_db, insert_clipboard_db},
-        global::get_app,
+        global::{get_app, get_app_window},
+        window::calculate_thumbnail_dimensions,
     },
     types::orm_query::ClipboardManager,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
+use common::enums::{ClipboardTextType, ClipboardType, CommandEvent, WebWindow};
 use image::imageops;
-use migration::{ClipboardTextType, ClipboardType};
 use regex::Regex;
-use sea_orm::Iden;
-use sea_orm::Set;
 use std::io::Cursor;
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
-
-const MAX_IMAGE_SIZE: u32 = 1280;
 
 impl ClipboardManager {
     pub fn new() -> Self {
@@ -45,13 +43,13 @@ impl ClipboardManager {
             return;
         }
 
-        insert_clipboard_db(clipboard_manager).await.unwrap();
+        insert_clipboard_db(clipboard_manager)
+            .await
+            .expect("Failed to insert clipboard");
 
-        get_app()
-            .get_webview_window("main")
-            .unwrap()
-            .emit("init", ())
-            .unwrap();
+        get_app_window(WebWindow::Main)
+            .emit(CommandEvent::Init.to_string().as_str(), ())
+            .expect("Failed to emit event");
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
@@ -63,7 +61,7 @@ impl ClipboardManager {
 
             // Get types from current clipboard model
             let current_types =
-                ClipboardType::from_json_value(&self.clipboard_model.types.clone().unwrap());
+                ClipboardType::from_json_value(&self.clipboard_model.types.as_ref());
 
             if let (Some(last_types), Some(current_types)) = (last_types, current_types) {
                 // Compare if both arrays have same length
@@ -238,24 +236,5 @@ impl ClipboardManager {
                 };
             }
         }
-    }
-}
-
-fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
-    let aspect_ratio = width as f64 / height as f64;
-    if width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE {
-        if width > height {
-            (
-                MAX_IMAGE_SIZE,
-                (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32,
-            )
-        } else {
-            (
-                (MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32,
-                MAX_IMAGE_SIZE,
-            )
-        }
-    } else {
-        (width, height)
     }
 }

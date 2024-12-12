@@ -1,5 +1,5 @@
+use crate::prelude::*;
 use crate::{
-    printlog,
     service::{
         clipboard::copy_clipboard_from_index,
         global::{
@@ -12,11 +12,10 @@ use crate::{
     types::types::Key,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
+use common::enums::{CommandEvent, HotkeyEvent};
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
-use migration::{CommandEvent, HotkeyEvent};
 use regex::Regex;
-use sea_orm::{Iden, Iterable};
 use tauri::Emitter;
 use tokio::sync::oneshot;
 
@@ -86,7 +85,7 @@ pub async fn parse_hotkey_event(key: &Key) {
             }
         }
         Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
-        Some(e @ (HotkeyEvent::Preferences | HotkeyEvent::About)) => get_main_window()
+        Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => get_main_window()
             .emit(
                 CommandEvent::OpenWindow.to_string().as_str(),
                 Some(e.to_string().as_str()),
@@ -95,8 +94,8 @@ pub async fn parse_hotkey_event(key: &Key) {
 
         Some(HotkeyEvent::Exit) => get_app().exit(1),
         Some(
-            e @ (HotkeyEvent::RecentClipboard
-            | HotkeyEvent::StarredClipboard
+            e @ (HotkeyEvent::RecentClipboards
+            | HotkeyEvent::StarredClipboards
             | HotkeyEvent::History
             | HotkeyEvent::ViewMore),
         ) => {
