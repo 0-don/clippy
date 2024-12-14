@@ -1,6 +1,6 @@
 import { Component, For, Show } from "solid-js";
-import AppStore from "../../store/AppStore";
-import HotkeyStore from "../../store/HotkeyStore";
+import AppStore from "../../store/app-store";
+import HotkeyStore from "../../store/hotkey-store";
 
 interface AppSidebarProps {}
 

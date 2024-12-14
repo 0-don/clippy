@@ -1,14 +1,15 @@
-import { listen } from "@tauri-apps/api/event";
 import { createResource, onMount } from "solid-js";
 import { Show, render } from "solid-js/web";
-import { Tabs } from "./components/navigation/SettingsTabs";
-import { SettingsBackup } from "./components/pages/settings/SettingsBackup";
-import { SettingsGeneral } from "./components/pages/settings/SettingsGeneral";
-import { SettingsHistory } from "./components/pages/settings/SettingsHistory";
-import { SettingsHotkeys } from "./components/pages/settings/SettingsHotkeys";
-import AppStore from "./store/AppStore";
-import SettingsStore from "./store/SettingsStore";
+import { Tabs } from "./components/navigation/settings-tabs";
+import { SettingsBackup } from "./components/pages/settings/settings-backup";
+import { SettingsGeneral } from "./components/pages/settings/settings-general";
+import { SettingsHistory } from "./components/pages/settings/settings-history";
+import { SettingsHotkeys } from "./components/pages/settings/settings-hotkeys";
+import AppStore from "./store/app-store";
+import SettingsStore from "./store/settings-store";
 import "./styles.css";
+import { listenEvent } from "./utils/tauri";
+import { ListenEvent } from "./types/tauri-listen";
 
 const Settings = () => {
   const { getCurrentTab } = SettingsStore;
@@ -16,7 +17,7 @@ const Settings = () => {
 
   createResource(init);
 
-  onMount(() => listen("init", init));
+  onMount(() => listenEvent(ListenEvent.Init, init));
 
   return (
     <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:bg-dark dark:text-white">

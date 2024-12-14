@@ -1,6 +1,6 @@
 use crate::{
     service::hotkey::{get_all_hotkeys_db, update_hotkey_db, with_hotkeys},
-    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
+    utils::hotkey_manager::unregister_hotkeys,
 };
 use common::types::types::CommandError;
 use entity::hotkey::Model;
@@ -23,9 +23,4 @@ pub async fn update_hotkey(hotkey: Model) {
 #[tauri::command]
 pub async fn stop_hotkeys() {
     unregister_hotkeys(false)
-}
-
-#[tauri::command]
-pub async fn start_hotkeys() {
-    register_hotkeys(true)
 }

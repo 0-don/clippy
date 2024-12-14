@@ -1,11 +1,11 @@
 import { VsArrowSwap } from "solid-icons/vs";
 import { Component, createSignal } from "solid-js";
-import { GlobalShortcutKeysType } from "../../utils/constants";
+import { GlobalShortcutKeys } from "../../utils/constants";
 
 interface DropdownProps {
   items: string[];
   value: string;
-  onChange: (value: GlobalShortcutKeysType | string & {}) => void;
+  onChange: (value: GlobalShortcutKeys | (string & {})) => void;
 }
 
 export const Dropdown: Component<DropdownProps> = (props) => {

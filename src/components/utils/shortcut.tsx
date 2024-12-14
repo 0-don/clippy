@@ -1,10 +1,10 @@
 import { Component, Show } from "solid-js";
-import { Hotkey } from "../../@types";
-import HotkeyStore from "../../store/HotkeyStore";
+import HotkeyStore from "../../store/hotkey-store";
+import { Hotkey } from "../../types";
 
 import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
-import { CheckBox } from "../elements/CheckBox";
-import { Dropdown } from "../elements/Dropdown";
+import { CheckBox } from "../elements/checkbox";
+import { Dropdown } from "../elements/dropdown";
 
 interface ShortcutProps {
   hotkey: Hotkey;
@@ -15,7 +15,7 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
 
   return (
     <>
-      <div class="flex w-full items-center space-x-2.5 text-sm ">
+      <div class="flex w-full items-center space-x-2.5 text-sm">
         <div class="w-8">
           <div innerHTML={JSON.parse(props.hotkey.icon)} class="relative" />
         </div>

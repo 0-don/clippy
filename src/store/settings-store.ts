@@ -1,31 +1,25 @@
-import { invoke } from "@tauri-apps/api/core";
-import { IconTypes } from "solid-icons";
 import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
-import { Settings, WindowName } from "../@types";
-
-type SettingsTabName = "General" | "Backup" | "History" | "Hotkeys";
-
-type SettingsTab = {
-  name: SettingsTabName;
-  Icon: IconTypes;
-  current: boolean;
-};
+import { Settings, SettingsTab } from "../types";
+import { WebWindow } from "../types/enums";
+import { InvokeCommand } from "../types/tauri-invoke";
+import { SETTINGS_TAB, SettingsTabName } from "../utils/constants";
+import { invokeCommand } from "../utils/tauri";
 
 function createSettingsStore() {
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
-    { name: "General", Icon: HiSolidCog8Tooth, current: true },
-    { name: "Backup", Icon: BsDatabaseFillGear, current: false },
+    { name: SETTINGS_TAB[0], Icon: HiSolidCog8Tooth, current: true },
+    { name: SETTINGS_TAB[1], Icon: BsDatabaseFillGear, current: false },
     {
-      name: "History",
+      name: SETTINGS_TAB[2],
       Icon: VsHistory,
       current: false,
     },
     {
-      name: "Hotkeys",
+      name: SETTINGS_TAB[3],
       Icon: RiDeviceKeyboardFill,
       current: false,
     },
@@ -38,21 +32,21 @@ function createSettingsStore() {
   const getCurrentTab = () => tabs().find((tab) => tab.current);
 
   const updateSettings = async (settings: Settings, upload: boolean | undefined = true) => {
-    if (upload) await invoke("update_settings", { settings });
+    if (upload) await invokeCommand(InvokeCommand.UpdateSettings, { settings });
     setSettings(settings);
-    await invoke("toggle_autostart");
+    await invokeCommand(InvokeCommand.ToggleAutostart);
   };
 
   const initSettings = async () => {
-    const settings = await invoke<Settings>("get_settings");
+    const settings = await invokeCommand(InvokeCommand.GetSettings);
     setSettings(settings);
   };
 
-  const syncClipboard = async () => invoke<void>("sync_clipboard_history") 
+  const syncClipboard = async () => invokeCommand(InvokeCommand.GetSettings);
 
-  const openWindow = async (windowName: WindowName) => invoke("open_new_window", { windowName });
+  const openWindow = async (windowName: WebWindow) => invokeCommand(InvokeCommand.OpenNewWindow, { windowName });
 
-  const exitApp = async () => invoke("exit_app");
+  const exitApp = async () => invokeCommand(InvokeCommand.ExitApp);
 
   return {
     settings,

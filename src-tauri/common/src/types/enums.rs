@@ -4,28 +4,18 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
-pub enum WebWindow {
-    #[iden = "main"]
-    Main,
-    #[iden = "about"]
-    About,
-    #[iden = "settings"]
-    Settings,
-}
-
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
-pub enum CommandEvents {
+#[serde(rename_all = "lowercase")]
+pub enum ListenEvent {
     #[iden = "init"]
     Init,
     #[iden = "set_global_hotkey_event"]
     SetGlobalHotkeyEvent,
     #[iden = "change_tab"]
     ChangeTab,
-    #[iden = "open_window"]
-    OpenWindow,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum HotkeyEvent {
     #[iden = "window_display_toggle"]
     WindowDisplayToggle,
@@ -88,6 +78,18 @@ pub enum HotkeyEvent {
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
+pub enum WebWindow {
+    #[iden = "main"]
+    Main,
+    #[iden = "about"]
+    About,
+    #[iden = "settings"]
+    Settings,
+}
+
+#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum ClipboardTextType {
     #[iden = "text"]
     Text,
@@ -100,6 +102,7 @@ pub enum ClipboardTextType {
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum ClipboardType {
     #[iden = "text"]
     Text,

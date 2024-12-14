@@ -1,12 +1,13 @@
-import { invoke } from "@tauri-apps/api/core";
 import { BsGlobeAmericas } from "solid-icons/bs";
 import { FiUpload } from "solid-icons/fi";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { TbDatabaseStar } from "solid-icons/tb";
 import { Component, Show, createEffect, createSignal, on } from "solid-js";
-import SettingsStore from "../../../store/SettingsStore";
-import { TextBlock } from "../../elements/TextBlock";
-import { Toggle } from "../../elements/Toggle";
+import SettingsStore from "../../../store/settings-store";
+import { InvokeCommand } from "../../../types/tauri-invoke";
+import { invokeCommand } from "../../../utils/tauri";
+import { TextBlock } from "../../elements/text-block";
+import { Toggle } from "../../elements/toggle";
 
 interface SettingsBackupProps {}
 
@@ -17,7 +18,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   createEffect(
     on(
       () => settings()?.synchronize,
-      () => setTimeout(async () => setUrl(await invoke<string>("get_db_path")), 100)
+      () => setTimeout(async () => setUrl(await invokeCommand(InvokeCommand.GetDbPath)), 100)
     )
   );
 
@@ -30,7 +31,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <h6 class="text-sm">Synchronize clipboard history</h6>
           </div>
           <div>
-            <Toggle checked={settings()?.synchronize || false} onChange={() => syncClipboard()} />
+            <Toggle checked={settings()?.synchronize || false} onChange={() => void syncClipboard()} />
           </div>
         </div>
       </TextBlock>

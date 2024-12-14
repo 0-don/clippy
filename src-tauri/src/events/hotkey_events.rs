@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::service::window::open_window;
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
@@ -11,7 +12,7 @@ use crate::{
     },
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
-use common::types::enums::{CommandEvents, HotkeyEvent};
+use common::types::enums::{HotkeyEvent, ListenEvent, WebWindow};
 use common::types::types::Key;
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
@@ -85,12 +86,11 @@ pub async fn parse_hotkey_event(key: &Key) {
             }
         }
         Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
-        Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => get_main_window()
-            .emit(
-                CommandEvents::OpenWindow.to_string().as_str(),
-                Some(e.to_string().as_str()),
-            )
-            .expect("Failed to emit event"),
+        Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => open_window(
+            WebWindow::iter()
+                .find(|window| window.to_string().to_lowercase() == e.to_string().to_lowercase())
+                .expect("Failed to find window"),
+        ),
 
         Some(HotkeyEvent::Exit) => get_app().exit(1),
         Some(
@@ -102,8 +102,8 @@ pub async fn parse_hotkey_event(key: &Key) {
             *get_hotkey_running() = true;
             get_main_window()
                 .emit(
-                    CommandEvents::ChangeTab.to_string().as_str(),
-                    Some(e.to_string().as_str()),
+                    ListenEvent::ChangeTab.to_string().as_str(),
+                    e.to_string().as_str(),
                 )
                 .expect("Failed to emit event");
         }

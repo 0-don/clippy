@@ -5,7 +5,7 @@ use crate::{
     service::global::get_window_stop_tx,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
-use common::types::enums::{CommandEvents, WebWindow};
+use common::types::enums::{HotkeyEvent, ListenEvent, WebWindow};
 use std::sync::{Arc, Mutex};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
@@ -14,8 +14,22 @@ pub fn init_window(app: &mut tauri::App) {
     let window: tauri::WebviewWindow = app
         .get_webview_window(WebWindow::Main.to_string().as_str())
         .expect("Failed to get window");
+
+    // Get the primary monitor's scale factor
+    let scale_factor = window
+        .primary_monitor()
+        .expect("Failed to get primary monitor")
+        .expect("No primary monitor found")
+        .scale_factor();
+
+    printlog!("scale factor: {}", scale_factor);
+
+    // Convert logical size to physical size considering scale factor
+    let physical_width = (MAIN_WINDOW_X as f64 * scale_factor) as u32;
+    let physical_height = (MAIN_WINDOW_Y as f64 * scale_factor) as u32;
+
     window
-        .set_size(LogicalSize::new(MAIN_WINDOW_X, MAIN_WINDOW_Y))
+        .set_size(LogicalSize::new(physical_width, physical_height))
         .expect("Failed to set window size");
 
     #[cfg(any(windows, target_os = "macos"))]
@@ -28,6 +42,7 @@ pub fn init_window(app: &mut tauri::App) {
     {
         window.open_devtools();
     }
+
     MAIN_WINDOW
         .set(Arc::new(Mutex::new(window)))
         .expect("Failed to set main window");
@@ -40,14 +55,14 @@ pub fn toggle_main_window() {
     {
         printlog!("hiding window");
         if let Some(tx) = get_window_stop_tx().take() {
-            tx.send(()).expect("Failed to send stop signal");
+            tx.send(()).unwrap_or(())
         }
 
         get_main_window().hide().expect("Failed to hide window");
         unregister_hotkeys(false);
         get_main_window()
             .emit(
-                CommandEvents::SetGlobalHotkeyEvent.to_string().as_str(),
+                ListenEvent::SetGlobalHotkeyEvent.to_string().as_str(),
                 false,
             )
             .expect("Failed to emit set global hotkey event");
@@ -55,18 +70,15 @@ pub fn toggle_main_window() {
         position_window_near_cursor();
         get_main_window()
             .emit(
-                CommandEvents::ChangeTab.to_string().as_str(),
-                "recent_clipboards",
+                ListenEvent::ChangeTab.to_string().as_str(),
+                HotkeyEvent::RecentClipboards.to_string().as_str(),
             )
             .expect("Failed to emit change tab event");
         get_main_window().show().expect("Failed to show window");
 
         register_hotkeys(true);
         get_main_window()
-            .emit(
-                CommandEvents::SetGlobalHotkeyEvent.to_string().as_str(),
-                true,
-            )
+            .emit(ListenEvent::SetGlobalHotkeyEvent.to_string().as_str(), true)
             .expect("Failed to emit set global hotkey event");
 
         get_app()

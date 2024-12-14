@@ -11,6 +11,7 @@ use crate::{
 };
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+    
     init_globals(app);
     init_window(app);
     init_clipboard_listener(app);

@@ -3,6 +3,12 @@
 
 #[tokio::main]
 async fn main() {
+    #[cfg(target_os = "linux")]
+    {
+        // See: https://github.com/spacedriveapp/spacedrive/issues/1512#issuecomment-1758550164
+        std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+    }
+
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
     tauri_app_lib::run()

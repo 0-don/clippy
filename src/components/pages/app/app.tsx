@@ -1,13 +1,13 @@
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
 import { Show } from "solid-js";
-import AppStore from "../../../store/AppStore";
-import SettingsStore from "../../../store/SettingsStore";
-import { AppSidebar } from "../../navigation/AppSidebar";
-import { ClipboardHistory } from "./ClipboardHistory";
-import { RecentClipboards } from "./RecentClipboards";
-import { StarredClipboards } from "./StarredClipboards";
-import { ViewMore } from "./ViewMore";
+import AppStore from "../../../store/app-store";
+import SettingsStore from "../../../store/settings-store";
+import { AppSidebar } from "../../navigation/app-sidebar";
+import { ClipboardHistory } from "./clipboard-history";
+import { RecentClipboards } from "./recent-clipboards";
+import { StarredClipboards } from "./starred-clipboards";
+import { ViewMore } from "./view-more";
 
 function App() {
   const { settings } = SettingsStore;
@@ -18,7 +18,7 @@ function App() {
       <div class="flex w-12 flex-col items-center space-y-3 bg-gray-200 pt-2 dark:bg-dark-light">
         <AppSidebar />
       </div>
-      <div class="h-screen min-w-0 flex-1 flex flex-col">
+      <div class="flex h-screen min-w-0 flex-1 flex-col">
         <div class="flex w-full justify-between px-2 py-1">
           <p class="select-none bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white">
             {getCurrentTab()?.name?.toUpperCase()}

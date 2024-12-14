@@ -1,17 +1,15 @@
 use crate::service::{
     clipboard::count_clipboards_db,
     settings::{get_data_path, sync_clipboard_history_toggle},
-    window::{open_window, toggle_main_window},
+    window::open_window,
 };
-use common::types::{enums::WebWindow, types::{CommandError, Config, DatabaseInfo}};
+use common::types::{
+    enums::WebWindow,
+    types::{CommandError, Config, DatabaseInfo},
+};
 use std::fs::{self, read_to_string};
 use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
-
-#[tauri::command]
-pub fn window_display_toggle() {
-    toggle_main_window();
-}
 
 #[tauri::command]
 pub fn open_new_window(window_name: WebWindow) {
@@ -34,7 +32,7 @@ pub fn open_browser_url(url: String, app: AppHandle) -> Result<(), CommandError>
 }
 
 #[tauri::command]
-pub async fn get_db_size() -> Result<DatabaseInfo, CommandError> {
+pub async fn get_db_info() -> Result<DatabaseInfo, CommandError> {
     let data_path = get_data_path();
 
     let config: Config = serde_json::from_str(&read_to_string(&data_path.config_file_path)?)?;

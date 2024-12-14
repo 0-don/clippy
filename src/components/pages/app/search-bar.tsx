@@ -1,10 +1,11 @@
-import { invoke } from "@tauri-apps/api/core";
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
 import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
-import AppStore from "../../../store/AppStore";
-import ClipboardStore, { initialWhere } from "../../../store/ClipboardStore";
-import HotkeyStore from "../../../store/HotkeyStore";
+import AppStore from "../../../store/app-store";
+import ClipboardStore, { initialWhere } from "../../../store/clipboard-store";
+import HotkeyStore from "../../../store/hotkey-store";
+import { InvokeCommand } from "../../../types/tauri-invoke";
+import { invokeCommand } from "../../../utils/tauri";
 
 interface SearchBarProps {}
 
@@ -18,7 +19,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
 
   onMount(async () => {
     input?.focus();
-    await invoke("stop_hotkeys");
+    await invokeCommand(InvokeCommand.StopHotkeys);
     setGlobalHotkeyEvent(false);
   });
 
