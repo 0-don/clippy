@@ -1,5 +1,5 @@
-use common::enums::HotkeyEvent;
 use common::keyboard::get_keyboard_layout;
+use common::types::enums::HotkeyEvent;
 use common::types::types::KeyboardLayout;
 use entity::{hotkey, settings};
 use sea_orm_migration::prelude::*;

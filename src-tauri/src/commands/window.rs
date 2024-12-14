@@ -3,10 +3,7 @@ use crate::service::{
     settings::{get_data_path, sync_clipboard_history_toggle},
     window::{open_window, toggle_main_window},
 };
-use common::{
-    enums::WebWindow,
-    types::types::{CommandError, Config, DatabaseInfo},
-};
+use common::types::{enums::WebWindow, types::{CommandError, Config, DatabaseInfo}};
 use std::fs::{self, read_to_string};
 use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;

@@ -8,10 +8,7 @@ use crate::{
     tauri_config::config::APP,
     utils::hotkey_manager::unregister_hotkeys,
 };
-use common::{
-    enums::ClipboardType,
-    types::{orm_query::ClipboardWithRelations, types::CommandError},
-};
+use common::types::{enums::ClipboardType, orm_query::ClipboardWithRelations, types::CommandError};
 use std::fs::File;
 use tauri::Manager;
 

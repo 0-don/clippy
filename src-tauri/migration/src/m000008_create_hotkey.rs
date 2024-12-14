@@ -1,4 +1,4 @@
-use common::enums::HotkeyEvent;
+use common::types::enums::HotkeyEvent;
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,

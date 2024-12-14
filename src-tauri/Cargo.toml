@@ -18,7 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 members = [".", "migration", "entity", "common"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.3", features = [] }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
 
@@ -26,31 +26,31 @@ entity = { path = "entity" }
 migration = { path = "migration" }
 common = { path = "common" }
 
-tauri = { version = "2.1.1", features = [
+tauri = { version = "2", features = [
   "macos-private-api",
   "devtools",
   "tray-icon",
 ] }
-tauri-plugin-shell = "2.2.0"
-tauri-plugin-dialog = "2.2.0"
-tauri-plugin-clipboard = "2.1.11"
-tauri-plugin-opener = "2.2.1"
-tauri-plugin-positioner = { version = "2.2.0", features = ["tray-icon"] }
-tauri-plugin-autostart = "2.2.0"
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-clipboard = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-positioner = { version = "2", features = ["tray-icon"] }
+tauri-plugin-autostart = "2"
 
-tokio = { version = "1.42.0", features = ["full"] }
-serde = { version = "1.0.216", features = ["derive"] }
-serde_json = { version = "1.0.133" }
-global-hotkey = "0.6.3"
-image = "0.25.5"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+global-hotkey = "0"
+image = "0"
 
-chrono = "0.4.39"
-enigo = "0.3.0"
-base64 = "0.22.1"
-regex = "1.11.1"
+chrono = "0"
+enigo = "0"
+base64 = "0"
+regex = "1"
 
 [dependencies.sea-orm]
-version = "1.1.2"
+version = "1"
 features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"]
 default-features = false
 
