@@ -1,9 +1,10 @@
 import { Component, Show } from "solid-js";
-import { Hotkey } from "../../../@types";
-import HotkeyStore from "../../../store/HotkeyStore";
-import SettingsStore from "../../../store/SettingsStore";
+import HotkeyStore from "../../../store/hotkey-store";
+import SettingsStore from "../../../store/settings-store";
+import { Hotkey } from "../../../types";
+import { WebWindow } from "../../../types/enums";
 import { ViewMoreName } from "../../../utils/constants";
-import { Toggle } from "../../elements/Toggle";
+import { Toggle } from "../../elements/toggle";
 
 interface ViewMoreProps {}
 
@@ -44,9 +45,9 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* Sync Clipboard History  */}
       {createButton("Sync Clipboard History", syncClipboard)}
       {/* Settings */}
-      {createButton("Settings", async () => openWindow("settings"))}
+      {createButton("Settings", async () => openWindow(WebWindow.Settings))}
       {/* About */}
-      {createButton("About", async () => openWindow("about"))}
+      {createButton("About", async () => openWindow(WebWindow.About))}
       {/* Exit */}
       {createButton("Exit", exitApp)}
     </>

@@ -1,29 +1,24 @@
-import { listen } from "@tauri-apps/api/event";
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
-import { WindowName } from "./@types";
-import App from "./components/pages/app/App";
-import AppStore from "./store/AppStore";
-import HotkeyStore from "./store/HotkeyStore";
+import App from "./components/pages/app/app";
+import AppStore from "./store/app-store";
+import HotkeyStore from "./store/hotkey-store";
 import "./styles.css";
-import { TabId } from "./utils/constants";
-import { openWindow } from "./utils/helpers";
+import { ListenEvent } from "./types/tauri-listen";
+import { listenEvent } from "./utils/tauri";
 
 const Index = () => {
   const { setGlobalHotkeyEvent } = HotkeyStore;
   const { init, setCurrentTab } = AppStore;
 
   createResource(init);
-  1;
 
   onMount(() => {
-    listen("set_global_hotkey_event", ({ payload }) => setGlobalHotkeyEvent(!!payload));
+    listenEvent(ListenEvent.Init, init);
 
-    listen("init", init);
+    listenEvent(ListenEvent.SetGlobalHotkeyEvent, (bool) => setGlobalHotkeyEvent(bool));
 
-    listen("open_window", async ({ payload }: { payload: WindowName }) => openWindow(payload));
-
-    listen("change_tab", ({ payload }: { payload: TabId }) => setCurrentTab(payload));
+    listenEvent(ListenEvent.ChangeTab, (tab) => setCurrentTab(tab));
   });
 
   return <App />;

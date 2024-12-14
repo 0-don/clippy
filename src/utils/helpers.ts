@@ -1,6 +1,3 @@
-import { invoke } from "@tauri-apps/api/core";
-import { WindowName } from "../@types";
-
 export function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
 
@@ -15,18 +12,4 @@ export function formatBytes(bytes: number, decimals = 2) {
 
 export async function sleep(milis: number) {
   return new Promise((resolve) => setTimeout(resolve, milis));
-}
-
-export async function openWindow(windowName: WindowName) {
-  switch (windowName) {
-    case "about":
-      // await createAboutWindow();
-      await invoke("open_new_window", { windowName });
-      break;
-    case "settings":
-      await invoke("open_new_window", { windowName });
-      break;
-    default:
-      break;
-  }
 }

@@ -1,13 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { createRoot, createSignal } from "solid-js";
-import { ClipboardWithRelations } from "../@types";
-
-type ClipboardWhere = {
-  cursor?: number;
-  search?: string;
-  star?: boolean;
-  img?: boolean;
-};
+import { ClipboardWhere, ClipboardWithRelations } from "../types";
+import { invokeCommand } from "../utils/tauri";
+import { InvokeCommand } from "../types/tauri-invoke";
 
 export const initialWhere: ClipboardWhere = {
   cursor: undefined,
@@ -24,7 +19,7 @@ function createClipboardStore() {
   const resetWhere = () => setWhere(initialWhere);
 
   const getClipboards = async () => {
-    const clipboards = await invoke<ClipboardWithRelations[]>("get_clipboards", where());
+    const clipboards = await invokeCommand(InvokeCommand.GetClipboards, where());
     return clipboards;
   };
 

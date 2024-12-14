@@ -1,16 +1,37 @@
-import { SidebarIconName, ViewMoreName } from "../store/utils/constants";
+import { IconTypes } from "solid-icons";
+import { SettingsTabName, Tab, TabName } from "../utils/constants";
+import { ClipboardTextType, ClipboardType, HotkeyEvent } from "./enums";
 
-export type ClipboardType = "text" | "image" | "html" | "rtf" | "file";
+export type DatabaseInfo = {
+  records: number;
+  size: number;
+};
 
-export type ClipboardTextType = "text" | "link" | "hex" | "rgb";
+export type Tabs = {
+  name: TabName;
+  Icon: IconTypes;
+  current: boolean;
+  id: Tab;
+};
 
-export type DateTime = string;
+export type ClipboardWhere = {
+  cursor?: number;
+  search?: string;
+  star?: boolean;
+  img?: boolean;
+};
+
+export type SettingsTab = {
+  name: SettingsTabName;
+  Icon: IconTypes;
+  current: boolean;
+};
 
 export interface ClipboardModel {
   id: number;
   types: ClipboardType[];
   star: boolean;
-  created_date: DateTime;
+  created_date: string;
 }
 
 export interface ClipboardTextModel {
@@ -50,8 +71,8 @@ export interface ClipboardFileModel {
   name: string | null;
   extension: string | null;
   size: number | null;
-  created_date: DateTime | null;
-  updated_date: DateTime | null;
+  created_date: string | null;
+  updated_date: string | null;
 }
 
 export interface ClipboardWithRelations {
@@ -71,7 +92,7 @@ export type Hotkey = {
   shift: boolean;
   key: string;
   status: boolean;
-  name: ViewMoreName & SidebarIconName;
+  name: string;
   icon: string;
 
   shortcut: string; // not in db added for convenience
@@ -84,19 +105,3 @@ export type Settings = {
   synchronize: boolean;
   dark_mode: boolean;
 };
-
-export type HotkeyEvent =
-  | "window_display_toggle"
-  | "type_clipboard"
-  | "recent_clipboards"
-  | "recent_clipboards"
-  | "history"
-  | "view_more"
-  | "sync_clipboard_history"
-  | "settings"
-  | "about"
-  | "exit"
-  | "toggle_dev_tools"
-  | "scroll_to_top";
-
-export type WindowName = "main" | "about" | "settings";

@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -8,12 +7,15 @@ import { FiArrowUp, FiFileText, FiLink } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { VsStarFull } from "solid-icons/vs";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
-import { ClipboardModel } from "../../../@types";
 import clippy from "../../../assets/clippy.png";
-import ClipboardStore from "../../../store/ClipboardStore";
-import HotkeyStore from "../../../store/HotkeyStore";
+import ClipboardStore from "../../../store/clipboard-store";
+import HotkeyStore from "../../../store/hotkey-store";
+import { ClipboardModel } from "../../../types";
+import { ClipboardType } from "../../../types/enums";
+import { InvokeCommand } from "../../../types/tauri-invoke";
 import { rgbCompatible } from "../../../utils/colors";
 import { formatBytes } from "../../../utils/helpers";
+import { invokeCommand } from "../../../utils/tauri";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -50,7 +52,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       <VsStarFull
         onClick={async (e) => {
           e.stopPropagation();
-          await invoke<boolean>("star_clipboard", {
+          await invokeCommand(InvokeCommand.StarClipboard, {
             id: clipboard.id,
             star: !clipboard.star,
           });
@@ -65,7 +67,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
       <IoTrashOutline
         onClick={async (e) => {
           e.stopPropagation();
-          if (await invoke<boolean>("delete_clipboard", { id: clipboard.id })) {
+          if (await invokeCommand(InvokeCommand.DeleteClipboard, { id: clipboard.id })) {
             setClipboards((prev) => prev.filter((o) => o.clipboard.id !== clipboard.id));
           }
         }}
@@ -112,16 +114,20 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                   e.stopPropagation();
                   if (e.detail === 1) {
                     dbClickTimer = setTimeout(
-                      async () => await invoke("copy_clipboard", { id: clipboard.id }),
-                      clipboard.types.includes("image") ? 200 : 0
+                      async () =>
+                        await invokeCommand(InvokeCommand.CopyClipboard, {
+                          id: clipboard.id,
+                          type: ClipboardType.Text,
+                        }),
+                      clipboard.types.includes(ClipboardType.Image) ? 200 : 0
                     );
                   }
                 }}
                 onDblClick={async (e) => {
                   clearTimeout(dbClickTimer);
                   e.stopPropagation();
-                  if (!clipboard.types.includes("image")) return;
-                  await invoke("save_clipboard_image", { id: clipboard.id });
+                  if (!clipboard.types.includes(ClipboardType.Image)) return;
+                  await invokeCommand(InvokeCommand.SaveClipboardImage, { id: clipboard.id });
                 }}
               >
                 <div class="flex justify-between py-3">
@@ -130,7 +136,7 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
                       <div class="relative" title={clipboard.id.toString()}>
                         {text?.type === "link" && <FiLink class="text-2xl text-zinc-700 dark:text-white" />}
                         {text?.type === "text" && <FiFileText class="text-2xl text-zinc-700 dark:text-white" />}
-                        {clipboard.types.includes("image") && (
+                        {clipboard.types.includes(ClipboardType.Image) && (
                           <BsImages class="text-2xl text-zinc-700 dark:text-white" />
                         )}
                         {text?.type === "hex" && (

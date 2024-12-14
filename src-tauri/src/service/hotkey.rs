@@ -4,7 +4,7 @@ use crate::{
     connection,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
-use common::types::enums::{CommandEvents, WebWindow};
+use common::types::enums::{ListenEvent, WebWindow};
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
@@ -43,10 +43,10 @@ where
 
     register_hotkeys(register_all);
     get_main_window()
-        .emit(CommandEvents::Init.to_string().as_str(), ())
+        .emit(ListenEvent::Init.to_string().as_str(), ())
         .expect("Failed to emit init event");
     get_app_window(WebWindow::Settings)
-        .emit(CommandEvents::Init.to_string().as_str(), ())
+        .emit(ListenEvent::Init.to_string().as_str(), ())
         .expect("Failed to emit init event");
 
     result

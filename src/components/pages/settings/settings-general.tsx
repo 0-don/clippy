@@ -4,12 +4,13 @@ import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
-import HotkeyStore from "../../../store/HotkeyStore";
-import SettingsStore from "../../../store/SettingsStore";
-import { TextBlock } from "../../elements/TextBlock";
-import { Toggle } from "../../elements/Toggle";
-import { DarkMode } from "../../utils/DarkMode";
-import { Shortcut } from "../../utils/Shortcut";
+import HotkeyStore from "../../../store/hotkey-store";
+import SettingsStore from "../../../store/settings-store";
+import { HotkeyEvent } from "../../../types/enums";
+import { TextBlock } from "../../elements/text-block";
+import { Toggle } from "../../elements/toggle";
+import { DarkMode } from "../../utils/dark-mode";
+import { Shortcut } from "../../utils/shortcut";
 
 interface SettingsGeneralProps {}
 
@@ -21,9 +22,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
     <Show when={settings()}>
       <TextBlock Icon={RiDeviceKeyboardFill} title="Keyboard shortcut">
         <div class="mb-2 flex items-center space-x-2 px-5 pb-2.5">
-          <Show when={getHotkey("window_display_toggle")}>
-            <Shortcut hotkey={getHotkey("window_display_toggle")!} />
-          </Show>
+          <Show when={getHotkey(HotkeyEvent.WindowDisplayToggle)}>{(hotkey) => <Shortcut hotkey={hotkey()} />}</Show>
         </div>
       </TextBlock>
 
