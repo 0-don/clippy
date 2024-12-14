@@ -34,10 +34,10 @@ pub struct Key {
     pub hotkey: HotKey,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum WindowName {
-    About,
-    Settings,
+#[derive(Debug)]
+pub enum KeyboardLayout {
+    Qwerty,
+    Qwertz,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

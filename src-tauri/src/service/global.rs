@@ -1,11 +1,7 @@
-use crate::prelude::*;
-use crate::{
-    types::{hotkey::SafeHotKeyManager, types::Key},
-    utils::tauri::config::{
-        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
-    },
-};
+use crate::{prelude::*, tauri_config::config::{APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX}};
 use common::enums::WebWindow;
+use common::types::hotkey::SafeHotKeyManager;
+use common::types::types::Key;
 use std::{collections::HashMap, sync::MutexGuard};
 use tauri::{AppHandle, Manager, WebviewWindow};
 use tokio::sync::oneshot;

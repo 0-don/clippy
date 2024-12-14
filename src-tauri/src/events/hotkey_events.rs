@@ -9,10 +9,10 @@ use crate::{
         settings::sync_clipboard_history_toggle,
         window::toggle_main_window,
     },
-    types::types::Key,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
 use common::enums::{CommandEvent, HotkeyEvent};
+use common::types::types::Key;
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
 use regex::Regex;

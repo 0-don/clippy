@@ -1,22 +1,35 @@
 use crate::prelude::*;
-use crate::{
-    service::{
-        clipboard::{get_last_clipboard_db, insert_clipboard_db},
-        global::{get_app, get_app_window},
-        window::calculate_thumbnail_dimensions,
-    },
-    types::orm_query::ClipboardManager,
+use crate::service::{
+    clipboard::{get_last_clipboard_db, insert_clipboard_db},
+    global::{get_app, get_app_window},
+    window::calculate_thumbnail_dimensions,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use common::enums::{ClipboardTextType, ClipboardType, CommandEvent, WebWindow};
+use common::types::orm_query::ClipboardManager;
 use image::imageops;
 use regex::Regex;
 use std::io::Cursor;
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
-impl ClipboardManager {
-    pub fn new() -> Self {
+pub trait ClipboardManagerExt {
+    fn new() -> ClipboardManager;
+    fn upsert_clipboard() -> impl std::future::Future<Output = ()> + Send;
+    fn check_if_last_is_same(&mut self) -> impl std::future::Future<Output = bool> + Send;
+    fn parse_model(
+        &mut self,
+        text: Option<String>,
+        html: Option<String>,
+        rtf: Option<String>,
+        image_data: Option<Vec<u8>>,
+        files: Option<Vec<String>>,
+    );
+    fn parse_image_model(&mut self, img_bytes: Vec<u8>);
+}
+
+impl ClipboardManagerExt for ClipboardManager {
+    fn new() -> Self {
         ClipboardManager {
             clipboard_model: entity::clipboard::ActiveModel::default(),
             clipboard_text_model: entity::clipboard_text::ActiveModel::default(),
@@ -27,7 +40,7 @@ impl ClipboardManager {
         }
     }
 
-    pub async fn upsert_clipboard() {
+    async fn upsert_clipboard() {
         let clipboard = get_app().state::<Clipboard>();
         let mut clipboard_manager = ClipboardManager::new();
 
@@ -146,7 +159,7 @@ impl ClipboardManager {
         false
     }
 
-    pub fn parse_model(
+    fn parse_model(
         &mut self,
         text: Option<String>,
         html: Option<String>,
@@ -156,45 +169,58 @@ impl ClipboardManager {
     ) {
         let mut types: Vec<ClipboardType> = vec![];
 
-        if text.is_some() && !text.as_ref().unwrap().is_empty() {
-            types.push(ClipboardType::Text);
+        if let Some(text_content) = text {
+            if !text_content.is_empty() {
+                types.push(ClipboardType::Text);
 
-            let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap();
-            let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap();
-            let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)").unwrap();
+                let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$")
+                    .expect("Failed to compile link regex");
+                let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$")
+                    .expect("Failed to compile hex regex");
+                let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)")
+                    .expect("Failed to compile rgb regex");
 
-            self.clipboard_text_model.r#type = Set(ClipboardTextType::Text.to_string());
+                self.clipboard_text_model.r#type = Set(ClipboardTextType::Text.to_string());
 
-            if is_link.is_match(text.as_ref().unwrap()) {
-                self.clipboard_text_model.r#type = Set(ClipboardTextType::Link.to_string());
-            } else if is_hex.is_match(text.as_ref().unwrap()) {
-                self.clipboard_text_model.r#type = Set(ClipboardTextType::Hex.to_string());
-            } else if is_rgb.is_match(text.as_ref().unwrap()) {
-                self.clipboard_text_model.r#type = Set(ClipboardTextType::Rgb.to_string());
+                if is_link.is_match(&text_content) {
+                    self.clipboard_text_model.r#type = Set(ClipboardTextType::Link.to_string());
+                } else if is_hex.is_match(&text_content) {
+                    self.clipboard_text_model.r#type = Set(ClipboardTextType::Hex.to_string());
+                } else if is_rgb.is_match(&text_content) {
+                    self.clipboard_text_model.r#type = Set(ClipboardTextType::Rgb.to_string());
+                }
+
+                self.clipboard_text_model.data = Set(text_content);
             }
-
-            self.clipboard_text_model.data = Set(text.unwrap());
         }
 
-        if html.is_some() && !html.as_ref().unwrap().is_empty() {
-            types.push(ClipboardType::Html);
-            self.clipboard_html_model.data = Set(html.unwrap());
+        if let Some(html_content) = html {
+            if !html_content.is_empty() {
+                types.push(ClipboardType::Html);
+                self.clipboard_html_model.data = Set(html_content);
+            }
         }
 
-        if rtf.is_some() && !rtf.as_ref().unwrap().is_empty() {
-            types.push(ClipboardType::Rtf);
-            self.clipboard_rtf_model.data = Set(rtf.unwrap());
+        if let Some(rtf_content) = rtf {
+            if !rtf_content.is_empty() {
+                types.push(ClipboardType::Rtf);
+                self.clipboard_rtf_model.data = Set(rtf_content);
+            }
         }
 
-        if image_data.is_some() && !image_data.as_ref().unwrap().is_empty() {
-            types.push(ClipboardType::Image);
-            self.parse_image_model(image_data.unwrap());
+        if let Some(image_content) = image_data {
+            if !image_content.is_empty() {
+                types.push(ClipboardType::Image);
+                self.parse_image_model(image_content);
+            }
         }
 
-        if files.is_some() && !files.as_ref().unwrap().is_empty() {
-            types.push(ClipboardType::File);
-            println!("{:?}", files);
-            // self.clipboard_file_model.data = Set(files.unwrap());
+        if let Some(file_content) = files {
+            if !file_content.is_empty() {
+                types.push(ClipboardType::File);
+                println!("{:?}", file_content);
+                // self.clipboard_file_model.data = Set(file_content);
+            }
         }
 
         println!("{:?}", ClipboardType::to_json_value(&types));

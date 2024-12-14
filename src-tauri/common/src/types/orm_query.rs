@@ -3,6 +3,7 @@ use entity::{
     clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text,
 };
 use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ClipboardWithRelations {
     pub clipboard: clipboard::Model,
@@ -12,6 +13,7 @@ pub struct ClipboardWithRelations {
     pub rtf: Option<clipboard_rtf::Model>,
     pub file: Option<clipboard_file::Model>,
 }
+
 
 #[derive(Debug, Clone)]
 pub struct ClipboardManager {

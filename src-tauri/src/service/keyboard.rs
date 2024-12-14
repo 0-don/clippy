@@ -1,5 +1,6 @@
-use crate::{service::clipboard::get_last_clipboard_db, types::orm_query::ClipboardWithRelations};
+use crate::service::clipboard::get_last_clipboard_db;
 use common::enums::ClipboardType;
+use common::types::orm_query::ClipboardWithRelations;
 use enigo::{Enigo, Keyboard, Settings};
 use std::{process::Command, time::Duration};
 use tauri_plugin_dialog::DialogExt;

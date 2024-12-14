@@ -1,8 +1,4 @@
-#[derive(Debug)]
-pub enum KeyboardLayout {
-    Qwerty,
-    Qwertz,
-}
+use crate::types::types::KeyboardLayout;
 
 pub fn get_keyboard_layout() -> KeyboardLayout {
     if cfg!(target_os = "linux") {

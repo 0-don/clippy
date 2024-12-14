@@ -1,8 +1,8 @@
 use crate::commands::settings::get_settings;
 use crate::service::global::get_app;
 use crate::service::settings::get_data_path;
-use crate::types::hotkey::SafeHotKeyManager;
-use crate::types::types::{Config, Key};
+use common::types::hotkey::SafeHotKeyManager;
+use common::types::types::{Config, Key};
 use global_hotkey::GlobalHotKeyManager;
 use std::collections::HashMap;
 use std::fs;

@@ -5,10 +5,13 @@ use crate::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
         get_clipboards_db, star_clipboard_db,
     },
-    types::{orm_query::ClipboardWithRelations, types::CommandError},
-    utils::{hotkey_manager::unregister_hotkeys, tauri::config::APP},
+    tauri_config::config::APP,
+    utils::hotkey_manager::unregister_hotkeys,
 };
-use common::enums::ClipboardType;
+use common::{
+    enums::ClipboardType,
+    types::{orm_query::ClipboardWithRelations, types::CommandError},
+};
 use std::fs::File;
 use tauri::Manager;
 
