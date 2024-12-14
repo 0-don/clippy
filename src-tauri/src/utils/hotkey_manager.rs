@@ -1,5 +1,3 @@
-use super::tauri::config::GLOBAL_EVENTS;
-
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::service::global::get_app;
 use crate::{
@@ -8,8 +6,9 @@ use crate::{
         global::{get_hotkey_manager, get_hotkey_store},
         hotkey::get_all_hotkeys_db,
     },
-    types::types::Key,
+    tauri_config::config::GLOBAL_EVENTS,
 };
+use common::types::types::Key;
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {
@@ -74,7 +73,9 @@ fn insert_hotkey_into_store(key: Key) {
     let mut hotkeys_lock = get_hotkey_store();
 
     if hotkeys_lock.get(&key.id).is_some() {
-        hotkeys_lock.remove(&key.id).expect("Failed to remove hotkey");
+        hotkeys_lock
+            .remove(&key.id)
+            .expect("Failed to remove hotkey");
     }
     hotkeys_lock.insert(key.id, key);
 }

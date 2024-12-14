@@ -3,9 +3,9 @@ use crate::{
         hotkey::with_hotkeys,
         settings::{get_settings_db, update_settings_db},
     },
-    types::types::CommandError,
-    utils::tauri::config::autostart,
+    tauri_config::config::autostart,
 };
+use common::types::types::CommandError;
 use entity::settings::Model;
 
 #[tauri::command]
@@ -26,6 +26,6 @@ pub async fn update_settings(settings: Model) -> Result<(), CommandError> {
 }
 
 #[tauri::command]
-pub async fn toggle_autostart() -> Result<(), String> {
+pub async fn toggle_autostart() -> Result<(), CommandError> {
     Ok(autostart())
 }

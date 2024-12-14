@@ -1,8 +1,8 @@
 use crate::{
     service::hotkey::{get_all_hotkeys_db, update_hotkey_db, with_hotkeys},
-    types::types::CommandError,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
+use common::types::types::CommandError;
 use entity::hotkey::Model;
 
 #[tauri::command]

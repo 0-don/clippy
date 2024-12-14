@@ -1,13 +1,14 @@
 mod commands;
 mod connection;
 mod events;
-mod service;
-mod types;
-mod utils;
 mod prelude;
+mod service;
+mod tauri_config;
+mod utils;
+
 use commands::{clipboard, hotkey, settings, window};
+use tauri_config::setup;
 use tauri_plugin_autostart::MacosLauncher;
-use utils::tauri::setup;
 
 #[macro_export]
 macro_rules! printlog {

@@ -1,13 +1,10 @@
 use super::global::{get_app, get_main_window};
 use crate::prelude::*;
+use crate::tauri_config::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_SIZE};
 use crate::{
     printlog,
     service::global::get_window_stop_tx,
-    types::types::WindowName,
-    utils::{
-        hotkey_manager::{register_hotkeys, unregister_hotkeys},
-        tauri::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_SIZE},
-    },
+    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
 use common::enums::{CommandEvent, WebWindow};
 use std::sync::{Arc, Mutex};
@@ -208,9 +205,10 @@ pub fn create_settings_window() {
     .expect("Failed to build window");
 }
 
-pub fn open_window(window_name: WindowName) {
+pub fn open_window(window_name: WebWindow) {
     match window_name {
-        WindowName::About => create_about_window(),
-        WindowName::Settings => create_settings_window(),
+        WebWindow::About => create_about_window(),
+        WebWindow::Settings => create_settings_window(),
+        _ => {}
     }
 }

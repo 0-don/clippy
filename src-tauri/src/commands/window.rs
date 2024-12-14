@@ -1,10 +1,11 @@
-use crate::{
-    service::{
-        clipboard::count_clipboards_db,
-        settings::{get_data_path, sync_clipboard_history_toggle},
-        window::{open_window, toggle_main_window},
-    },
-    types::types::{Config, DatabaseInfo, CommandError, WindowName},
+use crate::service::{
+    clipboard::count_clipboards_db,
+    settings::{get_data_path, sync_clipboard_history_toggle},
+    window::{open_window, toggle_main_window},
+};
+use common::{
+    enums::WebWindow,
+    types::types::{CommandError, Config, DatabaseInfo},
 };
 use std::fs::{self, read_to_string};
 use tauri::AppHandle;
@@ -16,7 +17,7 @@ pub fn window_display_toggle() {
 }
 
 #[tauri::command]
-pub fn open_new_window(window_name: WindowName) {
+pub fn open_new_window(window_name: WebWindow) {
     open_window(window_name);
 }
 

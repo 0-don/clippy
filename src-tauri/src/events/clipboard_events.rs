@@ -1,4 +1,5 @@
-use crate::types::orm_query::ClipboardManager;
+use crate::utils::clipboard_manager::ClipboardManagerExt;
+use common::types::orm_query::ClipboardManager;
 use tauri::{Listener, Manager};
 use tauri_plugin_clipboard::Clipboard;
 

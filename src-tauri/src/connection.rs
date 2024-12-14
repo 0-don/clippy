@@ -1,5 +1,6 @@
 use crate::prelude::*;
-use crate::{service::settings::get_data_path, types::types::Config};
+use crate::service::settings::get_data_path;
+use common::types::types::Config;
 use migration::{DbErr, Migrator, MigratorTrait};
 use std::sync::Once;
 

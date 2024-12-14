@@ -4,8 +4,9 @@ use crate::prelude::*;
 use crate::{
     commands::settings::get_settings,
     service::hotkey::with_hotkeys,
-    types::types::{Config, DataPath},
 };
+use common::types::types::Config;
+use common::types::types::DataPath;
 use entity::settings::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use std::{
