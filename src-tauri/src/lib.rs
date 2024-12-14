@@ -10,18 +10,6 @@ use commands::{clipboard, hotkey, settings, window};
 use tauri_config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
-#[macro_export]
-macro_rules! printlog {
-    ($($arg:tt)*) => {
-        {
-            use chrono::{Local, DateTime};
-            let now: DateTime<Local> = Local::now();
-            let millis = now.timestamp_subsec_millis();
-            println!("{}.{:03}: {}", now.format("%Y-%m-%d %H:%M:%S"), millis, format!($($arg)*));
-        }
-    };
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()

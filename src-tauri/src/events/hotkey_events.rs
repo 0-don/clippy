@@ -11,7 +11,7 @@ use crate::{
     },
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
-use common::enums::{CommandEvent, HotkeyEvent};
+use common::types::enums::{CommandEvents, HotkeyEvent};
 use common::types::types::Key;
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
@@ -87,7 +87,7 @@ pub async fn parse_hotkey_event(key: &Key) {
         Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
         Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => get_main_window()
             .emit(
-                CommandEvent::OpenWindow.to_string().as_str(),
+                CommandEvents::OpenWindow.to_string().as_str(),
                 Some(e.to_string().as_str()),
             )
             .expect("Failed to emit event"),
@@ -102,7 +102,7 @@ pub async fn parse_hotkey_event(key: &Key) {
             *get_hotkey_running() = true;
             get_main_window()
                 .emit(
-                    CommandEvent::ChangeTab.to_string().as_str(),
+                    CommandEvents::ChangeTab.to_string().as_str(),
                     Some(e.to_string().as_str()),
                 )
                 .expect("Failed to emit event");

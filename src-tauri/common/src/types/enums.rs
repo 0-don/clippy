@@ -14,7 +14,7 @@ pub enum WebWindow {
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
-pub enum CommandEvent {
+pub enum CommandEvents {
     #[iden = "init"]
     Init,
     #[iden = "set_global_hotkey_event"]

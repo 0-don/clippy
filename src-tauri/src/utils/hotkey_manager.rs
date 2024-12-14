@@ -1,7 +1,7 @@
+use crate::prelude::*;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::service::global::get_app;
 use crate::{
-    printlog,
     service::{
         global::{get_hotkey_manager, get_hotkey_store},
         hotkey::get_all_hotkeys_db,

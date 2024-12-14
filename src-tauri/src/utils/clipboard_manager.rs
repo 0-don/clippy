@@ -5,7 +5,7 @@ use crate::service::{
     window::calculate_thumbnail_dimensions,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use common::enums::{ClipboardTextType, ClipboardType, CommandEvent, WebWindow};
+use common::types::enums::{ClipboardTextType, ClipboardType, CommandEvents, WebWindow};
 use common::types::orm_query::ClipboardManager;
 use image::imageops;
 use regex::Regex;
@@ -61,7 +61,7 @@ impl ClipboardManagerExt for ClipboardManager {
             .expect("Failed to insert clipboard");
 
         get_app_window(WebWindow::Main)
-            .emit(CommandEvent::Init.to_string().as_str(), ())
+            .emit(CommandEvents::Init.to_string().as_str(), ())
             .expect("Failed to emit event");
     }
 

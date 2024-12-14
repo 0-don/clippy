@@ -1,7 +1,7 @@
 use crate::tauri_config::config::APP;
 use crate::{connection, prelude::*};
 use crate::service::global::get_app;
-use common::enums::{ClipboardTextType, ClipboardType};
+use common::types::enums::{ClipboardTextType, ClipboardType};
 use common::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use entity::clipboard::{self, Model};
 use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};

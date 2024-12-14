@@ -1,5 +1,5 @@
 use crate::m000001_create_clipboard::Clipboard;
-use common::enums::ClipboardTextType;
+use common::types::enums::ClipboardTextType;
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,

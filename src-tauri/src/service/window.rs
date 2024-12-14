@@ -2,11 +2,10 @@ use super::global::{get_app, get_main_window};
 use crate::prelude::*;
 use crate::tauri_config::config::{MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_SIZE};
 use crate::{
-    printlog,
     service::global::get_window_stop_tx,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
-use common::enums::{CommandEvent, WebWindow};
+use common::types::enums::{CommandEvents, WebWindow};
 use std::sync::{Arc, Mutex};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
@@ -48,7 +47,7 @@ pub fn toggle_main_window() {
         unregister_hotkeys(false);
         get_main_window()
             .emit(
-                CommandEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                CommandEvents::SetGlobalHotkeyEvent.to_string().as_str(),
                 false,
             )
             .expect("Failed to emit set global hotkey event");
@@ -56,7 +55,7 @@ pub fn toggle_main_window() {
         position_window_near_cursor();
         get_main_window()
             .emit(
-                CommandEvent::ChangeTab.to_string().as_str(),
+                CommandEvents::ChangeTab.to_string().as_str(),
                 "recent_clipboards",
             )
             .expect("Failed to emit change tab event");
@@ -65,7 +64,7 @@ pub fn toggle_main_window() {
         register_hotkeys(true);
         get_main_window()
             .emit(
-                CommandEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                CommandEvents::SetGlobalHotkeyEvent.to_string().as_str(),
                 true,
             )
             .expect("Failed to emit set global hotkey event");

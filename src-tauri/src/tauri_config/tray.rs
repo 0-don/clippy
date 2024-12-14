@@ -14,7 +14,11 @@ pub fn create_system_tray(app: &mut tauri::App) -> Result<TrayIcon, Box<dyn std:
 
     // Build and return the tray
     let tray = TrayIconBuilder::new()
-        .icon(app.default_window_icon().expect("failed to get default icon").clone())
+        .icon(
+            app.default_window_icon()
+                .expect("failed to get default icon")
+                .clone(),
+        )
         .menu(&menu)
         .on_menu_event(|app, event| {
             // Use event.id.0 to get the string value

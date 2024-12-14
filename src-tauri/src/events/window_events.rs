@@ -1,10 +1,9 @@
+use crate::prelude::*;
 use crate::{
-    printlog,
     service::global::{get_hotkey_running, get_main_window, get_window_stop_tx},
     utils::hotkey_manager::unregister_hotkeys,
 };
-use common::enums::CommandEvent;
-use crate::prelude::*;
+use common::types::enums::CommandEvents;
 use tauri::{Emitter, WindowEvent};
 use tokio::sync::oneshot;
 
@@ -28,7 +27,7 @@ pub fn window_event_listener() {
                         unregister_hotkeys(false);
                         get_main_window()
                             .emit(
-                                CommandEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                                CommandEvents::SetGlobalHotkeyEvent.to_string().as_str(),
                                 false,
                             )
                             .expect("failed to emit event");
