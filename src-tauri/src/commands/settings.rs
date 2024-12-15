@@ -1,7 +1,7 @@
 use crate::{
     service::{
         hotkey::with_hotkeys,
-        settings::{get_settings_db, update_settings_db},
+        settings::{get_settings_db, sync_clipboard_history_toggle, update_settings_db},
     },
     tauri_config::config::autostart,
 };
@@ -28,4 +28,9 @@ pub async fn update_settings(settings: Model) -> Result<(), CommandError> {
 #[tauri::command]
 pub async fn toggle_autostart() -> Result<(), CommandError> {
     Ok(autostart())
+}
+
+#[tauri::command]
+pub async fn sync_clipboard_history() {
+    sync_clipboard_history_toggle().await;
 }

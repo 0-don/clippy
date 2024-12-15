@@ -10,6 +10,6 @@ path = "src/lib.rs"
 [dependencies]
 entity = { path = "../entity" }
 global-hotkey = "0"
-sea-orm = { version = "1", features = ["macros"] }
-serde = { version = "1", features = ["derive"] }
+sea-orm = { version = "1" }
+serde = { version = "1" }
 serde_json = { version = "1" }

@@ -17,6 +17,10 @@ pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_cl
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
+pub static ABOUT_WINDOW_X: i32 = 375;
+pub static ABOUT_WINDOW_Y: i32 = 600;
+pub static SETTINGS_WINDOW_X: i32 = 500;
+pub static SETTINGS_WINDOW_Y: i32 = 450;
 pub static MAX_IMAGE_SIZE: u32 = 1280;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();

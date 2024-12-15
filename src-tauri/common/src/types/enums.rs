@@ -5,6 +5,19 @@ use serde_json::{json, Value as JsonValue};
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
+pub enum Language {
+    #[iden = "en"]
+    English,
+    #[iden = "es"]
+    Spanish,
+    #[iden = "fr"]
+    French,
+    #[iden = "de"]
+    German,
+}
+
+#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum ListenEvent {
     #[iden = "init"]
     Init,
