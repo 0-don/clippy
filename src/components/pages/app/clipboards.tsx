@@ -57,7 +57,17 @@ export const Clipboards: Component<ClipboardsProps> = ({}) => {
             star: !clipboard.star,
           });
           setClipboards((prev) =>
-            prev.map((o) => (o.clipboard.id === clipboard.id ? { ...o, star: !o.clipboard.star } : o))
+            prev.map((o) =>
+              o.clipboard.id === clipboard.id
+                ? {
+                    ...o,
+                    clipboard: {
+                      ...o.clipboard,
+                      star: !o.clipboard.star,
+                    },
+                  }
+                : o
+            )
           );
         }}
         class={`${

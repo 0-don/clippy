@@ -14,10 +14,6 @@ impl MigrationTrait for Migration {
         let db = manager.get_connection();
 
         settings::ActiveModel {
-            startup: Set(true),
-            dark_mode: Set(true),
-            notification: Set(false),
-            synchronize: Set(false),
             ..Default::default()
         }
         .insert(db)

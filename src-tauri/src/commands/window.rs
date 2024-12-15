@@ -1,7 +1,5 @@
 use crate::service::{
-    clipboard::count_clipboards_db,
-    settings::{get_data_path, sync_clipboard_history_toggle},
-    window::open_window,
+    clipboard::count_clipboards_db, settings::get_data_path, window::open_window,
 };
 use common::types::{
     enums::WebWindow,
@@ -48,9 +46,4 @@ pub async fn get_db_path() -> Result<String, CommandError> {
     let data_path = get_data_path();
     let config: Config = serde_json::from_str(&read_to_string(&data_path.config_file_path)?)?;
     Ok(config.db)
-}
-
-#[tauri::command]
-pub async fn sync_clipboard_history() {
-    sync_clipboard_history_toggle().await;
 }

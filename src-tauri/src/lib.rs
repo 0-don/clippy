@@ -30,19 +30,22 @@ pub fn run() {
             clipboard::copy_clipboard,
             clipboard::clear_clipboards,
             clipboard::save_clipboard_image,
+            //
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
             hotkey::stop_hotkeys,
+            //
             settings::get_settings,
             settings::update_settings,
             settings::toggle_autostart,
+            settings::sync_clipboard_history,
+            //
             window::open_new_window,
             window::open_browser_url,
             window::exit_app,
             window::get_app_version,
             window::get_db_info,
             window::get_db_path,
-            window::sync_clipboard_history,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

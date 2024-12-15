@@ -19,14 +19,17 @@ export enum InvokeCommand {
   GetSettings = "get_settings",
   UpdateSettings = "update_settings",
   ToggleAutostart = "toggle_autostart",
+  SyncClipboardHistory = "sync_clipboard_history",
 
+  // Window commands
   OpenNewWindow = "open_new_window",
   OpenBrowserUrl = "open_browser_url",
   ExitApp = "exit_app",
+
+  // App info commands
   GetAppVersion = "get_app_version",
   GetDbInfo = "get_db_info",
   GetDbPath = "get_db_path",
-  SyncClipboardHistory = "sync_clipboard_history",
 }
 
 export interface TauriInvokeCommands {
@@ -83,6 +86,10 @@ export interface TauriInvokeCommands {
     args: undefined;
     return: void;
   };
+  [InvokeCommand.SyncClipboardHistory]: {
+    args: undefined;
+    return: void;
+  };
 
   // Window commands
   [InvokeCommand.OpenNewWindow]: {
@@ -110,9 +117,5 @@ export interface TauriInvokeCommands {
   [InvokeCommand.GetDbPath]: {
     args: undefined;
     return: string;
-  };
-  [InvokeCommand.SyncClipboardHistory]: {
-    args: undefined;
-    return: void;
   };
 }

@@ -27,6 +27,17 @@ export type SettingsTab = {
   current: boolean;
 };
 
+export interface ClipboardFileModel {
+  id: number;
+  clipboard_id: number;
+  data: Uint8Array;
+  name: string | null;
+  extension: string | null;
+  size: number | null;
+  created_date: string | null;
+  updated_date: string | null;
+}
+
 export interface ClipboardModel {
   id: number;
   types: ClipboardType[];
@@ -62,17 +73,6 @@ export interface ClipboardRtfModel {
   id: number;
   clipboard_id: number;
   data: string;
-}
-
-export interface ClipboardFileModel {
-  id: number;
-  clipboard_id: number;
-  data: Uint8Array;
-  name: string | null;
-  extension: string | null;
-  size: number | null;
-  created_date: string | null;
-  updated_date: string | null;
 }
 
 export interface ClipboardWithRelations {

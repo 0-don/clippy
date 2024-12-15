@@ -1,16 +1,25 @@
+use common::language::get_system_language;
 use sea_orm_migration::{
     prelude::*,
-    schema::{boolean, pk_auto},
+    schema::{boolean, integer, pk_auto, string},
 };
 
 #[derive(Iden)]
 enum Settings {
     Table,
     Id,
+    Language,
+    //
     Startup,
     Notification,
     Synchronize,
     DarkMode,
+    //
+    MaxFileSize,
+    MaxImageSize,
+    MaxTextSize,
+    MaxRtfSize,
+    MaxHtmlSize,
 }
 
 #[derive(DeriveMigrationName)]
@@ -25,10 +34,21 @@ impl MigrationTrait for Migration {
                     .table(Settings::Table)
                     .if_not_exists()
                     .col(pk_auto(Settings::Id))
-                    .col(boolean(Settings::Startup))
-                    .col(boolean(Settings::Notification))
-                    .col(boolean(Settings::Synchronize))
-                    .col(boolean(Settings::DarkMode))
+                    .col(
+                        string(Settings::Language)
+                            .string_len(2)
+                            .default(get_system_language().to_string()),
+                    )
+                    .col(boolean(Settings::Startup).default(true))
+                    .col(boolean(Settings::Notification).default(false))
+                    .col(boolean(Settings::Synchronize).default(false))
+                    .col(boolean(Settings::DarkMode).default(true))
+                    // 10MB in bytes (10 * 1024 * 1024)
+                    .col(integer(Settings::MaxFileSize).default(10_485_760))
+                    .col(integer(Settings::MaxImageSize).default(10_485_760))
+                    .col(integer(Settings::MaxTextSize).default(10_485_760))
+                    .col(integer(Settings::MaxRtfSize).default(10_485_760))
+                    .col(integer(Settings::MaxHtmlSize).default(10_485_760))
                     .to_owned(),
             )
             .await

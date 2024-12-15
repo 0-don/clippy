@@ -15,19 +15,31 @@ impl EntityName for Entity {
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
     pub id: i32,
+    pub language: String,
     pub startup: bool,
     pub notification: bool,
     pub synchronize: bool,
     pub dark_mode: bool,
+    pub max_file_size: i32,
+    pub max_image_size: i32,
+    pub max_text_size: i32,
+    pub max_rtf_size: i32,
+    pub max_html_size: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
+    Language,
     Startup,
     Notification,
     Synchronize,
     DarkMode,
+    MaxFileSize,
+    MaxImageSize,
+    MaxTextSize,
+    MaxRtfSize,
+    MaxHtmlSize,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -50,10 +62,16 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::Integer.def(),
+            Self::Language => ColumnType::String(StringLen::N(2u32)).def(),
             Self::Startup => ColumnType::Boolean.def(),
             Self::Notification => ColumnType::Boolean.def(),
             Self::Synchronize => ColumnType::Boolean.def(),
             Self::DarkMode => ColumnType::Boolean.def(),
+            Self::MaxFileSize => ColumnType::Integer.def(),
+            Self::MaxImageSize => ColumnType::Integer.def(),
+            Self::MaxTextSize => ColumnType::Integer.def(),
+            Self::MaxRtfSize => ColumnType::Integer.def(),
+            Self::MaxHtmlSize => ColumnType::Integer.def(),
         }
     }
 }
