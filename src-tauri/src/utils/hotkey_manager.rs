@@ -1,14 +1,11 @@
 use crate::prelude::*;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::service::global::get_app;
-use crate::{
-    service::{
-        global::{get_hotkey_manager, get_hotkey_store},
-        hotkey::get_all_hotkeys_db,
-    },
-    tauri_config::config::GLOBAL_EVENTS,
+use crate::service::{
+    global::{get_hotkey_manager, get_hotkey_store},
+    hotkey::get_all_hotkeys_db,
 };
-use common::types::types::Key;
+use common::{constants::GLOBAL_EVENTS, types::types::Key};
 use global_hotkey::hotkey::HotKey;
 
 pub fn register_hotkeys(all: bool) {

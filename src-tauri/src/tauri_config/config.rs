@@ -1,6 +1,8 @@
 use crate::commands::settings::get_settings;
+use crate::prelude::*;
 use crate::service::global::get_app;
 use crate::service::settings::get_data_path;
+use common::types::enums::WebWindow;
 use common::types::hotkey::SafeHotKeyManager;
 use common::types::types::{Config, Key};
 use global_hotkey::GlobalHotKeyManager;
@@ -13,16 +15,6 @@ use tauri::{Manager, WebviewWindow};
 use tauri_plugin_autostart::AutoLaunchManager;
 use tokio::sync::oneshot;
 
-pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
-
-pub static MAIN_WINDOW_X: i32 = 375;
-pub static MAIN_WINDOW_Y: i32 = 600;
-pub static ABOUT_WINDOW_X: i32 = 375;
-pub static ABOUT_WINDOW_Y: i32 = 600;
-pub static SETTINGS_WINDOW_X: i32 = 500;
-pub static SETTINGS_WINDOW_Y: i32 = 450;
-pub static MAX_IMAGE_SIZE: u32 = 1280;
-
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<WebviewWindow>>> = OnceLock::new();
 
@@ -31,23 +23,6 @@ pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
-
-pub fn create_config() {
-    let data_path = get_data_path();
-
-    if Path::new(&data_path.config_file_path).exists() {
-        return;
-    }
-
-    let config = Config {
-        db: format!("{}", &data_path.db_file_path),
-    };
-
-    let _ = fs::write(
-        &data_path.config_file_path,
-        serde_json::to_string(&config).expect("Failed to serialize config"),
-    );
-}
 
 pub fn init_globals(app: &mut tauri::App) {
     APP.set(app.handle().clone())
@@ -69,6 +44,29 @@ pub fn init_globals(app: &mut tauri::App) {
     WINDOW_STOP_TX
         .set(Mutex::new(None))
         .unwrap_or_else(|_| panic!("Failed to initialize WINDOW_STOP_TX"));
+    MAIN_WINDOW
+        .set(Arc::new(Mutex::new(
+            app.get_webview_window(WebWindow::Main.to_string().as_str())
+                .expect("Failed to get window"),
+        )))
+        .expect("Failed to set main window");
+}
+
+pub fn create_config() {
+    let data_path = get_data_path();
+
+    if Path::new(&data_path.config_file_path).exists() {
+        return;
+    }
+
+    let config = Config {
+        db: format!("{}", &data_path.db_file_path),
+    };
+
+    let _ = fs::write(
+        &data_path.config_file_path,
+        serde_json::to_string(&config).expect("Failed to serialize config"),
+    );
 }
 
 pub fn autostart() {

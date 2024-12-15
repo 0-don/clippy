@@ -1,7 +1,15 @@
-use common::language::get_system_language;
+use common::{
+    constants::{
+        DISPLAY_SCALE, DISPLAY_SCALE_MAX, DISPLAY_SCALE_MIN, MAX_FILE_SIZE, MAX_FILE_SIZE_MAX,
+        MAX_FILE_SIZE_MIN, MAX_HTML_SIZE, MAX_HTML_SIZE_MAX, MAX_HTML_SIZE_MIN, MAX_IMAGE_SIZE,
+        MAX_IMAGE_SIZE_MAX, MAX_IMAGE_SIZE_MIN, MAX_RTF_SIZE, MAX_RTF_SIZE_MAX, MAX_RTF_SIZE_MIN,
+        MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN,
+    },
+    language::get_system_language,
+};
 use sea_orm_migration::{
     prelude::*,
-    schema::{boolean, integer, pk_auto, string},
+    schema::{boolean,  float, integer, pk_auto, string},
 };
 
 #[derive(Iden)]
@@ -14,6 +22,7 @@ enum Settings {
     Notification,
     Synchronize,
     DarkMode,
+    DisplayScale,
     //
     MaxFileSize,
     MaxImageSize,
@@ -43,12 +52,56 @@ impl MigrationTrait for Migration {
                     .col(boolean(Settings::Notification).default(false))
                     .col(boolean(Settings::Synchronize).default(false))
                     .col(boolean(Settings::DarkMode).default(true))
-                    // 10MB in bytes (10 * 1024 * 1024)
-                    .col(integer(Settings::MaxFileSize).default(10_485_760))
-                    .col(integer(Settings::MaxImageSize).default(10_485_760))
-                    .col(integer(Settings::MaxTextSize).default(10_485_760))
-                    .col(integer(Settings::MaxRtfSize).default(10_485_760))
-                    .col(integer(Settings::MaxHtmlSize).default(10_485_760))
+                    .col(
+                        float(Settings::DisplayScale)
+                            .default(Value::Float(Some(DISPLAY_SCALE)))
+                            .check(
+                                Expr::col(Settings::DisplayScale)
+                                    .gte(Value::Float(Some(DISPLAY_SCALE_MIN)))
+                                    .and(
+                                        Expr::col(Settings::DisplayScale)
+                                            .lte(Value::Float(Some(DISPLAY_SCALE_MAX))),
+                                    ),
+                            ),
+                    )
+                    // 10MB default, 0 min, 100MB max
+                    .col(
+                        integer(Settings::MaxFileSize).default(MAX_FILE_SIZE).check(
+                            Expr::col(Settings::MaxFileSize)
+                                .gte(MAX_FILE_SIZE_MIN)
+                                .and(Expr::col(Settings::MaxFileSize).lte(MAX_FILE_SIZE_MAX)),
+                        ),
+                    )
+                    .col(
+                        integer(Settings::MaxImageSize)
+                            .default(MAX_IMAGE_SIZE)
+                            .check(
+                                Expr::col(Settings::MaxImageSize)
+                                    .gte(MAX_IMAGE_SIZE_MIN)
+                                    .and(Expr::col(Settings::MaxImageSize).lte(MAX_IMAGE_SIZE_MAX)),
+                            ),
+                    )
+                    .col(
+                        integer(Settings::MaxTextSize).default(MAX_TEXT_SIZE).check(
+                            Expr::col(Settings::MaxTextSize)
+                                .gte(MAX_TEXT_SIZE_MIN)
+                                .and(Expr::col(Settings::MaxTextSize).lte(MAX_FILE_SIZE_MAX)),
+                        ),
+                    )
+                    .col(
+                        integer(Settings::MaxRtfSize).default(MAX_RTF_SIZE).check(
+                            Expr::col(Settings::MaxRtfSize)
+                                .gte(MAX_RTF_SIZE_MIN)
+                                .and(Expr::col(Settings::MaxRtfSize).lte(MAX_RTF_SIZE_MAX)),
+                        ),
+                    )
+                    .col(
+                        integer(Settings::MaxHtmlSize).default(MAX_HTML_SIZE).check(
+                            Expr::col(Settings::MaxHtmlSize)
+                                .gte(MAX_HTML_SIZE_MIN)
+                                .and(Expr::col(Settings::MaxHtmlSize).lte(MAX_HTML_SIZE_MAX)),
+                        ),
+                    )
                     .to_owned(),
             )
             .await

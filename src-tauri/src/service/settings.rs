@@ -1,10 +1,10 @@
+use super::clipboard::get_last_clipboard_db;
 use super::global::get_app;
 use crate::connection;
 use crate::prelude::*;
-use crate::{
-    commands::settings::get_settings,
-    service::hotkey::with_hotkeys,
-};
+use crate::service::window::get_monitor_scale_factor;
+use crate::{commands::settings::get_settings, service::hotkey::with_hotkeys};
+use common::language::get_system_language;
 use common::types::types::Config;
 use common::types::types::DataPath;
 use entity::settings::{self, ActiveModel, Model};
@@ -17,7 +17,7 @@ use tauri::Manager;
 use tauri_plugin_dialog::DialogExt;
 
 pub async fn get_settings_db() -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::establish_connection().await?;
+    let db: DatabaseConnection = connection::db().await?;
 
     let settings = settings::Entity::find_by_id(1).one(&db).await?;
 
@@ -25,7 +25,7 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
 }
 
 pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::establish_connection().await?;
+    let db: DatabaseConnection = connection::db().await?;
 
     let active_model: ActiveModel = settings.into();
 
@@ -37,11 +37,9 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
 }
 
 pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
-    let db: DatabaseConnection = connection::establish_connection().await?;
+    let db: DatabaseConnection = connection::db().await?;
 
-    let settings = settings::Entity::find_by_id(1).one(&db).await?;
-
-    let mut settings = settings.expect("Settings not found");
+    let mut settings = get_settings_db().await?;
 
     settings.synchronize = sync;
 
@@ -52,6 +50,26 @@ pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
         .await?;
 
     Ok(())
+}
+
+pub fn init_settings() {
+    tokio::task::block_in_place(|| {
+        tokio::runtime::Handle::current().block_on(async {
+            let last_clipboard = get_last_clipboard_db().await;
+            if last_clipboard.is_ok() {
+                return;
+            }
+
+            let mut settings = get_settings_db().await.expect("Failed to get settings");
+
+            settings.display_scale = get_monitor_scale_factor();
+            settings.language = get_system_language().to_string();
+
+            let _ = update_settings_db(settings)
+                .await
+                .expect("Failed to update settings");
+        })
+    });
 }
 
 pub fn get_data_path() -> DataPath {

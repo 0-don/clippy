@@ -16,7 +16,7 @@ use tokio::try_join;
 pub async fn load_clipboards_with_relations(
     clipboards: Vec<clipboard::Model>,
 ) -> Vec<ClipboardWithRelations> {
-    let db = connection::establish_connection()
+    let db = connection::db()
         .await
         .expect("Failed to establish connection");
 
@@ -51,7 +51,7 @@ pub async fn load_clipboards_with_relations(
 pub async fn insert_clipboard_db(
     active_model: ClipboardManager,
 ) -> Result<ClipboardWithRelations, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     // First insert the clipboard model to get its ID
     let clipboard_model = active_model.clipboard_model.insert(&db).await?;
@@ -140,7 +140,7 @@ pub async fn insert_clipboard_db(
 }
 
 pub async fn get_clipboard_db(id: i32) -> Result<ClipboardWithRelations, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
     let clipboard = clipboard::Entity::find_by_id(id).one(&db).await?;
 
     if clipboard.is_none() {
@@ -157,7 +157,7 @@ pub async fn get_clipboard_db(id: i32) -> Result<ClipboardWithRelations, DbErr> 
 }
 
 pub async fn get_last_clipboard_db() -> Result<ClipboardWithRelations, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     let last_clipboard = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)
@@ -186,7 +186,7 @@ pub async fn get_clipboards_db(
     img: Option<bool>,
 ) -> Result<Vec<ClipboardWithRelations>, DbErr> {
     printlog!("get_clipboards");
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     // First get the clipboards with filters
     let clipboards: Vec<Model> = clipboard::Entity::find()
@@ -236,7 +236,7 @@ pub async fn get_clipboards_db(
 }
 
 pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     let model = clipboard::ActiveModel {
         id: Set(id),
@@ -250,7 +250,7 @@ pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
 }
 
 pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
 
@@ -258,7 +258,7 @@ pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
 }
 
 pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     clipboard::Entity::delete_many()
         .filter(clipboard::Column::Star.eq(false))
@@ -269,7 +269,7 @@ pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
 }
 
 pub async fn count_clipboards_db() -> Result<u64, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     let count = clipboard::Entity::find().count(&db).await?;
 
@@ -277,7 +277,7 @@ pub async fn count_clipboards_db() -> Result<u64, DbErr> {
 }
 
 pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
-    let db = connection::establish_connection().await?;
+    let db = connection::db().await?;
 
     let model = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)
