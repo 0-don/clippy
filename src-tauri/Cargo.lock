@@ -5767,9 +5767,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-opener"
-version = "2.2.1"
+version = "2.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c57f68e88f81a299463b4d1eaf214f7b1be012e6a415b3088eda46a38bb9cef"
+checksum = "63ac39033ef1bb4d52da4878c3d8ab6d80b0a569d69208c884e6d4d54eb427b9"
 dependencies = [
  "dunce",
  "glob",

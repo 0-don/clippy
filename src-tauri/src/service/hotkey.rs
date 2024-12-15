@@ -11,7 +11,7 @@ use sea_orm::{ActiveModelTrait, EntityTrait};
 use tauri::Emitter;
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
-    let db: DatabaseConnection = connection::establish_connection().await?;
+    let db: DatabaseConnection = connection::db().await?;
 
     let hotkeys = hotkey::Entity::find().all(&db).await?;
 
@@ -19,7 +19,7 @@ pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
 }
 
 pub async fn update_hotkey_db(hotkey: Model) -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::establish_connection().await?;
+    let db: DatabaseConnection = connection::db().await?;
 
     let active_model: ActiveModel = hotkey.into();
 

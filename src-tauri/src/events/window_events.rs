@@ -7,7 +7,7 @@ use common::types::enums::ListenEvent;
 use tauri::{Emitter, WindowEvent};
 use tokio::sync::oneshot;
 
-pub fn window_event_listener() {
+pub fn init_window_event_listener() {
     get_main_window().on_window_event(|event| {
         if !get_main_window().is_visible().unwrap_or(false) {
             return;

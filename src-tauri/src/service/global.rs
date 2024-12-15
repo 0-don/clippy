@@ -1,9 +1,22 @@
-use crate::{prelude::*, tauri_config::config::{APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX}};
-use common::types::{enums::WebWindow, hotkey::SafeHotKeyManager};
+use crate::{
+    prelude::*,
+    tauri_config::config::{
+        APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
+    },
+};
 use common::types::types::Key;
+use common::types::{enums::WebWindow, hotkey::SafeHotKeyManager};
 use std::{collections::HashMap, sync::MutexGuard};
 use tauri::{AppHandle, Manager, WebviewWindow};
 use tokio::sync::oneshot;
+
+pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
+    MAIN_WINDOW
+        .get()
+        .expect("Failed to get MAIN_WINDOW")
+        .lock()
+        .expect("Failed to lock MAIN_WINDOW")
+}
 
 pub fn get_hotkey_manager() -> MutexGuard<'static, SafeHotKeyManager> {
     HOTKEY_MANAGER
@@ -19,14 +32,6 @@ pub fn get_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
         .expect("Failed to get HOTKEYS")
         .lock()
         .expect("Failed to lock HOTKEYS")
-}
-
-pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
-    MAIN_WINDOW
-        .get()
-        .expect("Failed to get MAIN_WINDOW")
-        .lock()
-        .expect("Failed to lock MAIN_WINDOW")
 }
 
 pub fn get_window_stop_tx() -> MutexGuard<'static, Option<oneshot::Sender<()>>> {

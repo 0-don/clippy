@@ -7,7 +7,7 @@ use std::sync::Once;
 #[allow(dead_code)]
 static INIT: Once = Once::new();
 
-pub async fn establish_connection() -> Result<DbConn, DbErr> {
+pub async fn db() -> Result<DbConn, DbErr> {
     let database_url = if cfg!(debug_assertions) {
         String::from("sqlite://../clippy.sqlite?mode=rwc")
     } else {

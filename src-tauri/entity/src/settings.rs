@@ -12,7 +12,7 @@ impl EntityName for Entity {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Serialize, Deserialize)]
 pub struct Model {
     pub id: i32,
     pub language: String,
@@ -20,6 +20,7 @@ pub struct Model {
     pub notification: bool,
     pub synchronize: bool,
     pub dark_mode: bool,
+    pub display_scale: f32,
     pub max_file_size: i32,
     pub max_image_size: i32,
     pub max_text_size: i32,
@@ -35,6 +36,7 @@ pub enum Column {
     Notification,
     Synchronize,
     DarkMode,
+    DisplayScale,
     MaxFileSize,
     MaxImageSize,
     MaxTextSize,
@@ -67,6 +69,7 @@ impl ColumnTrait for Column {
             Self::Notification => ColumnType::Boolean.def(),
             Self::Synchronize => ColumnType::Boolean.def(),
             Self::DarkMode => ColumnType::Boolean.def(),
+            Self::DisplayScale => ColumnType::Float.def(),
             Self::MaxFileSize => ColumnType::Integer.def(),
             Self::MaxImageSize => ColumnType::Integer.def(),
             Self::MaxTextSize => ColumnType::Integer.def(),

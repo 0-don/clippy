@@ -1,21 +1,22 @@
-use crate::service::window::toggle_main_window;
+use crate::service::{global::get_app, window::toggle_main_window};
 use tauri::{
     menu::{Menu, MenuItem},
-    tray::{TrayIcon, TrayIconBuilder},
+    tray::TrayIconBuilder,
 };
 
-pub fn create_system_tray(app: &mut tauri::App) -> Result<TrayIcon, Box<dyn std::error::Error>> {
+pub fn init_system_tray() -> Result<(), Box<dyn std::error::Error>> {
     // Create menu items
-    let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-    let open = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
+    let quit = MenuItem::with_id(get_app(), "quit", "Quit", true, None::<&str>)?;
+    let open = MenuItem::with_id(get_app(), "open", "Open", true, None::<&str>)?;
 
     // Create the menu
-    let menu = Menu::with_items(app, &[&open, &quit])?;
+    let menu = Menu::with_items(get_app(), &[&open, &quit])?;
 
     // Build and return the tray
-    let tray = TrayIconBuilder::new()
+    TrayIconBuilder::new()
         .icon(
-            app.default_window_icon()
+            get_app()
+                .default_window_icon()
                 .expect("failed to get default icon")
                 .clone(),
         )
@@ -44,7 +45,7 @@ pub fn create_system_tray(app: &mut tauri::App) -> Result<TrayIcon, Box<dyn std:
                 _ => (),
             }
         })
-        .build(app)?;
+        .build(get_app())?;
 
-    Ok(tray)
+    Ok(())
 }

@@ -1,50 +1,44 @@
 use super::global::{get_app, get_main_window};
 use crate::prelude::*;
-use crate::tauri_config::config::{
-    ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_SIZE, SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
-};
+use crate::service::settings::get_settings_db;
 use crate::{
     service::global::get_window_stop_tx,
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
 };
+use common::constants::{
+    ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
+    SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
+};
 use common::types::enums::{HotkeyEvent, ListenEvent, WebWindow};
 use std::env;
 use std::process::Command;
-use std::sync::{Arc, Mutex};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
 
 /// App
-pub fn init_window(app: &mut tauri::App) {
-    let window: tauri::WebviewWindow = app
-        .get_webview_window(WebWindow::Main.to_string().as_str())
-        .expect("Failed to get window");
+pub fn init_window() {
+    tauri::async_runtime::spawn(async {
+        let settings = get_settings_db().await.expect("Failed to get settings");
 
-    let scale_factor = get_monitor_scale_factor(&window);
-    println!("Window scale factor: {}", scale_factor);
+        // Convert logical size to physical size considering scale factor
+        let physical_width = (MAIN_WINDOW_X as f32 * settings.display_scale) as u32;
+        let physical_height = (MAIN_WINDOW_Y as f32 * settings.display_scale) as u32;
 
-    // Convert logical size to physical size considering scale factor
-    let physical_width = (MAIN_WINDOW_X as f64 * scale_factor) as u32;
-    let physical_height = (MAIN_WINDOW_Y as f64 * scale_factor) as u32;
+        get_main_window()
+            .set_size(LogicalSize::new(physical_width, physical_height))
+            .expect("Failed to set window size");
 
-    window
-        .set_size(LogicalSize::new(physical_width, physical_height))
-        .expect("Failed to set window size");
+        #[cfg(any(windows, target_os = "macos"))]
+        {
+            let _ = get_main_window().set_decorations(false);
+            let _ = get_main_window().set_shadow(true);
+        }
 
-    #[cfg(any(windows, target_os = "macos"))]
-    {
-        let _ = window.set_decorations(false);
-        let _ = window.set_shadow(true);
-    }
-
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
-
-    MAIN_WINDOW
-        .set(Arc::new(Mutex::new(window)))
-        .expect("Failed to set main window");
+        #[cfg(debug_assertions)]
+        {
+            get_main_window().open_devtools();
+        }
+    });
 }
 
 pub fn toggle_main_window() {
@@ -158,16 +152,16 @@ pub fn position_window_near_cursor() {
 
 pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
     let aspect_ratio = width as f64 / height as f64;
-    if width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE {
+    if width > MAX_IMAGE_DIMENSIONS || height > MAX_IMAGE_DIMENSIONS {
         if width > height {
             (
-                MAX_IMAGE_SIZE,
-                (MAX_IMAGE_SIZE as f64 / aspect_ratio) as u32,
+                MAX_IMAGE_DIMENSIONS,
+                (MAX_IMAGE_DIMENSIONS as f64 / aspect_ratio) as u32,
             )
         } else {
             (
-                (MAX_IMAGE_SIZE as f64 * aspect_ratio) as u32,
-                MAX_IMAGE_SIZE,
+                (MAX_IMAGE_DIMENSIONS as f64 * aspect_ratio) as u32,
+                MAX_IMAGE_DIMENSIONS,
             )
         }
     } else {
@@ -194,10 +188,10 @@ pub fn create_about_window() {
     .build()
     .expect("Failed to build window");
 
-    let scale_factor = get_monitor_scale_factor(&window);
+    let scale_factor = get_monitor_scale_factor();
 
-    let physical_width = (ABOUT_WINDOW_X as f64 * scale_factor) as u32;
-    let physical_height = (ABOUT_WINDOW_Y as f64 * scale_factor) as u32;
+    let physical_width = (ABOUT_WINDOW_X as f32 * scale_factor) as u32;
+    let physical_height = (ABOUT_WINDOW_Y as f32 * scale_factor) as u32;
 
     window
         .set_size(LogicalSize::new(physical_width, physical_height))
@@ -223,10 +217,10 @@ pub fn create_settings_window() {
     .build()
     .expect("Failed to build window");
 
-    let scale_factor = get_monitor_scale_factor(&window);
+    let scale_factor = get_monitor_scale_factor();
 
-    let physical_width = (SETTINGS_WINDOW_X as f64 * scale_factor) as u32;
-    let physical_height = (SETTINGS_WINDOW_Y as f64 * scale_factor) as u32;
+    let physical_width = (SETTINGS_WINDOW_X as f32 * scale_factor) as u32;
+    let physical_height = (SETTINGS_WINDOW_Y as f32 * scale_factor) as u32;
 
     window
         .set_size(LogicalSize::new(physical_width, physical_height))
@@ -241,7 +235,7 @@ pub fn open_window(window_name: WebWindow) {
     }
 }
 
-pub fn get_monitor_scale_factor(window: &tauri::WebviewWindow) -> f64 {
+pub fn get_monitor_scale_factor() -> f32 {
     // First check if we're running in X11
     let is_x11 = env::var("XDG_SESSION_TYPE")
         .unwrap_or_default()
@@ -256,18 +250,23 @@ pub fn get_monitor_scale_factor(window: &tauri::WebviewWindow) -> f64 {
     }
 
     // Fall back to Tauri's method if not X11 or if X11 scaling factor detection failed
-    if let Some(monitor) = window.current_monitor().expect("Failed to get monitors") {
-        monitor.scale_factor()
-    } else if let Some(primary_monitor) = window.primary_monitor().expect("Failed to get monitors")
+    if let Some(monitor) = get_main_window()
+        .current_monitor()
+        .expect("Failed to get monitors")
     {
-        primary_monitor.scale_factor()
+        monitor.scale_factor() as f32
+    } else if let Some(primary_monitor) = get_main_window()
+        .primary_monitor()
+        .expect("Failed to get monitors")
+    {
+        primary_monitor.scale_factor() as f32
     } else {
         1.0 // Fallback default scale factor
     }
 }
 
 // Helper function to get X11 scaling factor
-fn get_x11_scaling_factor() -> Option<f64> {
+fn get_x11_scaling_factor() -> Option<f32> {
     let output = Command::new("xrdb").arg("-query").output().ok()?;
 
     if !output.status.success() {
@@ -279,7 +278,7 @@ fn get_x11_scaling_factor() -> Option<f64> {
     for line in stdout.lines() {
         if line.starts_with("Xft.dpi:") {
             if let Some(dpi_str) = line.split(':').nth(1) {
-                if let Ok(dpi) = dpi_str.trim().parse::<f64>() {
+                if let Ok(dpi) = dpi_str.trim().parse::<f32>() {
                     return Some(dpi / 96.0);
                 }
             }

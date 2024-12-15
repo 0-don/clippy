@@ -40,11 +40,11 @@ impl MigrationTrait for Migration {
                             ),
                         ),
                     )
-                    .col(boolean(Hotkey::Ctrl))
-                    .col(boolean(Hotkey::Alt))
-                    .col(boolean(Hotkey::Shift))
+                    .col(boolean(Hotkey::Ctrl).default(false))
+                    .col(boolean(Hotkey::Alt).default(false))
+                    .col(boolean(Hotkey::Shift).default(false))
                     .col(string(Hotkey::Key))
-                    .col(boolean(Hotkey::Status))
+                    .col(boolean(Hotkey::Status).default(true))
                     .col(string(Hotkey::Name))
                     .col(string(Hotkey::Icon))
                     .to_owned(),
