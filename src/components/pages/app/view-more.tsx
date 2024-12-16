@@ -1,10 +1,10 @@
 import { Component, Show } from "solid-js";
-import HotkeyStore from "../../../store/hotkey-store";
-import SettingsStore from "../../../store/settings-store";
 import { Hotkey } from "../../../types";
 import { WebWindow } from "../../../types/enums";
 import { ViewMoreName } from "../../../utils/constants";
 import { Toggle } from "../../elements/toggle";
+import { HotkeyStore } from "../../../store/hotkey-store";
+import { SettingsStore } from "../../../store/settings-store";
 
 interface ViewMoreProps {}
 

@@ -1,12 +1,13 @@
 import { Component, For, Show } from "solid-js";
-import AppStore from "../../store/app-store";
-import HotkeyStore from "../../store/hotkey-store";
+import { AppStore } from "../../store/app-store";
+import { HotkeyStore } from "../../store/hotkey-store";
 
 interface AppSidebarProps {}
 
 export const AppSidebar: Component<AppSidebarProps> = ({}) => {
   const { hotkeys, globalHotkeyEvent, getHotkey } = HotkeyStore;
   const { setCurrentTab, tabs } = AppStore;
+
   return (
     <Show when={hotkeys().length}>
       <For each={tabs()}>

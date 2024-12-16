@@ -14,9 +14,8 @@ pub async fn db() -> Result<DbConn, DbErr> {
         get_prod_database_url()
     };
 
-    let db = Database::connect(&database_url)
-        .await
-        .expect("Failed to setup the database");
+    // Connect using the url with foreign keys enabled
+    let db = Database::connect(&database_url).await?;
 
     INIT.call_once(|| {
         println!("Running migrations...");

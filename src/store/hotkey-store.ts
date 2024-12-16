@@ -31,4 +31,6 @@ function createHotkeyStore() {
   };
 }
 
-export default createRoot(createHotkeyStore);
+export const HotkeyStore = createRoot(createHotkeyStore);
+
+export type HotkeyStore = ReturnType<typeof createHotkeyStore>;

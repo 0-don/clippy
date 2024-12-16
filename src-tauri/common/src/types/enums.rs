@@ -25,6 +25,8 @@ pub enum ListenEvent {
     SetGlobalHotkeyEvent,
     #[iden = "change_tab"]
     ChangeTab,
+    #[iden = "scroll_to_top"]
+    ScrollToTop,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]

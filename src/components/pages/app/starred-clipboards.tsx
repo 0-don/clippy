@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { Clipboards } from "./clipboards";
+import { Clipboards } from "./clipboard/clipboards";
 import { SearchBar } from "./search-bar";
 
 interface StarredClipboardsProps {}

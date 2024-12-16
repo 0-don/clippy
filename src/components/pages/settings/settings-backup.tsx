@@ -3,11 +3,11 @@ import { FiUpload } from "solid-icons/fi";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { TbDatabaseStar } from "solid-icons/tb";
 import { Component, Show, createEffect, createSignal, on } from "solid-js";
-import SettingsStore from "../../../store/settings-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { invokeCommand } from "../../../utils/tauri";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
+import { SettingsStore } from "../../../store/settings-store";
 
 interface SettingsBackupProps {}
 

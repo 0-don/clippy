@@ -1,11 +1,11 @@
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
 import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
-import AppStore from "../../../store/app-store";
-import ClipboardStore, { initialWhere } from "../../../store/clipboard-store";
-import HotkeyStore from "../../../store/hotkey-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { invokeCommand } from "../../../utils/tauri";
+import { AppStore } from "../../../store/app-store";
+import { ClipboardStore, initialWhere } from "../../../store/clipboard-store";
+import { HotkeyStore } from "../../../store/hotkey-store";
 
 interface SearchBarProps {}
 

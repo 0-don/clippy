@@ -4,13 +4,13 @@ import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
-import HotkeyStore from "../../../store/hotkey-store";
-import SettingsStore from "../../../store/settings-store";
 import { HotkeyEvent } from "../../../types/enums";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { DarkMode } from "../../utils/dark-mode";
 import { Shortcut } from "../../utils/shortcut";
+import { HotkeyStore } from "../../../store/hotkey-store";
+import { SettingsStore } from "../../../store/settings-store";
 
 interface SettingsGeneralProps {}
 
