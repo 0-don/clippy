@@ -63,4 +63,5 @@ function createSettingsStore() {
   };
 }
 
-export default createRoot(createSettingsStore);
+export const SettingsStore = createRoot(createSettingsStore);
+export type SettingsStore = ReturnType<typeof createSettingsStore>;

@@ -5,11 +5,11 @@ import { SettingsBackup } from "./components/pages/settings/settings-backup";
 import { SettingsGeneral } from "./components/pages/settings/settings-general";
 import { SettingsHistory } from "./components/pages/settings/settings-history";
 import { SettingsHotkeys } from "./components/pages/settings/settings-hotkeys";
-import AppStore from "./store/app-store";
-import SettingsStore from "./store/settings-store";
 import "./styles.css";
-import { listenEvent } from "./utils/tauri";
 import { ListenEvent } from "./types/tauri-listen";
+import { listenEvent } from "./utils/tauri";
+import { AppStore } from "./store/app-store";
+import { SettingsStore } from "./store/settings-store";
 
 const Settings = () => {
   const { getCurrentTab } = SettingsStore;

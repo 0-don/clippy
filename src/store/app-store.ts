@@ -6,9 +6,9 @@ import { createRoot, createSignal } from "solid-js";
 import { Tabs } from "../types";
 import { HotkeyEvent } from "../types/enums";
 import { TAB_NAMES, Tab } from "../utils/constants";
-import ClipboardStore from "./clipboard-store";
-import HotkeyStore from "./hotkey-store";
-import SettingsStore from "./settings-store";
+import { ClipboardStore } from "./clipboard-store";
+import { HotkeyStore } from "./hotkey-store";
+import { SettingsStore } from "./settings-store";
 
 function createAppStore() {
   const [tabs, setTabs] = createSignal<Tabs[]>([
@@ -44,7 +44,6 @@ function createAppStore() {
   const getCurrentTab = () => tabs().find((s) => s.current);
 
   const init = async () => {
-    console.log("init");
     HotkeyStore.initHotkeys();
     ClipboardStore.initClipboards();
     await SettingsStore.initSettings();
@@ -66,4 +65,5 @@ function createAppStore() {
   };
 }
 
-export default createRoot(createAppStore);
+export const AppStore = createRoot(createAppStore);
+export type AppStore = ReturnType<typeof createAppStore>;

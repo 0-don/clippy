@@ -71,9 +71,9 @@ pub async fn parse_hotkey_event(key: &Key) {
         Some(HotkeyEvent::WindowDisplayToggle) => toggle_main_window(),
         Some(e @ HotkeyEvent::ScrollToTop) => {
             *get_hotkey_running() = true;
-            println!("scroll to top {:?}", e);
+            printlog!("scroll to top {:?}", e);
             get_main_window()
-                .emit(e.to_string().as_str(), ())
+                .emit(ListenEvent::ScrollToTop.to_string().as_str(), ())
                 .expect("Failed to emit event");
         }
         Some(HotkeyEvent::TypeClipboard) => {

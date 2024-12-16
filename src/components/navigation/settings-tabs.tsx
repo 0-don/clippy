@@ -1,5 +1,5 @@
 import { Component, For } from "solid-js";
-import SettingsStore from "../../store/settings-store";
+import { SettingsStore } from "../../store/settings-store";
 
 interface TabsProps {}
 

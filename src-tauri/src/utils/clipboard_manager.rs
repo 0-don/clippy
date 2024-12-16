@@ -46,132 +46,96 @@ impl ClipboardManagerExt for ClipboardManager {
 
     async fn upsert_clipboard() {
         let clipboard = get_app().state::<Clipboard>();
-        let mut clipboard_manager = ClipboardManager::new();
+        let mut manager = Self::new();
 
-        let text = clipboard.read_text().ok();
-        let html = clipboard.read_html().ok();
-        let rtf = clipboard.read_rtf().ok();
-        let image_data = clipboard.read_image_binary().ok();
-        let files: Option<Vec<String>> = clipboard.read_files().ok();
-
-        clipboard_manager
-            .parse_model(text, html, rtf, image_data, files)
+        manager
+            .parse_model(
+                clipboard.read_text().ok(),
+                clipboard.read_html().ok(),
+                clipboard.read_rtf().ok(),
+                clipboard.read_image_binary().ok(),
+                clipboard.read_files().ok(),
+            )
             .await;
 
-        if clipboard_manager.check_if_last_is_same().await {
-            return;
+        if !manager.check_if_last_is_same().await {
+            insert_clipboard_db(manager)
+                .await
+                .expect("Failed to insert");
+            get_app_window(WebWindow::Main)
+                .emit(ListenEvent::Init.to_string().as_str(), ())
+                .expect("Failed to emit");
         }
-
-        insert_clipboard_db(clipboard_manager)
-            .await
-            .expect("Failed to insert clipboard");
-
-        get_app_window(WebWindow::Main)
-            .emit(ListenEvent::Init.to_string().as_str(), ())
-            .expect("Failed to emit event");
     }
 
     async fn check_if_last_is_same(&mut self) -> bool {
-        let last_result = get_last_clipboard_db().await;
+        if let Ok(last) = get_last_clipboard_db().await {
+            let last_types = ClipboardType::from_json_value(&last.clipboard.types);
+            let curr_types = ClipboardType::from_json_value(&self.clipboard_model.types.as_ref());
 
-        if let Ok(last_clipboard) = last_result {
-            // Get types from last clipboard
-            let last_types = ClipboardType::from_json_value(&last_clipboard.clipboard.types);
-
-            // Get types from current clipboard model
-            let current_types =
-                ClipboardType::from_json_value(&self.clipboard_model.types.as_ref());
-
-            if let (Some(last_types), Some(current_types)) = (last_types, current_types) {
-                // Compare if both arrays have same length
-                if last_types.len() != current_types.len() {
-                    return false;
-                }
-
-                // Check if all types match between arrays
-                let types_match = last_types.iter().all(|t| current_types.contains(t))
-                    && current_types.iter().all(|t| last_types.contains(t));
-
-                if !types_match {
-                    return false;
-                }
-
-                // Compare content for each type
-                for clipboard_type in current_types {
-                    match clipboard_type {
-                        ClipboardType::Text => {
-                            if let Some(text_model) = &last_clipboard.text {
-                                if let sea_orm::ActiveValue::Set(current_text) =
-                                    &self.clipboard_text_model.data
+            match (last_types, curr_types) {
+                (Some(lt), Some(ct)) if lt.len() == ct.len() => {
+                    for t in ct {
+                        match t {
+                            ClipboardType::Text => {
+                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                                    (&last.text, &self.clipboard_text_model.data)
                                 {
-                                    if current_text != &text_model.data {
+                                    if curr != &last.data {
                                         return false;
                                     }
                                 }
                             }
-                        }
-                        ClipboardType::Html => {
-                            if let Some(html_model) = &last_clipboard.html {
-                                if let sea_orm::ActiveValue::Set(current_html) =
-                                    &self.clipboard_html_model.data
+                            ClipboardType::Html => {
+                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                                    (&last.html, &self.clipboard_html_model.data)
                                 {
-                                    if current_html != &html_model.data {
+                                    if curr != &last.data {
                                         return false;
                                     }
                                 }
                             }
-                        }
-                        ClipboardType::Rtf => {
-                            if let Some(rtf_model) = &last_clipboard.rtf {
-                                if let sea_orm::ActiveValue::Set(current_rtf) =
-                                    &self.clipboard_rtf_model.data
+                            ClipboardType::Image => {
+                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                                    (&last.image, &self.clipboard_image_model.data)
                                 {
-                                    if current_rtf != &rtf_model.data {
+                                    if curr != &last.data {
                                         return false;
                                     }
                                 }
                             }
-                        }
-                        ClipboardType::Image => {
-                            if let Some(image_model) = &last_clipboard.image {
-                                if let sea_orm::ActiveValue::Set(current_image) =
-                                    &self.clipboard_image_model.data
+                            ClipboardType::Rtf => {
+                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                                    (&last.rtf, &self.clipboard_rtf_model.data)
                                 {
-                                    if current_image != &image_model.data {
+                                    if curr != &last.data {
                                         return false;
                                     }
                                 }
                             }
-                        }
-                        ClipboardType::File => {
-                            if self.clipboard_files_model.len() != last_clipboard.files.len() {
-                                return false;
-                            }
-
-                            // Compare each file
-                            for (i, last_file) in last_clipboard.files.iter().enumerate() {
-                                if let Some(current_file) = self.clipboard_files_model.get(i) {
-                                    if let sea_orm::ActiveValue::Set(ref current_data) =
-                                        current_file.data
-                                    {
-                                        if current_data != &last_file.data {
+                            ClipboardType::File => {
+                                if self.clipboard_files_model.len() != last.files.len() {
+                                    return false;
+                                }
+                                for (curr_file, last_file) in
+                                    self.clipboard_files_model.iter().zip(&last.files)
+                                {
+                                    if let sea_orm::ActiveValue::Set(curr_data) = &curr_file.data {
+                                        if curr_data != &last_file.data {
                                             return false;
                                         }
                                     }
-                                } else {
-                                    return false;
                                 }
                             }
                         }
                     }
+                    true
                 }
-
-                // If we get here, all types and their contents match
-                return true;
+                _ => false,
             }
+        } else {
+            false
         }
-
-        false
     }
 
     async fn parse_model(
@@ -179,89 +143,80 @@ impl ClipboardManagerExt for ClipboardManager {
         text: Option<String>,
         html: Option<String>,
         rtf: Option<String>,
-        image_data: Option<Vec<u8>>,
+        image: Option<Vec<u8>>,
         files: Option<Vec<String>>,
     ) {
-        let settings = get_settings_db().await.expect("Failed to get settings");
-        let mut types: Vec<ClipboardType> = vec![];
+        let settings = get_settings_db().await.expect("Settings failed");
+        let mut types = vec![];
 
-        if let Some(text_content) = text {
-            if !text_content.is_empty() && text_content.len() <= settings.max_text_size as usize {
-                types.push(ClipboardType::Text);
-
-                let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$")
-                    .expect("Failed to compile link regex");
-                let is_hex = Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$")
-                    .expect("Failed to compile hex regex");
-                let is_rgb = Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)")
-                    .expect("Failed to compile rgb regex");
-
-                self.clipboard_text_model.r#type = Set(ClipboardTextType::Text.to_string());
-
-                if is_link.is_match(&text_content) {
-                    self.clipboard_text_model.r#type = Set(ClipboardTextType::Link.to_string());
-                } else if is_hex.is_match(&text_content) {
-                    self.clipboard_text_model.r#type = Set(ClipboardTextType::Hex.to_string());
-                } else if is_rgb.is_match(&text_content) {
-                    self.clipboard_text_model.r#type = Set(ClipboardTextType::Rgb.to_string());
+        if let Some(text) =
+            text.filter(|t| !t.is_empty() && t.len() <= settings.max_text_size as usize)
+        {
+            types.push(ClipboardType::Text);
+            self.clipboard_text_model.data = Set(text.clone());
+            self.clipboard_text_model.r#type = Set(match text {
+                t if Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$")
+                    .expect("Invalid regex")
+                    .is_match(&t) =>
+                {
+                    ClipboardTextType::Link
                 }
-
-                self.clipboard_text_model.data = Set(text_content);
-            }
-        }
-
-        if let Some(html_content) = html {
-            if !html_content.is_empty() && html_content.len() <= settings.max_html_size as usize {
-                types.push(ClipboardType::Html);
-                self.clipboard_html_model.data = Set(html_content);
-            }
-        }
-
-        if let Some(rtf_content) = rtf {
-            if !rtf_content.is_empty() && rtf_content.len() <= settings.max_rtf_size as usize {
-                types.push(ClipboardType::Rtf);
-                self.clipboard_rtf_model.data = Set(rtf_content);
-            }
-        }
-
-        if let Some(image_content) = image_data {
-            if !image_content.is_empty() && image_content.len() <= settings.max_image_size as usize
-            {
-                types.push(ClipboardType::Image);
-                self.parse_image_model(image_content);
-            }
-        }
-
-        if let Some(file_paths) = files {
-            if !file_paths.is_empty() {
-                let mut valid_files = Vec::new();
-
-                for path in &file_paths {
-                    if let Ok(metadata) = fs::metadata(path) {
-                        let file_size = metadata.len() as i32;
-
-                        if file_size <= settings.max_file_size {
-                            valid_files.push(path.clone());
-                        } else {
-                            println!("Skipping file {}: exceeds size limit", path);
-                        }
-                    }
+                t if Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$")
+                    .expect("Invalid regex")
+                    .is_match(&t) =>
+                {
+                    ClipboardTextType::Hex
                 }
-
-                if !valid_files.is_empty() {
-                    types.push(ClipboardType::File);
-                    if let Err(e) = self.parse_file_models(valid_files) {
-                        println!("Error processing files: {}", e);
-                    }
+                t if Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)")
+                    .expect("Invalid regex")
+                    .is_match(&t) =>
+                {
+                    ClipboardTextType::Rgb
                 }
+                _ => ClipboardTextType::Text,
             }
+            .to_string());
         }
 
-        println!("{:?}", ClipboardType::to_json_value(&types));
+        if let Some(html) =
+            html.filter(|h| !h.is_empty() && h.len() <= settings.max_html_size as usize)
+        {
+            types.push(ClipboardType::Html);
+            self.clipboard_html_model.data = Set(html);
+        }
+
+        if let Some(rtf) =
+            rtf.filter(|r| !r.is_empty() && r.len() <= settings.max_rtf_size as usize)
+        {
+            types.push(ClipboardType::Rtf);
+            self.clipboard_rtf_model.data = Set(rtf);
+        }
+
+        if let Some(img) =
+            image.filter(|i| !i.is_empty() && i.len() <= settings.max_image_size as usize)
+        {
+            types.push(ClipboardType::Image);
+            self.parse_image_model(img);
+        }
+
+        if let Some(paths) = files.filter(|f| !f.is_empty()) {
+            let valid_files: Vec<_> = paths
+                .into_iter()
+                .filter(|p| {
+                    fs::metadata(p)
+                        .map(|m| m.len() as i32 <= settings.max_file_size)
+                        .unwrap_or(false)
+                })
+                .collect();
+
+            if !valid_files.is_empty() {
+                types.push(ClipboardType::File);
+                let _ = self.parse_file_models(valid_files);
+            }
+        }
 
         self.clipboard_model = entity::clipboard::ActiveModel {
             types: Set(ClipboardType::to_json_value(&types)),
-            star: Set(false),
             ..Default::default()
         };
     }

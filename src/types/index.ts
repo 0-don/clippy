@@ -81,7 +81,7 @@ export interface ClipboardWithRelations {
   html?: ClipboardHtmlModel;
   image?: ClipboardImageModel;
   rtf?: ClipboardRtfModel;
-  file?: ClipboardFileModel;
+  files?: ClipboardFileModel[];
 }
 
 export type Hotkey = {

@@ -25,7 +25,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Clipboard::Id))
                     .col(json(Clipboard::Types).default(Expr::value("[]")))
-                    .col(boolean(Clipboard::Star).default(true))
+                    .col(boolean(Clipboard::Star).default(false))
                     .col(date_time(Clipboard::CreatedDate).default(Expr::current_timestamp()))
                     .to_owned(),
             )

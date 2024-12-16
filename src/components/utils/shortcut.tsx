@@ -1,7 +1,6 @@
 import { Component, Show } from "solid-js";
-import HotkeyStore from "../../store/hotkey-store";
+import { HotkeyStore } from "../../store/hotkey-store";
 import { Hotkey } from "../../types";
-
 import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
 import { CheckBox } from "../elements/checkbox";
 import { Dropdown } from "../elements/dropdown";
