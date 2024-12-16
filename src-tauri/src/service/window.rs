@@ -18,14 +18,9 @@ use tauri::{PhysicalPosition, WebviewWindowBuilder};
 /// App
 pub fn init_window() {
     tauri::async_runtime::spawn(async {
-        let settings = get_settings_db().await.expect("Failed to get settings");
-
-        // Convert logical size to physical size considering scale factor
-        let physical_width = (MAIN_WINDOW_X as f32 * settings.display_scale) as u32;
-        let physical_height = (MAIN_WINDOW_Y as f32 * settings.display_scale) as u32;
-
+        let size = calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y).await;
         get_main_window()
-            .set_size(LogicalSize::new(physical_width, physical_height))
+            .set_size(size)
             .expect("Failed to set window size");
 
         #[cfg(any(windows, target_os = "macos"))]
@@ -169,7 +164,7 @@ pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
     }
 }
 
-pub fn create_about_window() {
+pub async fn create_about_window() {
     let app = crate::service::global::get_app();
 
     // Close existing window if it exists
@@ -188,17 +183,12 @@ pub fn create_about_window() {
     .build()
     .expect("Failed to build window");
 
-    let scale_factor = get_monitor_scale_factor();
-
-    let physical_width = (ABOUT_WINDOW_X as f32 * scale_factor) as u32;
-    let physical_height = (ABOUT_WINDOW_Y as f32 * scale_factor) as u32;
-
     window
-        .set_size(LogicalSize::new(physical_width, physical_height))
+        .set_size(calculate_logical_size(ABOUT_WINDOW_X, ABOUT_WINDOW_Y).await)
         .expect("Failed to set window size");
 }
 
-pub fn create_settings_window() {
+pub async fn create_settings_window() {
     let app = crate::service::global::get_app();
 
     // Close existing window if it exists
@@ -217,20 +207,15 @@ pub fn create_settings_window() {
     .build()
     .expect("Failed to build window");
 
-    let scale_factor = get_monitor_scale_factor();
-
-    let physical_width = (SETTINGS_WINDOW_X as f32 * scale_factor) as u32;
-    let physical_height = (SETTINGS_WINDOW_Y as f32 * scale_factor) as u32;
-
     window
-        .set_size(LogicalSize::new(physical_width, physical_height))
+        .set_size(calculate_logical_size(SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y).await)
         .expect("Failed to set window size");
 }
 
-pub fn open_window(window_name: WebWindow) {
+pub async fn open_window(window_name: WebWindow) {
     match window_name {
-        WebWindow::About => create_about_window(),
-        WebWindow::Settings => create_settings_window(),
+        WebWindow::About => create_about_window().await,
+        WebWindow::Settings => create_settings_window().await,
         _ => {}
     }
 }
@@ -286,4 +271,12 @@ fn get_x11_scaling_factor() -> Option<f32> {
     }
 
     None
+}
+
+pub async fn calculate_logical_size(width: i32, height: i32) -> LogicalSize<u32> {
+    let settings = get_settings_db().await.expect("Failed to get settings");
+
+    let physical_width = (width as f32 * settings.display_scale) as u32;
+    let physical_height = (height as f32 * settings.display_scale) as u32;
+    LogicalSize::new(physical_width, physical_height)
 }

@@ -86,11 +86,16 @@ pub async fn parse_hotkey_event(key: &Key) {
             }
         }
         Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
-        Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => open_window(
-            WebWindow::iter()
-                .find(|window| window.to_string().to_lowercase() == e.to_string().to_lowercase())
-                .expect("Failed to find window"),
-        ),
+        Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => {
+            open_window(
+                WebWindow::iter()
+                    .find(|window| {
+                        window.to_string().to_lowercase() == e.to_string().to_lowercase()
+                    })
+                    .expect("Failed to find window"),
+            )
+            .await
+        }
 
         Some(HotkeyEvent::Exit) => get_app().exit(1),
         Some(

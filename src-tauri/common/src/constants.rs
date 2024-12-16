@@ -1,4 +1,13 @@
-pub static GLOBAL_EVENTS: [&'static str; 2] = ["window_display_toggle", "type_clipboard"];
+use crate::types::enums::HotkeyEvent;
+use sea_orm::Iden;
+use std::sync::LazyLock;
+
+pub static GLOBAL_EVENTS: LazyLock<Vec<String>> = LazyLock::new(|| {
+    vec![
+        HotkeyEvent::WindowDisplayToggle.to_string(),
+        HotkeyEvent::TypeClipboard.to_string(),
+    ]
+});
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
