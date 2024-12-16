@@ -43,7 +43,7 @@ pub async fn load_clipboards_with_relations(
             html: h,
             image: i,
             rtf: r,
-            file: f.into_iter().next(), // only files need into_iter().next() since it's load_many
+            files: f,
         })
         .collect()
 }
@@ -114,18 +114,16 @@ pub async fn insert_clipboard_db(
         };
 
     // Only insert file if data is set
-    let clipboard_file_model =
-        if let sea_orm::ActiveValue::Set(data) = &active_model.clipboard_file_model.data {
-            if !data.is_empty() {
-                let mut file_model = active_model.clipboard_file_model;
-                file_model.clipboard_id = Set(clipboard_id);
-                Some(file_model.insert(&db).await?)
-            } else {
-                None
-            }
-        } else {
-            None
-        };
+    let clipboard_files_model = if !active_model.clipboard_files_model.is_empty() {
+        let mut files = Vec::new();
+        for mut file_model in active_model.clipboard_files_model {
+            file_model.clipboard_id = Set(clipboard_id);
+            files.push(file_model.insert(&db).await?);
+        }
+        files
+    } else {
+        Vec::new()
+    };
 
     let clip_db = ClipboardWithRelations {
         clipboard: clipboard_model,
@@ -133,7 +131,7 @@ pub async fn insert_clipboard_db(
         html: clipboard_html_model,
         image: clipboard_image_model,
         rtf: clipboard_rtf_model,
-        file: clipboard_file_model,
+        files: clipboard_files_model,
     };
 
     Ok(clip_db)
@@ -337,11 +335,48 @@ pub async fn copy_clipboard_from_id(id: i32, requested_type: ClipboardType) -> R
             .and_then(|model| clipboard.write_rtf(model.data.clone()).ok())
             .is_some(),
 
-        ClipboardType::File => clipboard_data
-            .file
-            .as_ref()
-            .and_then::<bool, _>(|_model| None)
-            .is_some(),
+        ClipboardType::File => {
+            if clipboard_data.files.is_empty() {
+                false
+            } else {
+                let temp_dir = std::env::temp_dir();
+                let mut file_uris = Vec::new();
+
+                for file in &clipboard_data.files {
+                    let file_name = match (&file.name, &file.extension) {
+                        (Some(name), Some(ext)) => format!("{}.{}", name, ext),
+                        (Some(name), None) => name.clone(),
+                        _ => continue,
+                    };
+
+                    let temp_file_path = temp_dir.join(&file_name);
+
+                    // Write the file data to temp location
+                    if let Err(e) = std::fs::write(&temp_file_path, &file.data) {
+                        println!("Failed to write temp file {}: {}", file_name, e);
+                        continue;
+                    }
+
+                    // Format the URI based on OS
+                    #[cfg(target_os = "windows")]
+                    let uri = temp_file_path
+                        .to_string_lossy()
+                        .replace('/', "\\")
+                        .to_string();
+
+                    #[cfg(not(target_os = "windows"))]
+                    let uri = format!("file://{}", temp_file_path.to_string_lossy());
+
+                    file_uris.push(uri);
+                }
+
+                if file_uris.is_empty() {
+                    false
+                } else {
+                    clipboard.write_files_uris(file_uris).is_ok()
+                }
+            }
+        }
     };
 
     if success {

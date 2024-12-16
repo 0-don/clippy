@@ -95,7 +95,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
         let key_struct = Key {
             id: key.id(),
             state: false,
-            is_global: GLOBAL_EVENTS.contains(&hotkey.event.as_str()),
+            is_global: GLOBAL_EVENTS.contains(&hotkey.event),
             event: hotkey.event,
             key_str: hotkey_str.clone(),
             ctrl: hotkey.ctrl,

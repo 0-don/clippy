@@ -11,9 +11,8 @@ pub struct ClipboardWithRelations {
     pub html: Option<clipboard_html::Model>,
     pub image: Option<clipboard_image::Model>,
     pub rtf: Option<clipboard_rtf::Model>,
-    pub file: Option<clipboard_file::Model>,
+    pub files: Vec<clipboard_file::Model>,
 }
-
 
 #[derive(Debug, Clone)]
 pub struct ClipboardManager {
@@ -22,5 +21,5 @@ pub struct ClipboardManager {
     pub clipboard_html_model: entity::clipboard_html::ActiveModel,
     pub clipboard_image_model: entity::clipboard_image::ActiveModel,
     pub clipboard_rtf_model: entity::clipboard_rtf::ActiveModel,
-    pub clipboard_file_model: entity::clipboard_file::ActiveModel,
+    pub clipboard_files_model: Vec<entity::clipboard_file::ActiveModel>,
 }

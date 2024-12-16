@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::service::settings::get_settings_db;
 use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_db},
     global::{get_app, get_app_window},
@@ -9,7 +10,9 @@ use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWin
 use common::types::orm_query::ClipboardManager;
 use image::imageops;
 use regex::Regex;
+use std::fs;
 use std::io::Cursor;
+use std::path::Path;
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
@@ -24,8 +27,9 @@ pub trait ClipboardManagerExt {
         rtf: Option<String>,
         image_data: Option<Vec<u8>>,
         files: Option<Vec<String>>,
-    );
+    ) -> impl std::future::Future<Output = ()> + Send;
     fn parse_image_model(&mut self, img_bytes: Vec<u8>);
+    fn parse_file_models(&mut self, file_paths: Vec<String>) -> std::io::Result<()>;
 }
 
 impl ClipboardManagerExt for ClipboardManager {
@@ -36,7 +40,7 @@ impl ClipboardManagerExt for ClipboardManager {
             clipboard_html_model: entity::clipboard_html::ActiveModel::default(),
             clipboard_image_model: entity::clipboard_image::ActiveModel::default(),
             clipboard_rtf_model: entity::clipboard_rtf::ActiveModel::default(),
-            clipboard_file_model: entity::clipboard_file::ActiveModel::default(),
+            clipboard_files_model: Vec::new(),
         }
     }
 
@@ -48,9 +52,11 @@ impl ClipboardManagerExt for ClipboardManager {
         let html = clipboard.read_html().ok();
         let rtf = clipboard.read_rtf().ok();
         let image_data = clipboard.read_image_binary().ok();
-        let files = clipboard.read_files().ok();
+        let files: Option<Vec<String>> = clipboard.read_files().ok();
 
-        clipboard_manager.parse_model(text, html, rtf, image_data, files);
+        clipboard_manager
+            .parse_model(text, html, rtf, image_data, files)
+            .await;
 
         if clipboard_manager.check_if_last_is_same().await {
             return;
@@ -138,13 +144,22 @@ impl ClipboardManagerExt for ClipboardManager {
                             }
                         }
                         ClipboardType::File => {
-                            if let Some(file_model) = &last_clipboard.file {
-                                if let sea_orm::ActiveValue::Set(current_file) =
-                                    &self.clipboard_file_model.data
-                                {
-                                    if current_file != &file_model.data {
-                                        return false;
+                            if self.clipboard_files_model.len() != last_clipboard.files.len() {
+                                return false;
+                            }
+
+                            // Compare each file
+                            for (i, last_file) in last_clipboard.files.iter().enumerate() {
+                                if let Some(current_file) = self.clipboard_files_model.get(i) {
+                                    if let sea_orm::ActiveValue::Set(ref current_data) =
+                                        current_file.data
+                                    {
+                                        if current_data != &last_file.data {
+                                            return false;
+                                        }
                                     }
+                                } else {
+                                    return false;
                                 }
                             }
                         }
@@ -159,7 +174,7 @@ impl ClipboardManagerExt for ClipboardManager {
         false
     }
 
-    fn parse_model(
+    async fn parse_model(
         &mut self,
         text: Option<String>,
         html: Option<String>,
@@ -167,10 +182,11 @@ impl ClipboardManagerExt for ClipboardManager {
         image_data: Option<Vec<u8>>,
         files: Option<Vec<String>>,
     ) {
+        let settings = get_settings_db().await.expect("Failed to get settings");
         let mut types: Vec<ClipboardType> = vec![];
 
         if let Some(text_content) = text {
-            if !text_content.is_empty() {
+            if !text_content.is_empty() && text_content.len() <= settings.max_text_size as usize {
                 types.push(ClipboardType::Text);
 
                 let is_link = Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$")
@@ -195,31 +211,49 @@ impl ClipboardManagerExt for ClipboardManager {
         }
 
         if let Some(html_content) = html {
-            if !html_content.is_empty() {
+            if !html_content.is_empty() && html_content.len() <= settings.max_html_size as usize {
                 types.push(ClipboardType::Html);
                 self.clipboard_html_model.data = Set(html_content);
             }
         }
 
         if let Some(rtf_content) = rtf {
-            if !rtf_content.is_empty() {
+            if !rtf_content.is_empty() && rtf_content.len() <= settings.max_rtf_size as usize {
                 types.push(ClipboardType::Rtf);
                 self.clipboard_rtf_model.data = Set(rtf_content);
             }
         }
 
         if let Some(image_content) = image_data {
-            if !image_content.is_empty() {
+            if !image_content.is_empty() && image_content.len() <= settings.max_image_size as usize
+            {
                 types.push(ClipboardType::Image);
                 self.parse_image_model(image_content);
             }
         }
 
-        if let Some(file_content) = files {
-            if !file_content.is_empty() {
-                types.push(ClipboardType::File);
-                println!("{:?}", file_content);
-                // self.clipboard_file_model.data = Set(file_content);
+        if let Some(file_paths) = files {
+            if !file_paths.is_empty() {
+                let mut valid_files = Vec::new();
+
+                for path in &file_paths {
+                    if let Ok(metadata) = fs::metadata(path) {
+                        let file_size = metadata.len() as i32;
+
+                        if file_size <= settings.max_file_size {
+                            valid_files.push(path.clone());
+                        } else {
+                            println!("Skipping file {}: exceeds size limit", path);
+                        }
+                    }
+                }
+
+                if !valid_files.is_empty() {
+                    types.push(ClipboardType::File);
+                    if let Err(e) = self.parse_file_models(valid_files) {
+                        println!("Error processing files: {}", e);
+                    }
+                }
             }
         }
 
@@ -262,5 +296,41 @@ impl ClipboardManagerExt for ClipboardManager {
                 };
             }
         }
+    }
+
+    fn parse_file_models(&mut self, file_paths: Vec<String>) -> std::io::Result<()> {
+        for path in file_paths {
+            let path = Path::new(&path);
+
+            if let Ok(metadata) = fs::metadata(path) {
+                let file_name = path
+                    .file_name()
+                    .and_then(|n| n.to_str())
+                    .unwrap_or("unknown")
+                    .to_string();
+
+                let file_ext = path
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .map(|s| s.to_string());
+
+                let file_size = metadata.len() as i32;
+
+                // Read file bytes
+                if let Ok(file_bytes) = fs::read(path) {
+                    let file_model: entity::clipboard_file::ActiveModel =
+                        entity::clipboard_file::ActiveModel {
+                            name: Set(Some(file_name)),
+                            extension: Set(file_ext),
+                            size: Set(Some(file_size)),
+                            data: Set(file_bytes),
+                            ..Default::default()
+                        };
+
+                    self.clipboard_files_model.push(file_model);
+                }
+            }
+        }
+        Ok(())
     }
 }
