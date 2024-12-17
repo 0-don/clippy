@@ -9,12 +9,13 @@ pub enum ClipboardFile {
     Table,
     Id,
     ClipboardId,
-    Extension,
     Name,
-    Data,
+    Extension,
     Size,
+    MimeType,
     CreatedDate,
-    UpdatedDate,
+    ModifiedDate,
+    Data,
 }
 
 #[derive(DeriveMigrationName)]
@@ -30,12 +31,13 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(ClipboardFile::Id))
                     .col(integer(ClipboardFile::ClipboardId))
-                    .col(blob(ClipboardFile::Data))
                     .col(string_null(ClipboardFile::Name))
                     .col(string_null(ClipboardFile::Extension))
                     .col(integer_null(ClipboardFile::Size))
+                    .col(string_null(ClipboardFile::MimeType))
                     .col(date_time_null(ClipboardFile::CreatedDate))
-                    .col(date_time_null(ClipboardFile::UpdatedDate))
+                    .col(date_time_null(ClipboardFile::ModifiedDate))
+                    .col(blob(ClipboardFile::Data))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-file")
