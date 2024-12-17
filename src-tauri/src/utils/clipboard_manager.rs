@@ -6,6 +6,7 @@ use crate::service::{
     window::calculate_thumbnail_dimensions,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
+use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
 use common::types::orm_query::ClipboardManager;
 use image::imageops;
@@ -195,6 +196,7 @@ impl ClipboardManagerExt for ClipboardManager {
         if let Some(img) =
             image.filter(|i| !i.is_empty() && i.len() <= settings.max_image_size as usize)
         {
+            types.clear(); // Clear all types if image is present
             types.push(ClipboardType::Image);
             self.parse_image_model(img);
         }
@@ -210,6 +212,7 @@ impl ClipboardManagerExt for ClipboardManager {
                 .collect();
 
             if !valid_files.is_empty() {
+                types.clear(); // Clear all types if files are present
                 types.push(ClipboardType::File);
                 let _ = self.parse_file_models(valid_files);
             }
@@ -259,9 +262,9 @@ impl ClipboardManagerExt for ClipboardManager {
 
             if let Ok(metadata) = fs::metadata(path) {
                 let file_name = path
-                    .file_name()
+                    .file_stem()
                     .and_then(|n| n.to_str())
-                    .unwrap_or("unknown")
+                    .unwrap_or("ERROR.UNKNOWN_FILE")
                     .to_string();
 
                 let file_ext = path
@@ -269,18 +272,53 @@ impl ClipboardManagerExt for ClipboardManager {
                     .and_then(|e| e.to_str())
                     .map(|s| s.to_string());
 
-                let file_size = metadata.len() as i32;
+                // Get MIME type using infer first, fallback to mime_guess
+                let mime_type = infer::get_from_path(path)
+                    .ok()
+                    .flatten()
+                    .map(|k| k.mime_type().to_string())
+                    .or_else(|| {
+                        Some(
+                            mime_guess::from_path(path)
+                                .first_or_octet_stream()
+                                .to_string(),
+                        )
+                    });
 
-                // Read file bytes
+                // Use std::fs::Metadata for timestamps
+                let created = metadata.created().ok().map(|t| {
+                    let timestamp = t
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .as_secs() as i64;
+
+                    DateTime::from_timestamp(timestamp, 0)
+                        .unwrap_or_default()
+                        .naive_utc()
+                });
+
+                let modified = metadata.modified().ok().map(|t| {
+                    let timestamp = t
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .as_secs() as i64;
+
+                    DateTime::from_timestamp(timestamp, 0)
+                        .unwrap_or_default()
+                        .naive_utc()
+                });
+
                 if let Ok(file_bytes) = fs::read(path) {
-                    let file_model: entity::clipboard_file::ActiveModel =
-                        entity::clipboard_file::ActiveModel {
-                            name: Set(Some(file_name)),
-                            extension: Set(file_ext),
-                            size: Set(Some(file_size)),
-                            data: Set(file_bytes),
-                            ..Default::default()
-                        };
+                    let file_model = entity::clipboard_file::ActiveModel {
+                        name: Set(Some(file_name)),
+                        extension: Set(file_ext),
+                        size: Set(Some(metadata.len() as i32)),
+                        mime_type: Set(mime_type),
+                        created_date: Set(created),
+                        modified_date: Set(modified),
+                        data: Set(file_bytes),
+                        ..Default::default()
+                    };
 
                     self.clipboard_files_model.push(file_model);
                 }
