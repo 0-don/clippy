@@ -34,6 +34,7 @@ export interface ClipboardFileModel {
   name: string | null;
   extension: string | null;
   size: number | null;
+  mime_type: string | null;
   created_date: string | null;
   updated_date: string | null;
 }
