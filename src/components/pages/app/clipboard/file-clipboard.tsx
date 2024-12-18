@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { VsFileBinary } from "solid-icons/vs";
 import { Component } from "solid-js";
-import { ClipboardWithRelations } from "../../../../types";
+import { ClipboardFileModel, ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
 import { formatBytes } from "../../../../utils/helpers";
@@ -22,8 +22,22 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
     });
   };
 
-  const getTotalSize = () => {
-    return props.data.files?.reduce((total, file) => total + (file.size || 0), 0) || 0;
+  const getGroupedFiles = () => {
+    const grouped = props.data.files?.reduce(
+      (acc, file) => {
+        const type = file.mime_type || "unknown";
+        if (!acc[type]) {
+          acc[type] = { count: 0, size: 0, files: [] };
+        }
+        acc[type].count += 1;
+        acc[type].size += file.size || 0;
+        acc[type].files.push(file);
+        return acc;
+      },
+      {} as Record<string, { count: number; size: number; files: ClipboardFileModel[] }>
+    );
+
+    return grouped || {};
   };
 
   const getFileListTitle = () => {
@@ -31,6 +45,8 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
       ?.map((file) => `${file.name}${file.extension ? `.${file.extension}` : ""} - ${formatBytes(file.size || 0)}`)
       .join("\n");
   };
+
+  const groupedFiles = getGroupedFiles();
 
   return (
     <button
@@ -48,10 +64,18 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
           </div>
           <div class="mr-4 truncate px-4">
             <div class="flex items-center gap-2" title={getFileListTitle()}>
-              <p class="text-sm">
-                {props.data.files?.length || 0} file{props.data.files?.length !== 1 ? "s" : ""}
-              </p>
-              <span class="text-xs text-zinc-500">{formatBytes(getTotalSize())}</span>
+              <div class="flex flex-wrap">
+                {Object.entries(groupedFiles).map(([type, data], index) => (
+                  <>
+                    <span class="flex items-center gap-1">
+                      <span class="text-sm">
+                        {data.count} {type}
+                      </span>
+                      <span class="text-xs text-zinc-500">{formatBytes(data.size)}</span>
+                    </span>
+                  </>
+                ))}
+              </div>
             </div>
           </div>
         </div>

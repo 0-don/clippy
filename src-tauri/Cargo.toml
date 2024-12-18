@@ -43,13 +43,18 @@ tokio = { version = "1", features = ["full"] }
 serde = "1"
 serde_json = "1"
 
-image = "0"
 chrono = "0"
 enigo = "0"
-base64 = "0"
 regex = "1"
+
+# image
+image = "0"
+base64 = "0"
+
+# file mime parser
 infer = "0"
 mime_guess = "2"
+tree_magic_mini = "3"
 
 [profile.release]
 # panic = "abort"
