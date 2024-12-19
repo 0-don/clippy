@@ -1,4 +1,4 @@
-import { ClipboardWhere, ClipboardWithRelations, DatabaseInfo, Hotkey, Settings } from ".";
+import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings } from ".";
 import { ClipboardType, WebWindow } from "./enums";
 
 export enum InvokeCommand {
@@ -36,7 +36,7 @@ export interface TauriInvokeCommands {
   // Clipboard commands
   [InvokeCommand.GetClipboards]: {
     args: ClipboardWhere;
-    return: ClipboardWithRelations[];
+    return: ClipboardResponse;
   };
   [InvokeCommand.DeleteClipboard]: {
     args: { id: number };

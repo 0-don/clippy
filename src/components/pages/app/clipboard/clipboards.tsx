@@ -6,6 +6,7 @@ import { Component, For, Show, createSignal, onMount } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
 import { ClipboardStore } from "../../../../store/clipboard-store";
 import { HotkeyStore } from "../../../../store/hotkey-store";
+import { HotkeyEvent } from "../../../../types/enums";
 import { ListenEvent } from "../../../../types/tauri-listen";
 import { listenEvent } from "../../../../utils/tauri";
 import { BaseClipboard } from "./base-clipboard";
@@ -14,7 +15,7 @@ dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
 export const Clipboards: Component = () => {
-  const { clipboards, setClipboards, getClipboards, setWhere, clipboardRef, setClipboardRef } = ClipboardStore;
+  const { clipboards, setClipboards, getClipboards, setWhere, clipboardRef, setClipboardRef, hasMore } = ClipboardStore;
   const { globalHotkeyEvent, hotkeys } = HotkeyStore;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
@@ -26,7 +27,7 @@ export const Clipboards: Component = () => {
 
     clipboardRef()!.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false);
 
-    if (bottom) {
+    if (bottom && hasMore()) {
       setWhere((prev) => ({ ...prev, cursor: clipboards().length }));
       const newClipboards = await getClipboards();
       setClipboards((prev) => [...prev, ...newClipboards]);
@@ -56,7 +57,7 @@ export const Clipboards: Component = () => {
               <FiArrowUp class="text-xl !text-white dark:!text-white" />
               <Show when={globalHotkeyEvent()}>
                 <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
-                  {hotkeys().find((key) => key.event === "scroll_to_top")?.key}
+                  {hotkeys().find((key) => key.event === HotkeyEvent.ScrollToTop)?.key}
                 </div>
               </Show>
             </div>

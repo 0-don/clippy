@@ -14,6 +14,13 @@ pub struct ClipboardWithRelations {
     pub files: Vec<clipboard_file::Model>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClipboardsResponse {
+    pub clipboards: Vec<ClipboardWithRelations>,
+    pub total: u64,
+    pub has_more: bool,
+}
+
 #[derive(Debug, Clone)]
 pub struct ClipboardManager {
     pub clipboard_model: entity::clipboard::ActiveModel,

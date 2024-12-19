@@ -47,6 +47,14 @@ pub async fn load_clipboards_with_relations(
         .collect()
 }
 
+pub async fn get_clipboard_count_db() -> Result<u64, DbErr> {
+    let db = connection::db().await?;
+
+    let count = clipboard::Entity::find().count(&db).await?;
+
+    Ok(count)
+}
+
 pub async fn insert_clipboard_db(model: ClipboardManager) -> Result<ClipboardWithRelations, DbErr> {
     let db = connection::db().await?;
     let clipboard = model.clipboard_model.insert(&db).await?;
@@ -111,6 +119,8 @@ pub async fn insert_clipboard_db(model: ClipboardManager) -> Result<ClipboardWit
         files,
     })
 }
+
+
 
 pub async fn get_clipboard_db(id: i32) -> Result<ClipboardWithRelations, DbErr> {
     let db = connection::db().await?;
