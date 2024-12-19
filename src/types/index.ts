@@ -84,6 +84,11 @@ export interface ClipboardWithRelations {
   rtf?: ClipboardRtfModel;
   files?: ClipboardFileModel[];
 }
+export interface ClipboardResponse {
+  clipboards: ClipboardWithRelations[];
+  total: number;
+  has_more: boolean;
+}
 
 export type Hotkey = {
   id: number;

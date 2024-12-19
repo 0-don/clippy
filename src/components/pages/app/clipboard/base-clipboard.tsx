@@ -15,15 +15,20 @@ import { TextClipboard } from "./text-clipboard";
 interface BaseClipboardProps {
   data: ClipboardWithRelations;
   index: number;
+  isSelected: boolean;
 }
 
 export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
-  const { setClipboards } = ClipboardStore;
+  const { setClipboards, resetClipboards } = ClipboardStore;
   const { clipboard } = props.data;
 
   const handleDelete = async (id: number) => {
     if (await invokeCommand(InvokeCommand.DeleteClipboard, { id })) {
-      setClipboards((prev) => prev.filter((o) => o.clipboard.id !== id));
+      setClipboards((prev) => {
+        const updated = prev.filter((o) => o.clipboard.id !== id);
+        if (!updated.length) resetClipboards();
+        return updated;
+      });
     }
   };
 
@@ -64,47 +69,49 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   };
 
   return (
-    <div class="group relative">
+    <div class={`group relative ${props.isSelected ? "bg-zinc-100 dark:bg-neutral-600" : ""}`}>
       {/* Actions overlay */}
-      <div class="absolute bottom-0 right-0 top-0 z-10 flex flex-col items-end justify-between">
-        <div class="flex flex-col justify-between">
-          <VsStarFull
-            onClick={(e) => {
-              e.stopPropagation();
-              handleStar(clipboard);
-            }}
-            class={`${
-              clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
-            } text-lg hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
+      <div class="absolute bottom-0 right-0 top-0 z-10 my-1 mr-0.5 flex flex-col items-end justify-between">
+        <VsStarFull
+          onClick={(e) => {
+            e.stopPropagation();
+            handleStar(clipboard);
+          }}
+          title="Star"
+          class={`${
+            clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
+          } cursor-pointer text-lg hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
+        />
+        {props.data.rtf && (
+          <BsJournalRichtext
+            onClick={handleRtfCopy}
+            title="Copy as RTF"
+            class="hidden cursor-pointer text-lg text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
           />
-          {props.data.rtf && (
-            <BsJournalRichtext
-              onClick={handleRtfCopy}
-              title="Copy as RTF"
-              class="hidden text-lg text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
-            />
-          )}
-          {props.data.html && (
-            <TbSourceCode
-              onClick={handleHtmlCopy}
-              title="Copy as HTML"
-              class="hidden text-lg text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
-            />
-          )}
-        </div>
+        )}
+        {props.data.html && (
+          <TbSourceCode
+            onClick={handleHtmlCopy}
+            title="Copy as HTML"
+            class="hidden cursor-pointer text-lg text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
+          />
+        )}
         <IoTrashOutline
           onClick={(e) => {
             e.stopPropagation();
             handleDelete(clipboard.id);
           }}
-          class="hidden text-lg text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
+          title="Delete"
+          class="hidden cursor-pointer text-lg text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
         />
       </div>
 
       {/* Content rendered by specific clipboard type */}
       {clipboard.types.includes(ClipboardType.Image) && <ImageClipboard {...props} />}
       {clipboard.types.includes(ClipboardType.File) && <FileClipboard {...props} />}
-      {clipboard.types.includes(ClipboardType.Text) && <TextClipboard {...props} />}
+      {(clipboard.types.includes(ClipboardType.Text) ||
+        clipboard.types.includes(ClipboardType.Html) ||
+        clipboard.types.includes(ClipboardType.Rtf)) && <TextClipboard {...props} />}
     </div>
   );
 };

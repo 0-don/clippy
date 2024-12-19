@@ -12,14 +12,6 @@ export const DarkMode: Component<DarkModeProps> = ({}) => {
   createEffect(darkMode);
 
   return (
-    <Toggle
-      checked={settings()?.dark_mode}
-      onChange={(dark_mode) =>
-        updateSettings({
-          ...settings()!,
-          dark_mode,
-        })
-      }
-    />
+    <Toggle checked={settings()?.dark_mode} onChange={(dark_mode) => updateSettings({ ...settings()!, dark_mode })} />
   );
 };

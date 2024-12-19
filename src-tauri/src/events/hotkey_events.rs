@@ -45,7 +45,6 @@ pub fn init_hotkey_listener() {
         loop {
             if let Ok(event) = receiver.try_recv() {
                 if event.state == HotKeyState::Pressed {
-                    printlog!("hotkey caught {:?}", event);
                     let hotkey = get_hotkey_store().get(&event.id).cloned();
                     if let Some(hotkey) = hotkey {
                         parse_hotkey_event(&hotkey).await;
@@ -74,6 +73,9 @@ pub async fn parse_hotkey_event(key: &Key) {
             printlog!("scroll to top {:?}", e);
             get_main_window()
                 .emit(ListenEvent::ScrollToTop.to_string().as_str(), ())
+                .expect("Failed to emit event");
+            get_main_window()
+                .emit(ListenEvent::Init.to_string().as_str(), ())
                 .expect("Failed to emit event");
         }
         Some(HotkeyEvent::TypeClipboard) => {

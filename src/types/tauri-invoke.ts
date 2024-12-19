@@ -1,5 +1,5 @@
-import { ClipboardWhere, ClipboardWithRelations, DatabaseInfo, Hotkey, Settings } from ".";
-import { ClipboardType, WebWindow } from "./enums";
+import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings } from ".";
+import { ClipboardType, FolderLocation, WebWindow } from "./enums";
 
 export enum InvokeCommand {
   // Clipboard commands
@@ -25,6 +25,7 @@ export enum InvokeCommand {
   OpenNewWindow = "open_new_window",
   OpenBrowserUrl = "open_browser_url",
   ExitApp = "exit_app",
+  OpenFolder = "open_folder",
 
   // App info commands
   GetAppVersion = "get_app_version",
@@ -36,7 +37,7 @@ export interface TauriInvokeCommands {
   // Clipboard commands
   [InvokeCommand.GetClipboards]: {
     args: ClipboardWhere;
-    return: ClipboardWithRelations[];
+    return: ClipboardResponse;
   };
   [InvokeCommand.DeleteClipboard]: {
     args: { id: number };
@@ -102,6 +103,10 @@ export interface TauriInvokeCommands {
   };
   [InvokeCommand.ExitApp]: {
     args: undefined;
+    return: void;
+  };
+  [InvokeCommand.OpenFolder]: {
+    args: { location: FolderLocation };
     return: void;
   };
 

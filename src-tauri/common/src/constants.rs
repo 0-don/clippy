@@ -19,6 +19,7 @@ pub static SETTINGS_WINDOW_X: i32 = 500;
 pub static SETTINGS_WINDOW_Y: i32 = 450;
 
 pub static MAX_IMAGE_DIMENSIONS: u32 = 1280;
+pub static MAX_TEXT_PREVIEW: usize = 500; // Adjust preview length as needed
 
 pub static DISPLAY_SCALE: f32 = 1.0;
 pub static DISPLAY_SCALE_MIN: f32 = 0.5;
