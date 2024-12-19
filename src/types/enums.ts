@@ -4,6 +4,11 @@ export enum WebWindow {
   Settings = "settings",
 }
 
+export enum FolderLocation {
+  Database = "database",
+  Config = "config"
+}
+
 export enum HotkeyEvent {
   WindowDisplayToggle = "window_display_toggle",
   TypeClipboard = "type_clipboard",

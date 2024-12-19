@@ -5,37 +5,34 @@ import { SettingsBackup } from "./components/pages/settings/settings-backup";
 import { SettingsGeneral } from "./components/pages/settings/settings-general";
 import { SettingsHistory } from "./components/pages/settings/settings-history";
 import { SettingsHotkeys } from "./components/pages/settings/settings-hotkeys";
+import { AppStore } from "./store/app-store";
+import { SettingsStore } from "./store/settings-store";
 import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
 import { listenEvent } from "./utils/tauri";
-import { AppStore } from "./store/app-store";
-import { SettingsStore } from "./store/settings-store";
 
 const Settings = () => {
-  const { getCurrentTab } = SettingsStore;
-  const { init } = AppStore;
+  createResource(AppStore.init);
 
-  createResource(init);
-
-  onMount(() => listenEvent(ListenEvent.Init, init));
+  onMount(() => listenEvent(ListenEvent.Init, AppStore.init));
 
   return (
     <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:bg-dark dark:text-white">
       <Tabs />
       <div class="px-5 pt-5 dark:text-white">
-        <Show when={getCurrentTab()?.name === "General"}>
+        <Show when={SettingsStore.getCurrentTab()?.name === "General"}>
           <SettingsGeneral />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "Backup"}>
+        <Show when={SettingsStore.getCurrentTab()?.name === "Backup"}>
           <SettingsBackup />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "History"}>
+        <Show when={SettingsStore.getCurrentTab()?.name === "History"}>
           <SettingsHistory />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "Hotkeys"}>
+        <Show when={SettingsStore.getCurrentTab()?.name === "Hotkeys"}>
           <SettingsHotkeys />
         </Show>
       </div>

@@ -2,13 +2,17 @@ extern crate alloc;
 extern crate image;
 use crate::{
     service::clipboard::{
-        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_db,
-        get_clipboards_db, star_clipboard_db,
+        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_count_db,
+        get_clipboard_db, get_clipboards_db, star_clipboard_db,
     },
     tauri_config::config::APP,
     utils::hotkey_manager::unregister_hotkeys,
 };
-use common::types::{enums::ClipboardType, orm_query::ClipboardWithRelations, types::CommandError};
+use common::{
+    clipboard::trim_clipboard_data,
+    printlog,
+    types::{enums::ClipboardType, orm_query::ClipboardsResponse, types::CommandError},
+};
 use std::fs::File;
 use tauri::Manager;
 
@@ -18,8 +22,26 @@ pub async fn get_clipboards(
     search: Option<String>,
     star: Option<bool>,
     img: Option<bool>,
-) -> Result<Vec<ClipboardWithRelations>, CommandError> {
-    Ok(get_clipboards_db(cursor, search, star, img).await?)
+) -> Result<ClipboardsResponse, CommandError> {
+    let clipboards = get_clipboards_db(cursor, search, star, img).await?;
+    let total = get_clipboard_count_db().await?;
+
+    // Calculate if there are more items
+    let current_position = cursor.unwrap_or(0) + clipboards.len() as u64;
+    let has_more = current_position < total;
+
+    printlog!(
+        "Total: {}, Current Position: {}, Has More: {}",
+        total,
+        current_position,
+        has_more
+    );
+
+    Ok(ClipboardsResponse {
+        clipboards: trim_clipboard_data(clipboards),
+        total,
+        has_more,
+    })
 }
 
 #[tauri::command]

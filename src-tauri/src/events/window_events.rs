@@ -27,7 +27,7 @@ pub fn init_window_event_listener() {
                         unregister_hotkeys(false);
                         get_main_window()
                             .emit(
-                                ListenEvent::SetGlobalHotkeyEvent.to_string().as_str(),
+                                ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(),
                                 false,
                             )
                             .expect("failed to emit event");

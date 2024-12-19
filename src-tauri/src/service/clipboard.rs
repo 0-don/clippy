@@ -47,6 +47,14 @@ pub async fn load_clipboards_with_relations(
         .collect()
 }
 
+pub async fn get_clipboard_count_db() -> Result<u64, DbErr> {
+    let db = connection::db().await?;
+
+    let count = clipboard::Entity::find().count(&db).await?;
+
+    Ok(count)
+}
+
 pub async fn insert_clipboard_db(model: ClipboardManager) -> Result<ClipboardWithRelations, DbErr> {
     let db = connection::db().await?;
     let clipboard = model.clipboard_model.insert(&db).await?;
@@ -181,7 +189,7 @@ pub async fn get_clipboards_db(
             q.filter(f)
         })
         .offset(cursor)
-        .limit(10)
+        .limit(25)
         .order_by_desc(clipboard::Column::Id);
 
     Ok(load_clipboards_with_relations(query.all(&db).await?).await)
@@ -249,7 +257,7 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
 }
 
 pub async fn copy_clipboard_from_id(id: i32, requested_type: ClipboardType) -> Result<bool, DbErr> {
-    printlog!("type {:?}", requested_type);
+    printlog!("copy clipboard type: {:?} id:{:?}", requested_type, id);
     let clipboard_data = get_clipboard_db(id).await?;
     let clipboard = get_app().state::<Clipboard>();
 
@@ -290,7 +298,7 @@ pub async fn copy_clipboard_from_id(id: i32, requested_type: ClipboardType) -> R
     }
     .is_some();
 
-    if success {
+    if success && !cfg!(debug_assertions) {
         get_main_window().hide().ok();
     }
 

@@ -49,10 +49,7 @@ pub fn toggle_main_window() {
         get_main_window().hide().expect("Failed to hide window");
         unregister_hotkeys(false);
         get_main_window()
-            .emit(
-                ListenEvent::SetGlobalHotkeyEvent.to_string().as_str(),
-                false,
-            )
+            .emit(ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(), false)
             .expect("Failed to emit set global hotkey event");
     } else {
         position_window_near_cursor();
@@ -66,7 +63,7 @@ pub fn toggle_main_window() {
 
         register_hotkeys(true);
         get_main_window()
-            .emit(ListenEvent::SetGlobalHotkeyEvent.to_string().as_str(), true)
+            .emit(ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(), true)
             .expect("Failed to emit set global hotkey event");
 
         get_app()

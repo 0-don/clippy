@@ -5,6 +5,15 @@ use serde_json::{json, Value as JsonValue};
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
+pub enum FolderLocation {
+    #[iden = "database"]
+    Database,
+    #[iden = "config"]
+    Config,
+}
+
+#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum Language {
     #[iden = "en"]
     English,
@@ -21,12 +30,14 @@ pub enum Language {
 pub enum ListenEvent {
     #[iden = "init"]
     Init,
-    #[iden = "set_global_hotkey_event"]
-    SetGlobalHotkeyEvent,
+    #[iden = "enable_global_hotkey_event"]
+    EnableGlobalHotkeyEvent,
     #[iden = "change_tab"]
     ChangeTab,
     #[iden = "scroll_to_top"]
     ScrollToTop,
+    #[iden = "new_clipboard"]
+    NewClipboard,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]

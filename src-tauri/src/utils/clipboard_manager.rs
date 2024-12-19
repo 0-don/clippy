@@ -60,11 +60,11 @@ impl ClipboardManagerExt for ClipboardManager {
             .await;
 
         if !manager.check_if_last_is_same().await {
-            insert_clipboard_db(manager)
+            let clipboard = insert_clipboard_db(manager)
                 .await
                 .expect("Failed to insert");
             get_app_window(WebWindow::Main)
-                .emit(ListenEvent::Init.to_string().as_str(), ())
+                .emit(ListenEvent::NewClipboard.to_string().as_str(), clipboard)
                 .expect("Failed to emit");
         }
     }

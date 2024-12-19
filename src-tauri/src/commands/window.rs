@@ -2,10 +2,13 @@ use crate::service::{
     clipboard::count_clipboards_db, settings::get_data_path, window::open_window,
 };
 use common::types::{
-    enums::WebWindow,
+    enums::{FolderLocation, WebWindow},
     types::{CommandError, Config, DatabaseInfo},
 };
-use std::fs::{self, read_to_string};
+use std::{
+    fs::{self, read_to_string},
+    path::PathBuf,
+};
 use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
 
@@ -46,4 +49,49 @@ pub async fn get_db_path() -> Result<String, CommandError> {
     let data_path = get_data_path();
     let config: Config = serde_json::from_str(&read_to_string(&data_path.config_file_path)?)?;
     Ok(config.db)
+}
+
+#[tauri::command]
+pub async fn open_folder(location: FolderLocation) -> Result<(), CommandError> {
+    let data_path = get_data_path();
+
+    let path = match location {
+        FolderLocation::Database => {
+            // Get the database path from config
+            let config: Config =
+                serde_json::from_str(&read_to_string(&data_path.config_file_path)?)?;
+            PathBuf::from(&config.db)
+                .parent()
+                .map(|p| p.to_path_buf())
+                .ok_or_else(|| {
+                    CommandError::Error("Could not get database directory".to_string())
+                })?
+        }
+        FolderLocation::Config => PathBuf::from(&data_path.config_path),
+    };
+
+    if !path.exists() {
+        return Err(CommandError::Error("Path does not exist".to_string()));
+    }
+
+    if !path.is_dir() {
+        return Err(CommandError::Error("Path is not a directory".to_string()));
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        std::process::Command::new("explorer").arg(path).spawn()?;
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        std::process::Command::new("open").arg(path).spawn()?;
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        std::process::Command::new("xdg-open").arg(path).spawn()?;
+    }
+
+    Ok(())
 }
