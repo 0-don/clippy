@@ -1,4 +1,6 @@
+import { BsJournalRichtext } from "solid-icons/bs";
 import { IoTrashOutline } from "solid-icons/io";
+import { TbSourceCode } from "solid-icons/tb";
 import { VsStarFull } from "solid-icons/vs";
 import { Component } from "solid-js";
 import { ClipboardStore } from "../../../../store/clipboard-store";
@@ -45,25 +47,57 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
     );
   };
 
+  const handleRtfCopy = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await invokeCommand(InvokeCommand.CopyClipboard, {
+      id: clipboard.id,
+      type: ClipboardType.Rtf,
+    });
+  };
+
+  const handleHtmlCopy = async (e: MouseEvent) => {
+    e.stopPropagation();
+    await invokeCommand(InvokeCommand.CopyClipboard, {
+      id: clipboard.id,
+      type: ClipboardType.Html,
+    });
+  };
+
   return (
     <div class="group relative">
       {/* Actions overlay */}
-      <div class="absolute bottom-0 right-0 top-0 z-10 m-2 flex w-4 flex-col items-end justify-between">
-        <VsStarFull
-          onClick={(e) => {
-            e.stopPropagation();
-            handleStar(clipboard);
-          }}
-          class={`${
-            clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
-          } hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
-        />
+      <div class="absolute bottom-0 right-0 top-0 z-10 flex flex-col items-end justify-between">
+        <div class="flex flex-col justify-between">
+          <VsStarFull
+            onClick={(e) => {
+              e.stopPropagation();
+              handleStar(clipboard);
+            }}
+            class={`${
+              clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
+            } text-lg hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
+          />
+          {props.data.rtf && (
+            <BsJournalRichtext
+              onClick={handleRtfCopy}
+              title="Copy as RTF"
+              class="hidden text-lg text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
+            />
+          )}
+          {props.data.html && (
+            <TbSourceCode
+              onClick={handleHtmlCopy}
+              title="Copy as HTML"
+              class="hidden text-lg text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
+            />
+          )}
+        </div>
         <IoTrashOutline
           onClick={(e) => {
             e.stopPropagation();
             handleDelete(clipboard.id);
           }}
-          class="hidden text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
+          class="hidden text-lg text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
         />
       </div>
 
