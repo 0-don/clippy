@@ -14,11 +14,10 @@ interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const [url, setUrl] = createSignal<string>();
-  const { settings, syncClipboard } = SettingsStore;
 
   createEffect(
     on(
-      () => settings()?.synchronize,
+      () => SettingsStore.settings()?.synchronize,
       () => setTimeout(async () => setUrl(await invokeCommand(InvokeCommand.GetDbPath)), 100)
     )
   );
@@ -31,9 +30,11 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <RiDeviceSave3Fill />
             <h6 class="text-sm">Synchronize clipboard history</h6>
           </div>
-          <div>
-            <Toggle checked={settings()?.synchronize || false} onChange={() => void syncClipboard()} />
-          </div>
+
+          <Toggle
+            checked={!!SettingsStore.settings()?.synchronize}
+            onChange={() => void SettingsStore.syncClipboard()}
+          />
         </div>
       </TextBlock>
 
@@ -50,7 +51,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               </div>
               <button
                 type="button"
-                onClick={syncClipboard}
+                onClick={SettingsStore.syncClipboard}
                 class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
               >
                 <FiUpload class="dark:text-white" />

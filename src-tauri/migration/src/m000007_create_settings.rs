@@ -9,7 +9,7 @@ use common::{
 };
 use sea_orm_migration::{
     prelude::*,
-    schema::{boolean,  float, integer, pk_auto, string},
+    schema::{boolean, float, integer, pk_auto, string},
 };
 
 #[derive(Iden)]
@@ -19,7 +19,6 @@ enum Settings {
     Language,
     //
     Startup,
-    Notification,
     Synchronize,
     DarkMode,
     DisplayScale,
@@ -49,7 +48,6 @@ impl MigrationTrait for Migration {
                             .default(get_system_language().to_string()),
                     )
                     .col(boolean(Settings::Startup).default(true))
-                    .col(boolean(Settings::Notification).default(false))
                     .col(boolean(Settings::Synchronize).default(false))
                     .col(boolean(Settings::DarkMode).default(true))
                     .col(

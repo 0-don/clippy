@@ -1,6 +1,6 @@
 node_modules
 dist
-clippy.sqlite
+*.sqlite
 yarn.lock
 package-lock.json
 pnpm-lock.yaml

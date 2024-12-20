@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use crate::service::settings::get_data_path;
-use common::types::types::Config;
+use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use std::sync::Once;
 
@@ -9,7 +9,7 @@ static INIT: Once = Once::new();
 
 pub async fn db() -> Result<DbConn, DbErr> {
     let database_url = if cfg!(debug_assertions) {
-        String::from("sqlite://../clippy.sqlite?mode=rwc")
+        format!("sqlite://../{}?mode=rwc", DB_NAME)
     } else {
         get_prod_database_url()
     };

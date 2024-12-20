@@ -49,7 +49,10 @@ pub fn toggle_main_window() {
         get_main_window().hide().expect("Failed to hide window");
         unregister_hotkeys(false);
         get_main_window()
-            .emit(ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(), false)
+            .emit(
+                ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(),
+                false,
+            )
             .expect("Failed to emit set global hotkey event");
     } else {
         position_window_near_cursor();
@@ -63,7 +66,10 @@ pub fn toggle_main_window() {
 
         register_hotkeys(true);
         get_main_window()
-            .emit(ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(), true)
+            .emit(
+                ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(),
+                true,
+            )
             .expect("Failed to emit set global hotkey event");
 
         get_app()
@@ -166,7 +172,9 @@ pub async fn create_about_window() {
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window(WebWindow::About.to_string().as_str()) {
+        printlog!("closing existing about window");
         window.close().expect("Failed to close window");
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
     }
 
     let window = WebviewWindowBuilder::new(
@@ -191,6 +199,7 @@ pub async fn create_settings_window() {
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window(WebWindow::Settings.to_string().as_str()) {
         window.close().expect("Failed to close window");
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
     }
 
     let window = WebviewWindowBuilder::new(

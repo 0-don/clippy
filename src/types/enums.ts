@@ -6,7 +6,39 @@ export enum WebWindow {
 
 export enum FolderLocation {
   Database = "database",
-  Config = "config"
+  Config = "config",
+}
+
+export enum Language {
+  // ~1.1 billion speakers
+  English = "en",
+
+  // ~1.1 billion speakers
+  Mandarin = "zh",
+
+  // ~600 million speakers
+  Hindi = "hi",
+
+  // ~550 million speakers
+  Spanish = "es",
+
+  // ~320 million speakers
+  French = "fr",
+
+  // ~310 million speakers
+  Arabic = "ar",
+
+  // ~260 million speakers
+  Bengali = "bn",
+
+  // ~240 million speakers
+  Portuguese = "pt",
+
+  // ~230 million speakers
+  Russian = "ru",
+
+  // ~200 million speakers
+  Urdu = "ur",
 }
 
 export enum HotkeyEvent {

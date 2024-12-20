@@ -4,6 +4,8 @@ use crate::connection;
 use crate::prelude::*;
 use crate::service::window::get_monitor_scale_factor;
 use crate::{commands::settings::get_settings, service::hotkey::with_hotkeys};
+use common::constants::CONFIG_NAME;
+use common::constants::DB_NAME;
 use common::language::get_system_language;
 use common::types::types::Config;
 use common::types::types::DataPath;
@@ -73,23 +75,34 @@ pub fn init_settings() {
 }
 
 pub fn get_data_path() -> DataPath {
-    let config_path = get_app()
-        .path()
-        .app_data_dir()
-        .expect("Failed to get app data dir")
-        .to_string_lossy()
-        .to_string();
+    let config_path = if cfg!(debug_assertions) {
+        // Get absolute project root directory
+        let current_dir = std::env::current_dir()
+            .expect("Failed to get current directory")
+            .parent()
+            .expect("Failed to get parent directory")
+            .to_path_buf();
+
+        current_dir.to_string_lossy().to_string()
+    } else {
+        // Use app data dir in production
+        get_app()
+            .path()
+            .app_data_dir()
+            .expect("Failed to get app data dir")
+            .to_string_lossy()
+            .to_string()
+    };
 
     fs::create_dir_all(&config_path).expect("Failed to create config directory");
 
-    // let config_file = Path::new(&config_dir).join("config.json");
-    let config_file_path = [&config_path, "config.json"]
+    let config_file_path = [&config_path, CONFIG_NAME]
         .iter()
         .collect::<PathBuf>()
         .to_string_lossy()
         .to_string();
 
-    let db_file_path = [&config_path, "clippy.sqlite"]
+    let db_file_path = [&config_path, DB_NAME]
         .iter()
         .collect::<PathBuf>()
         .to_string_lossy()
@@ -122,11 +135,14 @@ pub async fn sync_clipboard_history_enable() {
         let dir = dir.to_string();
         let dir_file = format!("{}/clippy.sqlite", &dir);
 
-        println!("selected dir: {}", dir);
-
         // check if backup file exists
         if !Path::new(&dir_file).exists() {
             // copy current database to backup location
+            printlog!(
+                "copying database to backup location {} {}",
+                &config.db,
+                &dir_file
+            );
             fs::copy(&config.db, &dir_file).expect("Failed to copy database");
         }
 
@@ -169,6 +185,7 @@ pub async fn sync_clipboard_history_disable() {
 pub async fn sync_clipboard_history_toggle() {
     let settings = get_settings().await.expect("Failed to get settings");
 
+    printlog!("synchronize: {}", settings.synchronize);
     with_hotkeys(false, async move {
         if settings.synchronize {
             sync_clipboard_history_disable().await;

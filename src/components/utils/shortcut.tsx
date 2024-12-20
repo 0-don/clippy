@@ -33,7 +33,7 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
           />
         </Show>
         <Dropdown
-          items={GLOBAL_SHORTCUT_KEYS as unknown as string[]}
+          items={GLOBAL_SHORTCUT_KEYS.map((key) => ({ value: key, label: key }))}
           value={props.hotkey.key}
           onChange={(currentKey) => {
             if (typeof currentKey === "number") return;

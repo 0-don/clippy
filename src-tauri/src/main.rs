@@ -3,6 +3,8 @@
 
 #[tokio::main]
 async fn main() {
+    color_backtrace::install();
+
     #[cfg(target_os = "linux")]
     {
         // See: https://github.com/spacedriveapp/spacedrive/issues/1512#issuecomment-1758550164

@@ -42,7 +42,7 @@ function createSettingsStore() {
     setSettings(settings);
   };
 
-  const syncClipboard = async () => invokeCommand(InvokeCommand.GetSettings);
+  const syncClipboard = async () => invokeCommand(InvokeCommand.SyncClipboardHistory);
 
   const openWindow = async (windowName: WebWindow) => invokeCommand(InvokeCommand.OpenNewWindow, { windowName });
 

@@ -1,6 +1,6 @@
 node_modules
 dist
-clippy.sqlite
+*.sqlite
 yarn.lock
 package-lock.json
 pnpm-lock.yamlor.log
@@ -16,3 +16,4 @@ bun.lockb
 target/
 context.txt
 sea_orm_*.txt
+config.json
