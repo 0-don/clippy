@@ -1,4 +1,4 @@
-use super::global::{get_app_window, get_main_window};
+use super::global::{get_app, get_main_window};
 use crate::prelude::*;
 use crate::{
     connection,
@@ -8,7 +8,7 @@ use common::types::enums::{ListenEvent, WebWindow};
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
-use tauri::Emitter;
+use tauri::{Emitter, Manager};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
     let db: DatabaseConnection = connection::db().await?;
@@ -45,9 +45,14 @@ where
     get_main_window()
         .emit(ListenEvent::Init.to_string().as_str(), ())
         .expect("Failed to emit init event");
-    get_app_window(WebWindow::Settings)
-        .emit(ListenEvent::Init.to_string().as_str(), ())
-        .expect("Failed to emit init event");
+
+    if let Some(settings_window) =
+        get_app().get_webview_window(WebWindow::Settings.to_string().as_str())
+    {
+        settings_window
+            .emit(ListenEvent::Init.to_string().as_str(), ())
+            .expect("Failed to emit init event");
+    }
 
     result
 }

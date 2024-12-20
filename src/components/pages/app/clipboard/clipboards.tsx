@@ -4,6 +4,7 @@ import utc from "dayjs/plugin/utc";
 import { FiArrowUp } from "solid-icons/fi";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
+import { AppStore } from "../../../../store/app-store";
 import { ClipboardStore } from "../../../../store/clipboard-store";
 import { HotkeyStore } from "../../../../store/hotkey-store";
 import { HotkeyEvent } from "../../../../types/enums";
@@ -35,7 +36,7 @@ export const Clipboards: Component = () => {
     }
   };
 
-  onMount(() => listenEvent(ListenEvent.ScrollToTop, () => ClipboardStore.clipboardRef()!.scrollTo(0, 0)));
+  onMount(() => listenEvent(ListenEvent.ScrollToTop, () => ClipboardStore.clipboardRef()?.scrollTo(0, 0)));
 
   onMount(() => {
     window.addEventListener("keydown", ClipboardStore.handleKeyDown);
@@ -57,7 +58,7 @@ export const Clipboards: Component = () => {
           <button
             type="button"
             class="absolute bottom-5 right-4 z-10 rounded-full bg-neutral-600 px-2 py-1 hover:bg-gray-500"
-            onClick={() => ClipboardStore.clipboardRef()!.scrollTo(0, 0)}
+            onClick={AppStore.init}
           >
             <div class="relative flex items-center justify-center py-1">
               <FiArrowUp class="text-xl !text-white dark:!text-white" />

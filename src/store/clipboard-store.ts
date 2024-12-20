@@ -90,7 +90,7 @@ function createClipboardStore() {
 
   return {
     clipboards,
-    addClipboard,
+    newClipboard: addClipboard,
     setClipboards,
     where,
     setWhere,

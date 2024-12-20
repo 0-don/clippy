@@ -14,11 +14,11 @@ const Index = () => {
   onMount(() => {
     listenEvent(ListenEvent.Init, AppStore.init);
 
-    listenEvent(ListenEvent.EnableGlobalHotkeyEvent, HotkeyStore.setGlobalHotkeyEvent);
+    listenEvent(ListenEvent.EnableGlobalHotkeyEvent, HotkeyStore.enableGlobalHotkeyEvent);
 
-    listenEvent(ListenEvent.ChangeTab, AppStore.setCurrentTab);
+    listenEvent(ListenEvent.ChangeTab, AppStore.changeTab);
 
-    listenEvent(ListenEvent.NewClipboard, ClipboardStore.addClipboard);
+    listenEvent(ListenEvent.NewClipboard, ClipboardStore.newClipboard);
   });
 
   return <App />;
