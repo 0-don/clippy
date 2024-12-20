@@ -1,11 +1,11 @@
 import { VsArrowSwap } from "solid-icons/vs";
 import { Component, createSignal } from "solid-js";
-import { GlobalShortcutKeys } from "../../utils/constants";
 
 interface DropdownProps {
+  className?: string;
   items: string[];
   value: string;
-  onChange: (value: GlobalShortcutKeys | (string & {})) => void;
+  onChange: (value: string) => void;
 }
 
 export const Dropdown: Component<DropdownProps> = (props) => {
@@ -14,7 +14,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
   return (
     <div
       onClick={() => ref()?.dispatchEvent(new MouseEvent("mousedown"))}
-      class="group flex items-center rounded-md border border-gray-300 p-1 text-sm focus:outline-none focus:ring-0 dark:border-dark-light dark:bg-dark-light dark:text-white"
+      class={`${props.className ? props.className : ""} group flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus:outline-none focus:ring-0 dark:border-dark-light dark:bg-dark-light dark:text-white`}
     >
       <select
         ref={setRef}

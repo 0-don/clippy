@@ -5,7 +5,7 @@ import { InvokeCommand } from "../types/tauri-invoke";
 import { invokeCommand } from "../utils/tauri";
 
 function createHotkeyStore() {
-  const [globalHotkeyEvent, setGlobalHotkeyEvent] = createSignal<boolean>(false);
+  const [globalHotkeyEvent, enableGlobalHotkeyEvent] = createSignal<boolean>(false);
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
 
   const updateHotkey = async (hotkey: Hotkey, upload: boolean | undefined = true) => {
@@ -22,7 +22,7 @@ function createHotkeyStore() {
 
   return {
     globalHotkeyEvent,
-    setGlobalHotkeyEvent,
+    enableGlobalHotkeyEvent,
     hotkeys,
     setHotkeys,
     updateHotkey,

@@ -10,9 +10,6 @@ import { StarredClipboards } from "./starred-clipboards";
 import { ViewMore } from "./view-more";
 
 function App() {
-  const { settings } = SettingsStore;
-  const { getCurrentTab } = AppStore;
-
   return (
     <div class="flex h-full w-full overflow-hidden bg-white text-black dark:bg-dark dark:text-white">
       <div class="flex w-12 flex-col items-center space-y-3 bg-gray-200 pt-2 dark:bg-dark-light">
@@ -21,26 +18,26 @@ function App() {
       <div class="flex h-screen min-w-0 flex-1 flex-col">
         <div class="z-10 flex w-full justify-between overflow-visible px-2 py-1">
           <p class="select-none bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white">
-            {getCurrentTab()?.name?.toUpperCase()}
+            {AppStore.getCurrentTab()?.name?.toUpperCase()}
           </p>
-          <Show when={settings()?.synchronize} fallback={<BsHddFill title="offline" />}>
+          <Show when={SettingsStore.settings()?.synchronize} fallback={<BsHddFill title="offline" />}>
             <FiGlobe title="online" />
           </Show>
         </div>
 
-        <Show when={getCurrentTab()?.name === "Recent Clipboards"}>
+        <Show when={AppStore.getCurrentTab()?.name === "Recent Clipboards"}>
           <RecentClipboards />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "Starred Clipboards"}>
+        <Show when={AppStore.getCurrentTab()?.name === "Starred Clipboards"}>
           <StarredClipboards />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "History"}>
+        <Show when={AppStore.getCurrentTab()?.name === "History"}>
           <ClipboardHistory />
         </Show>
 
-        <Show when={getCurrentTab()?.name === "View more"}>
+        <Show when={AppStore.getCurrentTab()?.name === "View more"}>
           <ViewMore />
         </Show>
       </div>

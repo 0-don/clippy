@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { VsFileBinary } from "solid-icons/vs";
 import { Component } from "solid-js";
 import { ClipboardFileModel, ClipboardWithRelations } from "../../../../types";
@@ -5,7 +6,6 @@ import { ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
 import { formatBytes } from "../../../../utils/helpers";
 import { invokeCommand } from "../../../../utils/tauri";
-import { ClipboardFooter } from "../../../utils/clipboard/clipboard-footer";
 import { ClipboardHeader } from "../../../utils/clipboard/clipboard-header";
 
 interface FileClipboardProps {
@@ -48,13 +48,10 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
   const groupedFiles = getGroupedFiles();
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      class="group w-full cursor-pointer select-none hover:bg-zinc-200 dark:hover:bg-neutral-700"
-    >
-      <div class="mt-2 flex gap-2">
-        <ClipboardHeader {...props} Icon={VsFileBinary} />
+    <button type="button" onClick={handleClick} class="clipboard">
+      <ClipboardHeader {...props} Icon={VsFileBinary} />
+
+      <div class="min-w-0 flex-1">
         <div class="flex flex-wrap gap-2" title={getFileListTitle()}>
           {Object.entries(groupedFiles).map(([type, data]) => (
             <span class="flex items-center gap-1">
@@ -65,8 +62,13 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
             </span>
           ))}
         </div>
+        <div
+          class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
+          title={dayjs.utc(props.data.clipboard.created_date).format()}
+        >
+          {dayjs.utc(props.data.clipboard.created_date).fromNow()}
+        </div>
       </div>
-      <ClipboardFooter {...props} />
     </button>
   );
 };

@@ -38,12 +38,11 @@ function createAppStore() {
     },
   ]);
 
-  const setCurrentTab = (id: Tab) => {
-    setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
-  };
+  const setCurrentTab = (id: Tab) => setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
   const getCurrentTab = () => tabs().find((s) => s.current);
 
   const init = async () => {
+    console.log("init");
     HotkeyStore.initHotkeys();
     ClipboardStore.initClipboards();
     await SettingsStore.initSettings();
@@ -58,7 +57,7 @@ function createAppStore() {
   return {
     tabs,
     setTabs,
-    setCurrentTab,
+    changeTab: setCurrentTab,
     getCurrentTab,
     init,
     darkMode,
