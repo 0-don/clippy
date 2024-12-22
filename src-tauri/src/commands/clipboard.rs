@@ -31,7 +31,7 @@ pub async fn get_clipboards(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<ClipboardsResponse, CommandError> {
-    let clipboards = get_clipboards_db(cursor, search.clone(), star, img)
+    let clipboards = get_clipboards_db(cursor, search, star, img)
         .await
         .expect("Error getting clipboards");
 
@@ -73,8 +73,8 @@ pub async fn delete_clipboard(id: i32) -> Result<(), CommandError> {
 }
 
 #[tauri::command]
-pub async fn clear_clipboards() -> Result<(), CommandError> {
-    clear_clipboards_db().await?;
+pub async fn clear_clipboards(r#type: Option<ClipboardType>) -> Result<(), CommandError> {
+    clear_clipboards_db(r#type).await?;
     get_main_window()
         .emit(ListenEvent::Init.to_string().as_str(), ())
         .expect("Failed to emit");

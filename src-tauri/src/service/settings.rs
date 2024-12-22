@@ -2,8 +2,8 @@ use super::clipboard::get_last_clipboard_db;
 use super::global::get_app;
 use crate::connection;
 use crate::prelude::*;
+use crate::service::hotkey::with_hotkeys;
 use crate::service::window::get_monitor_scale_factor;
-use crate::{commands::settings::get_settings, service::hotkey::with_hotkeys};
 use common::constants::CONFIG_NAME;
 use common::constants::DB_NAME;
 use common::language::get_system_language;
@@ -183,7 +183,7 @@ pub async fn sync_clipboard_history_disable() {
 }
 
 pub async fn sync_clipboard_history_toggle() {
-    let settings = get_settings().await.expect("Failed to get settings");
+    let settings = get_settings_db().await.expect("Failed to get settings");
 
     printlog!("synchronize: {}", settings.synchronize);
     with_hotkeys(false, async move {

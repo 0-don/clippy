@@ -238,13 +238,86 @@ pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
     Ok(true)
 }
 
-pub async fn clear_clipboards_db() -> Result<(), DbErr> {
+pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), DbErr> {
     let db = connection::db().await?;
 
-    clipboard::Entity::delete_many()
-        .filter(clipboard::Column::Star.eq(false))
-        .exec(&db)
-        .await?;
+    match r#type {
+        None => {
+            // Keep existing behavior - delete all non-starred clipboards
+            clipboard::Entity::delete_many()
+                .filter(clipboard::Column::Star.eq(false))
+                .exec(&db)
+                .await?;
+        }
+        Some(clipboard_type) => {
+            // Find all non-starred clipboards that contain the specified type
+            let clipboards = clipboard::Entity::find()
+                .filter(
+                    clipboard::Column::Star
+                        .eq(false)
+                        .and(clipboard::Column::Types.contains(clipboard_type.to_string())),
+                )
+                .all(&db)
+                .await?;
+
+            for clipboard in clipboards {
+                // Delete the type-specific data first
+                match clipboard_type {
+                    ClipboardType::Text => {
+                        clipboard_text::Entity::delete_many()
+                            .filter(clipboard_text::Column::ClipboardId.eq(clipboard.id))
+                            .exec(&db)
+                            .await?;
+                    }
+                    ClipboardType::Image => {
+                        clipboard_image::Entity::delete_many()
+                            .filter(clipboard_image::Column::ClipboardId.eq(clipboard.id))
+                            .exec(&db)
+                            .await?;
+                    }
+                    ClipboardType::Html => {
+                        clipboard_html::Entity::delete_many()
+                            .filter(clipboard_html::Column::ClipboardId.eq(clipboard.id))
+                            .exec(&db)
+                            .await?;
+                    }
+                    ClipboardType::Rtf => {
+                        clipboard_rtf::Entity::delete_many()
+                            .filter(clipboard_rtf::Column::ClipboardId.eq(clipboard.id))
+                            .exec(&db)
+                            .await?;
+                    }
+                    ClipboardType::File => {
+                        clipboard_file::Entity::delete_many()
+                            .filter(clipboard_file::Column::ClipboardId.eq(clipboard.id))
+                            .exec(&db)
+                            .await?;
+                    }
+                }
+
+                // Parse and update the types JSON array
+                if let Some(mut types) = ClipboardType::from_json_value(&clipboard.types) {
+                    // Remove the specified type
+                    types.retain(|t| t != &clipboard_type);
+
+                    if types.is_empty() {
+                        // If no types remain, delete the clipboard
+                        clipboard::Entity::delete_by_id(clipboard.id)
+                            .exec(&db)
+                            .await?;
+                    } else {
+                        // Update the clipboard with the remaining types
+                        let model = clipboard::ActiveModel {
+                            id: Set(clipboard.id),
+                            types: Set(ClipboardType::to_json_value(&types)),
+                            ..Default::default()
+                        };
+                        clipboard::Entity::update(model).exec(&db).await?;
+                    }
+                }
+            }
+        }
+    }
 
     Ok(())
 }

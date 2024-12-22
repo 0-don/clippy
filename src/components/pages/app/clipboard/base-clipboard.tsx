@@ -23,13 +23,12 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   const { clipboard } = props.data;
 
   const handleDelete = async (id: number) => {
-    if (await invokeCommand(InvokeCommand.DeleteClipboard, { id })) {
-      setClipboards((prev) => {
-        const updated = prev.filter((o) => o.clipboard.id !== id);
-        if (!updated.length) resetClipboards();
-        return updated;
-      });
-    }
+    await invokeCommand(InvokeCommand.DeleteClipboard, { id });
+    setClipboards((prev) => {
+      const updated = prev.filter((o) => o.clipboard.id !== id);
+      if (!updated.length) resetClipboards();
+      return updated;
+    });
   };
 
   const handleStar = async (clipboard: ClipboardModel) => {

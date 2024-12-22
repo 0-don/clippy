@@ -31,6 +31,7 @@ export enum InvokeCommand {
   GetAppVersion = "get_app_version",
   GetDbInfo = "get_db_info",
   GetDbPath = "get_db_path",
+  GetConfigPath = "get_config_path",
 }
 
 export interface TauriInvokeCommands {
@@ -41,18 +42,18 @@ export interface TauriInvokeCommands {
   };
   [InvokeCommand.DeleteClipboard]: {
     args: { id: number };
-    return: boolean;
+    return: void;
   };
   [InvokeCommand.StarClipboard]: {
     args: { id: number; star: boolean };
     return: boolean;
   };
   [InvokeCommand.CopyClipboard]: {
-    args: { id: number; type: ClipboardType };
+    args: { id: number; type?: ClipboardType | null };
     return: boolean;
   };
   [InvokeCommand.ClearClipboards]: {
-    args: undefined;
+    args: { type?: ClipboardType | null };
     return: void;
   };
   [InvokeCommand.SaveClipboardImage]: {
@@ -120,6 +121,10 @@ export interface TauriInvokeCommands {
     return: DatabaseInfo;
   };
   [InvokeCommand.GetDbPath]: {
+    args: undefined;
+    return: string;
+  };
+  [InvokeCommand.GetConfigPath]: {
     args: undefined;
     return: string;
   };
