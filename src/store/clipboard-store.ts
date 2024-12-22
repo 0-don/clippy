@@ -32,7 +32,7 @@ function createClipboardStore() {
     setWhere(initialWhere);
     const clipboards = await getClipboards();
     setClipboards(clipboards);
-    ClipboardStore.clipboardRef()!.scrollTo(0, 0);
+    ClipboardStore.clipboardRef()?.scrollTo(0, 0);
   };
 
   const resetClipboards = async () => {

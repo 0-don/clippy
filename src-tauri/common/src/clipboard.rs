@@ -1,4 +1,5 @@
 use crate::{constants::MAX_TEXT_PREVIEW, types::orm_query::ClipboardWithRelations};
+use tl::{parse, ParserOptions};
 
 pub fn trim_clipboard_data(
     mut clipboards: Vec<ClipboardWithRelations>,
@@ -11,7 +12,7 @@ pub fn trim_clipboard_data(
 
         // Trim HTML content
         if let Some(html) = &mut clipboard.html {
-            html.data = truncate_text(&html.data, MAX_TEXT_PREVIEW);
+            html.data = extract_and_truncate_html_body(&html.data, MAX_TEXT_PREVIEW);
         }
 
         // Trim RTF content
@@ -33,6 +34,18 @@ pub fn trim_clipboard_data(
     }
 
     clipboards
+}
+
+fn extract_and_truncate_html_body(html: &str, max_length: usize) -> String {
+    if let Ok(dom) = parse(html, ParserOptions::default()) {
+        if let Some(body) = dom.query_selector("body").and_then(|mut iter| iter.next()) {
+            let node = body.get(dom.parser()).unwrap();
+            let body_html = node.inner_html(dom.parser());
+            return truncate_text(&body_html, max_length);
+        }
+    }
+
+    truncate_text(html, max_length)
 }
 
 fn truncate_text(text: &str, max_length: usize) -> String {

@@ -9,7 +9,7 @@ interface SettingsHotkeysProps {}
 export const SettingsHotkeys: Component<SettingsHotkeysProps> = ({}) => {
   return (
     <TextBlock Icon={RiDeviceKeyboardFill} title="Change your Hotkeys">
-      <div class="h-64 overflow-auto px-5">
+      <div class="h-96 overflow-auto px-5">
         <For each={HotkeyStore.hotkeys()}>
           {(hotkey, index) => (
             <>

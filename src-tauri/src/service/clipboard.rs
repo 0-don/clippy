@@ -4,8 +4,9 @@ use common::types::enums::{ClipboardTextType, ClipboardType};
 use common::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use entity::clipboard::{self, Model};
 use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
+use sea_orm::RelationTrait;
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, EntityTrait, LoaderTrait, PaginatorTrait, QueryFilter,
+    ActiveModelTrait, ColumnTrait, EntityTrait, JoinType, LoaderTrait, PaginatorTrait, QueryFilter,
     QueryOrder, QuerySelect, QueryTrait,
 };
 use tauri::Manager;
@@ -162,6 +163,14 @@ pub async fn get_clipboards_db(
     let db = connection::db().await?;
 
     let query = clipboard::Entity::find()
+        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
+        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardHtml.def())
+        .join(
+            JoinType::LeftJoin,
+            clipboard::Relation::ClipboardImage.def(),
+        )
+        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardRtf.def())
+        .join(JoinType::LeftJoin, clipboard::Relation::ClipboardFile.def())
         .apply_if(star, |q, s| q.filter(clipboard::Column::Star.eq(s)))
         .apply_if(img, |q, _| {
             q.filter(clipboard::Column::Types.contains(ClipboardType::Image.to_string()))
@@ -184,7 +193,17 @@ pub async fn get_clipboards_db(
                     .eq(ClipboardTextType::Hex.to_string())
                     .or(clipboard_text::Column::Type.eq(ClipboardTextType::Rgb.to_string())),
                 t @ ("hex" | "rgb") => clipboard_text::Column::Type.eq(t.to_string()),
-                _ => clipboard_text::Column::Data.contains(s),
+                _ => clipboard_text::Column::Data
+                    .contains(&s)
+                    .or(clipboard_file::Column::Name.contains(&s))
+                    .or(clipboard_file::Column::Extension.contains(&s))
+                    .or(clipboard_file::Column::MimeType.contains(&s))
+                    .or(clipboard_file::Column::Name.contains(&s))
+                    .or(clipboard_file::Column::Extension.contains(&s))
+                    .or(clipboard_image::Column::Extension.contains(&s))
+                    .or(clipboard_text::Column::Type.contains(&s))
+                    .or(clipboard_html::Column::Data.contains(&s))
+                    .or(clipboard_rtf::Column::Data.contains(&s)),
             };
             q.filter(f)
         })
@@ -192,7 +211,9 @@ pub async fn get_clipboards_db(
         .limit(25)
         .order_by_desc(clipboard::Column::Id);
 
-    Ok(load_clipboards_with_relations(query.all(&db).await?).await)
+    let clipboards = query.all(&db).await?;
+    // printlog!("clipboards: {:?}", clipboards);
+    Ok(load_clipboards_with_relations(clipboards).await)
 }
 
 pub async fn star_clipboard_db(id: i32, star: bool) -> Result<bool, DbErr> {
@@ -217,7 +238,7 @@ pub async fn delete_clipboard_db(id: i32) -> Result<bool, DbErr> {
     Ok(true)
 }
 
-pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
+pub async fn clear_clipboards_db() -> Result<(), DbErr> {
     let db = connection::db().await?;
 
     clipboard::Entity::delete_many()
@@ -225,7 +246,7 @@ pub async fn clear_clipboards_db() -> Result<bool, DbErr> {
         .exec(&db)
         .await?;
 
-    Ok(true)
+    Ok(())
 }
 
 pub async fn count_clipboards_db() -> Result<u64, DbErr> {

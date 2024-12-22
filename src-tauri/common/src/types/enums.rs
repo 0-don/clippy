@@ -5,6 +5,43 @@ use serde_json::{json, Value as JsonValue};
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
+pub enum ClippyPosition {
+    #[iden = "cursor"]
+    Cursor,
+    #[iden = "top_left"]
+    TopLeft,
+    #[iden = "top_right"]
+    TopRight,
+    #[iden = "bottom_left"]
+    BottomLeft,
+    #[iden = "bottom_right"]
+    BottomRight,
+    #[iden = "top_center"]
+    TopCenter,
+    #[iden = "bottom_center"]
+    BottomCenter,
+    #[iden = "left_center"]
+    LeftCenter,
+    #[iden = "right_center"]
+    RightCenter,
+    #[iden = "center"]
+    Center,
+    #[iden = "tray_left"]
+    TrayLeft,
+    #[iden = "tray_bottom_left"]
+    TrayBottomLeft,
+    #[iden = "tray_right"]
+    TrayRight,
+    #[iden = "tray_bottom_right"]
+    TrayBottomRight,
+    #[iden = "tray_center"]
+    TrayCenter,
+    #[iden = "tray_bottom_center"]
+    TrayBottomCenter,
+}
+
+#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum FolderLocation {
     #[iden = "database"]
     Database,
@@ -17,12 +54,24 @@ pub enum FolderLocation {
 pub enum Language {
     #[iden = "en"]
     English,
+    #[iden = "zh"]
+    Mandarin,
+    #[iden = "hi"]
+    Hindi,
     #[iden = "es"]
     Spanish,
     #[iden = "fr"]
     French,
-    #[iden = "de"]
-    German,
+    #[iden = "ar"]
+    Arabic,
+    #[iden = "bn"]
+    Bengali,
+    #[iden = "pt"]
+    Portuguese,
+    #[iden = "ru"]
+    Russian,
+    #[iden = "ur"]
+    Urdu,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]

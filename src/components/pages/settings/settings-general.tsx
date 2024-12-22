@@ -1,19 +1,22 @@
 import { CgDisplayFlex } from "solid-icons/cg";
 import { FiMoon } from "solid-icons/fi";
-import { HiSolidCog8Tooth } from "solid-icons/hi";
+import { HiOutlineWindow, HiSolidCog8Tooth } from "solid-icons/hi";
 import { IoLanguageOutline } from "solid-icons/io";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
-import { HotkeyEvent, Language } from "../../../types/enums";
+import { ClippyPosition, HotkeyEvent, Language, WebWindow } from "../../../types/enums";
+import { InvokeCommand } from "../../../types/tauri-invoke";
+import { invokeCommand } from "../../../utils/tauri";
 import { Dropdown } from "../../elements/dropdown";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { DarkMode } from "../../utils/dark-mode";
 import { Shortcut } from "../../utils/shortcut";
+import { TbTooltip } from "solid-icons/tb";
 
 interface SettingsGeneralProps {}
 
@@ -37,11 +40,49 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
           <div>
             <Toggle
               checked={SettingsStore.settings()?.startup}
-              onChange={async (check: boolean) =>
-                SettingsStore.updateSettings({ ...SettingsStore.settings()!, startup: check })
+              onChange={async (startup) => SettingsStore.updateSettings({ ...SettingsStore.settings()!, startup })}
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+          <div class="flex items-center space-x-2 truncate">
+            <FiMoon class="dark:text-white" />
+            <h6 class="text-sm">Switch Theme</h6>
+          </div>
+          <div>
+            <DarkMode />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+          <div class="flex items-center space-x-2 truncate">
+            <TbTooltip />
+            <h6 class="text-sm">HTML clipboard tooltip</h6>
+          </div>
+          <div>
+            <Toggle
+              checked={SettingsStore.settings()?.tooltip}
+              onChange={async (tooltip: boolean) =>
+                SettingsStore.updateSettings({ ...SettingsStore.settings()!, tooltip })
               }
             />
           </div>
+        </div>
+
+        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+          <div class="flex items-center space-x-2 truncate">
+            <HiOutlineWindow />
+            <h6 class="text-sm">Change Window Position</h6>
+          </div>
+
+          <Dropdown
+            items={Object.entries(ClippyPosition).map(([key, value]) => ({ value: value, label: key }))}
+            value={SettingsStore.settings()!.position}
+            onChange={(position) => {
+              SettingsStore.updateSettings({ ...SettingsStore.settings()!, position: position as ClippyPosition });
+            }}
+          />
         </div>
 
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
@@ -51,7 +92,6 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
           </div>
 
           <Dropdown
-            className="w-16"
             items={Object.entries(Language).map(([key, value]) => ({ value: value, label: key }))}
             value={SettingsStore.settings()!.language}
             onChange={(language) => {
@@ -63,26 +103,24 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
             <CgDisplayFlex />
-            <h6 class="text-sm">Display Scale</h6>
+            <h6 class="text-sm">Window Scale</h6>
           </div>
 
           <Input
-            className="w-16"
-            value={SettingsStore.settings()!.display_scale.toString()}
-            onChange={(display_scale) => {
-              SettingsStore.updateSettings({ ...SettingsStore.settings()!, display_scale: parseInt(display_scale) });
+            type="number"
+            step="0.01"
+            min={0.5}
+            max={2}
+            value={SettingsStore.settings()!.display_scale}
+            debounce={1000}
+            onInput={async (e) => {
+              SettingsStore.updateSettings({
+                ...SettingsStore.settings()!,
+                display_scale: Number(parseFloat(e.target.value).toFixed(2)),
+              });
+              await invokeCommand(InvokeCommand.OpenNewWindow, { windowName: WebWindow.Settings });
             }}
           />
-        </div>
-
-        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
-          <div class="flex items-center space-x-2 truncate">
-            <FiMoon class="dark:text-white" />
-            <h6 class="text-sm">Switch Theme.</h6>
-          </div>
-          <div>
-            <DarkMode />
-          </div>
         </div>
       </TextBlock>
     </Show>

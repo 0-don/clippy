@@ -231,6 +231,11 @@ impl ClipboardManagerExt for ClipboardManager {
             let image_buffer = image_buffer.to_rgba8();
             let (width, height) = (image_buffer.width(), image_buffer.height());
 
+            let extension = image::guess_format(&img_bytes)
+                .ok()
+                .map(|format| format.extensions_str()[0].to_string())
+                .or_else(|| infer::get(&img_bytes).map(|kind| kind.extension().to_string()));
+
             let (new_width, new_height) = calculate_thumbnail_dimensions(width, height);
 
             let thumbnail =
@@ -251,6 +256,7 @@ impl ClipboardManagerExt for ClipboardManager {
                     data: Set(img_bytes),
                     width: Set(Some(width as i32)),
                     height: Set(Some(height as i32)),
+                    extension: Set(extension),
                     thumbnail: Set(Some(base64_thumbnail)),
                     ..Default::default()
                 };

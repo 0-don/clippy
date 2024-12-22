@@ -13,3 +13,4 @@ global-hotkey = "0"
 sea-orm = { version = "1" }
 serde = { version = "1" }
 serde_json = { version = "1" }
+tl = "0"

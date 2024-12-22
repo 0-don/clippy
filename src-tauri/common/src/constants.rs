@@ -19,7 +19,7 @@ pub static ABOUT_WINDOW_X: i32 = 375;
 pub static ABOUT_WINDOW_Y: i32 = 600;
 
 pub static SETTINGS_WINDOW_X: i32 = 500;
-pub static SETTINGS_WINDOW_Y: i32 = 550;
+pub static SETTINGS_WINDOW_Y: i32 = 570;
 
 pub static MAX_IMAGE_DIMENSIONS: u32 = 1280;
 pub static MAX_TEXT_PREVIEW: usize = 500; // Adjust preview length as needed
