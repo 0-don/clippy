@@ -1,7 +1,6 @@
-use crate::commands::settings::get_settings;
 use crate::prelude::*;
 use crate::service::global::get_app;
-use crate::service::settings::get_data_path;
+use crate::service::settings::{get_data_path, get_settings_db};
 use common::types::enums::WebWindow;
 use common::types::hotkey::SafeHotKeyManager;
 use common::types::types::{Config, Key};
@@ -72,7 +71,7 @@ pub fn create_config() {
 pub fn autostart() {
     tauri::async_runtime::spawn(async {
         let app: &tauri::AppHandle = get_app();
-        let settings = get_settings().await.expect("Failed to get settings");
+        let settings = get_settings_db().await.expect("Failed to get settings");
         let manager: tauri::State<'_, AutoLaunchManager> = app.state::<AutoLaunchManager>();
 
         // Use the manager as needed

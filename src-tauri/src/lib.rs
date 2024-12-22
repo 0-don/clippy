@@ -46,6 +46,7 @@ pub fn run() {
             window::get_app_version,
             window::get_db_info,
             window::get_db_path,
+            window::get_config_path,
             window::open_folder,
         ])
         .run(tauri::generate_context!())

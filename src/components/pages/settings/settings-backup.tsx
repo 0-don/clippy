@@ -1,8 +1,9 @@
-import { BsGlobeAmericas } from "solid-icons/bs";
-import { FiUpload } from "solid-icons/fi";
+import { AiTwotoneFolderOpen } from "solid-icons/ai";
+import { BsGearWideConnected } from "solid-icons/bs";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
+import { SiSqlite } from "solid-icons/si";
 import { TbDatabaseStar } from "solid-icons/tb";
-import { Component, Show, createEffect, createSignal, on } from "solid-js";
+import { Component, createResource } from "solid-js";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
@@ -13,14 +14,8 @@ import { Toggle } from "../../elements/toggle";
 interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
-  const [url, setUrl] = createSignal<string>();
-
-  createEffect(
-    on(
-      () => SettingsStore.settings()?.synchronize,
-      () => setTimeout(async () => setUrl(await invokeCommand(InvokeCommand.GetDbPath)), 100)
-    )
-  );
+  const [databaseUrl, setDatabaseUrl] = createResource(() => invokeCommand(InvokeCommand.GetDbPath));
+  const [configUrl] = createResource(() => invokeCommand(InvokeCommand.GetConfigPath));
 
   return (
     <>
@@ -33,34 +28,55 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
 
           <Toggle
             checked={!!SettingsStore.settings()?.synchronize}
-            onChange={() => void SettingsStore.syncClipboard()}
+            onChange={async () => {
+              await SettingsStore.syncClipboard();
+              setDatabaseUrl.refetch();
+            }}
           />
         </div>
       </TextBlock>
 
-      <Show when={url()}>
-        <TextBlock Icon={BsGlobeAmericas} title="Database Location" className="animate-fade">
-          <div class="list-disc px-5 pb-5 pt-2.5">
-            <div class="relative w-full cursor-pointer">
-              <div
-                title={url()}
-                onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Database })}
-                class="w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
-              >
-                {url()}
-              </div>
-              <button
-                type="button"
-                onClick={SettingsStore.syncClipboard}
-                class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
-              >
-                <FiUpload class="dark:text-white" />
-                <div>Browse</div>
-              </button>
+      <TextBlock Icon={SiSqlite} title="Database Location">
+        <div class="list-disc px-5 pb-5 pt-2.5">
+          <div class="relative w-full cursor-pointer">
+            <div
+              title={databaseUrl()}
+              class="w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
+            >
+              {databaseUrl()}
             </div>
+            <button
+              type="button"
+              onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Database })}
+              class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
+            >
+              <AiTwotoneFolderOpen class="dark:text-white" />
+              <div>Open</div>
+            </button>
           </div>
-        </TextBlock>
-      </Show>
+        </div>
+      </TextBlock>
+
+      <TextBlock Icon={BsGearWideConnected} title="Config Location">
+        <div class="list-disc px-5 pb-5 pt-2.5">
+          <div class="relative w-full cursor-pointer">
+            <div
+              title={configUrl()}
+              class="w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
+            >
+              {configUrl()}
+            </div>
+            <button
+              type="button"
+              onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Config })}
+              class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
+            >
+              <AiTwotoneFolderOpen class="dark:text-white" />
+              <div>Open</div>
+            </button>
+          </div>
+        </div>
+      </TextBlock>
     </>
   );
 };

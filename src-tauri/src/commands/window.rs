@@ -52,6 +52,12 @@ pub async fn get_db_path() -> Result<String, CommandError> {
 }
 
 #[tauri::command]
+pub async fn get_config_path() -> Result<String, CommandError> {
+    let data_path = get_data_path();
+    Ok(data_path.config_file_path)
+}
+
+#[tauri::command]
 pub async fn open_folder(location: FolderLocation) -> Result<(), CommandError> {
     let data_path = get_data_path();
 
