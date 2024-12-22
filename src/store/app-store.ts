@@ -42,7 +42,6 @@ function createAppStore() {
   const getCurrentTab = () => tabs().find((s) => s.current);
 
   const init = async () => {
-    console.log("AppStore.init");
     HotkeyStore.initHotkeys();
     ClipboardStore.initClipboards();
     await SettingsStore.initSettings();

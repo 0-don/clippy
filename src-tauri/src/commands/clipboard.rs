@@ -31,13 +31,6 @@ pub async fn get_clipboards(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<ClipboardsResponse, CommandError> {
-    printlog!(
-        "Getting clipboards with cursor: {:?}, search: {:?}, star: {:?}, img: {:?}",
-        cursor,
-        search,
-        star,
-        img
-    );
     let clipboards = get_clipboards_db(cursor, search.clone(), star, img)
         .await
         .expect("Error getting clipboards");
@@ -115,9 +108,19 @@ pub async fn save_clipboard_image(id: i32) -> Result<(), CommandError> {
         .desktop_dir()?
         .join(format!("clipboard-{}.{}", id, extension));
 
-    // Save the image to the desktop
+    // Convert extension to ImageFormat
+    let format = match extension.to_lowercase().as_str() {
+        "jpg" | "jpeg" => image::ImageFormat::Jpeg,
+        "png" => image::ImageFormat::Png,
+        "gif" => image::ImageFormat::Gif,
+        "bmp" => image::ImageFormat::Bmp,
+        "webp" => image::ImageFormat::WebP,
+        _ => image::ImageFormat::Png, // Default to PNG if unknown format
+    };
+
+    // Save the image to the desktop with the correct format
     let mut file = File::create(image_path)?;
-    image.write_to(&mut file, image::ImageFormat::Png)?;
+    image.write_to(&mut file, format)?;
 
     Ok(())
 }
