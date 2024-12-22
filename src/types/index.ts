@@ -1,6 +1,6 @@
 import { IconTypes } from "solid-icons";
 import { SettingsTabName, Tab, TabName } from "../utils/constants";
-import { ClipboardTextType, ClipboardType, HotkeyEvent, Language } from "./enums";
+import { ClipboardTextType, ClipboardType, ClippyPosition, HotkeyEvent, Language } from "./enums";
 
 export type DatabaseInfo = {
   records: number;
@@ -107,10 +107,14 @@ export type Hotkey = {
 export type Settings = {
   id: number;
   language: Language;
+
   startup: boolean;
   synchronize: boolean;
+  tooltip: boolean;
   dark_mode: boolean;
   display_scale: number;
+  position: ClippyPosition;
+  
   max_file_size: number;
   max_image_size: number;
   max_text_size: number;

@@ -9,11 +9,12 @@ use common::constants::{
     ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
     SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
 };
-use common::types::enums::{HotkeyEvent, ListenEvent, WebWindow};
+use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
 use std::env;
 use std::process::Command;
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
+use tauri_plugin_positioner::{Position, WindowExt};
 
 /// App
 pub fn init_window() {
@@ -55,7 +56,15 @@ pub fn toggle_main_window() {
             )
             .expect("Failed to emit set global hotkey event");
     } else {
-        position_window_near_cursor();
+        update_main_window_position();
+        tokio::task::block_in_place(|| {
+            tokio::runtime::Handle::current().block_on(async {
+                let size = calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y).await;
+                get_main_window()
+                    .set_size(size)
+                    .expect("Failed to set window size");
+            })
+        });
         get_main_window()
             .emit(
                 ListenEvent::ChangeTab.to_string().as_str(),
@@ -78,6 +87,46 @@ pub fn toggle_main_window() {
 
         printlog!("displaying window");
     }
+}
+
+pub fn update_main_window_position() {
+    tokio::task::block_in_place(|| {
+        tokio::runtime::Handle::current().block_on(async {
+            let settings = get_settings_db().await.expect("Failed to get settings");
+
+            if settings.position == ClippyPosition::Cursor.to_string() {
+                position_window_near_cursor();
+                return;
+            }
+
+            let position = match settings.position.as_str() {
+                s if s == ClippyPosition::TopLeft.to_string() => Position::TopLeft,
+                s if s == ClippyPosition::TopRight.to_string() => Position::TopRight,
+                s if s == ClippyPosition::BottomLeft.to_string() => Position::BottomLeft,
+                s if s == ClippyPosition::BottomRight.to_string() => Position::BottomRight,
+                s if s == ClippyPosition::TopCenter.to_string() => Position::TopCenter,
+                s if s == ClippyPosition::BottomCenter.to_string() => Position::BottomCenter,
+                s if s == ClippyPosition::LeftCenter.to_string() => Position::LeftCenter,
+                s if s == ClippyPosition::RightCenter.to_string() => Position::RightCenter,
+                s if s == ClippyPosition::Center.to_string() => Position::Center,
+                s if s == ClippyPosition::TrayLeft.to_string() => Position::TrayLeft,
+                s if s == ClippyPosition::TrayBottomLeft.to_string() => Position::TrayBottomLeft,
+                s if s == ClippyPosition::TrayRight.to_string() => Position::TrayRight,
+                s if s == ClippyPosition::TrayBottomRight.to_string() => Position::TrayBottomRight,
+                s if s == ClippyPosition::TrayCenter.to_string() => Position::TrayCenter,
+                s if s == ClippyPosition::TrayBottomCenter.to_string() => {
+                    Position::TrayBottomCenter
+                }
+                _ => Position::BottomRight, // default fallback
+            };
+
+            get_main_window()
+                .as_ref()
+                .window()
+                .move_window(position)
+                .expect("Failed to move window");
+        })
+    });
 }
 
 pub fn position_window_near_cursor() {

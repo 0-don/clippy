@@ -9,6 +9,25 @@ export enum FolderLocation {
   Config = "config",
 }
 
+export enum ClippyPosition {
+  Cursor = "cursor",
+  TopLeft = "top_left",
+  TopRight = "top_right",
+  BottomLeft = "bottom_left",
+  BottomRight = "bottom_right",
+  TopCenter = "top_center",
+  BottomCenter = "bottom_center",
+  LeftCenter = "left_center",
+  RightCenter = "right_center",
+  Center = "center",
+  TrayLeft = "tray_left",
+  TrayBottomLeft = "tray_bottom_left",
+  TrayRight = "tray_right",
+  TrayBottomRight = "tray_bottom_right",
+  TrayCenter = "tray_center",
+  TrayBottomCenter = "tray_bottom_center",
+}
+
 export enum Language {
   // ~1.1 billion speakers
   English = "en",

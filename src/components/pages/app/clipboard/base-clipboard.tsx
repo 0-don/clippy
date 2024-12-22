@@ -82,20 +82,22 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
             clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
           } cursor-pointer text-lg hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
         />
-        {props.data.rtf && (
-          <BsJournalRichtext
-            onClick={handleRtfCopy}
-            title="Copy as RTF"
-            class="hidden cursor-pointer text-lg text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
-          />
-        )}
-        {props.data.html && (
-          <TbSourceCode
-            onClick={handleHtmlCopy}
-            title="Copy as HTML"
-            class="hidden cursor-pointer text-lg text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
-          />
-        )}
+        <div class="flex items-center gap-1">
+          {props.data.rtf && (
+            <BsJournalRichtext
+              onClick={handleRtfCopy}
+              title="Copy as RTF"
+              class="hidden cursor-pointer text-lg text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
+            />
+          )}
+          {props.data.html && (
+            <TbSourceCode
+              onClick={handleHtmlCopy}
+              title="Copy as HTML"
+              class="hidden cursor-pointer text-lg text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
+            />
+          )}
+        </div>
         <IoTrashOutline
           onClick={(e) => {
             e.stopPropagation();

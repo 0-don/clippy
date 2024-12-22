@@ -6,7 +6,9 @@ use common::{
         MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN,
     },
     language::get_system_language,
+    types::enums::{ClippyPosition, Language},
 };
+use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,
     schema::{boolean, float, integer, pk_auto, string},
@@ -20,8 +22,10 @@ enum Settings {
     //
     Startup,
     Synchronize,
+    Tooltip,
     DarkMode,
     DisplayScale,
+    Position,
     //
     MaxFileSize,
     MaxImageSize,
@@ -45,11 +49,19 @@ impl MigrationTrait for Migration {
                     .col(
                         string(Settings::Language)
                             .string_len(2)
-                            .default(get_system_language().to_string()),
+                            .default(get_system_language().to_string())
+                            .check(
+                                Expr::col(Settings::Language).is_in(
+                                    Language::iter()
+                                        .map(|x| x.to_string())
+                                        .collect::<Vec<String>>(),
+                                ),
+                            ),
                     )
                     .col(boolean(Settings::Startup).default(true))
                     .col(boolean(Settings::Synchronize).default(false))
                     .col(boolean(Settings::DarkMode).default(true))
+                    .col(boolean(Settings::Tooltip).default(true))
                     .col(
                         float(Settings::DisplayScale)
                             .default(Value::Float(Some(DISPLAY_SCALE)))
@@ -60,6 +72,17 @@ impl MigrationTrait for Migration {
                                         Expr::col(Settings::DisplayScale)
                                             .lte(Value::Float(Some(DISPLAY_SCALE_MAX))),
                                     ),
+                            ),
+                    )
+                    .col(
+                        string(Settings::Position)
+                            .default(ClippyPosition::Cursor.to_string())
+                            .check(
+                                Expr::col(Settings::Position).is_in(
+                                    ClippyPosition::iter()
+                                        .map(|x| x.to_string())
+                                        .collect::<Vec<String>>(),
+                                ),
                             ),
                     )
                     // 10MB default, 0 min, 100MB max
