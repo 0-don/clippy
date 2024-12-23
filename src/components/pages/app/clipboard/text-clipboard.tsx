@@ -1,7 +1,7 @@
 import Tooltip from "@corvu/tooltip";
 import dayjs from "dayjs";
-import { FiCode, FiFileText, FiLink } from "solid-icons/fi";
-import { VsDebugRestartFrame } from "solid-icons/vs";
+import { BsFiletypeHtml, BsJournalRichtext } from "solid-icons/bs";
+import { FiFileText, FiLink } from "solid-icons/fi";
 import { Component } from "solid-js";
 import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardWithRelations } from "../../../../types";
@@ -32,10 +32,10 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
 
   const getIcon = () => {
     if (type === ClipboardType.Html) {
-      return FiCode;
+      return BsFiletypeHtml;
     }
     if (type === ClipboardType.Rtf) {
-      return VsDebugRestartFrame;
+      return BsJournalRichtext;
     }
 
     switch (textType) {

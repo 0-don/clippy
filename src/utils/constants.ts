@@ -1,6 +1,6 @@
 import { HotkeyEvent } from "../types/enums";
 
-export const SETTINGS_TAB = ["General", "Backup", "History", "Hotkeys"] as const;
+export const SETTINGS_TAB = ["General", "Backup", "History", "Hotkeys", "Limits"] as const;
 export const VIEW_MORE_NAMES = ["Sync Clipboard History", "Settings", "About", "Exit"] as const;
 export const TAB_NAMES = ["Recent Clipboards", "Starred Clipboards", "History", "View more"] as const;
 export const TABS = [
