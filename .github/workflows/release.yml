@@ -9,11 +9,10 @@ concurrency:
   cancel-in-progress: true
 env:
   ARCH: x86_64
-  DEPENDENCIES_ARCH: "'libappindicator-gtk3' 'webkit2gtk' 'gtk3' 'xdotool'"
-  DEPENDENCIES_RPM: "javascriptcoregtk4.1, webkit2gtk4.1, libxdo, libappindicator-gtk3, xdotool"
+  DEPENDENCIES_ARCH: "'libappindicator-gtk3' 'webkit2gtk-4.1' 'gtk3' 'xdotool'"
 jobs:
   setup:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     outputs:
       name: ${{ steps.get-package.outputs.name }}
       name_bin: ${{ steps.get-package.outputs.name }}-bin
@@ -24,7 +23,6 @@ jobs:
       deb_pkg_path: ./src-tauri/target/release/bundle/deb/
       deb_pkg_renamed: ${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-${{ env.ARCH }}.deb
       arch_pkg_name: ${{ steps.get-package.outputs.name }}-bin-${{ steps.get-package.outputs.version }}-1-${{ env.ARCH }}.pkg.tar.zst
-      rpm_pkg_name: RPMS/${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-1.${{ env.ARCH }}.rpm
       tag_name: v${{ steps.get-package.outputs.version }}
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +37,6 @@ jobs:
           echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
           echo "description=$(node -p "require('./package.json').description")" >> $GITHUB_OUTPUT
           echo "license=$(node -p "require('./package.json').license")" >> $GITHUB_OUTPUT
-      
 
   build-tauri:
     needs: [setup]
@@ -49,17 +46,16 @@ jobs:
       fail-fast: false
       matrix:
           include:
-            - platform: "macos-latest" # for Arm based macs (M1 and above).
+            - platform: "macos-latest"
               args: "--target aarch64-apple-darwin"
-            - platform: "macos-latest" # for Intel based macs.
+            - platform: "macos-latest"
               args: "--target x86_64-apple-darwin"
-            - platform: "ubuntu-24.04" # for Tauri v1 you could replace this with ubuntu-20.04.
+            - platform: "ubuntu-22.04"
               args: ""
             - platform: "windows-latest"
               args: ""
     runs-on: ${{ matrix.platform }}
     steps:
-
       - uses: actions/checkout@v4
 
       - name: setup node
@@ -70,22 +66,29 @@ jobs:
       - name: install rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04' # This must match the platform value defined above.
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libappindicator3-dev librsvg2-dev libxcb-shape0-dev libxcb-xfixes0-dev patchelf libxdo-dev libjavascriptcoregtk-4.1-dev libwebkit2gtk-4.1-dev
+          sudo apt-get install -y \
+            libglib2.0-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libxcb-shape0-dev \
+            libxdo3 \
+            libxdo-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libwebkit2gtk-4.1-dev
 
       - name: install frontend dependencies
         run: yarn install
 
       - name: Set NO_STRIP environment variable
-        if: matrix.platform == 'ubuntu-24.04' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-22.04' || matrix.platform == 'macos-latest'
         run: echo "NO_STRIP=true" >> $GITHUB_ENV
-
 
       - uses: tauri-apps/tauri-action@v0
         env:
@@ -97,9 +100,8 @@ jobs:
           releaseDraft: false
           prerelease: false
 
-
       - name: copy deb package && create PKGBUILD file (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04'
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
           mkdir -p ${{ needs.setup.outputs.name_bin }}
           cp -fr ${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
@@ -127,57 +129,15 @@ jobs:
           cat ${{ needs.setup.outputs.name_bin }}/PKGBUILD
 
       - name: create arch package (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04'
+        if: matrix.platform == 'ubuntu-22.04'
         uses: 2m/arch-pkgbuild-builder@v1.17
         with:
           debug: true
           target: pkgbuild
           pkgname: ${{ needs.setup.outputs.name_bin }}/
 
-      # - name: copy deb package && create rpm.spec file (ubuntu only)
-      #   if: matrix.platform == 'ubuntu-24.04'
-      #   run: |
-      #     mkdir -p ${{ needs.setup.outputs.name_bin }}
-      #     cp -fr ${{ needs.setup.outputs.deb_pkg_path }}/${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
-      #     cat <<EOF > ./${{ needs.setup.outputs.name_bin }}/rpm.spec
-      #     Name: ${{ needs.setup.outputs.name }}
-      #     Version: ${{ needs.setup.outputs.version }}
-      #     BuildArch: ${{ env.ARCH }}
-      #     Release: 1
-      #     Summary: ${{ needs.setup.outputs.description }}
-      #     Requires: ${{ env.DEPENDENCIES_RPM }}
-      #     License: ${{ needs.setup.outputs.license }}
-      #     Source0: ${{ needs.setup.outputs.deb_pkg_renamed }}
-
-      #     %description
-      #     ${{ needs.setup.outputs.description }}
-
-      #     %prep
-      #     ar x %{SOURCE0}
-
-      #     %build
-      #     rm -rf control.tar.gz
-      #     tar xvf data.tar.gz
-                      
-      #     %install
-      #     cp -fr usr/ %{buildroot}
-
-      #     %files
-      #     %{_bindir}/${{ needs.setup.outputs.name }}
-      #     /usr/share/applications/${{ needs.setup.outputs.name }}.desktop
-      #     /usr/share/icons/hicolor/**/*
-      #     EOF
-      #     cat ${{ needs.setup.outputs.name_bin }}/rpm.spec
-
-      # - name: createa rpm package (ubuntu only)
-      #   if: matrix.platform == 'ubuntu-24.04'
-      #   uses: Antikythera/build-rpm@latest
-      #   with:
-      #     spec_file: ${{ needs.setup.outputs.name_bin }}/rpm.spec
-      #     sources: ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
-
       - name: upload arch && rpm release (ubuntu only)
-        if: matrix.platform == 'ubuntu-24.04'
+        if: matrix.platform == 'ubuntu-22.04'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

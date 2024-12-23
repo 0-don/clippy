@@ -21,6 +21,10 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
   let data = props.data.text?.data;
   let textType = props.data.text?.type as ClipboardTextType;
 
+  if (props.data.text?.data && props.data.html?.data) {
+    type = ClipboardType.Html;
+    data = props.data.text?.data;
+  }
   if (!props.data.text?.data && props.data.html?.data) {
     type = ClipboardType.Html;
     data = props.data.html.data;

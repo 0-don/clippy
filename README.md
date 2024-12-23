@@ -17,8 +17,6 @@
     <img src="public/clippy-showcase.webp" alt="Logo" >
   </p>
 </p>
-<!-- npx npm-check-updates -u -->
-<!-- sea-orm-cli migrate fresh -v -d migration && sea-orm-cli generate entity -l -o ./entity/src --expanded-format --with-serde both -->
 
 successor of [the electron clippy](https://github.com/0-don/clippy-ts)
 
@@ -26,14 +24,14 @@ successor of [the electron clippy](https://github.com/0-don/clippy-ts)
 
 - display/hide **ctrl+y** or **ctrl+d** (change in settings)
 - type out clipboard **ctrl+b** (where pasting isn't allowed)
-- images & text support
-- keybinds for everything
+- text, html, rtf, image, file support
+- keybinds for everything & custom keybinds
 - add favorite clipboards
-- smart search for links, colors, images, hex
-- instant search
-- change database location
-- change keyboard bindings
+- smart search, for links, colors, images, hex, etc.
+- change/sync database location
 - dark mode / white mode
+- multilanguage support
+- display scale
 
 ### Prerequisites Development
 
@@ -63,3 +61,10 @@ Before you begin, ensure you have met the following requirements:
 - Linux(x11) KDE Plasma (Disable Focus Stealing Prevention)
 - Windows
 - Mac (hotkeys needs to be changed in settings)
+
+<!-- DEBIAN GNOME X11 -->
+<!-- su - -->
+<!-- usermod -aG sudo don -->
+<!-- echo "disable wayland" && sudo nano /etc/gdm3/daemon.conf -->
+<!-- sudo dpkg -i ./code_1.96.2-1734607745_amd64.deb -->
+<!-- sudo apt install pkg-config libglib2.0-dev libwebkit2gtk-4.1-dev libgtk-3-dev libxdo-dev libayatana-appindicator3-dev librsvg2-dev -->
