@@ -8,6 +8,7 @@ import { WebWindow } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { SETTINGS_TAB, SettingsTabName } from "../utils/constants";
 import { invokeCommand } from "../utils/tauri";
+import { TbResize } from "solid-icons/tb";
 
 function createSettingsStore() {
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
@@ -21,6 +22,11 @@ function createSettingsStore() {
     {
       name: SETTINGS_TAB[3],
       Icon: RiDeviceKeyboardFill,
+      current: false,
+    },
+    {
+      name: SETTINGS_TAB[4],
+      Icon: TbResize,
       current: false,
     },
   ]);

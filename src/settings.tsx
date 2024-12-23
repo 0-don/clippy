@@ -10,6 +10,7 @@ import { SettingsStore } from "./store/settings-store";
 import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
 import { listenEvent } from "./utils/tauri";
+import { SettingsLimits } from "./components/pages/settings/settings-limits";
 
 const Settings = () => {
   createResource(AppStore.init);
@@ -34,6 +35,10 @@ const Settings = () => {
 
         <Show when={SettingsStore.getCurrentTab()?.name === "Hotkeys"}>
           <SettingsHotkeys />
+        </Show>
+
+        <Show when={SettingsStore.getCurrentTab()?.name === "Limits"}>
+          <SettingsLimits />
         </Show>
       </div>
     </div>

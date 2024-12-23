@@ -5,7 +5,13 @@ type InputProps = JSX.InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
 };
 
-export const Input: Component<InputProps> = ({ className, debounce = 0, onInput, value: initialValue = "", ...props }) => {
+export const Input: Component<InputProps> = ({
+  className,
+  debounce = 0,
+  onInput,
+  value: initialValue = "",
+  ...props
+}) => {
   let timeoutId: number;
   const [value, setValue] = createSignal(initialValue as string);
 
@@ -35,7 +41,7 @@ export const Input: Component<InputProps> = ({ className, debounce = 0, onInput,
         {...props}
         onInput={handleInput}
         value={value()}
-        class="w-full appearance-none bg-transparent text-sm focus:outline-none focus:ring-0 dark:text-white"
+        class={`w-full appearance-none bg-transparent text-sm focus:outline-none focus:ring-0 dark:text-white ${props.class}`}
       />
     </div>
   );
