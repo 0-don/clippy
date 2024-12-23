@@ -1,10 +1,13 @@
 import { Component, For, Show } from "solid-js";
 import { AppStore } from "../../store/app-store";
 import { HotkeyStore } from "../../store/hotkey-store";
+import { useLanguage } from "../provider/language-provider";
 
 interface AppSidebarProps {}
 
 export const AppSidebar: Component<AppSidebarProps> = ({}) => {
+  const { t } = useLanguage();
+
   return (
     <Show when={HotkeyStore.hotkeys().length}>
       <For each={AppStore.tabs()}>
@@ -19,7 +22,7 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
               title={currentHotkey?.name}
               onClick={() => AppStore.changeTab(id)}
             >
-              <Icon title={name} />
+              <Icon title={t(name)} />
               <Show
                 when={
                   currentHotkey?.event && HotkeyStore.getHotkey(currentHotkey?.event) && HotkeyStore.globalHotkeyEvent()

@@ -1,7 +1,7 @@
 import { createRoot, createSignal } from "solid-js";
+import { invokeCommand } from "../lib/tauri";
 import { ClipboardWhere, ClipboardWithRelations } from "../types";
 import { InvokeCommand } from "../types/tauri-invoke";
-import { invokeCommand } from "../utils/tauri";
 
 export const initialWhere: ClipboardWhere = {
   cursor: undefined,

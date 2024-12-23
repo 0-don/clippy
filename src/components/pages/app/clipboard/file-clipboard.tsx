@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
 import { VsFileBinary } from "solid-icons/vs";
 import { Component } from "solid-js";
+import { invokeCommand } from "../../../../lib/tauri";
 import { ClipboardFileModel, ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
-import { formatBytes } from "../../../../utils/helpers";
-import { invokeCommand } from "../../../../utils/tauri";
-import { ClipboardHeader } from "../../../utils/clipboard/clipboard-header";
+import { formatBytes } from "../../../../utils";
+import { ClipboardHeader } from "./clipboard-header";
 
 interface FileClipboardProps {
   data: ClipboardWithRelations;

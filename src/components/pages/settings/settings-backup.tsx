@@ -4,26 +4,28 @@ import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { SiSqlite } from "solid-icons/si";
 import { TbDatabaseStar } from "solid-icons/tb";
 import { Component, createResource } from "solid-js";
+import { invokeCommand } from "../../../lib/tauri";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
-import { invokeCommand } from "../../../utils/tauri";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
+import { useLanguage } from "../../provider/language-provider";
 
 interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
+  const { t } = useLanguage();
   const [databaseUrl, setDatabaseUrl] = createResource(() => invokeCommand(InvokeCommand.GetDbPath));
   const [configUrl] = createResource(() => invokeCommand(InvokeCommand.GetConfigPath));
 
   return (
     <>
-      <TextBlock Icon={TbDatabaseStar} title="Sync">
+      <TextBlock Icon={TbDatabaseStar} title={t("SETTINGS.BACKUP.SYNC")}>
         <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
           <div class="flex items-center space-x-2 truncate">
             <RiDeviceSave3Fill />
-            <h6 class="text-sm">Synchronize clipboard history</h6>
+            <h6 class="text-sm">{t("SETTINGS.BACKUP.SYNCHRONIZE_CLIPBOARD_HISTORY")}</h6>
           </div>
 
           <Toggle
@@ -36,7 +38,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
         </div>
       </TextBlock>
 
-      <TextBlock Icon={SiSqlite} title="Database Location">
+      <TextBlock Icon={SiSqlite} title={t("SETTINGS.BACKUP.DATABASE_LOCATION")}>
         <div class="list-disc px-5 pb-5 pt-2.5">
           <div class="relative w-full cursor-pointer">
             <div
@@ -51,13 +53,13 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
             >
               <AiTwotoneFolderOpen class="dark:text-white" />
-              <div>Open</div>
+              <div>{t("SETTINGS.BACKUP.OPEN")}</div>
             </button>
           </div>
         </div>
       </TextBlock>
 
-      <TextBlock Icon={BsGearWideConnected} title="Config Location">
+      <TextBlock Icon={BsGearWideConnected} title={t("SETTINGS.BACKUP.CONFIG_LOCATION")}>
         <div class="list-disc px-5 pb-5 pt-2.5">
           <div class="relative w-full cursor-pointer">
             <div
@@ -72,7 +74,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
             >
               <AiTwotoneFolderOpen class="dark:text-white" />
-              <div>Open</div>
+              <div>{t("SETTINGS.BACKUP.OPEN")}</div>
             </button>
           </div>
         </div>

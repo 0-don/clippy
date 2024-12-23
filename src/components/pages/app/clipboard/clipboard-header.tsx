@@ -1,7 +1,7 @@
 import { IconTypes } from "solid-icons";
 import { Component, Show } from "solid-js";
-import { HotkeyStore } from "../../../store/hotkey-store";
-import { ClipboardWithRelations } from "../../../types";
+import { HotkeyStore } from "../../../../store/hotkey-store";
+import { ClipboardWithRelations } from "../../../../types";
 
 interface ClipboardHeaderProps {
   data: ClipboardWithRelations;

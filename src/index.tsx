@@ -1,12 +1,13 @@
 import { createResource, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./components/pages/app/app";
+import { listenEvent } from "./lib/tauri";
 import { AppStore } from "./store/app-store";
 import { ClipboardStore } from "./store/clipboard-store";
 import { HotkeyStore } from "./store/hotkey-store";
 import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
-import { listenEvent } from "./utils/tauri";
+import LanguageProvider from "./components/provider/language-provider";
 
 const Index = () => {
   createResource(AppStore.init);
@@ -24,4 +25,11 @@ const Index = () => {
   return <App />;
 };
 
-render(() => <Index />, document.getElementById("root") as HTMLElement);
+render(
+  () => (
+    <LanguageProvider>
+      <Index />
+    </LanguageProvider>
+  ),
+  document.getElementById("root") as HTMLElement
+);

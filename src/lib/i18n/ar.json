@@ -1,0 +1,137 @@
+{
+	"ABOUT": {
+		"COPYRIGHT": "جميع الحقوق محفوظة لشركة DC.",
+		"DEVELOPED_BY": "تم تطويره بواسطة 0-don. مدعوم بواسطة Tauri.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "لا توجد تحديثات متاحة حاليًا",
+		"OFFICIAL_WEBSITE": "الموقع الرسمي"
+	},
+	"CLIPBOARD": {
+		"NO_CLIPBOARDS_YET": "لا توجد حافظات بعد...",
+		"SEARCH_ENTRIES": "إدخالات البحث"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "عن",
+			"DIGIT_1": "الرقم 1",
+			"DIGIT_2": "الرقم 2",
+			"DIGIT_3": "الرقم 3",
+			"DIGIT_4": "الرقم 4",
+			"DIGIT_5": "الرقم 5",
+			"DIGIT_6": "الرقم 6",
+			"DIGIT_7": "الرقم 7",
+			"DIGIT_8": "الرقم 8",
+			"DIGIT_9": "الرقم 9",
+			"EXIT": "مخرج",
+			"HISTORY": "تاريخ",
+			"NUM_1": "رقم 1",
+			"NUM_2": "رقم 2",
+			"NUM_3": "رقم 3",
+			"NUM_4": "رقم 4",
+			"NUM_5": "رقم 5",
+			"NUM_6": "رقم 6",
+			"NUM_7": "رقم 7",
+			"NUM_8": "رقم 8",
+			"NUM_9": "رقم 9",
+			"RECENT_CLIPBOARDS": "الحافظات الحديثة",
+			"SCROLL_TO_TOP": "انتقل إلى الأعلى",
+			"SETTINGS": "إعدادات",
+			"STARRED_CLIPBOARDS": "الحافظات المميزة",
+			"SYNC_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة",
+			"TYPE_CLIPBOARD": "نوع الحافظة",
+			"VIEW_MORE": "عرض المزيد",
+			"WINDOW_DISPLAY_TOGGLE": "تبديل عرض النافذة"
+		},
+		"KEYS": {
+			"ALT": "بديل",
+			"CTRL": "كنترول",
+			"SHIFT": "يُحوّل"
+		},
+		"LANGUAGE": {
+			"AR": "عربي",
+			"BN": "البنغالية",
+			"DE": "ألمانية",
+			"EN": "إنجليزي",
+			"ES": "الأسبانية",
+			"FR": "فرنسي",
+			"HI": "الهندية",
+			"IT": "ايطالي",
+			"JA": "اليابانية",
+			"KO": "الكورية",
+			"NL": "هولندي",
+			"PL": "تلميع",
+			"PT": "البرتغالية",
+			"RU": "الروسية",
+			"TH": "التايلاندية",
+			"TR": "اللغة التركية",
+			"UR": "الأردية",
+			"VI": "الفيتنامية",
+			"ZH": "الماندرين"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "أسفل المركز",
+			"BOTTOM_LEFT": "أسفل اليسار",
+			"BOTTOM_RIGHT": "أسفل اليمين",
+			"CENTER": "مركز",
+			"CURSOR": "المؤشر",
+			"LEFT_CENTER": "الوسط الأيسر",
+			"RIGHT_CENTER": "الوسط الأيمن",
+			"TOP_CENTER": "المركز العلوي",
+			"TOP_LEFT": "أعلى اليسار",
+			"TOP_RIGHT": "أعلى اليمين",
+			"TRAY_BOTTOM_CENTER": "صينية أسفل المركز",
+			"TRAY_BOTTOM_LEFT": "صينية أسفل اليسار",
+			"TRAY_BOTTOM_RIGHT": "صينية أسفل اليمين",
+			"TRAY_CENTER": "مركز الصينية",
+			"TRAY_LEFT": "صينية اليسار",
+			"TRAY_RIGHT": "صينية اليمين"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "موقع التكوين",
+			"DATABASE_LOCATION": "موقع قاعدة البيانات",
+			"OPEN": "يفتح",
+			"SYNC": "المزامنة",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "تغيير اللغة",
+			"CHANGE_WINDOW_POSITION": "تغيير موضع النافذة",
+			"HTML_CLIPBOARD_TOOLTIP": "تلميحات حول حافظة HTML",
+			"KEYBOARD_SHORTCUT": "اختصار لوحة المفاتيح",
+			"START_CLIPPY_ON_STARTUP": "بدء تشغيل Clippy عند بدء تشغيل النظام",
+			"SWITCH_THEME": "تبديل الثيم",
+			"SYSTEM": "نظام",
+			"WINDOW_SCALE": "مقياس النافذة"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "امسح الكل",
+			"CLEAR_FILE": "مسح الملف",
+			"CLEAR_HTML": "مسح HTML",
+			"CLEAR_IMAGE": "صورة واضحة",
+			"CLEAR_RTF": "مسح RTF",
+			"CLEAR_TEXT": "نص واضح",
+			"SQL_DATABASE_INFO": "معلومات قاعدة بيانات SQL",
+			"STORAGE_ACTIONS": "إجراءات التخزين"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "تغيير مفاتيح التشغيل السريع الخاصة بك"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "حدود الحافظة",
+			"IF_SET_TO_ZERO": "إذا تم ضبطه على 0، فسيتم تخطي نوع الحافظة بالكامل",
+			"MAX_FILE_SIZE": "الحد الأقصى لحجم الملف",
+			"MAX_HTML_SIZE": "الحد الأقصى لحجم HTML",
+			"MAX_IMAGE_SIZE": "الحد الأقصى لحجم الصورة",
+			"MAX_RTF_SIZE": "الحد الأقصى لحجم RTF",
+			"MAX_TEXT_SIZE": "الحد الأقصى لحجم النص"
+		},
+		"TAB": {
+			"BACKUP": "دعم",
+			"GENERAL": "عام",
+			"HISTORY": "تاريخ",
+			"HOTKEYS": "مفاتيح التشغيل السريع",
+			"LIMITS": "الحدود"
+		}
+	}
+}

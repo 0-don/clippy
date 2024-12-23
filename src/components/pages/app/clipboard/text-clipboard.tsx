@@ -3,13 +3,13 @@ import dayjs from "dayjs";
 import { BsFiletypeHtml, BsJournalRichtext } from "solid-icons/bs";
 import { FiFileText, FiLink } from "solid-icons/fi";
 import { Component } from "solid-js";
+import { rgbCompatible } from "../../../../lib/colors";
+import { invokeCommand } from "../../../../lib/tauri";
 import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardWithRelations } from "../../../../types";
 import { ClipboardTextType, ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
-import { rgbCompatible } from "../../../../utils/colors";
-import { invokeCommand } from "../../../../utils/tauri";
-import { ClipboardHeader } from "../../../utils/clipboard/clipboard-header";
+import { ClipboardHeader } from "./clipboard-header";
 
 interface TextClipboardProps {
   data: ClipboardWithRelations;

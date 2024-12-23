@@ -1,5 +1,8 @@
 import { VsArrowSwap } from "solid-icons/vs";
 import { Component, createSignal } from "solid-js";
+import { DictionaryKey } from "../../lib/i18n";
+
+import { useLanguage } from "../provider/language-provider";
 
 interface DropdownProps {
   className?: string;
@@ -9,6 +12,7 @@ interface DropdownProps {
 }
 
 export const Dropdown: Component<DropdownProps> = (props) => {
+  const { t } = useLanguage();
   const [ref, setRef] = createSignal<HTMLSelectElement>();
 
   return (
@@ -24,7 +28,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
       >
         {props.items.map((item) => (
           <option value={item.value} selected={item.value === props.value} class="!text-red-500 dark:!text-red-600">
-            {item.label}
+            {t(item.label as DictionaryKey) || item.label}
           </option>
         ))}
       </select>

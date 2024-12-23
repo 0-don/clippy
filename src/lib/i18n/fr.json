@@ -1,0 +1,137 @@
+{
+	"ABOUT": {
+		"COPYRIGHT": "Copyright (C) DC. Tous droits réservés.",
+		"DEVELOPED_BY": "Développé par 0-don. Propulsé par Tauri.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "Aucune mise à jour disponible actuellement",
+		"OFFICIAL_WEBSITE": "Site officiel"
+	},
+	"CLIPBOARD": {
+		"NO_CLIPBOARDS_YET": "Pas encore de presse-papiers...",
+		"SEARCH_ENTRIES": "Rechercher des entrées"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "À propos",
+			"DIGIT_1": "Chiffre 1",
+			"DIGIT_2": "Chiffre 2",
+			"DIGIT_3": "Chiffre 3",
+			"DIGIT_4": "Chiffre 4",
+			"DIGIT_5": "Chiffre 5",
+			"DIGIT_6": "Chiffre 6",
+			"DIGIT_7": "Chiffre 7",
+			"DIGIT_8": "Chiffre 8",
+			"DIGIT_9": "Chiffre 9",
+			"EXIT": "Sortie",
+			"HISTORY": "Histoire",
+			"NUM_1": "Numéro 1",
+			"NUM_2": "Numéro 2",
+			"NUM_3": "Numéro 3",
+			"NUM_4": "Numéro 4",
+			"NUM_5": "Numéro 5",
+			"NUM_6": "Numéro 6",
+			"NUM_7": "Numéro 7",
+			"NUM_8": "Numéro 8",
+			"NUM_9": "Numéro 9",
+			"RECENT_CLIPBOARDS": "Presse-papiers récents",
+			"SCROLL_TO_TOP": "Faire défiler vers le haut",
+			"SETTINGS": "Paramètres",
+			"STARRED_CLIPBOARDS": "Presse-papiers étoilés",
+			"SYNC_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers",
+			"TYPE_CLIPBOARD": "Tapez le presse-papiers",
+			"VIEW_MORE": "Voir plus",
+			"WINDOW_DISPLAY_TOGGLE": "Basculement de l'affichage de la fenêtre"
+		},
+		"KEYS": {
+			"ALT": "ALT",
+			"CTRL": "Ctrl",
+			"SHIFT": "Changement"
+		},
+		"LANGUAGE": {
+			"AR": "Arabe",
+			"BN": "Bengali",
+			"DE": "Allemand",
+			"EN": "Anglais",
+			"ES": "Espagnol",
+			"FR": "Français",
+			"HI": "Hindi",
+			"IT": "Italien",
+			"JA": "Japonais",
+			"KO": "Coréen",
+			"NL": "Néerlandais",
+			"PL": "Polonais",
+			"PT": "Portugais",
+			"RU": "Russe",
+			"TH": "Thaïlandais",
+			"TR": "Turc",
+			"UR": "Ourdou",
+			"VI": "Vietnamien",
+			"ZH": "Mandarin"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "En bas au centre",
+			"BOTTOM_LEFT": "En bas à gauche",
+			"BOTTOM_RIGHT": "En bas à droite",
+			"CENTER": "Centre",
+			"CURSOR": "Curseur",
+			"LEFT_CENTER": "Centre gauche",
+			"RIGHT_CENTER": "Centre droit",
+			"TOP_CENTER": "En haut au centre",
+			"TOP_LEFT": "En haut à gauche",
+			"TOP_RIGHT": "En haut à droite",
+			"TRAY_BOTTOM_CENTER": "Plateau en bas au centre",
+			"TRAY_BOTTOM_LEFT": "Plateau en bas à gauche",
+			"TRAY_BOTTOM_RIGHT": "Plateau en bas à droite",
+			"TRAY_CENTER": "Plateau central",
+			"TRAY_LEFT": "Plateau à gauche",
+			"TRAY_RIGHT": "Plateau à droite"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "Emplacement de la configuration",
+			"DATABASE_LOCATION": "Emplacement de la base de données",
+			"OPEN": "Ouvrir",
+			"SYNC": "Synchroniser",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "Changer de langue",
+			"CHANGE_WINDOW_POSITION": "Changer la position de la fenêtre",
+			"HTML_CLIPBOARD_TOOLTIP": "Info-bulle du presse-papiers HTML",
+			"KEYBOARD_SHORTCUT": "Raccourci clavier",
+			"START_CLIPPY_ON_STARTUP": "Démarrer Clippy au démarrage du système",
+			"SWITCH_THEME": "Changer de thème",
+			"SYSTEM": "Système",
+			"WINDOW_SCALE": "Échelle de fenêtre"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "Tout effacer",
+			"CLEAR_FILE": "Effacer le fichier",
+			"CLEAR_HTML": "Effacer le HTML",
+			"CLEAR_IMAGE": "Image claire",
+			"CLEAR_RTF": "Effacer le RTF",
+			"CLEAR_TEXT": "Effacer le texte",
+			"SQL_DATABASE_INFO": "Informations sur la base de données SQL",
+			"STORAGE_ACTIONS": "Actions de stockage"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "Changez vos raccourcis clavier"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "Limites du presse-papiers",
+			"IF_SET_TO_ZERO": "Si défini sur 0, le type de presse-papiers sera entièrement ignoré",
+			"MAX_FILE_SIZE": "Taille maximale du fichier",
+			"MAX_HTML_SIZE": "Taille HTML maximale",
+			"MAX_IMAGE_SIZE": "Taille maximale de l'image",
+			"MAX_RTF_SIZE": "Taille maximale du fichier RTF",
+			"MAX_TEXT_SIZE": "Taille maximale du texte"
+		},
+		"TAB": {
+			"BACKUP": "Sauvegarde",
+			"GENERAL": "Général",
+			"HISTORY": "Histoire",
+			"HOTKEYS": "Raccourcis clavier",
+			"LIMITS": "Limites"
+		}
+	}
+}

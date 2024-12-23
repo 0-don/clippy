@@ -1,0 +1,137 @@
+{
+	"ABOUT": {
+		"COPYRIGHT": "Telif Hakkı(C) DC. Tüm hakları saklıdır.",
+		"DEVELOPED_BY": "0-don tarafından geliştirildi. Tauri tarafından destekleniyor.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "Şu anda herhangi bir güncelleme mevcut değil",
+		"OFFICIAL_WEBSITE": "Resmi Web Sitesi"
+	},
+	"CLIPBOARD": {
+		"NO_CLIPBOARDS_YET": "Henüz pano yok...",
+		"SEARCH_ENTRIES": "Arama girişleri"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "Hakkında",
+			"DIGIT_1": "Rakam 1",
+			"DIGIT_2": "Rakam 2",
+			"DIGIT_3": "Rakam 3",
+			"DIGIT_4": "Rakam 4",
+			"DIGIT_5": "Rakam 5",
+			"DIGIT_6": "Rakam 6",
+			"DIGIT_7": "Rakam 7",
+			"DIGIT_8": "Rakam 8",
+			"DIGIT_9": "Rakam 9",
+			"EXIT": "Çıkış",
+			"HISTORY": "Tarih",
+			"NUM_1": "Sayı 1",
+			"NUM_2": "Sayı 2",
+			"NUM_3": "Sayı 3",
+			"NUM_4": "Sayı 4",
+			"NUM_5": "Sayı 5",
+			"NUM_6": "Sayı 6",
+			"NUM_7": "Sayı 7",
+			"NUM_8": "Sayı 8",
+			"NUM_9": "Sayı 9",
+			"RECENT_CLIPBOARDS": "Son Panolar",
+			"SCROLL_TO_TOP": "Yukarıya doğru kaydır",
+			"SETTINGS": "Ayarlar",
+			"STARRED_CLIPBOARDS": "Yıldızlı_Panolar",
+			"SYNC_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et",
+			"TYPE_CLIPBOARD": "Panoya yazın",
+			"VIEW_MORE": "Daha fazlasını görüntüle",
+			"WINDOW_DISPLAY_TOGGLE": "Pencere görüntüleme geçişi"
+		},
+		"KEYS": {
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Vardiya"
+		},
+		"LANGUAGE": {
+			"AR": "Arapça",
+			"BN": "Bengalce",
+			"DE": "Almanca",
+			"EN": "İngilizce",
+			"ES": "İspanyol",
+			"FR": "Fransızca",
+			"HI": "Hintçe",
+			"IT": "İtalyan",
+			"JA": "Japonca",
+			"KO": "Korece",
+			"NL": "Flemenkçe",
+			"PL": "Lehçe",
+			"PT": "Portekizce",
+			"RU": "Rusça",
+			"TH": "Tayca",
+			"TR": "Türkçe",
+			"UR": "Urdu",
+			"VI": "Vietnam",
+			"ZH": "Mandalina"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "Alt merkez",
+			"BOTTOM_LEFT": "Sol alt",
+			"BOTTOM_RIGHT": "Sağ alt",
+			"CENTER": "Merkez",
+			"CURSOR": "İmleç",
+			"LEFT_CENTER": "Sol merkez",
+			"RIGHT_CENTER": "Sağ merkez",
+			"TOP_CENTER": "Üst merkez",
+			"TOP_LEFT": "Sol üst",
+			"TOP_RIGHT": "Sağ üst",
+			"TRAY_BOTTOM_CENTER": "Tepsi alt orta",
+			"TRAY_BOTTOM_LEFT": "Tepsi alt sol",
+			"TRAY_BOTTOM_RIGHT": "Tepsi alt sağ",
+			"TRAY_CENTER": "Tepsi merkezi",
+			"TRAY_LEFT": "Tepsi sol",
+			"TRAY_RIGHT": "Tepsi sağ"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "Yapılandırma konumu",
+			"DATABASE_LOCATION": "Veritabanı konumu",
+			"OPEN": "Açık",
+			"SYNC": "Senkronizasyon",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "Dili değiştir",
+			"CHANGE_WINDOW_POSITION": "Pencere konumunu değiştir",
+			"HTML_CLIPBOARD_TOOLTIP": "HTML panosu araç ipucu",
+			"KEYBOARD_SHORTCUT": "Klavye kısayolu",
+			"START_CLIPPY_ON_STARTUP": "Sistem başlangıcında Clippy'yi başlatın",
+			"SWITCH_THEME": "Tema Değiştir",
+			"SYSTEM": "Sistem",
+			"WINDOW_SCALE": "Pencere ölçeği"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "Tümünü temizle",
+			"CLEAR_FILE": "Dosyayı Temizle",
+			"CLEAR_HTML": "Html'yi Temizle",
+			"CLEAR_IMAGE": "Net Görüntü",
+			"CLEAR_RTF": "Rtf'yi temizle",
+			"CLEAR_TEXT": "Temiz Metin",
+			"SQL_DATABASE_INFO": "SQL Veritabanı bilgisi",
+			"STORAGE_ACTIONS": "Depolama eylemleri"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "Kısayol tuşlarınızı değiştirin"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "Panoya sınırlamalar",
+			"IF_SET_TO_ZERO": "0 olarak ayarlanırsa pano türü tamamen atlanacaktır",
+			"MAX_FILE_SIZE": "Maksimum Dosya boyutu",
+			"MAX_HTML_SIZE": "Maksimum Html boyutu",
+			"MAX_IMAGE_SIZE": "Maksimum Görüntü boyutu",
+			"MAX_RTF_SIZE": "Maksimum Rtf boyutu",
+			"MAX_TEXT_SIZE": "Maksimum Metin boyutu"
+		},
+		"TAB": {
+			"BACKUP": "Yedekleme",
+			"GENERAL": "Genel",
+			"HISTORY": "Tarih",
+			"HOTKEYS": "Kısayollar",
+			"LIMITS": "Sınırlar"
+		}
+	}
+}

@@ -72,6 +72,24 @@ pub enum Language {
     Russian,
     #[iden = "ur"]
     Urdu,
+    #[iden = "ja"]
+    Japanese,
+    #[iden = "de"]
+    German,
+    #[iden = "ko"]
+    Korean,
+    #[iden = "vi"]
+    Vietnamese,
+    #[iden = "tr"]
+    Turkish,
+    #[iden = "it"]
+    Italian,
+    #[iden = "th"]
+    Thai,
+    #[iden = "pl"]
+    Polish,
+    #[iden = "nl"]
+    Dutch,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]

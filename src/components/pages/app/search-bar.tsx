@@ -1,26 +1,25 @@
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
 import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import { invokeCommand } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
 import { ClipboardStore, initialWhere } from "../../../store/clipboard-store";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
-import { invokeCommand } from "../../../utils/tauri";
+import { useLanguage } from "../../provider/language-provider";
 
 interface SearchBarProps {}
 
 export const SearchBar: Component<SearchBarProps> = ({}) => {
   let input: HTMLInputElement | undefined;
+  const { t } = useLanguage();
   const [search, setSearch] = createSignal("");
   const [showImages, setShowImages] = createSignal(false);
-  const { getCurrentTab } = AppStore;
-  const { setClipboards, setWhere, getClipboards } = ClipboardStore;
-  const { enableGlobalHotkeyEvent: setGlobalHotkeyEvent } = HotkeyStore;
 
   onMount(async () => {
     input?.focus();
     await invokeCommand(InvokeCommand.StopHotkeys);
-    setGlobalHotkeyEvent(false);
+    HotkeyStore.enableGlobalHotkeyEvent(false);
   });
 
   createEffect(() => {
@@ -28,14 +27,14 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
     const img = showImages();
 
     const delayDebounceFn = setTimeout(async () => {
-      setWhere(() => ({
+      ClipboardStore.setWhere(() => ({
         ...initialWhere,
         search: text.length && !img ? text : undefined,
         img: img || undefined,
-        star: getCurrentTab()?.name === "Starred Clipboards" ? true : undefined,
+        star: AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS" ? true : undefined,
       }));
-      const clipboards = await getClipboards();
-      setClipboards(clipboards);
+      const clipboards = await ClipboardStore.getClipboards();
+      ClipboardStore.setClipboards(clipboards);
     }, 0);
 
     onCleanup(() => clearTimeout(delayDebounceFn));
@@ -49,7 +48,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
             <FiSearch class="opacity-50 dark:text-white" />
           </div>
           <input
-            placeholder="Search Entries"
+            placeholder={t("CLIPBOARD.SEARCH_ENTRIES")}
             class="w-full border border-gray-300 py-2 pl-8 pr-2 placeholder:text-sm focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
             type="text"
             autofocus
