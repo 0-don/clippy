@@ -9,57 +9,6 @@ export enum FolderLocation {
   Config = "config",
 }
 
-export enum ClippyPosition {
-  Cursor = "cursor",
-  TopLeft = "top_left",
-  TopRight = "top_right",
-  BottomLeft = "bottom_left",
-  BottomRight = "bottom_right",
-  TopCenter = "top_center",
-  BottomCenter = "bottom_center",
-  LeftCenter = "left_center",
-  RightCenter = "right_center",
-  Center = "center",
-  TrayLeft = "tray_left",
-  TrayBottomLeft = "tray_bottom_left",
-  TrayRight = "tray_right",
-  TrayBottomRight = "tray_bottom_right",
-  TrayCenter = "tray_center",
-  TrayBottomCenter = "tray_bottom_center",
-}
-
-export enum Language {
-  // ~1.1 billion speakers
-  English = "en",
-
-  // ~1.1 billion speakers
-  Mandarin = "zh",
-
-  // ~600 million speakers
-  Hindi = "hi",
-
-  // ~550 million speakers
-  Spanish = "es",
-
-  // ~320 million speakers
-  French = "fr",
-
-  // ~310 million speakers
-  Arabic = "ar",
-
-  // ~260 million speakers
-  Bengali = "bn",
-
-  // ~240 million speakers
-  Portuguese = "pt",
-
-  // ~230 million speakers
-  Russian = "ru",
-
-  // ~200 million speakers
-  Urdu = "ur",
-}
-
 export enum HotkeyEvent {
   WindowDisplayToggle = "window_display_toggle",
   TypeClipboard = "type_clipboard",

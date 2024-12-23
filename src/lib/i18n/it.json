@@ -1,0 +1,137 @@
+{
+	"ABOUT": {
+		"COPYRIGHT": "Copyright(C) DC. Tutti i diritti riservati.",
+		"DEVELOPED_BY": "Sviluppato da 0-don. Alimentato da Tauri.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "Nessun aggiornamento disponibile al momento",
+		"OFFICIAL_WEBSITE": "Sito ufficiale"
+	},
+	"CLIPBOARD": {
+		"NO_CLIPBOARDS_YET": "Ancora nessuna clipboard...",
+		"SEARCH_ENTRIES": "Cerca voci"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "Di",
+			"DIGIT_1": "Cifra 1",
+			"DIGIT_2": "Cifra 2",
+			"DIGIT_3": "Cifra 3",
+			"DIGIT_4": "Cifra 4",
+			"DIGIT_5": "Cifra 5",
+			"DIGIT_6": "Cifra 6",
+			"DIGIT_7": "Cifra 7",
+			"DIGIT_8": "Cifra 8",
+			"DIGIT_9": "Cifra 9",
+			"EXIT": "Uscita",
+			"HISTORY": "Storia",
+			"NUM_1": "Numero 1",
+			"NUM_2": "Numero 2",
+			"NUM_3": "Numero 3",
+			"NUM_4": "Numero 4",
+			"NUM_5": "Numero 5",
+			"NUM_6": "Numero 6",
+			"NUM_7": "Numero 7",
+			"NUM_8": "Numero 8",
+			"NUM_9": "Numero 9",
+			"RECENT_CLIPBOARDS": "Appunti recenti",
+			"SCROLL_TO_TOP": "Scorri fino all'inizio",
+			"SETTINGS": "Impostazioni",
+			"STARRED_CLIPBOARDS": "Appunti_stellati",
+			"SYNC_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
+			"TYPE_CLIPBOARD": "Tipo appunti",
+			"VIEW_MORE": "Visualizza altro",
+			"WINDOW_DISPLAY_TOGGLE": "Attiva/disattiva visualizzazione finestra"
+		},
+		"KEYS": {
+			"ALT": "ALT",
+			"CTRL": "Ctrl",
+			"SHIFT": "SPOSTARE"
+		},
+		"LANGUAGE": {
+			"AR": "Arabo",
+			"BN": "Bengalese",
+			"DE": "Tedesco",
+			"EN": "Inglese",
+			"ES": "Spagnolo",
+			"FR": "Francese",
+			"HI": "Hindi",
+			"IT": "Italiano",
+			"JA": "Giapponese",
+			"KO": "Coreano",
+			"NL": "Olandese",
+			"PL": "Polacco",
+			"PT": "Portoghese",
+			"RU": "Russo",
+			"TH": "Tailandese",
+			"TR": "Turco",
+			"UR": "Italiano:",
+			"VI": "Vietnamita",
+			"ZH": "Mandarino"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "In basso al centro",
+			"BOTTOM_LEFT": "In basso a sinistra",
+			"BOTTOM_RIGHT": "In basso a destra",
+			"CENTER": "Centro",
+			"CURSOR": "Cursore",
+			"LEFT_CENTER": "Centro sinistra",
+			"RIGHT_CENTER": "Centro-destra",
+			"TOP_CENTER": "In alto al centro",
+			"TOP_LEFT": "In alto a sinistra",
+			"TOP_RIGHT": "In alto a destra",
+			"TRAY_BOTTOM_CENTER": "Vassoio in basso al centro",
+			"TRAY_BOTTOM_LEFT": "Vassoio in basso a sinistra",
+			"TRAY_BOTTOM_RIGHT": "Vassoio in basso a destra",
+			"TRAY_CENTER": "Centro del vassoio",
+			"TRAY_LEFT": "Vassoio sinistro",
+			"TRAY_RIGHT": "Vassoio destro"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "Posizione di configurazione",
+			"DATABASE_LOCATION": "Posizione del database",
+			"OPEN": "Aprire",
+			"SYNC": "Sincronizzazione",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizzare la cronologia degli appunti"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "Cambia lingua",
+			"CHANGE_WINDOW_POSITION": "Cambia posizione della finestra",
+			"HTML_CLIPBOARD_TOOLTIP": "Tooltip degli appunti HTML",
+			"KEYBOARD_SHORTCUT": "Scorciatoia da tastiera",
+			"START_CLIPPY_ON_STARTUP": "Avvia Clippy all'avvio del sistema",
+			"SWITCH_THEME": "Cambia tema",
+			"SYSTEM": "Sistema",
+			"WINDOW_SCALE": "Scala della finestra"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "Cancella tutto",
+			"CLEAR_FILE": "Cancella file",
+			"CLEAR_HTML": "Cancella HTML",
+			"CLEAR_IMAGE": "Immagine chiara",
+			"CLEAR_RTF": "Cancella Rtf",
+			"CLEAR_TEXT": "Testo chiaro",
+			"SQL_DATABASE_INFO": "Informazioni sul database SQL",
+			"STORAGE_ACTIONS": "Azioni di archiviazione"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "Cambia i tuoi tasti di scelta rapida"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "Limiti degli appunti",
+			"IF_SET_TO_ZERO": "Se impostato su 0 il tipo di appunti verrà completamente saltato",
+			"MAX_FILE_SIZE": "Dimensione massima del file",
+			"MAX_HTML_SIZE": "Dimensione massima HTML",
+			"MAX_IMAGE_SIZE": "Dimensione massima dell'immagine",
+			"MAX_RTF_SIZE": "Dimensione massima RTF",
+			"MAX_TEXT_SIZE": "Dimensione massima del testo"
+		},
+		"TAB": {
+			"BACKUP": "Backup",
+			"GENERAL": "Generale",
+			"HISTORY": "Storia",
+			"HOTKEYS": "Tasti di scelta rapida",
+			"LIMITS": "Limiti"
+		}
+	}
+}

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@corvu/tooltip": "^0.2.1",
+    "@solid-primitives/i18n": "^2.1.1",
     "@tauri-apps/api": "2.1.1",
     "dayjs": "1.11.13",
     "solid-icons": "1.1.0",
@@ -28,9 +29,9 @@
     "postcss": "8.4.49",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "0.6.9",
-    "tailwindcss": "3.4.16",
+    "tailwindcss": "3.4.17",
     "typescript": "5.7.2",
-    "vite": "6.0.3",
+    "vite": "6.0.5",
     "vite-plugin-checker": "0.8.0",
     "vite-plugin-solid": "2.11.0"
   }

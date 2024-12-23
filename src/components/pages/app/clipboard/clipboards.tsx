@@ -4,18 +4,20 @@ import utc from "dayjs/plugin/utc";
 import { FiArrowUp } from "solid-icons/fi";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
+import { listenEvent } from "../../../../lib/tauri";
 import { AppStore } from "../../../../store/app-store";
 import { ClipboardStore } from "../../../../store/clipboard-store";
 import { HotkeyStore } from "../../../../store/hotkey-store";
 import { HotkeyEvent } from "../../../../types/enums";
 import { ListenEvent } from "../../../../types/tauri-listen";
-import { listenEvent } from "../../../../utils/tauri";
+import { useLanguage } from "../../../provider/language-provider";
 import { BaseClipboard } from "./base-clipboard";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
 export const Clipboards: Component = () => {
+  const { t } = useLanguage();
   const { globalHotkeyEvent, hotkeys } = HotkeyStore;
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
@@ -49,7 +51,7 @@ export const Clipboards: Component = () => {
       fallback={
         <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
           <img src={clippy} width="50%" alt="no clipboards" />
-          <h2 class="text-2xl font-medium opacity-50">No Clipboards yet...</h2>
+          <h2 class="text-2xl font-medium opacity-50">{t("CLIPBOARD.NO_CLIPBOARDS_YET")}</h2>
         </div>
       }
     >

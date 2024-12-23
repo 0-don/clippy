@@ -1,14 +1,14 @@
 import { BsDatabaseFillGear } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
+import { TbResize } from "solid-icons/tb";
 import { VsHistory } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
+import { invokeCommand } from "../lib/tauri";
 import { Settings, SettingsTab } from "../types";
 import { WebWindow } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { SETTINGS_TAB, SettingsTabName } from "../utils/constants";
-import { invokeCommand } from "../utils/tauri";
-import { TbResize } from "solid-icons/tb";
 
 function createSettingsStore() {
   const [tabs, setTabs] = createSignal<SettingsTab[]>([

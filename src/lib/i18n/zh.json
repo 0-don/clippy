@@ -1,0 +1,137 @@
+{
+	"ABOUT": {
+		"COPYRIGHT": "版权所有 (C) DC。保留所有权利。",
+		"DEVELOPED_BY": "由 0-don 开发。由 Tauri 提供支持。",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "目前没有可用更新",
+		"OFFICIAL_WEBSITE": "官方网站"
+	},
+	"CLIPBOARD": {
+		"NO_CLIPBOARDS_YET": "尚无剪贴板...",
+		"SEARCH_ENTRIES": "搜索条目"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "关于",
+			"DIGIT_1": "数字 1",
+			"DIGIT_2": "数字 2",
+			"DIGIT_3": "数字 3",
+			"DIGIT_4": "数字 4",
+			"DIGIT_5": "数字 5",
+			"DIGIT_6": "数字 6",
+			"DIGIT_7": "数字 7",
+			"DIGIT_8": "数字 8",
+			"DIGIT_9": "数字 9",
+			"EXIT": "出口",
+			"HISTORY": "历史",
+			"NUM_1": "数字 1",
+			"NUM_2": "数字 2",
+			"NUM_3": "数字 3",
+			"NUM_4": "数字 4",
+			"NUM_5": "数字 5",
+			"NUM_6": "数字 6",
+			"NUM_7": "数字 7",
+			"NUM_8": "数字 8",
+			"NUM_9": "数字 9",
+			"RECENT_CLIPBOARDS": "最近剪贴板",
+			"SCROLL_TO_TOP": "滚动到顶部",
+			"SETTINGS": "设置",
+			"STARRED_CLIPBOARDS": "Starred_Clipboards",
+			"SYNC_CLIPBOARD_HISTORY": "同步剪贴板历史记录",
+			"TYPE_CLIPBOARD": "类型剪贴板",
+			"VIEW_MORE": "查看更多",
+			"WINDOW_DISPLAY_TOGGLE": "窗口显示切换"
+		},
+		"KEYS": {
+			"ALT": "谷氨酰胺",
+			"CTRL": "Ctrl",
+			"SHIFT": "转移"
+		},
+		"LANGUAGE": {
+			"AR": "阿拉伯",
+			"BN": "孟加拉",
+			"DE": "德语",
+			"EN": "英语",
+			"ES": "西班牙语",
+			"FR": "法语",
+			"HI": "印地语",
+			"IT": "意大利语",
+			"JA": "日本人",
+			"KO": "韩国人",
+			"NL": "荷兰语",
+			"PL": "抛光",
+			"PT": "葡萄牙语",
+			"RU": "俄语",
+			"TH": "泰国",
+			"TR": "土耳其",
+			"UR": "乌尔都语",
+			"VI": "越南语",
+			"ZH": "普通话"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "底部中心",
+			"BOTTOM_LEFT": "左下方",
+			"BOTTOM_RIGHT": "右下角",
+			"CENTER": "中心",
+			"CURSOR": "光标",
+			"LEFT_CENTER": "左中",
+			"RIGHT_CENTER": "右中间",
+			"TOP_CENTER": "顶部中心",
+			"TOP_LEFT": "左上角",
+			"TOP_RIGHT": "右上",
+			"TRAY_BOTTOM_CENTER": "托盘底部中央",
+			"TRAY_BOTTOM_LEFT": "托盘左下方",
+			"TRAY_BOTTOM_RIGHT": "托盘右下方",
+			"TRAY_CENTER": "托盘中心",
+			"TRAY_LEFT": "托盘左侧",
+			"TRAY_RIGHT": "托盘右侧"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "配置位置",
+			"DATABASE_LOCATION": "数据库位置",
+			"OPEN": "打开",
+			"SYNC": "同步",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "改变语言",
+			"CHANGE_WINDOW_POSITION": "更改窗口位置",
+			"HTML_CLIPBOARD_TOOLTIP": "HTML 剪贴板工具提示",
+			"KEYBOARD_SHORTCUT": "键盘快捷键",
+			"START_CLIPPY_ON_STARTUP": "在系统启动时启动 Clippy",
+			"SWITCH_THEME": "切换主题",
+			"SYSTEM": "系统",
+			"WINDOW_SCALE": "窗口比例"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "清除全部",
+			"CLEAR_FILE": "透明文件柜",
+			"CLEAR_HTML": "清除 HTML",
+			"CLEAR_IMAGE": "清晰图像",
+			"CLEAR_RTF": "清除 RTF",
+			"CLEAR_TEXT": "明文",
+			"SQL_DATABASE_INFO": "SQL 数据库信息",
+			"STORAGE_ACTIONS": "存储操作"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "更改热键"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "剪贴板限制",
+			"IF_SET_TO_ZERO": "如果设置为 0，则将完全跳过剪贴板类型",
+			"MAX_FILE_SIZE": "最大文件大小",
+			"MAX_HTML_SIZE": "最大 HTML 大小",
+			"MAX_IMAGE_SIZE": "最大图像尺寸",
+			"MAX_RTF_SIZE": "最大 Rtf 大小",
+			"MAX_TEXT_SIZE": "最大文本大小"
+		},
+		"TAB": {
+			"BACKUP": "备份",
+			"GENERAL": "一般的",
+			"HISTORY": "历史",
+			"HOTKEYS": "热键",
+			"LIMITS": "限制"
+		}
+	}
+}

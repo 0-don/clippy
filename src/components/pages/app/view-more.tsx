@@ -5,10 +5,13 @@ import { Hotkey } from "../../../types";
 import { WebWindow } from "../../../types/enums";
 import { ViewMoreName } from "../../../utils/constants";
 import { Toggle } from "../../elements/toggle";
+import { useLanguage } from "../../provider/language-provider";
 
 interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
+  const { t } = useLanguage();
+
   const createButton = (name: ViewMoreName, callback: () => void) => {
     const hotkey = HotkeyStore.hotkeys().find((key) => key.name === name) as Hotkey;
 
@@ -32,9 +35,9 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
                 </div>
               </Show>
             </div>
-            <p class="px-4 text-base font-semibold">{name}</p>
+            <p class="px-4 text-base font-semibold">{t(name)}</p>
           </div>
-          {name === "Sync Clipboard History" && (
+          {name === "MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY" && (
             <Toggle checked={SettingsStore.settings()?.synchronize} onChange={async () => {}} />
           )}
         </div>
@@ -46,13 +49,13 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
   return (
     <>
       {/* Sync Clipboard History  */}
-      {createButton("Sync Clipboard History", SettingsStore.syncClipboard)}
+      {createButton("MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY", SettingsStore.syncClipboard)}
       {/* Settings */}
-      {createButton("Settings", () => SettingsStore.openWindow(WebWindow.Settings))}
+      {createButton("MAIN.HOTKEY.SETTINGS", () => SettingsStore.openWindow(WebWindow.Settings))}
       {/* About */}
-      {createButton("About", () => SettingsStore.openWindow(WebWindow.About))}
+      {createButton("MAIN.HOTKEY.ABOUT", () => SettingsStore.openWindow(WebWindow.About))}
       {/* Exit */}
-      {createButton("Exit", SettingsStore.exitApp)}
+      {createButton("MAIN.HOTKEY.EXIT", SettingsStore.exitApp)}
     </>
   );
 };
