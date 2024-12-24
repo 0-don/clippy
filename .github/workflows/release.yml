@@ -80,7 +80,6 @@ jobs:
             libxcb-shape0-dev \
             libxdo3 \
             libxdo-dev \
-            libjavascriptcoregtk-4.1-dev \
             libwebkit2gtk-4.1-dev
 
       - name: install frontend dependencies
