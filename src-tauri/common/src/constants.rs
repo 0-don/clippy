@@ -18,7 +18,7 @@ pub static MAIN_WINDOW_Y: i32 = 600;
 pub static ABOUT_WINDOW_X: i32 = 375;
 pub static ABOUT_WINDOW_Y: i32 = 600;
 
-pub static SETTINGS_WINDOW_X: i32 = 500;
+pub static SETTINGS_WINDOW_X: i32 = 580;
 pub static SETTINGS_WINDOW_Y: i32 = 580;
 
 pub static MAX_IMAGE_DIMENSIONS: u32 = 1280;
