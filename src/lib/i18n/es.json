@@ -1,137 +1,138 @@
 {
-	"ABOUT": {
-		"COPYRIGHT": "Copyright(C) DC. Todos los derechos reservados.",
-		"DEVELOPED_BY": "Desarrollado por 0-don. Con tecnología de Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "No hay actualizaciones disponibles actualmente",
-		"OFFICIAL_WEBSITE": "Sitio web oficial"
-	},
-	"CLIPBOARD": {
-		"NO_CLIPBOARDS_YET": "No hay portapapeles todavía...",
-		"SEARCH_ENTRIES": "Buscar entradas"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "Acerca de",
-			"DIGIT_1": "Dígito 1",
-			"DIGIT_2": "Dígito 2",
-			"DIGIT_3": "Dígito 3",
-			"DIGIT_4": "Dígito 4",
-			"DIGIT_5": "Dígito 5",
-			"DIGIT_6": "Dígito 6",
-			"DIGIT_7": "Dígito 7",
-			"DIGIT_8": "Dígito 8",
-			"DIGIT_9": "Dígito 9",
-			"EXIT": "Salida",
-			"HISTORY": "Historia",
-			"NUM_1": "Número 1",
-			"NUM_2": "Número 2",
-			"NUM_3": "Número 3",
-			"NUM_4": "Número 4",
-			"NUM_5": "Número 5",
-			"NUM_6": "Número 6",
-			"NUM_7": "Número 7",
-			"NUM_8": "Número 8",
-			"NUM_9": "Número 9",
-			"RECENT_CLIPBOARDS": "Portapapeles recientes",
-			"SCROLL_TO_TOP": "Vuelve al comienzo",
-			"SETTINGS": "Ajustes",
-			"STARRED_CLIPBOARDS": "Portapapeles con asterisco",
-			"SYNC_CLIPBOARD_HISTORY": "Sincronizar historial del portapapeles",
-			"TYPE_CLIPBOARD": "Tipo portapapeles",
-			"VIEW_MORE": "Ver más",
-			"WINDOW_DISPLAY_TOGGLE": "Alternar visualización de ventana"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Árabe",
-			"BN": "Bengalí",
-			"DE": "Alemán",
-			"EN": "Inglés",
-			"ES": "Español",
-			"FR": "Francés",
-			"HI": "Hindi",
-			"IT": "Italiano",
-			"JA": "Japonés",
-			"KO": "Coreano",
-			"NL": "Holandés",
-			"PL": "Polaco",
-			"PT": "Portugués",
-			"RU": "Ruso",
-			"TH": "Tailandés",
-			"TR": "Turco",
-			"UR": "Urdu",
-			"VI": "Vietnamita",
-			"ZH": "Mandarín"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "Parte inferior central",
-			"BOTTOM_LEFT": "Abajo a la izquierda",
-			"BOTTOM_RIGHT": "Abajo a la derecha",
-			"CENTER": "Centro",
-			"CURSOR": "Cursor",
-			"LEFT_CENTER": "Centro izquierda",
-			"RIGHT_CENTER": "Centro derecho",
-			"TOP_CENTER": "Centro superior",
-			"TOP_LEFT": "Arriba a la izquierda",
-			"TOP_RIGHT": "Arriba a la derecha",
-			"TRAY_BOTTOM_CENTER": "Bandeja inferior central",
-			"TRAY_BOTTOM_LEFT": "Bandeja inferior izquierda",
-			"TRAY_BOTTOM_RIGHT": "Bandeja inferior derecha",
-			"TRAY_CENTER": "Centro de bandeja",
-			"TRAY_LEFT": "Bandeja izquierda",
-			"TRAY_RIGHT": "Bandeja derecha"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "Ubicación de configuración",
-			"DATABASE_LOCATION": "Ubicación de la base de datos",
-			"OPEN": "Abierto",
-			"SYNC": "Sincronizar",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Cambiar idioma",
-			"CHANGE_WINDOW_POSITION": "Cambiar la posición de la ventana",
-			"HTML_CLIPBOARD_TOOLTIP": "Información sobre herramientas del portapapeles HTML",
-			"KEYBOARD_SHORTCUT": "Atajo de teclado",
-			"START_CLIPPY_ON_STARTUP": "Iniciar Clippy al iniciar el sistema",
-			"SWITCH_THEME": "Cambiar Tema",
-			"SYSTEM": "Sistema",
-			"WINDOW_SCALE": "Escala de ventana"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Limpiar todo",
-			"CLEAR_FILE": "Borrar archivo",
-			"CLEAR_HTML": "Borrar HTML",
-			"CLEAR_IMAGE": "Imagen clara",
-			"CLEAR_RTF": "Borrar Rtf",
-			"CLEAR_TEXT": "Texto claro",
-			"SQL_DATABASE_INFO": "Información de la base de datos SQL",
-			"STORAGE_ACTIONS": "Acciones de almacenamiento"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Cambia tus teclas de acceso rápido"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Límites del portapapeles",
-			"IF_SET_TO_ZERO": "Si se establece en 0, el tipo de portapapeles se omitirá por completo.",
-			"MAX_FILE_SIZE": "Tamaño máximo de archivo",
-			"MAX_HTML_SIZE": "Tamaño máximo de HTML",
-			"MAX_IMAGE_SIZE": "Tamaño máximo de imagen",
-			"MAX_RTF_SIZE": "Tamaño máximo de Rtf",
-			"MAX_TEXT_SIZE": "Tamaño máximo del texto"
-		},
-		"TAB": {
-			"BACKUP": "Respaldo",
-			"GENERAL": "General",
-			"HISTORY": "Historia",
-			"HOTKEYS": "Teclas de acceso rápido",
-			"LIMITS": "Límites"
-		}
-	}
+  "ABOUT": {
+    "COPYRIGHT": "Copyright(C) DC. Todos los derechos reservados.",
+    "DEVELOPED_BY": "Desarrollado por 0-don. Con tecnología de Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "No hay actualizaciones disponibles actualmente",
+    "OFFICIAL_WEBSITE": "Sitio web oficial"
+  },
+  "CLIPBOARD": {
+    "NO_CLIPBOARDS_YET": "No hay portapapeles todavía...",
+    "SEARCH_ENTRIES": "Buscar entradas"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "Acerca de",
+      "DIGIT_1": "Dígito 1",
+      "DIGIT_2": "Dígito 2",
+      "DIGIT_3": "Dígito 3",
+      "DIGIT_4": "Dígito 4",
+      "DIGIT_5": "Dígito 5",
+      "DIGIT_6": "Dígito 6",
+      "DIGIT_7": "Dígito 7",
+      "DIGIT_8": "Dígito 8",
+      "DIGIT_9": "Dígito 9",
+      "EXIT": "Salida",
+      "HISTORY": "Historia",
+      "NUM_1": "Número 1",
+      "NUM_2": "Número 2",
+      "NUM_3": "Número 3",
+      "NUM_4": "Número 4",
+      "NUM_5": "Número 5",
+      "NUM_6": "Número 6",
+      "NUM_7": "Número 7",
+      "NUM_8": "Número 8",
+      "NUM_9": "Número 9",
+      "RECENT_CLIPBOARDS": "Portapapeles recientes",
+      "SCROLL_TO_TOP": "Vuelve al comienzo",
+      "SETTINGS": "Ajustes",
+      "STARRED_CLIPBOARDS": "Portapapeles con asterisco",
+      "SYNC_CLIPBOARD_HISTORY": "Sincronizar historial del portapapeles",
+      "TYPE_CLIPBOARD": "Tipo portapapeles",
+      "VIEW_MORE": "Ver más",
+      "WINDOW_DISPLAY_TOGGLE": "Alternar visualización de ventana"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Árabe",
+      "BN": "Bengalí",
+      "DE": "Alemán",
+      "EN": "Inglés",
+      "ES": "Español",
+      "FR": "Francés",
+      "HI": "Hindi",
+      "IT": "Italiano",
+      "JA": "Japonés",
+      "KO": "Coreano",
+      "NL": "Holandés",
+      "PL": "Polaco",
+      "PT": "Portugués",
+      "RU": "Ruso",
+      "TH": "Tailandés",
+      "TR": "Turco",
+      "UR": "Urdu",
+      "VI": "Vietnamita",
+      "ZH": "Mandarín"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "Parte inferior central",
+      "BOTTOM_LEFT": "Abajo a la izquierda",
+      "BOTTOM_RIGHT": "Abajo a la derecha",
+      "CENTER": "Centro",
+      "CURSOR": "Cursor",
+      "LEFT_CENTER": "Centro izquierda",
+      "RIGHT_CENTER": "Centro derecho",
+      "TOP_CENTER": "Centro superior",
+      "TOP_LEFT": "Arriba a la izquierda",
+      "TOP_RIGHT": "Arriba a la derecha",
+      "TRAY_BOTTOM_CENTER": "Bandeja inferior central",
+      "TRAY_BOTTOM_LEFT": "Bandeja inferior izquierda",
+      "TRAY_BOTTOM_RIGHT": "Bandeja inferior derecha",
+      "TRAY_CENTER": "Centro de bandeja",
+      "TRAY_LEFT": "Bandeja izquierda",
+      "TRAY_RIGHT": "Bandeja derecha"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "Ubicación de configuración",
+      "DATABASE_LOCATION": "Ubicación de la base de datos",
+      "OPEN": "Abierto",
+      "SYNC": "Sincronizar",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Cambiar idioma",
+      "CHANGE_WINDOW_POSITION": "Cambiar la posición de la ventana",
+      "HTML_CLIPBOARD_TOOLTIP": "Información sobre herramientas del portapapeles HTML",
+      "KEYBOARD_SHORTCUT": "Atajo de teclado",
+      "START_CLIPPY_ON_STARTUP": "Iniciar Clippy al iniciar el sistema",
+      "SWITCH_THEME": "Cambiar Tema",
+      "SYSTEM": "Sistema",
+      "WINDOW_SCALE": "Escala de ventana"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Limpiar todo",
+      "CLEAR_FILE": "Borrar archivo",
+      "CLEAR_HTML": "Borrar HTML",
+      "CLEAR_IMAGE": "Imagen clara",
+      "CLEAR_RTF": "Borrar Rtf",
+      "CLEAR_TEXT": "Texto claro",
+      "DATABASE_INFO": "{{records}} elementos locales ({{size}}) se guardan en esta computadora",
+      "SQL_DATABASE_INFO": "Información de la base de datos SQL",
+      "STORAGE_ACTIONS": "Acciones de almacenamiento"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Cambia tus teclas de acceso rápido"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Límites del portapapeles",
+      "IF_SET_TO_ZERO": "Si se establece en 0, el tipo de portapapeles se omitirá por completo.",
+      "MAX_FILE_SIZE": "Tamaño máximo de archivo",
+      "MAX_HTML_SIZE": "Tamaño máximo de HTML",
+      "MAX_IMAGE_SIZE": "Tamaño máximo de imagen",
+      "MAX_RTF_SIZE": "Tamaño máximo de Rtf",
+      "MAX_TEXT_SIZE": "Tamaño máximo del texto"
+    },
+    "TAB": {
+      "BACKUP": "Respaldo",
+      "GENERAL": "General",
+      "HISTORY": "Historia",
+      "HOTKEYS": "Teclas de acceso rápido",
+      "LIMITS": "Límites"
+    }
+  }
 }

@@ -1,137 +1,138 @@
 {
-	"ABOUT": {
-		"COPYRIGHT": "Copyright(C) DC. Wszelkie prawa zastrzeżone.",
-		"DEVELOPED_BY": "Opracowane przez 0-don. Obsługiwane przez Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Brak dostępnych aktualizacji",
-		"OFFICIAL_WEBSITE": "Oficjalna strona internetowa"
-	},
-	"CLIPBOARD": {
-		"NO_CLIPBOARDS_YET": "Jeszcze nie ma schowków...",
-		"SEARCH_ENTRIES": "Wyszukaj wpisy"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "O",
-			"DIGIT_1": "Cyfra 1",
-			"DIGIT_2": "Cyfra 2",
-			"DIGIT_3": "Cyfra 3",
-			"DIGIT_4": "Cyfra 4",
-			"DIGIT_5": "Cyfra 5",
-			"DIGIT_6": "Cyfra 6",
-			"DIGIT_7": "Cyfra 7",
-			"DIGIT_8": "Cyfra 8",
-			"DIGIT_9": "Cyfra 9",
-			"EXIT": "Wyjście",
-			"HISTORY": "Historia",
-			"NUM_1": "Numer 1",
-			"NUM_2": "Numer 2",
-			"NUM_3": "Numer 3",
-			"NUM_4": "Numer 4",
-			"NUM_5": "Numer 5",
-			"NUM_6": "Numer 6",
-			"NUM_7": "Numer 7",
-			"NUM_8": "Numer 8",
-			"NUM_9": "Numer 9",
-			"RECENT_CLIPBOARDS": "Ostatnie schowki",
-			"SCROLL_TO_TOP": "Przewiń na górę",
-			"SETTINGS": "Ustawienia",
-			"STARRED_CLIPBOARDS": "Schowki oznaczone gwiazdką",
-			"SYNC_CLIPBOARD_HISTORY": "Synchronizuj historię schowka",
-			"TYPE_CLIPBOARD": "Wpisz schowek",
-			"VIEW_MORE": "Zobacz więcej",
-			"WINDOW_DISPLAY_TOGGLE": "Przełączanie wyświetlania okna"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Arabski",
-			"BN": "Bengalski",
-			"DE": "Niemiecki",
-			"EN": "Język angielski",
-			"ES": "Hiszpański",
-			"FR": "Francuski",
-			"HI": "Hinduski",
-			"IT": "Włoski",
-			"JA": "Japoński",
-			"KO": "Koreański",
-			"NL": "Holenderski",
-			"PL": "Polski",
-			"PT": "Portugalski",
-			"RU": "Rosyjski",
-			"TH": "Tajski",
-			"TR": "Turecki",
-			"UR": "Urdu",
-			"VI": "Wietnamski",
-			"ZH": "Mandarynka"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "Dolny środek",
-			"BOTTOM_LEFT": "Na dole po lewej",
-			"BOTTOM_RIGHT": "Prawy dolny",
-			"CENTER": "Centrum",
-			"CURSOR": "Kursor",
-			"LEFT_CENTER": "Lewy środek",
-			"RIGHT_CENTER": "Prawy środek",
-			"TOP_CENTER": "Górny środek",
-			"TOP_LEFT": "Lewy górny róg",
-			"TOP_RIGHT": "Prawy górny róg",
-			"TRAY_BOTTOM_CENTER": "Taca na dole, środek",
-			"TRAY_BOTTOM_LEFT": "Taca na dole po lewej",
-			"TRAY_BOTTOM_RIGHT": "Taca dolna prawa",
-			"TRAY_CENTER": "Środek tacy",
-			"TRAY_LEFT": "Taca lewa",
-			"TRAY_RIGHT": "Taca prawa"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "Lokalizacja konfiguracji",
-			"DATABASE_LOCATION": "Lokalizacja bazy danych",
-			"OPEN": "Otwarty",
-			"SYNC": "Synchronizacja",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Zmień język",
-			"CHANGE_WINDOW_POSITION": "Zmień położenie okna",
-			"HTML_CLIPBOARD_TOOLTIP": "Podpowiedź schowka HTML",
-			"KEYBOARD_SHORTCUT": "Skrót klawiaturowy",
-			"START_CLIPPY_ON_STARTUP": "Uruchom Clippy przy starcie systemu",
-			"SWITCH_THEME": "Zmień motyw",
-			"SYSTEM": "System",
-			"WINDOW_SCALE": "Skala okna"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Wyczyść wszystko",
-			"CLEAR_FILE": "Wyczyść plik",
-			"CLEAR_HTML": "Wyczyść HTML",
-			"CLEAR_IMAGE": "Wyraźny obraz",
-			"CLEAR_RTF": "Wyczyść RTF",
-			"CLEAR_TEXT": "Wyczyść tekst",
-			"SQL_DATABASE_INFO": "Informacje o bazie danych SQL",
-			"STORAGE_ACTIONS": "Akcje magazynowe"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Zmień swoje klawisze skrótu"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Ograniczenia schowka",
-			"IF_SET_TO_ZERO": "Jeśli ustawione na 0, typ schowka zostanie całkowicie pominięty",
-			"MAX_FILE_SIZE": "Maksymalny rozmiar pliku",
-			"MAX_HTML_SIZE": "Maksymalny rozmiar HTML",
-			"MAX_IMAGE_SIZE": "Maksymalny rozmiar obrazu",
-			"MAX_RTF_SIZE": "Maksymalny rozmiar RTF",
-			"MAX_TEXT_SIZE": "Maksymalny rozmiar tekstu"
-		},
-		"TAB": {
-			"BACKUP": "Kopia zapasowa",
-			"GENERAL": "Ogólny",
-			"HISTORY": "Historia",
-			"HOTKEYS": "Klawisze skrótu",
-			"LIMITS": "Ograniczenia"
-		}
-	}
+  "ABOUT": {
+    "COPYRIGHT": "Copyright(C) DC. Wszelkie prawa zastrzeżone.",
+    "DEVELOPED_BY": "Opracowane przez 0-don. Obsługiwane przez Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "Brak dostępnych aktualizacji",
+    "OFFICIAL_WEBSITE": "Oficjalna strona internetowa"
+  },
+  "CLIPBOARD": {
+    "NO_CLIPBOARDS_YET": "Jeszcze nie ma schowków...",
+    "SEARCH_ENTRIES": "Wyszukaj wpisy"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "O",
+      "DIGIT_1": "Cyfra 1",
+      "DIGIT_2": "Cyfra 2",
+      "DIGIT_3": "Cyfra 3",
+      "DIGIT_4": "Cyfra 4",
+      "DIGIT_5": "Cyfra 5",
+      "DIGIT_6": "Cyfra 6",
+      "DIGIT_7": "Cyfra 7",
+      "DIGIT_8": "Cyfra 8",
+      "DIGIT_9": "Cyfra 9",
+      "EXIT": "Wyjście",
+      "HISTORY": "Historia",
+      "NUM_1": "Numer 1",
+      "NUM_2": "Numer 2",
+      "NUM_3": "Numer 3",
+      "NUM_4": "Numer 4",
+      "NUM_5": "Numer 5",
+      "NUM_6": "Numer 6",
+      "NUM_7": "Numer 7",
+      "NUM_8": "Numer 8",
+      "NUM_9": "Numer 9",
+      "RECENT_CLIPBOARDS": "Ostatnie schowki",
+      "SCROLL_TO_TOP": "Przewiń na górę",
+      "SETTINGS": "Ustawienia",
+      "STARRED_CLIPBOARDS": "Schowki oznaczone gwiazdką",
+      "SYNC_CLIPBOARD_HISTORY": "Synchronizuj historię schowka",
+      "TYPE_CLIPBOARD": "Wpisz schowek",
+      "VIEW_MORE": "Zobacz więcej",
+      "WINDOW_DISPLAY_TOGGLE": "Przełączanie wyświetlania okna"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Arabski",
+      "BN": "Bengalski",
+      "DE": "Niemiecki",
+      "EN": "Język angielski",
+      "ES": "Hiszpański",
+      "FR": "Francuski",
+      "HI": "Hinduski",
+      "IT": "Włoski",
+      "JA": "Japoński",
+      "KO": "Koreański",
+      "NL": "Holenderski",
+      "PL": "Polski",
+      "PT": "Portugalski",
+      "RU": "Rosyjski",
+      "TH": "Tajski",
+      "TR": "Turecki",
+      "UR": "Urdu",
+      "VI": "Wietnamski",
+      "ZH": "Mandarynka"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "Dolny środek",
+      "BOTTOM_LEFT": "Na dole po lewej",
+      "BOTTOM_RIGHT": "Prawy dolny",
+      "CENTER": "Centrum",
+      "CURSOR": "Kursor",
+      "LEFT_CENTER": "Lewy środek",
+      "RIGHT_CENTER": "Prawy środek",
+      "TOP_CENTER": "Górny środek",
+      "TOP_LEFT": "Lewy górny róg",
+      "TOP_RIGHT": "Prawy górny róg",
+      "TRAY_BOTTOM_CENTER": "Taca na dole, środek",
+      "TRAY_BOTTOM_LEFT": "Taca na dole po lewej",
+      "TRAY_BOTTOM_RIGHT": "Taca dolna prawa",
+      "TRAY_CENTER": "Środek tacy",
+      "TRAY_LEFT": "Taca lewa",
+      "TRAY_RIGHT": "Taca prawa"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "Lokalizacja konfiguracji",
+      "DATABASE_LOCATION": "Lokalizacja bazy danych",
+      "OPEN": "Otwarty",
+      "SYNC": "Synchronizacja",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Zmień język",
+      "CHANGE_WINDOW_POSITION": "Zmień położenie okna",
+      "HTML_CLIPBOARD_TOOLTIP": "Podpowiedź schowka HTML",
+      "KEYBOARD_SHORTCUT": "Skrót klawiaturowy",
+      "START_CLIPPY_ON_STARTUP": "Uruchom Clippy przy starcie systemu",
+      "SWITCH_THEME": "Zmień motyw",
+      "SYSTEM": "System",
+      "WINDOW_SCALE": "Skala okna"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Wyczyść wszystko",
+      "CLEAR_FILE": "Wyczyść plik",
+      "CLEAR_HTML": "Wyczyść HTML",
+      "CLEAR_IMAGE": "Wyraźny obraz",
+      "CLEAR_RTF": "Wyczyść RTF",
+      "CLEAR_TEXT": "Wyczyść tekst",
+      "DATABASE_INFO": "{{records}} lokalnych elementów ({{size}}) jest zapisanych na tym komputerze",
+      "SQL_DATABASE_INFO": "Informacje o bazie danych SQL",
+      "STORAGE_ACTIONS": "Akcje magazynowe"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Zmień swoje klawisze skrótu"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Ograniczenia schowka",
+      "IF_SET_TO_ZERO": "Jeśli ustawione na 0, typ schowka zostanie całkowicie pominięty",
+      "MAX_FILE_SIZE": "Maksymalny rozmiar pliku",
+      "MAX_HTML_SIZE": "Maksymalny rozmiar HTML",
+      "MAX_IMAGE_SIZE": "Maksymalny rozmiar obrazu",
+      "MAX_RTF_SIZE": "Maksymalny rozmiar RTF",
+      "MAX_TEXT_SIZE": "Maksymalny rozmiar tekstu"
+    },
+    "TAB": {
+      "BACKUP": "Kopia zapasowa",
+      "GENERAL": "Ogólny",
+      "HISTORY": "Historia",
+      "HOTKEYS": "Klawisze skrótu",
+      "LIMITS": "Ograniczenia"
+    }
+  }
 }

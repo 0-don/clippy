@@ -1,7 +1,7 @@
 import { BsDeviceHdd } from "solid-icons/bs";
 import { FiTrash2 } from "solid-icons/fi";
 import { SiSqlite } from "solid-icons/si";
-import { Component, createResource } from "solid-js";
+import { Component, createEffect, createResource } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand } from "../../../lib/tauri";
 import { ClipboardType } from "../../../types/enums";
@@ -28,12 +28,18 @@ export const SettingsHistory: Component = () => {
     refetch();
   };
 
+  createEffect(() => {
+    console.log(databaseInfo());
+  });
   return (
     <>
       <TextBlock Icon={SiSqlite} title={t("SETTINGS.HISTORY.SQL_DATABASE_INFO")}>
         <ul class="mx-5 list-disc px-5 pb-5">
           <li>
-            {`${databaseInfo()?.records} local items (${formatBytes(databaseInfo()?.size)}) are saved on this computer`}
+            {t("SETTINGS.HISTORY.DATABASE_INFO", {
+              records: databaseInfo()?.records || 0,
+              size: formatBytes(databaseInfo()?.size),
+            })}
           </li>
         </ul>
       </TextBlock>

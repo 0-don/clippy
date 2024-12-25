@@ -1,137 +1,138 @@
 {
-	"ABOUT": {
-		"COPYRIGHT": "Авторские права (C) DC. Все права защищены.",
-		"DEVELOPED_BY": "Разработано 0-don. Работает на Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "В настоящее время обновлений нет.",
-		"OFFICIAL_WEBSITE": "Официальный сайт"
-	},
-	"CLIPBOARD": {
-		"NO_CLIPBOARDS_YET": "Пока нет буферов обмена...",
-		"SEARCH_ENTRIES": "Поиск записей"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "О",
-			"DIGIT_1": "Цифра 1",
-			"DIGIT_2": "Цифра 2",
-			"DIGIT_3": "Цифра 3",
-			"DIGIT_4": "Цифра 4",
-			"DIGIT_5": "Цифра 5",
-			"DIGIT_6": "Цифра 6",
-			"DIGIT_7": "Цифра 7",
-			"DIGIT_8": "Цифра 8",
-			"DIGIT_9": "Цифра 9",
-			"EXIT": "Выход",
-			"HISTORY": "История",
-			"NUM_1": "Номер 1",
-			"NUM_2": "Номер 2",
-			"NUM_3": "Номер 3",
-			"NUM_4": "Номер 4",
-			"NUM_5": "Номер 5",
-			"NUM_6": "Номер 6",
-			"NUM_7": "Номер 7",
-			"NUM_8": "Номер 8",
-			"NUM_9": "Номер 9",
-			"RECENT_CLIPBOARDS": "Недавние буферы обмена",
-			"SCROLL_TO_TOP": "Пролистать наверх",
-			"SETTINGS": "Настройки",
-			"STARRED_CLIPBOARDS": "Помеченные звездочкой буферы обмена",
-			"SYNC_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена",
-			"TYPE_CLIPBOARD": "Тип буфера обмена",
-			"VIEW_MORE": "Посмотреть больше",
-			"WINDOW_DISPLAY_TOGGLE": "Переключение отображения окна"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "АРАБСКИЙ",
-			"BN": "Бенгальский",
-			"DE": "НЕМЕЦКИЙ",
-			"EN": "Английский",
-			"ES": "ИСПАНСКИЙ",
-			"FR": "ФРАНЦУЗСКИЙ",
-			"HI": "Хинди",
-			"IT": "ИТАЛЬЯНСКИЙ",
-			"JA": "ЯПОНСКИЙ",
-			"KO": "КОРЕЙСКИЙ",
-			"NL": "ГОЛЛАНДСКИЙ",
-			"PL": "Польский",
-			"PT": "ПОРТУГАЛЬСКИЙ",
-			"RU": "РУССКИЙ",
-			"TH": "ТАЙСКИЙ",
-			"TR": "ТУРЕЦКИЙ",
-			"UR": "Урду",
-			"VI": "ВЬЕТНАМСКИЙ",
-			"ZH": "Мандарин"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "Внизу по центру",
-			"BOTTOM_LEFT": "Внизу слева",
-			"BOTTOM_RIGHT": "Внизу справа",
-			"CENTER": "Центр",
-			"CURSOR": "Курсор",
-			"LEFT_CENTER": "Левый центр",
-			"RIGHT_CENTER": "Правый центр",
-			"TOP_CENTER": "Верхний центр",
-			"TOP_LEFT": "Вверху слева",
-			"TOP_RIGHT": "Вверху справа",
-			"TRAY_BOTTOM_CENTER": "Нижний центр лотка",
-			"TRAY_BOTTOM_LEFT": "Лоток внизу слева",
-			"TRAY_BOTTOM_RIGHT": "Лоток внизу справа",
-			"TRAY_CENTER": "Центр подноса",
-			"TRAY_LEFT": "Лоток левый",
-			"TRAY_RIGHT": "Лоток правый"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "Расположение конфигурации",
-			"DATABASE_LOCATION": "Расположение базы данных",
-			"OPEN": "Открыть",
-			"SYNC": "Синхронизировать",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Изменить язык",
-			"CHANGE_WINDOW_POSITION": "Изменить положение окна",
-			"HTML_CLIPBOARD_TOOLTIP": "Подсказка буфера обмена HTML",
-			"KEYBOARD_SHORTCUT": "Сочетание клавиш",
-			"START_CLIPPY_ON_STARTUP": "Запустить Clippy при запуске системы",
-			"SWITCH_THEME": "Сменить тему",
-			"SYSTEM": "Система",
-			"WINDOW_SCALE": "Масштаб окна"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Очистить все",
-			"CLEAR_FILE": "Очистить файл",
-			"CLEAR_HTML": "Очистить HTML",
-			"CLEAR_IMAGE": "Очистить изображение",
-			"CLEAR_RTF": "Очистить RTF",
-			"CLEAR_TEXT": "Очистить текст",
-			"SQL_DATABASE_INFO": "Информация о базе данных SQL",
-			"STORAGE_ACTIONS": "Действия по хранению"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Измените горячие клавиши"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Ограничения буфера обмена",
-			"IF_SET_TO_ZERO": "Если установлено значение 0, тип буфера обмена будет полностью пропущен.",
-			"MAX_FILE_SIZE": "Макс. размер файла",
-			"MAX_HTML_SIZE": "Макс. размер HTML",
-			"MAX_IMAGE_SIZE": "Макс. размер изображения",
-			"MAX_RTF_SIZE": "Макс. размер RTF",
-			"MAX_TEXT_SIZE": "Макс. размер текста"
-		},
-		"TAB": {
-			"BACKUP": "Резервное копирование",
-			"GENERAL": "Общий",
-			"HISTORY": "История",
-			"HOTKEYS": "Горячие клавиши",
-			"LIMITS": "Пределы"
-		}
-	}
+  "ABOUT": {
+    "COPYRIGHT": "Авторские права (C) DC. Все права защищены.",
+    "DEVELOPED_BY": "Разработано 0-don. Работает на Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "В настоящее время обновлений нет.",
+    "OFFICIAL_WEBSITE": "Официальный сайт"
+  },
+  "CLIPBOARD": {
+    "NO_CLIPBOARDS_YET": "Пока нет буферов обмена...",
+    "SEARCH_ENTRIES": "Поиск записей"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "О",
+      "DIGIT_1": "Цифра 1",
+      "DIGIT_2": "Цифра 2",
+      "DIGIT_3": "Цифра 3",
+      "DIGIT_4": "Цифра 4",
+      "DIGIT_5": "Цифра 5",
+      "DIGIT_6": "Цифра 6",
+      "DIGIT_7": "Цифра 7",
+      "DIGIT_8": "Цифра 8",
+      "DIGIT_9": "Цифра 9",
+      "EXIT": "Выход",
+      "HISTORY": "История",
+      "NUM_1": "Номер 1",
+      "NUM_2": "Номер 2",
+      "NUM_3": "Номер 3",
+      "NUM_4": "Номер 4",
+      "NUM_5": "Номер 5",
+      "NUM_6": "Номер 6",
+      "NUM_7": "Номер 7",
+      "NUM_8": "Номер 8",
+      "NUM_9": "Номер 9",
+      "RECENT_CLIPBOARDS": "Недавние буферы обмена",
+      "SCROLL_TO_TOP": "Пролистать наверх",
+      "SETTINGS": "Настройки",
+      "STARRED_CLIPBOARDS": "Помеченные звездочкой буферы обмена",
+      "SYNC_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена",
+      "TYPE_CLIPBOARD": "Тип буфера обмена",
+      "VIEW_MORE": "Посмотреть больше",
+      "WINDOW_DISPLAY_TOGGLE": "Переключение отображения окна"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "АРАБСКИЙ",
+      "BN": "Бенгальский",
+      "DE": "НЕМЕЦКИЙ",
+      "EN": "Английский",
+      "ES": "ИСПАНСКИЙ",
+      "FR": "ФРАНЦУЗСКИЙ",
+      "HI": "Хинди",
+      "IT": "ИТАЛЬЯНСКИЙ",
+      "JA": "ЯПОНСКИЙ",
+      "KO": "КОРЕЙСКИЙ",
+      "NL": "ГОЛЛАНДСКИЙ",
+      "PL": "Польский",
+      "PT": "ПОРТУГАЛЬСКИЙ",
+      "RU": "РУССКИЙ",
+      "TH": "ТАЙСКИЙ",
+      "TR": "ТУРЕЦКИЙ",
+      "UR": "Урду",
+      "VI": "ВЬЕТНАМСКИЙ",
+      "ZH": "Мандарин"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "Внизу по центру",
+      "BOTTOM_LEFT": "Внизу слева",
+      "BOTTOM_RIGHT": "Внизу справа",
+      "CENTER": "Центр",
+      "CURSOR": "Курсор",
+      "LEFT_CENTER": "Левый центр",
+      "RIGHT_CENTER": "Правый центр",
+      "TOP_CENTER": "Верхний центр",
+      "TOP_LEFT": "Вверху слева",
+      "TOP_RIGHT": "Вверху справа",
+      "TRAY_BOTTOM_CENTER": "Нижний центр лотка",
+      "TRAY_BOTTOM_LEFT": "Лоток внизу слева",
+      "TRAY_BOTTOM_RIGHT": "Лоток внизу справа",
+      "TRAY_CENTER": "Центр подноса",
+      "TRAY_LEFT": "Лоток левый",
+      "TRAY_RIGHT": "Лоток правый"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "Расположение конфигурации",
+      "DATABASE_LOCATION": "Расположение базы данных",
+      "OPEN": "Открыть",
+      "SYNC": "Синхронизировать",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Изменить язык",
+      "CHANGE_WINDOW_POSITION": "Изменить положение окна",
+      "HTML_CLIPBOARD_TOOLTIP": "Подсказка буфера обмена HTML",
+      "KEYBOARD_SHORTCUT": "Сочетание клавиш",
+      "START_CLIPPY_ON_STARTUP": "Запустить Clippy при запуске системы",
+      "SWITCH_THEME": "Сменить тему",
+      "SYSTEM": "Система",
+      "WINDOW_SCALE": "Масштаб окна"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Очистить все",
+      "CLEAR_FILE": "Очистить файл",
+      "CLEAR_HTML": "Очистить HTML",
+      "CLEAR_IMAGE": "Очистить изображение",
+      "CLEAR_RTF": "Очистить RTF",
+      "CLEAR_TEXT": "Очистить текст",
+      "DATABASE_INFO": "{{records}} локальных элементов ({{size}}) сохранены на этом компьютере",
+      "SQL_DATABASE_INFO": "Информация о базе данных SQL",
+      "STORAGE_ACTIONS": "Действия по хранению"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Измените горячие клавиши"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Ограничения буфера обмена",
+      "IF_SET_TO_ZERO": "Если установлено значение 0, тип буфера обмена будет полностью пропущен.",
+      "MAX_FILE_SIZE": "Макс. размер файла",
+      "MAX_HTML_SIZE": "Макс. размер HTML",
+      "MAX_IMAGE_SIZE": "Макс. размер изображения",
+      "MAX_RTF_SIZE": "Макс. размер RTF",
+      "MAX_TEXT_SIZE": "Макс. размер текста"
+    },
+    "TAB": {
+      "BACKUP": "Резервное копирование",
+      "GENERAL": "Общий",
+      "HISTORY": "История",
+      "HOTKEYS": "Горячие клавиши",
+      "LIMITS": "Пределы"
+    }
+  }
 }

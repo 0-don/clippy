@@ -1,137 +1,138 @@
 {
-	"ABOUT": {
-		"COPYRIGHT": "저작권(C) DC. 모든 권리 보유.",
-		"DEVELOPED_BY": "0-don이 개발했습니다. Tauri가 지원합니다.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "현재 사용 가능한 업데이트가 없습니다.",
-		"OFFICIAL_WEBSITE": "공식 웹사이트"
-	},
-	"CLIPBOARD": {
-		"NO_CLIPBOARDS_YET": "아직 클립보드가 없습니다...",
-		"SEARCH_ENTRIES": "항목 검색"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "에 대한",
-			"DIGIT_1": "숫자 1",
-			"DIGIT_2": "숫자 2",
-			"DIGIT_3": "숫자 3",
-			"DIGIT_4": "숫자 4",
-			"DIGIT_5": "숫자 5",
-			"DIGIT_6": "숫자 6",
-			"DIGIT_7": "숫자 7",
-			"DIGIT_8": "숫자 8",
-			"DIGIT_9": "숫자 9",
-			"EXIT": "출구",
-			"HISTORY": "역사",
-			"NUM_1": "숫자 1",
-			"NUM_2": "숫자 2",
-			"NUM_3": "숫자 3",
-			"NUM_4": "숫자 4",
-			"NUM_5": "숫자 5",
-			"NUM_6": "숫자 6",
-			"NUM_7": "숫자 7",
-			"NUM_8": "숫자 8",
-			"NUM_9": "숫자 9",
-			"RECENT_CLIPBOARDS": "최근 클립보드",
-			"SCROLL_TO_TOP": "맨위로 스크롤",
-			"SETTINGS": "설정",
-			"STARRED_CLIPBOARDS": "별표가 붙은 클립보드",
-			"SYNC_CLIPBOARD_HISTORY": "클립보드 기록 동기화",
-			"TYPE_CLIPBOARD": "클립보드 입력",
-			"VIEW_MORE": "더보기",
-			"WINDOW_DISPLAY_TOGGLE": "창 표시 토글"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "아라비아 말",
-			"BN": "벵골 사람",
-			"DE": "독일 사람",
-			"EN": "영어",
-			"ES": "스페인 사람",
-			"FR": "프랑스 국민",
-			"HI": "힌디 어",
-			"IT": "이탈리아 사람",
-			"JA": "일본어",
-			"KO": "한국인",
-			"NL": "네덜란드 사람",
-			"PL": "광택",
-			"PT": "포르투갈 인",
-			"RU": "러시아인",
-			"TH": "태국어",
-			"TR": "터키어",
-			"UR": "우르두어",
-			"VI": "베트남 사람",
-			"ZH": "만다린 오렌지"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "하단 중앙",
-			"BOTTOM_LEFT": "왼쪽 하단",
-			"BOTTOM_RIGHT": "오른쪽 하단",
-			"CENTER": "센터",
-			"CURSOR": "커서",
-			"LEFT_CENTER": "왼쪽 중앙",
-			"RIGHT_CENTER": "오른쪽 중앙",
-			"TOP_CENTER": "상단 중앙",
-			"TOP_LEFT": "왼쪽 위",
-			"TOP_RIGHT": "오른쪽 상단",
-			"TRAY_BOTTOM_CENTER": "트레이 바닥 중앙",
-			"TRAY_BOTTOM_LEFT": "트레이 하단 왼쪽",
-			"TRAY_BOTTOM_RIGHT": "트레이 하단 오른쪽",
-			"TRAY_CENTER": "트레이 중앙",
-			"TRAY_LEFT": "트레이 왼쪽",
-			"TRAY_RIGHT": "트레이 오른쪽"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "구성 위치",
-			"DATABASE_LOCATION": "데이터베이스 위치",
-			"OPEN": "열려 있는",
-			"SYNC": "동조",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "언어 변경",
-			"CHANGE_WINDOW_POSITION": "창 위치 변경",
-			"HTML_CLIPBOARD_TOOLTIP": "HTML 클립보드 툴팁",
-			"KEYBOARD_SHORTCUT": "단축키",
-			"START_CLIPPY_ON_STARTUP": "시스템 시작 시 Clippy 시작",
-			"SWITCH_THEME": "테마 변경",
-			"SYSTEM": "체계",
-			"WINDOW_SCALE": "창 크기"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "모두 지우기",
-			"CLEAR_FILE": "클리어 파일",
-			"CLEAR_HTML": "HTML 지우기",
-			"CLEAR_IMAGE": "명확한 이미지",
-			"CLEAR_RTF": "Rtf 지우기",
-			"CLEAR_TEXT": "명확한 텍스트",
-			"SQL_DATABASE_INFO": "SQL 데이터베이스 정보",
-			"STORAGE_ACTIONS": "저장 작업"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "단축키를 변경하세요"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "클립보드 제한",
-			"IF_SET_TO_ZERO": "0으로 설정하면 클립보드 유형이 완전히 건너뜁니다.",
-			"MAX_FILE_SIZE": "최대 파일 크기",
-			"MAX_HTML_SIZE": "최대 HTML 크기",
-			"MAX_IMAGE_SIZE": "최대 이미지 크기",
-			"MAX_RTF_SIZE": "최대 Rtf 크기",
-			"MAX_TEXT_SIZE": "최대 텍스트 크기"
-		},
-		"TAB": {
-			"BACKUP": "지원",
-			"GENERAL": "일반적인",
-			"HISTORY": "역사",
-			"HOTKEYS": "단축키",
-			"LIMITS": "제한"
-		}
-	}
+  "ABOUT": {
+    "COPYRIGHT": "저작권(C) DC. 모든 권리 보유.",
+    "DEVELOPED_BY": "0-don이 개발했습니다. Tauri가 지원합니다.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "현재 사용 가능한 업데이트가 없습니다.",
+    "OFFICIAL_WEBSITE": "공식 웹사이트"
+  },
+  "CLIPBOARD": {
+    "NO_CLIPBOARDS_YET": "아직 클립보드가 없습니다...",
+    "SEARCH_ENTRIES": "항목 검색"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "에 대한",
+      "DIGIT_1": "숫자 1",
+      "DIGIT_2": "숫자 2",
+      "DIGIT_3": "숫자 3",
+      "DIGIT_4": "숫자 4",
+      "DIGIT_5": "숫자 5",
+      "DIGIT_6": "숫자 6",
+      "DIGIT_7": "숫자 7",
+      "DIGIT_8": "숫자 8",
+      "DIGIT_9": "숫자 9",
+      "EXIT": "출구",
+      "HISTORY": "역사",
+      "NUM_1": "숫자 1",
+      "NUM_2": "숫자 2",
+      "NUM_3": "숫자 3",
+      "NUM_4": "숫자 4",
+      "NUM_5": "숫자 5",
+      "NUM_6": "숫자 6",
+      "NUM_7": "숫자 7",
+      "NUM_8": "숫자 8",
+      "NUM_9": "숫자 9",
+      "RECENT_CLIPBOARDS": "최근 클립보드",
+      "SCROLL_TO_TOP": "맨위로 스크롤",
+      "SETTINGS": "설정",
+      "STARRED_CLIPBOARDS": "별표가 붙은 클립보드",
+      "SYNC_CLIPBOARD_HISTORY": "클립보드 기록 동기화",
+      "TYPE_CLIPBOARD": "클립보드 입력",
+      "VIEW_MORE": "더보기",
+      "WINDOW_DISPLAY_TOGGLE": "창 표시 토글"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "아라비아 말",
+      "BN": "벵골 사람",
+      "DE": "독일 사람",
+      "EN": "영어",
+      "ES": "스페인 사람",
+      "FR": "프랑스 국민",
+      "HI": "힌디 어",
+      "IT": "이탈리아 사람",
+      "JA": "일본어",
+      "KO": "한국인",
+      "NL": "네덜란드 사람",
+      "PL": "광택",
+      "PT": "포르투갈 인",
+      "RU": "러시아인",
+      "TH": "태국어",
+      "TR": "터키어",
+      "UR": "우르두어",
+      "VI": "베트남 사람",
+      "ZH": "만다린 오렌지"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "하단 중앙",
+      "BOTTOM_LEFT": "왼쪽 하단",
+      "BOTTOM_RIGHT": "오른쪽 하단",
+      "CENTER": "센터",
+      "CURSOR": "커서",
+      "LEFT_CENTER": "왼쪽 중앙",
+      "RIGHT_CENTER": "오른쪽 중앙",
+      "TOP_CENTER": "상단 중앙",
+      "TOP_LEFT": "왼쪽 위",
+      "TOP_RIGHT": "오른쪽 상단",
+      "TRAY_BOTTOM_CENTER": "트레이 바닥 중앙",
+      "TRAY_BOTTOM_LEFT": "트레이 하단 왼쪽",
+      "TRAY_BOTTOM_RIGHT": "트레이 하단 오른쪽",
+      "TRAY_CENTER": "트레이 중앙",
+      "TRAY_LEFT": "트레이 왼쪽",
+      "TRAY_RIGHT": "트레이 오른쪽"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "구성 위치",
+      "DATABASE_LOCATION": "데이터베이스 위치",
+      "OPEN": "열려 있는",
+      "SYNC": "동조",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "언어 변경",
+      "CHANGE_WINDOW_POSITION": "창 위치 변경",
+      "HTML_CLIPBOARD_TOOLTIP": "HTML 클립보드 툴팁",
+      "KEYBOARD_SHORTCUT": "단축키",
+      "START_CLIPPY_ON_STARTUP": "시스템 시작 시 Clippy 시작",
+      "SWITCH_THEME": "테마 변경",
+      "SYSTEM": "체계",
+      "WINDOW_SCALE": "창 크기"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "모두 지우기",
+      "CLEAR_FILE": "클리어 파일",
+      "CLEAR_HTML": "HTML 지우기",
+      "CLEAR_IMAGE": "명확한 이미지",
+      "CLEAR_RTF": "Rtf 지우기",
+      "CLEAR_TEXT": "명확한 텍스트",
+      "DATABASE_INFO": "{{records}} 개의 로컬 항목({{size}})이 이 컴퓨터에 저장되었습니다.",
+      "SQL_DATABASE_INFO": "SQL 데이터베이스 정보",
+      "STORAGE_ACTIONS": "저장 작업"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "단축키를 변경하세요"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "클립보드 제한",
+      "IF_SET_TO_ZERO": "0으로 설정하면 클립보드 유형이 완전히 건너뜁니다.",
+      "MAX_FILE_SIZE": "최대 파일 크기",
+      "MAX_HTML_SIZE": "최대 HTML 크기",
+      "MAX_IMAGE_SIZE": "최대 이미지 크기",
+      "MAX_RTF_SIZE": "최대 Rtf 크기",
+      "MAX_TEXT_SIZE": "최대 텍스트 크기"
+    },
+    "TAB": {
+      "BACKUP": "지원",
+      "GENERAL": "일반적인",
+      "HISTORY": "역사",
+      "HOTKEYS": "단축키",
+      "LIMITS": "제한"
+    }
+  }
 }
