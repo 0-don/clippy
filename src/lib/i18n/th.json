@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "คลิปบอร์ดล่าสุด",
 			"SCROLL_TO_TOP": "เลื่อนไปด้านบน",
 			"SETTINGS": "การตั้งค่า",
-			"STARRED_CLIPBOARDS": "คลิปบอร์ดติดดาว",
+			"STARRED_CLIPBOARDS": "คลิปบอร์ดที่มีดาว",
 			"SYNC_CLIPBOARD_HISTORY": "ซิงค์ประวัติคลิปบอร์ด",
 			"TYPE_CLIPBOARD": "ประเภทคลิปบอร์ด",
 			"VIEW_MORE": "ดูเพิ่มเติม",
 			"WINDOW_DISPLAY_TOGGLE": "สลับการแสดงผลหน้าต่าง"
 		},
 		"KEYS": {
-			"ALT": "อัลที",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "กะ"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "ภาษาอาหรับ",

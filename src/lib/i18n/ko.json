@@ -42,9 +42,9 @@
 			"WINDOW_DISPLAY_TOGGLE": "창 표시 토글"
 		},
 		"KEYS": {
-			"ALT": "대체",
-			"CTRL": "Ctrl 키",
-			"SHIFT": "옮기다"
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "아라비아 말",

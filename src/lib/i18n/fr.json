@@ -42,9 +42,9 @@
 			"WINDOW_DISPLAY_TOGGLE": "Basculement de l'affichage de la fenêtre"
 		},
 		"KEYS": {
-			"ALT": "ALT",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "Changement"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Arabe",

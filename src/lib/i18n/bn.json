@@ -35,7 +35,7 @@
 			"RECENT_CLIPBOARDS": "সাম্প্রতিক ক্লিপবোর্ড",
 			"SCROLL_TO_TOP": "উপরে স্ক্রোল করুন",
 			"SETTINGS": "সেটিংস",
-			"STARRED_CLIPBOARDS": "তারকাচিহ্নিত_ক্লিপবোর্ড",
+			"STARRED_CLIPBOARDS": "তারকাচিহ্নিত ক্লিপবোর্ড",
 			"SYNC_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক করুন",
 			"TYPE_CLIPBOARD": "ক্লিপবোর্ড টাইপ করুন",
 			"VIEW_MORE": "আরো দেখুন",
@@ -44,7 +44,7 @@
 		"KEYS": {
 			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "শিফট"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "আরবি",

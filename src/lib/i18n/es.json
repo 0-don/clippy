@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "Portapapeles recientes",
 			"SCROLL_TO_TOP": "Vuelve al comienzo",
 			"SETTINGS": "Ajustes",
-			"STARRED_CLIPBOARDS": "Portapapeles con estrellas",
+			"STARRED_CLIPBOARDS": "Portapapeles con asterisco",
 			"SYNC_CLIPBOARD_HISTORY": "Sincronizar historial del portapapeles",
 			"TYPE_CLIPBOARD": "Tipo portapapeles",
 			"VIEW_MORE": "Ver más",
 			"WINDOW_DISPLAY_TOGGLE": "Alternar visualización de ventana"
 		},
 		"KEYS": {
-			"ALT": "ALTA",
-			"CTRL": "Control",
-			"SHIFT": "Cambio"
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Árabe",

@@ -42,9 +42,9 @@
 			"WINDOW_DISPLAY_TOGGLE": "ウィンドウ表示切り替え"
 		},
 		"KEYS": {
-			"ALT": "代替",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "シフト"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "アラビア語",

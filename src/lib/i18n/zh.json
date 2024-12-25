@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "最近剪贴板",
 			"SCROLL_TO_TOP": "滚动到顶部",
 			"SETTINGS": "设置",
-			"STARRED_CLIPBOARDS": "Starred_Clipboards",
+			"STARRED_CLIPBOARDS": "加星标的剪贴板",
 			"SYNC_CLIPBOARD_HISTORY": "同步剪贴板历史记录",
 			"TYPE_CLIPBOARD": "类型剪贴板",
 			"VIEW_MORE": "查看更多",
 			"WINDOW_DISPLAY_TOGGLE": "窗口显示切换"
 		},
 		"KEYS": {
-			"ALT": "谷氨酰胺",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "转移"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "阿拉伯",

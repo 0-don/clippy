@@ -42,9 +42,9 @@
 			"WINDOW_DISPLAY_TOGGLE": "Chuyển đổi hiển thị cửa sổ"
 		},
 		"KEYS": {
-			"ALT": "Thay thế",
-			"CTRL": "Điều khiển",
-			"SHIFT": "Sự thay đổi"
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Tiếng Ả Rập",

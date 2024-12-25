@@ -35,7 +35,7 @@
 			"RECENT_CLIPBOARDS": "Recente klemborden",
 			"SCROLL_TO_TOP": "Scroll naar boven",
 			"SETTINGS": "Instellingen",
-			"STARRED_CLIPBOARDS": "Met ster gemarkeerde klemborden",
+			"STARRED_CLIPBOARDS": "Klemborden met sterretjes",
 			"SYNC_CLIPBOARD_HISTORY": "Synchroniseer klembordgeschiedenis",
 			"TYPE_CLIPBOARD": "Type klembord",
 			"VIEW_MORE": "Bekijk meer",
@@ -44,7 +44,7 @@
 		"KEYS": {
 			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "Verschuiving"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Arabisch",

@@ -42,9 +42,9 @@
 			"WINDOW_DISPLAY_TOGGLE": "تبديل عرض النافذة"
 		},
 		"KEYS": {
-			"ALT": "بديل",
-			"CTRL": "كنترول",
-			"SHIFT": "يُحوّل"
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "عربي",
