@@ -68,3 +68,7 @@ Before you begin, ensure you have met the following requirements:
 <!-- echo "disable wayland" && sudo nano /etc/gdm3/daemon.conf -->
 <!-- sudo dpkg -i ./code_1.96.2-1734607745_amd64.deb -->
 <!-- sudo apt install pkg-config libglib2.0-dev libwebkit2gtk-4.1-dev libgtk-3-dev libxdo-dev libayatana-appindicator3-dev librsvg2-dev -->
+
+<!-- OPENSUSE KDE X11 -->
+<!-- sudo zypper --non-interactive install -t pattern devel_basis && sudo zypper --non-interactive install glib2-devel webkit2gtk3-devel gtk3-devel libopenssl-devel xdotool-devel libayatana-appindicator3-1 libayatana-appindicator3-devel -->
+<!-- sudo zypper install ./clippy-1.3.0-1.x86_64.rpm -->
