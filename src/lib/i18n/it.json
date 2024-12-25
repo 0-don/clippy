@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "Appunti recenti",
 			"SCROLL_TO_TOP": "Scorri fino all'inizio",
 			"SETTINGS": "Impostazioni",
-			"STARRED_CLIPBOARDS": "Appunti_stellati",
+			"STARRED_CLIPBOARDS": "Appunti con stelle",
 			"SYNC_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
 			"TYPE_CLIPBOARD": "Tipo appunti",
 			"VIEW_MORE": "Visualizza altro",
 			"WINDOW_DISPLAY_TOGGLE": "Attiva/disattiva visualizzazione finestra"
 		},
 		"KEYS": {
-			"ALT": "ALT",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "SPOSTARE"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Arabo",

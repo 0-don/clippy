@@ -20,7 +20,7 @@ function App() {
       </div>
       <div class="flex h-screen min-w-0 flex-1 flex-col">
         <div class="z-10 flex w-full justify-between overflow-visible px-2 py-1">
-          <p class="select-none bg-gray-50 text-xs font-semibold text-gray-500 dark:bg-dark-dark dark:text-white">
+          <p class="select-none text-xs font-semibold text-gray-500 dark:text-white uppercase">
             {t(AppStore.getCurrentTab().name)}
           </p>
           <Show when={SettingsStore.settings()?.synchronize} fallback={<BsHddFill title="offline" />}>

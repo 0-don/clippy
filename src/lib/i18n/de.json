@@ -35,7 +35,7 @@
 			"RECENT_CLIPBOARDS": "Zuletzt verwendete Zwischenablagen",
 			"SCROLL_TO_TOP": "Nach oben scrollen",
 			"SETTINGS": "Einstellungen",
-			"STARRED_CLIPBOARDS": "Markierte_Zwischenablagen",
+			"STARRED_CLIPBOARDS": "Markierte Zwischenablagen",
 			"SYNC_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren",
 			"TYPE_CLIPBOARD": "Typ Zwischenablage",
 			"VIEW_MORE": "Mehr sehen",
@@ -44,7 +44,7 @@
 		"KEYS": {
 			"ALT": "Alt",
 			"CTRL": "Strg",
-			"SHIFT": "Schicht"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Arabisch",

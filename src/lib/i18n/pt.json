@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "Pranchetas recentes",
 			"SCROLL_TO_TOP": "Role para cima",
 			"SETTINGS": "Configurações",
-			"STARRED_CLIPBOARDS": "Starred_Clipboards",
+			"STARRED_CLIPBOARDS": "Pranchetas com estrela",
 			"SYNC_CLIPBOARD_HISTORY": "Sincronizar histórico da área de transferência",
 			"TYPE_CLIPBOARD": "Introduza a área de transferência",
 			"VIEW_MORE": "Ver mais",
 			"WINDOW_DISPLAY_TOGGLE": "Alternar visualização da janela"
 		},
 		"KEYS": {
-			"ALT": "Alt.",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "Turno"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Árabe",

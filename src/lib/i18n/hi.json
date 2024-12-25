@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "हाल ही के क्लिपबोर्ड",
 			"SCROLL_TO_TOP": "ऊपर स्क्रॉल करें",
 			"SETTINGS": "समायोजन",
-			"STARRED_CLIPBOARDS": "तारांकित_क्लिपबोर्ड",
+			"STARRED_CLIPBOARDS": "तारांकित क्लिपबोर्ड",
 			"SYNC_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक करें",
 			"TYPE_CLIPBOARD": "क्लिपबोर्ड टाइप करें",
 			"VIEW_MORE": "और देखें",
 			"WINDOW_DISPLAY_TOGGLE": "विंडो डिस्प्ले टॉगल"
 		},
 		"KEYS": {
-			"ALT": "ऑल्ट",
-			"CTRL": "सीटीआरएल",
-			"SHIFT": "बदलाव"
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "अरबी",

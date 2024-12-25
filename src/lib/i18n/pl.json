@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "Ostatnie schowki",
 			"SCROLL_TO_TOP": "Przewiń na górę",
 			"SETTINGS": "Ustawienia",
-			"STARRED_CLIPBOARDS": "Oznaczone gwiazdką schowki",
+			"STARRED_CLIPBOARDS": "Schowki oznaczone gwiazdką",
 			"SYNC_CLIPBOARD_HISTORY": "Synchronizuj historię schowka",
 			"TYPE_CLIPBOARD": "Wpisz schowek",
 			"VIEW_MORE": "Zobacz więcej",
 			"WINDOW_DISPLAY_TOGGLE": "Przełączanie wyświetlania okna"
 		},
 		"KEYS": {
-			"ALT": "ALT",
-			"CTRL": "Klawisz kontrolny",
-			"SHIFT": "Zmiana"
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "Arabski",

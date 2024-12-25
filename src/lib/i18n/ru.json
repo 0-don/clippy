@@ -35,16 +35,16 @@
 			"RECENT_CLIPBOARDS": "Недавние буферы обмена",
 			"SCROLL_TO_TOP": "Пролистать наверх",
 			"SETTINGS": "Настройки",
-			"STARRED_CLIPBOARDS": "Starred_Clipboards",
+			"STARRED_CLIPBOARDS": "Помеченные звездочкой буферы обмена",
 			"SYNC_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена",
 			"TYPE_CLIPBOARD": "Тип буфера обмена",
 			"VIEW_MORE": "Посмотреть больше",
 			"WINDOW_DISPLAY_TOGGLE": "Переключение отображения окна"
 		},
 		"KEYS": {
-			"ALT": "Альт",
+			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "Сдвиг"
+			"SHIFT": "Shift"
 		},
 		"LANGUAGE": {
 			"AR": "АРАБСКИЙ",
