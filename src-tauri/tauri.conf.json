@@ -39,7 +39,7 @@
         "depends": ["libxdo3"]
       },
       "rpm": {
-        "depends": ["libxdo", "xdotool"]
+        "depends": ["xdotool"]
       }
     }
   }
