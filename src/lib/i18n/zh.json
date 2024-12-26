@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "关于",
 		"COPYRIGHT": "版权所有 (C) DC。保留所有权利。",
 		"DEVELOPED_BY": "由 0-don 开发。由 Tauri 提供支持。",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "目前没有可用更新",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "最大 Rtf 大小",
 			"MAX_TEXT_SIZE": "最大文本大小"
 		},
+		"SETTINGS": "设置",
 		"TAB": {
 			"BACKUP": "备份",
 			"GENERAL": "一般的",

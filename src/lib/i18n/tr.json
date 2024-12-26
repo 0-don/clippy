@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "Hakkında",
 		"COPYRIGHT": "Telif Hakkı(C) DC. Tüm hakları saklıdır.",
 		"DEVELOPED_BY": "0-don tarafından geliştirildi. Tauri tarafından destekleniyor.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "Şu anda herhangi bir güncelleme mevcut değil",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "Maksimum Rtf boyutu",
 			"MAX_TEXT_SIZE": "Maksimum Metin boyutu"
 		},
+		"SETTINGS": "Ayarlar",
 		"TAB": {
 			"BACKUP": "Yedekleme",
 			"GENERAL": "Genel",

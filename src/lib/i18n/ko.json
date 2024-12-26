@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "에 대한",
 		"COPYRIGHT": "저작권(C) DC. 모든 권리 보유.",
 		"DEVELOPED_BY": "0-don이 개발했습니다. Tauri가 지원합니다.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "현재 사용 가능한 업데이트가 없습니다.",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "최대 Rtf 크기",
 			"MAX_TEXT_SIZE": "최대 텍스트 크기"
 		},
+		"SETTINGS": "설정",
 		"TAB": {
 			"BACKUP": "지원",
 			"GENERAL": "일반적인",

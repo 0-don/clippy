@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "Sobre",
 		"COPYRIGHT": "Direitos de autor(C) DC. Tudo bem reservado.",
 		"DEVELOPED_BY": "Desenvolvido por 0-don. Desenvolvido por Tauri.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "Nenhuma atualização disponível de momento",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "Tamanho máximo do Rtf",
 			"MAX_TEXT_SIZE": "Tamanho máximo do texto"
 		},
+		"SETTINGS": "Configurações",
 		"TAB": {
 			"BACKUP": "Backup",
 			"GENERAL": "Em geral",

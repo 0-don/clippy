@@ -50,7 +50,8 @@ function createSettingsStore() {
 
   const syncClipboard = async () => invokeCommand(InvokeCommand.SyncClipboardHistory);
 
-  const openWindow = async (windowName: WebWindow) => invokeCommand(InvokeCommand.OpenNewWindow, { windowName });
+  const openWindow = async (windowName: WebWindow, title: string) =>
+    invokeCommand(InvokeCommand.OpenNewWindow, { windowName, title });
 
   const exitApp = async () => invokeCommand(InvokeCommand.ExitApp);
 

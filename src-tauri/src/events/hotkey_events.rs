@@ -95,6 +95,7 @@ pub async fn parse_hotkey_event(key: &Key) {
                         window.to_string().to_lowercase() == e.to_string().to_lowercase()
                     })
                     .expect("Failed to find window"),
+                None,
             )
             .await
         }

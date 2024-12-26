@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "Về",
 		"COPYRIGHT": "Bản quyền (C) DC. Mọi quyền được bảo lưu.",
 		"DEVELOPED_BY": "Được phát triển bởi 0-don. Được hỗ trợ bởi Tauri.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "Hiện tại không có bản cập nhật nào",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "Kích thước Rtf tối đa",
 			"MAX_TEXT_SIZE": "Kích thước văn bản tối đa"
 		},
+		"SETTINGS": "Cài đặt",
 		"TAB": {
 			"BACKUP": "Hỗ trợ",
 			"GENERAL": "Tổng quan",

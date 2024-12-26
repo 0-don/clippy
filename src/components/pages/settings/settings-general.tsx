@@ -129,7 +129,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 ...SettingsStore.settings()!,
                 display_scale: Number(parseFloat(e.target.value).toFixed(2)),
               });
-              await invokeCommand(InvokeCommand.OpenNewWindow, { windowName: WebWindow.Settings });
+              await invokeCommand(InvokeCommand.OpenNewWindow, { windowName: WebWindow.Settings, title: "Settings" });
             }}
           />
         </div>

@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "সম্পর্কে",
 		"COPYRIGHT": "কপিরাইট(C) ডিসি। সব অধিকার সংরক্ষিত.",
 		"DEVELOPED_BY": "0-ডন দ্বারা বিকাশিত। তৌরি দ্বারা চালিত.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "কোন আপডেট বর্তমানে উপলব্ধ",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "সর্বোচ্চ Rtf আকার",
 			"MAX_TEXT_SIZE": "সর্বাধিক পাঠ্য আকার"
 		},
+		"SETTINGS": "সেটিংস",
 		"TAB": {
 			"BACKUP": "ব্যাকআপ",
 			"GENERAL": "সাধারণ",
