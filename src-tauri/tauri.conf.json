@@ -14,10 +14,6 @@
       "csp": null
     },
     "macOSPrivateApi": true,
-    "trayIcon": {
-      "iconPath": "icons/32x32.png",
-      "iconAsTemplate": true
-    },
     "windows": [
       {
         "fullscreen": false,
