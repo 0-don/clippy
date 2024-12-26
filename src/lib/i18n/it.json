@@ -1,8 +1,8 @@
 {
 	"ABOUT": {
 		"COPYRIGHT": "Copyright(C) DC. Tutti i diritti riservati.",
-		"DEVELOPED_BY": "Sviluppato da 0-don. Alimentato da Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Nessun aggiornamento disponibile al momento",
+		"DEVELOPED_BY": "Sviluppato da 0-don con Tauri.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "Questa versione è aggiornata",
 		"OFFICIAL_WEBSITE": "Sito ufficiale"
 	},
 	"CLIPBOARD": {
@@ -11,11 +11,11 @@
 		"DELETE_CLIPBOARD": "Elimina appunti",
 		"NO_CLIPBOARDS_YET": "Ancora nessuna clipboard...",
 		"SEARCH_ENTRIES": "Cerca voci",
-		"STAR_FAVORITE": "Il preferito delle star"
+		"STAR_FAVORITE": "Segna come preferito"
 	},
 	"MAIN": {
 		"HOTKEY": {
-			"ABOUT": "Di",
+			"ABOUT": "Info",
 			"DIGIT_1": "Cifra 1",
 			"DIGIT_2": "Cifra 2",
 			"DIGIT_3": "Cifra 3",
@@ -25,8 +25,8 @@
 			"DIGIT_7": "Cifra 7",
 			"DIGIT_8": "Cifra 8",
 			"DIGIT_9": "Cifra 9",
-			"EXIT": "Uscita",
-			"HISTORY": "Storia",
+			"EXIT": "Esci",
+			"HISTORY": "Crologia",
 			"NUM_1": "Numero 1",
 			"NUM_2": "Numero 2",
 			"NUM_3": "Numero 3",
@@ -39,16 +39,16 @@
 			"RECENT_CLIPBOARDS": "Appunti recenti",
 			"SCROLL_TO_TOP": "Scorri fino all'inizio",
 			"SETTINGS": "Impostazioni",
-			"STARRED_CLIPBOARDS": "Appunti con stelle",
+			"STARRED_CLIPBOARDS": "Clipboard con stelle",
 			"SYNC_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
 			"TYPE_CLIPBOARD": "Tipo appunti",
 			"VIEW_MORE": "Visualizza altro",
-			"WINDOW_DISPLAY_TOGGLE": "Attiva/disattiva visualizzazione finestra"
+			"WINDOW_DISPLAY_TOGGLE": "Attiva/disattiva finestra"
 		},
 		"KEYS": {
 			"ALT": "Alt",
 			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
+			"SHIFT": "Maiusc"
 		},
 		"LANGUAGE": {
 			"AR": "Arabo",
@@ -75,67 +75,67 @@
 			"BOTTOM_CENTER": "In basso al centro",
 			"BOTTOM_LEFT": "In basso a sinistra",
 			"BOTTOM_RIGHT": "In basso a destra",
-			"CENTER": "Centro",
+			"CENTER": "Al centro",
 			"CURSOR": "Cursore",
-			"LEFT_CENTER": "Centro sinistra",
-			"RIGHT_CENTER": "Centro-destra",
+			"LEFT_CENTER": "In centro a sinistra",
+			"RIGHT_CENTER": "In centro a destra",
 			"TOP_CENTER": "In alto al centro",
 			"TOP_LEFT": "In alto a sinistra",
 			"TOP_RIGHT": "In alto a destra",
-			"TRAY_BOTTOM_CENTER": "Vassoio in basso al centro",
-			"TRAY_BOTTOM_LEFT": "Vassoio in basso a sinistra",
-			"TRAY_BOTTOM_RIGHT": "Vassoio in basso a destra",
-			"TRAY_CENTER": "Centro del vassoio",
-			"TRAY_LEFT": "Vassoio sinistro",
-			"TRAY_RIGHT": "Vassoio destro"
+			"TRAY_BOTTOM_CENTER": "Icon sistema in basso al centro",
+			"TRAY_BOTTOM_LEFT": "Icona sistema in basso a sinistra",
+			"TRAY_BOTTOM_RIGHT": "Icona sistema in basso a destra",
+			"TRAY_CENTER": "Icona sistema al centro",
+			"TRAY_LEFT": "Icona sistema a sinistro",
+			"TRAY_RIGHT": "Icona sistema a destra"
 		}
 	},
 	"SETTINGS": {
 		"BACKUP": {
-			"CONFIG_LOCATION": "Posizione di configurazione",
-			"DATABASE_LOCATION": "Posizione del database",
-			"OPEN": "Aprire",
-			"SYNC": "Sincronizzazione",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizzare la cronologia degli appunti"
+			"CONFIG_LOCATION": "Percorso configurazione",
+			"DATABASE_LOCATION": "Percorso database",
+			"OPEN": "Apri",
+			"SYNC": "Sincronizza",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
 		},
 		"GENERAL": {
-			"CHANGE_LANGUAGE": "Cambia lingua",
-			"CHANGE_WINDOW_POSITION": "Cambia posizione della finestra",
-			"HTML_CLIPBOARD_TOOLTIP": "Tooltip degli appunti HTML",
-			"KEYBOARD_SHORTCUT": "Scorciatoia da tastiera",
-			"START_CLIPPY_ON_STARTUP": "Avvia Clippy all'avvio del sistema",
-			"SWITCH_THEME": "Cambia tema",
+			"CHANGE_LANGUAGE": "Cambia lingua UI",
+			"CHANGE_WINDOW_POSITION": "Modifica posizione finestra",
+			"HTML_CLIPBOARD_TOOLTIP": "Suggeriemnti appunti HTML",
+			"KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
+			"START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",
+			"SWITCH_THEME": "Modifica tema",
 			"SYSTEM": "Sistema",
-			"WINDOW_SCALE": "Scala della finestra"
+			"WINDOW_SCALE": "Scala finestra"
 		},
 		"HISTORY": {
 			"CLEAR_ALL": "Cancella tutto",
-			"CLEAR_FILE": "Cancella file",
+			"CLEAR_FILE": "Elimina file",
 			"CLEAR_HTML": "Cancella HTML",
-			"CLEAR_IMAGE": "Immagine chiara",
-			"CLEAR_RTF": "Cancella Rtf",
+			"CLEAR_IMAGE": "Cancella immagine",
+			"CLEAR_RTF": "Cancella RTF",
 			"CLEAR_TEXT": "Testo chiaro",
-			"DATABASE_INFO": "{{records}} elementi locali ({{size}}) sono salvati su questo computer",
-			"SQL_DATABASE_INFO": "Informazioni sul database SQL",
-			"STORAGE_ACTIONS": "Azioni di archiviazione"
+			"DATABASE_INFO": "In questo computer sono salvati {{records}} elementi locali ({{size}})",
+			"SQL_DATABASE_INFO": "Info database SQL",
+			"STORAGE_ACTIONS": "Azioni archiviazione"
 		},
 		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Cambia i tuoi tasti di scelta rapida"
+			"CHANGE_YOUR_HOTKEYS": "Modifica tasti scelta rapida"
 		},
 		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Limiti degli appunti",
-			"IF_SET_TO_ZERO": "Se impostato su 0 il tipo di appunti verrà completamente saltato",
-			"MAX_FILE_SIZE": "Dimensione massima del file",
+			"CLIPBOARD_LIMITS": "Limiti appunti",
+			"IF_SET_TO_ZERO": "Se impostato a 0 il tipo di appunti verrà completamente ignorato",
+			"MAX_FILE_SIZE": "Dimensione massima file",
 			"MAX_HTML_SIZE": "Dimensione massima HTML",
-			"MAX_IMAGE_SIZE": "Dimensione massima dell'immagine",
+			"MAX_IMAGE_SIZE": "Dimensione massima immagine",
 			"MAX_RTF_SIZE": "Dimensione massima RTF",
-			"MAX_TEXT_SIZE": "Dimensione massima del testo"
+			"MAX_TEXT_SIZE": "Dimensione massima testo"
 		},
 		"TAB": {
 			"BACKUP": "Backup",
 			"GENERAL": "Generale",
-			"HISTORY": "Storia",
-			"HOTKEYS": "Tasti di scelta rapida",
+			"HISTORY": "Cronologia",
+			"HOTKEYS": "Tasti scelta rapida",
 			"LIMITS": "Limiti"
 		}
 	}
