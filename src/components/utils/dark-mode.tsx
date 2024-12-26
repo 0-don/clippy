@@ -6,12 +6,12 @@ import { Toggle } from "../elements/toggle";
 interface DarkModeProps {}
 
 export const DarkMode: Component<DarkModeProps> = ({}) => {
-  const { settings, updateSettings } = SettingsStore;
-  const { darkMode } = AppStore;
-
-  createEffect(darkMode);
+  createEffect(AppStore.darkMode);
 
   return (
-    <Toggle checked={settings()?.dark_mode} onChange={(dark_mode) => updateSettings({ ...settings()!, dark_mode })} />
+    <Toggle
+      checked={SettingsStore.settings()?.dark_mode}
+      onChange={(dark_mode) => SettingsStore.updateSettings({ ...SettingsStore.settings()!, dark_mode })}
+    />
   );
 };

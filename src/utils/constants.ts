@@ -1,4 +1,4 @@
-import { DictionaryKey } from "../lib/i18n";
+import type { DictionaryKey } from "../lib/i18n";
 import { HotkeyEvent } from "../types/enums";
 
 export const LANGUAGE_KEY = "lang";

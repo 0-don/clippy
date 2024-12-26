@@ -9,7 +9,6 @@ import { Settings, SettingsTab } from "../types";
 import { WebWindow } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { SETTINGS_TAB, SettingsTabName } from "../utils/constants";
-import dayjs from "../utils/dayjs";
 
 function createSettingsStore() {
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
