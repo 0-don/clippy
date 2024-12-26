@@ -51,9 +51,9 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       {/* Sync Clipboard History  */}
       {createButton("MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY", SettingsStore.syncClipboard)}
       {/* Settings */}
-      {createButton("MAIN.HOTKEY.SETTINGS", () => SettingsStore.openWindow(WebWindow.Settings))}
+      {createButton("MAIN.HOTKEY.SETTINGS", () => SettingsStore.openWindow(WebWindow.Settings, t("SETTINGS.SETTINGS")))}
       {/* About */}
-      {createButton("MAIN.HOTKEY.ABOUT", () => SettingsStore.openWindow(WebWindow.About))}
+      {createButton("MAIN.HOTKEY.ABOUT", () => SettingsStore.openWindow(WebWindow.About, t("ABOUT.ABOUT")))}
       {/* Exit */}
       {createButton("MAIN.HOTKEY.EXIT", SettingsStore.exitApp)}
     </>

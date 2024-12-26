@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "के बारे में",
 		"COPYRIGHT": "कॉपीराइट(सी) डीसी. सभी अधिकार सुरक्षित.",
 		"DEVELOPED_BY": "0-don द्वारा विकसित। Tauri द्वारा संचालित।",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "वर्तमान में कोई अपडेट उपलब्ध नहीं है",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "अधिकतम Rtf आकार",
 			"MAX_TEXT_SIZE": "अधिकतम पाठ आकार"
 		},
+		"SETTINGS": "समायोजन",
 		"TAB": {
 			"BACKUP": "बैकअप",
 			"GENERAL": "सामान्य",

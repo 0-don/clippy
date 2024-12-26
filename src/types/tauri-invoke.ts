@@ -95,7 +95,7 @@ export interface TauriInvokeCommands {
 
   // Window commands
   [InvokeCommand.OpenNewWindow]: {
-    args: { windowName: WebWindow };
+    args: { windowName: WebWindow, title: string };
     return: void;
   };
   [InvokeCommand.OpenBrowserUrl]: {

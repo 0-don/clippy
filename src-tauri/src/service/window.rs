@@ -198,7 +198,7 @@ pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
     }
 }
 
-pub async fn create_about_window() {
+pub async fn create_about_window(title: Option<String>) {
     let app = crate::service::global::get_app();
 
     // Close existing window if it exists
@@ -213,7 +213,7 @@ pub async fn create_about_window() {
         WebWindow::About.to_string().as_str(),
         WebviewUrl::App("pages/about.html".into()),
     )
-    .title("About")
+    .title(title.unwrap_or_else(|| "About".to_string()))
     .inner_size(ABOUT_WINDOW_X as f64, ABOUT_WINDOW_Y as f64)
     .always_on_top(true)
     .build()
@@ -224,7 +224,7 @@ pub async fn create_about_window() {
         .expect("Failed to set window size");
 }
 
-pub async fn create_settings_window() {
+pub async fn create_settings_window(title: Option<String>) {
     let app = crate::service::global::get_app();
 
     // Close existing window if it exists
@@ -238,7 +238,7 @@ pub async fn create_settings_window() {
         WebWindow::Settings.to_string().as_str(),
         WebviewUrl::App("pages/settings.html".into()),
     )
-    .title("Settings")
+    .title(title.unwrap_or_else(|| "Settings".to_string()))
     .inner_size(SETTINGS_WINDOW_X as f64, SETTINGS_WINDOW_Y as f64)
     .always_on_top(true)
     .build()
@@ -249,10 +249,10 @@ pub async fn create_settings_window() {
         .expect("Failed to set window size");
 }
 
-pub async fn open_window(window_name: WebWindow) {
+pub async fn open_window(window_name: WebWindow, title: Option<String>) {
     match window_name {
-        WebWindow::About => create_about_window().await,
-        WebWindow::Settings => create_settings_window().await,
+        WebWindow::About => create_about_window(title).await,
+        WebWindow::Settings => create_settings_window(title).await,
         _ => {}
     }
 }

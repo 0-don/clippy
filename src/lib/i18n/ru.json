@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "О",
 		"COPYRIGHT": "Авторские права (C) DC. Все права защищены.",
 		"DEVELOPED_BY": "Разработано 0-don. Работает на Tauri.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "В настоящее время обновлений нет.",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "Макс. размер RTF",
 			"MAX_TEXT_SIZE": "Макс. размер текста"
 		},
+		"SETTINGS": "Настройки",
 		"TAB": {
 			"BACKUP": "Резервное копирование",
 			"GENERAL": "Общий",

@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "عن",
 		"COPYRIGHT": "جميع الحقوق محفوظة لشركة DC.",
 		"DEVELOPED_BY": "تم تطويره بواسطة 0-don. مدعوم بواسطة Tauri.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "لا توجد تحديثات متاحة حاليًا",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "الحد الأقصى لحجم RTF",
 			"MAX_TEXT_SIZE": "الحد الأقصى لحجم النص"
 		},
+		"SETTINGS": "إعدادات",
 		"TAB": {
 			"BACKUP": "دعم",
 			"GENERAL": "عام",

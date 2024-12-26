@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "について",
 		"COPYRIGHT": "Copyright(C) DC. 無断転載禁止。",
 		"DEVELOPED_BY": "0-don によって開発されました。Tauri を搭載しています。",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "現在利用可能なアップデートはありません",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "最大 RTF サイズ",
 			"MAX_TEXT_SIZE": "最大テキストサイズ"
 		},
+		"SETTINGS": "設定",
 		"TAB": {
 			"BACKUP": "バックアップ",
 			"GENERAL": "一般的な",

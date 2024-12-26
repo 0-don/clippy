@@ -13,8 +13,8 @@ use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
 
 #[tauri::command]
-pub async fn open_new_window(window_name: WebWindow) {
-    open_window(window_name).await;
+pub async fn open_new_window(window_name: WebWindow, title: Option<String>) {
+    open_window(window_name, title).await;
 }
 
 #[tauri::command]

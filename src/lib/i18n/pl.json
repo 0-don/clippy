@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "O",
 		"COPYRIGHT": "Copyright(C) DC. Wszelkie prawa zastrzeżone.",
 		"DEVELOPED_BY": "Opracowane przez 0-don. Obsługiwane przez Tauri.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "Brak dostępnych aktualizacji",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "Maksymalny rozmiar RTF",
 			"MAX_TEXT_SIZE": "Maksymalny rozmiar tekstu"
 		},
+		"SETTINGS": "Ustawienia",
 		"TAB": {
 			"BACKUP": "Kopia zapasowa",
 			"GENERAL": "Ogólny",

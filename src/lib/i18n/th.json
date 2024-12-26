@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "เกี่ยวกับ",
 		"COPYRIGHT": "ลิขสิทธิ์ © DC. สงวนลิขสิทธิ์.",
 		"DEVELOPED_BY": "พัฒนาโดย 0-don ขับเคลื่อนโดย Tauri",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "ไม่มีการอัพเดตใดๆ ในขณะนี้",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "ขนาด Rtf สูงสุด",
 			"MAX_TEXT_SIZE": "ขนาดข้อความสูงสุด"
 		},
+		"SETTINGS": "การตั้งค่า",
 		"TAB": {
 			"BACKUP": "การสำรองข้อมูล",
 			"GENERAL": "ทั่วไป",

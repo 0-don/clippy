@@ -1,5 +1,6 @@
 {
 	"ABOUT": {
+		"ABOUT": "Over",
 		"COPYRIGHT": "Copyright(C) DC. Alle rechten voorbehouden.",
 		"DEVELOPED_BY": "Ontwikkeld door 0-don. Powered by Tauri.",
 		"NO_UPDATES_CURRENTLY_AVAILABLE": "Momenteel geen updates beschikbaar",
@@ -131,6 +132,7 @@
 			"MAX_RTF_SIZE": "Maximale RTF-grootte",
 			"MAX_TEXT_SIZE": "Maximale tekstgrootte"
 		},
+		"SETTINGS": "Instellingen",
 		"TAB": {
 			"BACKUP": "Back-up",
 			"GENERAL": "Algemeen",
