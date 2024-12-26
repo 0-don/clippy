@@ -88,7 +88,12 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
           <ClipboardHeader {...props} Icon={getIcon()} />
 
           <div class="min-w-0 flex-1">
-            <p class="w-[calc(100vw-6.576rem)] truncate text-left text-sm">{data}</p>
+            <p
+              class="w-[calc(100vw-6.576rem)] truncate text-left text-sm"
+              title={!props.data.html?.data && SettingsStore.settings()?.tooltip ? data : undefined}
+            >
+              {data}
+            </p>
             <div
               class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
               title={new Date(props.data.clipboard.created_date).toLocaleString()}

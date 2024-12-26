@@ -1,138 +1,142 @@
 {
-  "ABOUT": {
-    "COPYRIGHT": "ลิขสิทธิ์ © DC. สงวนลิขสิทธิ์.",
-    "DEVELOPED_BY": "พัฒนาโดย 0-don ขับเคลื่อนโดย Tauri",
-    "NO_UPDATES_CURRENTLY_AVAILABLE": "ไม่มีการอัพเดตใดๆ ในขณะนี้",
-    "OFFICIAL_WEBSITE": "เว็บไซต์อย่างเป็นทางการ"
-  },
-  "CLIPBOARD": {
-    "NO_CLIPBOARDS_YET": "ยังไม่มีคลิปบอร์ด...",
-    "SEARCH_ENTRIES": "ค้นหารายการ"
-  },
-  "MAIN": {
-    "HOTKEY": {
-      "ABOUT": "เกี่ยวกับ",
-      "DIGIT_1": "หลักที่ 1",
-      "DIGIT_2": "หลักที่ 2",
-      "DIGIT_3": "หลักที่ 3",
-      "DIGIT_4": "หลักที่ 4",
-      "DIGIT_5": "หลักที่ 5",
-      "DIGIT_6": "หลักที่ 6",
-      "DIGIT_7": "เลข 7",
-      "DIGIT_8": "หลักที่ 8",
-      "DIGIT_9": "หลัก 9",
-      "EXIT": "ทางออก",
-      "HISTORY": "ประวัติศาสตร์",
-      "NUM_1": "หมายเลข 1",
-      "NUM_2": "หมายเลข 2",
-      "NUM_3": "หมายเลข 3",
-      "NUM_4": "หมายเลข 4",
-      "NUM_5": "หมายเลข 5",
-      "NUM_6": "หมายเลข 6",
-      "NUM_7": "หมายเลข 7",
-      "NUM_8": "หมายเลข 8",
-      "NUM_9": "หมายเลข 9",
-      "RECENT_CLIPBOARDS": "คลิปบอร์ดล่าสุด",
-      "SCROLL_TO_TOP": "เลื่อนไปด้านบน",
-      "SETTINGS": "การตั้งค่า",
-      "STARRED_CLIPBOARDS": "คลิปบอร์ดที่มีดาว",
-      "SYNC_CLIPBOARD_HISTORY": "ซิงค์ประวัติคลิปบอร์ด",
-      "TYPE_CLIPBOARD": "ประเภทคลิปบอร์ด",
-      "VIEW_MORE": "ดูเพิ่มเติม",
-      "WINDOW_DISPLAY_TOGGLE": "สลับการแสดงผลหน้าต่าง"
-    },
-    "KEYS": {
-      "ALT": "Alt",
-      "CTRL": "Ctrl",
-      "SHIFT": "Shift"
-    },
-    "LANGUAGE": {
-      "AR": "ภาษาอาหรับ",
-      "BN": "ภาษาเบงกาลี",
-      "DE": "เยอรมัน",
-      "EN": "ภาษาอังกฤษ",
-      "ES": "สเปน",
-      "FR": "ภาษาฝรั่งเศส",
-      "HI": "ภาษาฮินดี",
-      "IT": "อิตาลี",
-      "JA": "ญี่ปุ่น",
-      "KO": "เกาหลี",
-      "NL": "ดัตช์",
-      "PL": "ขัด",
-      "PT": "โปรตุเกส",
-      "RU": "รัสเซีย",
-      "TH": "แบบไทย",
-      "TR": "ภาษาตุรกี",
-      "UR": "อูรดู",
-      "VI": "เวียดนาม",
-      "ZH": "ภาษาจีนกลาง"
-    },
-    "POSITION": {
-      "BOTTOM_CENTER": "กลางล่าง",
-      "BOTTOM_LEFT": "ล่างซ้าย",
-      "BOTTOM_RIGHT": "ล่างขวา",
-      "CENTER": "ศูนย์",
-      "CURSOR": "เคอร์เซอร์",
-      "LEFT_CENTER": "ตรงกลางซ้าย",
-      "RIGHT_CENTER": "ตรงกลางขวา",
-      "TOP_CENTER": "ตรงกลางด้านบน",
-      "TOP_LEFT": "ซ้ายบน",
-      "TOP_RIGHT": "มุมขวาบน",
-      "TRAY_BOTTOM_CENTER": "ถาดด้านล่างตรงกลาง",
-      "TRAY_BOTTOM_LEFT": "ถาดล่างซ้าย",
-      "TRAY_BOTTOM_RIGHT": "ถาดล่างขวา",
-      "TRAY_CENTER": "ถาดกลาง",
-      "TRAY_LEFT": "ถาดซ้าย",
-      "TRAY_RIGHT": "ถาดด้านขวา"
-    }
-  },
-  "SETTINGS": {
-    "BACKUP": {
-      "CONFIG_LOCATION": "กำหนดค่าตำแหน่ง",
-      "DATABASE_LOCATION": "ตำแหน่งที่ตั้งฐานข้อมูล",
-      "OPEN": "เปิด",
-      "SYNC": "การซิงค์",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด"
-    },
-    "GENERAL": {
-      "CHANGE_LANGUAGE": "เปลี่ยนภาษา",
-      "CHANGE_WINDOW_POSITION": "เปลี่ยนตำแหน่งหน้าต่าง",
-      "HTML_CLIPBOARD_TOOLTIP": "คำแนะนำคลิปบอร์ด HTML",
-      "KEYBOARD_SHORTCUT": "แป้นพิมพ์ลัด",
-      "START_CLIPPY_ON_STARTUP": "เริ่ม Clippy เมื่อระบบเริ่มต้น",
-      "SWITCH_THEME": "เปลี่ยนธีม",
-      "SYSTEM": "ระบบ",
-      "WINDOW_SCALE": "เครื่องชั่งหน้าต่าง"
-    },
-    "HISTORY": {
-      "CLEAR_ALL": "ล้างทั้งหมด",
-      "CLEAR_FILE": "ล้างไฟล์",
-      "CLEAR_HTML": "เคลียร์ HTML",
-      "CLEAR_IMAGE": "ภาพที่ชัดเจน",
-      "CLEAR_RTF": "ล้าง Rtf",
-      "CLEAR_TEXT": "ข้อความที่ชัดเจน",
-      "DATABASE_INFO": "{{records}} รายการท้องถิ่น ({{size}}) ได้รับการบันทึกไว้ในคอมพิวเตอร์นี้",
-      "SQL_DATABASE_INFO": "ข้อมูลฐานข้อมูล SQL",
-      "STORAGE_ACTIONS": "การดำเนินการจัดเก็บข้อมูล"
-    },
-    "HOTKEYS": {
-      "CHANGE_YOUR_HOTKEYS": "เปลี่ยนปุ่มลัดของคุณ"
-    },
-    "LIMITS": {
-      "CLIPBOARD_LIMITS": "ข้อจำกัดของคลิปบอร์ด",
-      "IF_SET_TO_ZERO": "หากตั้งค่าเป็น 0 ประเภทคลิปบอร์ดจะถูกข้ามไปทั้งหมด",
-      "MAX_FILE_SIZE": "ขนาดไฟล์สูงสุด",
-      "MAX_HTML_SIZE": "ขนาด HTML สูงสุด",
-      "MAX_IMAGE_SIZE": "ขนาดภาพสูงสุด",
-      "MAX_RTF_SIZE": "ขนาด Rtf สูงสุด",
-      "MAX_TEXT_SIZE": "ขนาดข้อความสูงสุด"
-    },
-    "TAB": {
-      "BACKUP": "การสำรองข้อมูล",
-      "GENERAL": "ทั่วไป",
-      "HISTORY": "ประวัติศาสตร์",
-      "HOTKEYS": "ปุ่มลัด",
-      "LIMITS": "ข้อจำกัด"
-    }
-  }
+	"ABOUT": {
+		"COPYRIGHT": "ลิขสิทธิ์ © DC. สงวนลิขสิทธิ์.",
+		"DEVELOPED_BY": "พัฒนาโดย 0-don ขับเคลื่อนโดย Tauri",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "ไม่มีการอัพเดตใดๆ ในขณะนี้",
+		"OFFICIAL_WEBSITE": "เว็บไซต์อย่างเป็นทางการ"
+	},
+	"CLIPBOARD": {
+		"COPY_AS_HTML": "คัดลอกเป็น HTML",
+		"COPY_AS_RTF": "คัดลอกเป็น RTF",
+		"DELETE_CLIPBOARD": "ลบคลิปบอร์ด",
+		"NO_CLIPBOARDS_YET": "ยังไม่มีคลิปบอร์ด...",
+		"SEARCH_ENTRIES": "ค้นหารายการ",
+		"STAR_FAVORITE": "ดาวโปรด"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "เกี่ยวกับ",
+			"DIGIT_1": "หลักที่ 1",
+			"DIGIT_2": "หลักที่ 2",
+			"DIGIT_3": "หลักที่ 3",
+			"DIGIT_4": "หลักที่ 4",
+			"DIGIT_5": "หลักที่ 5",
+			"DIGIT_6": "หลักที่ 6",
+			"DIGIT_7": "เลข 7",
+			"DIGIT_8": "หลักที่ 8",
+			"DIGIT_9": "หลัก 9",
+			"EXIT": "ทางออก",
+			"HISTORY": "ประวัติศาสตร์",
+			"NUM_1": "หมายเลข 1",
+			"NUM_2": "หมายเลข 2",
+			"NUM_3": "หมายเลข 3",
+			"NUM_4": "หมายเลข 4",
+			"NUM_5": "หมายเลข 5",
+			"NUM_6": "หมายเลข 6",
+			"NUM_7": "หมายเลข 7",
+			"NUM_8": "หมายเลข 8",
+			"NUM_9": "หมายเลข 9",
+			"RECENT_CLIPBOARDS": "คลิปบอร์ดล่าสุด",
+			"SCROLL_TO_TOP": "เลื่อนไปด้านบน",
+			"SETTINGS": "การตั้งค่า",
+			"STARRED_CLIPBOARDS": "คลิปบอร์ดที่มีดาว",
+			"SYNC_CLIPBOARD_HISTORY": "ซิงค์ประวัติคลิปบอร์ด",
+			"TYPE_CLIPBOARD": "ประเภทคลิปบอร์ด",
+			"VIEW_MORE": "ดูเพิ่มเติม",
+			"WINDOW_DISPLAY_TOGGLE": "สลับการแสดงผลหน้าต่าง"
+		},
+		"KEYS": {
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
+		},
+		"LANGUAGE": {
+			"AR": "ภาษาอาหรับ",
+			"BN": "ภาษาเบงกาลี",
+			"DE": "เยอรมัน",
+			"EN": "ภาษาอังกฤษ",
+			"ES": "สเปน",
+			"FR": "ภาษาฝรั่งเศส",
+			"HI": "ภาษาฮินดี",
+			"IT": "อิตาลี",
+			"JA": "ญี่ปุ่น",
+			"KO": "เกาหลี",
+			"NL": "ดัตช์",
+			"PL": "ขัด",
+			"PT": "โปรตุเกส",
+			"RU": "รัสเซีย",
+			"TH": "แบบไทย",
+			"TR": "ภาษาตุรกี",
+			"UR": "อูรดู",
+			"VI": "เวียดนาม",
+			"ZH": "ภาษาจีนกลาง"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "กลางล่าง",
+			"BOTTOM_LEFT": "ล่างซ้าย",
+			"BOTTOM_RIGHT": "ล่างขวา",
+			"CENTER": "ศูนย์",
+			"CURSOR": "เคอร์เซอร์",
+			"LEFT_CENTER": "ตรงกลางซ้าย",
+			"RIGHT_CENTER": "ตรงกลางขวา",
+			"TOP_CENTER": "ตรงกลางด้านบน",
+			"TOP_LEFT": "ซ้ายบน",
+			"TOP_RIGHT": "มุมขวาบน",
+			"TRAY_BOTTOM_CENTER": "ถาดด้านล่างตรงกลาง",
+			"TRAY_BOTTOM_LEFT": "ถาดล่างซ้าย",
+			"TRAY_BOTTOM_RIGHT": "ถาดล่างขวา",
+			"TRAY_CENTER": "ถาดกลาง",
+			"TRAY_LEFT": "ถาดซ้าย",
+			"TRAY_RIGHT": "ถาดด้านขวา"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "กำหนดค่าตำแหน่ง",
+			"DATABASE_LOCATION": "ตำแหน่งที่ตั้งฐานข้อมูล",
+			"OPEN": "เปิด",
+			"SYNC": "การซิงค์",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "เปลี่ยนภาษา",
+			"CHANGE_WINDOW_POSITION": "เปลี่ยนตำแหน่งหน้าต่าง",
+			"HTML_CLIPBOARD_TOOLTIP": "คำแนะนำคลิปบอร์ด HTML",
+			"KEYBOARD_SHORTCUT": "แป้นพิมพ์ลัด",
+			"START_CLIPPY_ON_STARTUP": "เริ่ม Clippy เมื่อระบบเริ่มต้น",
+			"SWITCH_THEME": "เปลี่ยนธีม",
+			"SYSTEM": "ระบบ",
+			"WINDOW_SCALE": "เครื่องชั่งหน้าต่าง"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "ล้างทั้งหมด",
+			"CLEAR_FILE": "ล้างไฟล์",
+			"CLEAR_HTML": "เคลียร์ HTML",
+			"CLEAR_IMAGE": "ภาพที่ชัดเจน",
+			"CLEAR_RTF": "ล้าง Rtf",
+			"CLEAR_TEXT": "ข้อความที่ชัดเจน",
+			"DATABASE_INFO": "{{records}} รายการท้องถิ่น ({{size}}) ได้รับการบันทึกไว้ในคอมพิวเตอร์นี้",
+			"SQL_DATABASE_INFO": "ข้อมูลฐานข้อมูล SQL",
+			"STORAGE_ACTIONS": "การดำเนินการจัดเก็บข้อมูล"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "เปลี่ยนปุ่มลัดของคุณ"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "ข้อจำกัดของคลิปบอร์ด",
+			"IF_SET_TO_ZERO": "หากตั้งค่าเป็น 0 ประเภทคลิปบอร์ดจะถูกข้ามไปทั้งหมด",
+			"MAX_FILE_SIZE": "ขนาดไฟล์สูงสุด",
+			"MAX_HTML_SIZE": "ขนาด HTML สูงสุด",
+			"MAX_IMAGE_SIZE": "ขนาดภาพสูงสุด",
+			"MAX_RTF_SIZE": "ขนาด Rtf สูงสุด",
+			"MAX_TEXT_SIZE": "ขนาดข้อความสูงสุด"
+		},
+		"TAB": {
+			"BACKUP": "การสำรองข้อมูล",
+			"GENERAL": "ทั่วไป",
+			"HISTORY": "ประวัติศาสตร์",
+			"HOTKEYS": "ปุ่มลัด",
+			"LIMITS": "ข้อจำกัด"
+		}
+	}
 }
