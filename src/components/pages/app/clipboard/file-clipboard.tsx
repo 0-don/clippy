@@ -17,6 +17,7 @@ interface FileClipboardProps {
 
 export const FileClipboard: Component<FileClipboardProps> = (props) => {
   const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
+
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
     await invokeCommand(InvokeCommand.CopyClipboard, {

@@ -66,6 +66,16 @@ pub fn create_config() {
         &data_path.config_file_path,
         serde_json::to_string(&config).expect("Failed to serialize config"),
     );
+
+    printlog!(
+        "config path {}",
+        get_app()
+            .path()
+            .app_data_dir()
+            .expect("Failed to get app data dir")
+            .to_string_lossy()
+            .to_string()
+    );
 }
 
 pub fn autostart() {

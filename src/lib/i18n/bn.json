@@ -1,138 +1,142 @@
 {
-  "ABOUT": {
-    "COPYRIGHT": "কপিরাইট(C) ডিসি। সব অধিকার সংরক্ষিত.",
-    "DEVELOPED_BY": "0-ডন দ্বারা বিকাশিত। তৌরি দ্বারা চালিত.",
-    "NO_UPDATES_CURRENTLY_AVAILABLE": "কোন আপডেট বর্তমানে উপলব্ধ",
-    "OFFICIAL_WEBSITE": "অফিসিয়াল ওয়েবসাইট"
-  },
-  "CLIPBOARD": {
-    "NO_CLIPBOARDS_YET": "এখনো কোনো ক্লিপবোর্ড নেই...",
-    "SEARCH_ENTRIES": "অনুসন্ধান এন্ট্রি"
-  },
-  "MAIN": {
-    "HOTKEY": {
-      "ABOUT": "সম্পর্কে",
-      "DIGIT_1": "অঙ্ক 1",
-      "DIGIT_2": "সংখ্যা 2",
-      "DIGIT_3": "অঙ্ক 3",
-      "DIGIT_4": "ডিজিট 4",
-      "DIGIT_5": "অঙ্ক 5",
-      "DIGIT_6": "সংখ্যা 6",
-      "DIGIT_7": "অঙ্ক 7",
-      "DIGIT_8": "অঙ্ক 8",
-      "DIGIT_9": "অঙ্ক 9",
-      "EXIT": "প্রস্থান করুন",
-      "HISTORY": "ইতিহাস",
-      "NUM_1": "সংখ্যা 1",
-      "NUM_2": "সংখ্যা 2",
-      "NUM_3": "সংখ্যা 3",
-      "NUM_4": "সংখ্যা 4",
-      "NUM_5": "সংখ্যা 5",
-      "NUM_6": "সংখ্যা 6",
-      "NUM_7": "সংখ্যা 7",
-      "NUM_8": "সংখ্যা 8",
-      "NUM_9": "সংখ্যা 9",
-      "RECENT_CLIPBOARDS": "সাম্প্রতিক ক্লিপবোর্ড",
-      "SCROLL_TO_TOP": "উপরে স্ক্রোল করুন",
-      "SETTINGS": "সেটিংস",
-      "STARRED_CLIPBOARDS": "তারকাচিহ্নিত ক্লিপবোর্ড",
-      "SYNC_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক করুন",
-      "TYPE_CLIPBOARD": "ক্লিপবোর্ড টাইপ করুন",
-      "VIEW_MORE": "আরো দেখুন",
-      "WINDOW_DISPLAY_TOGGLE": "উইন্ডো প্রদর্শন টগল"
-    },
-    "KEYS": {
-      "ALT": "Alt",
-      "CTRL": "Ctrl",
-      "SHIFT": "Shift"
-    },
-    "LANGUAGE": {
-      "AR": "আরবি",
-      "BN": "বাংলা",
-      "DE": "জার্মান",
-      "EN": "ইংরেজি",
-      "ES": "স্প্যানিশ",
-      "FR": "ফরাসি",
-      "HI": "হিন্দি",
-      "IT": "ইতালীয়",
-      "JA": "জাপানিজ",
-      "KO": "কোরিয়ান",
-      "NL": "ডাচ",
-      "PL": "পোলিশ",
-      "PT": "পর্তুগিজ",
-      "RU": "রাশিয়ান",
-      "TH": "থাই",
-      "TR": "তুর্কি",
-      "UR": "উর্দু",
-      "VI": "ভিয়েতনামী",
-      "ZH": "ম্যান্ডারিন"
-    },
-    "POSITION": {
-      "BOTTOM_CENTER": "নীচে কেন্দ্র",
-      "BOTTOM_LEFT": "নীচে বাম",
-      "BOTTOM_RIGHT": "নীচে ডান",
-      "CENTER": "কেন্দ্র",
-      "CURSOR": "কার্সার",
-      "LEFT_CENTER": "বাম কেন্দ্র",
-      "RIGHT_CENTER": "ডান কেন্দ্র",
-      "TOP_CENTER": "শীর্ষ কেন্দ্র",
-      "TOP_LEFT": "উপরে বাম",
-      "TOP_RIGHT": "উপরের ডানদিকে",
-      "TRAY_BOTTOM_CENTER": "ট্রে নীচে কেন্দ্র",
-      "TRAY_BOTTOM_LEFT": "ট্রে নীচে বাম",
-      "TRAY_BOTTOM_RIGHT": "নীচে ডানদিকে ট্রে",
-      "TRAY_CENTER": "ট্রে কেন্দ্র",
-      "TRAY_LEFT": "ট্রে বাম",
-      "TRAY_RIGHT": "ট্রে ডান"
-    }
-  },
-  "SETTINGS": {
-    "BACKUP": {
-      "CONFIG_LOCATION": "অবস্থান কনফিগার করুন",
-      "DATABASE_LOCATION": "ডাটাবেস অবস্থান",
-      "OPEN": "খোলা",
-      "SYNC": "সিঙ্ক",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক্রোনাইজ করুন"
-    },
-    "GENERAL": {
-      "CHANGE_LANGUAGE": "ভাষা পরিবর্তন করুন",
-      "CHANGE_WINDOW_POSITION": "জানালার অবস্থান পরিবর্তন করুন",
-      "HTML_CLIPBOARD_TOOLTIP": "এইচটিএমএল ক্লিপবোর্ড টুলটিপ",
-      "KEYBOARD_SHORTCUT": "কীবোর্ড শর্টকাট",
-      "START_CLIPPY_ON_STARTUP": "সিস্টেম স্টার্টআপে Clippy শুরু করুন",
-      "SWITCH_THEME": "থিম পরিবর্তন করুন",
-      "SYSTEM": "সিস্টেম",
-      "WINDOW_SCALE": "উইন্ডো স্কেল"
-    },
-    "HISTORY": {
-      "CLEAR_ALL": "সমস্ত সাফ করুন",
-      "CLEAR_FILE": "ফাইল সাফ করুন",
-      "CLEAR_HTML": "Html সাফ করুন",
-      "CLEAR_IMAGE": "ছবি পরিষ্কার করুন",
-      "CLEAR_RTF": "সাফ Rtf",
-      "CLEAR_TEXT": "পাঠ্য সাফ করুন",
-      "DATABASE_INFO": "{{records}} স্থানীয় আইটেম ({{size}}) এই কম্পিউটারে সংরক্ষিত হয়েছে৷",
-      "SQL_DATABASE_INFO": "এসকিউএল ডাটাবেস তথ্য",
-      "STORAGE_ACTIONS": "স্টোরেজ অ্যাকশন"
-    },
-    "HOTKEYS": {
-      "CHANGE_YOUR_HOTKEYS": "আপনার হটকি পরিবর্তন করুন"
-    },
-    "LIMITS": {
-      "CLIPBOARD_LIMITS": "ক্লিপবোর্ড সীমা",
-      "IF_SET_TO_ZERO": "0 তে সেট করা থাকলে ক্লিপবোর্ডের ধরন সম্পূর্ণভাবে এড়িয়ে যাবে",
-      "MAX_FILE_SIZE": "সর্বোচ্চ ফাইলের আকার",
-      "MAX_HTML_SIZE": "সর্বোচ্চ এইচটিএমএল আকার",
-      "MAX_IMAGE_SIZE": "সর্বাধিক ছবির আকার",
-      "MAX_RTF_SIZE": "সর্বোচ্চ Rtf আকার",
-      "MAX_TEXT_SIZE": "সর্বাধিক পাঠ্য আকার"
-    },
-    "TAB": {
-      "BACKUP": "ব্যাকআপ",
-      "GENERAL": "সাধারণ",
-      "HISTORY": "ইতিহাস",
-      "HOTKEYS": "হটকি",
-      "LIMITS": "সীমা"
-    }
-  }
+	"ABOUT": {
+		"COPYRIGHT": "কপিরাইট(C) ডিসি। সব অধিকার সংরক্ষিত.",
+		"DEVELOPED_BY": "0-ডন দ্বারা বিকাশিত। তৌরি দ্বারা চালিত.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "কোন আপডেট বর্তমানে উপলব্ধ",
+		"OFFICIAL_WEBSITE": "অফিসিয়াল ওয়েবসাইট"
+	},
+	"CLIPBOARD": {
+		"COPY_AS_HTML": "HTML হিসাবে কপি করুন",
+		"COPY_AS_RTF": "RTF হিসেবে কপি করুন",
+		"DELETE_CLIPBOARD": "ক্লিপবোর্ড মুছুন",
+		"NO_CLIPBOARDS_YET": "এখনো কোনো ক্লিপবোর্ড নেই...",
+		"SEARCH_ENTRIES": "অনুসন্ধান এন্ট্রি",
+		"STAR_FAVORITE": "তারকা প্রিয়"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "সম্পর্কে",
+			"DIGIT_1": "অঙ্ক 1",
+			"DIGIT_2": "সংখ্যা 2",
+			"DIGIT_3": "অঙ্ক 3",
+			"DIGIT_4": "ডিজিট 4",
+			"DIGIT_5": "অঙ্ক 5",
+			"DIGIT_6": "সংখ্যা 6",
+			"DIGIT_7": "অঙ্ক 7",
+			"DIGIT_8": "অঙ্ক 8",
+			"DIGIT_9": "অঙ্ক 9",
+			"EXIT": "প্রস্থান করুন",
+			"HISTORY": "ইতিহাস",
+			"NUM_1": "সংখ্যা 1",
+			"NUM_2": "সংখ্যা 2",
+			"NUM_3": "সংখ্যা 3",
+			"NUM_4": "সংখ্যা 4",
+			"NUM_5": "সংখ্যা 5",
+			"NUM_6": "সংখ্যা 6",
+			"NUM_7": "সংখ্যা 7",
+			"NUM_8": "সংখ্যা 8",
+			"NUM_9": "সংখ্যা 9",
+			"RECENT_CLIPBOARDS": "সাম্প্রতিক ক্লিপবোর্ড",
+			"SCROLL_TO_TOP": "উপরে স্ক্রোল করুন",
+			"SETTINGS": "সেটিংস",
+			"STARRED_CLIPBOARDS": "তারকাচিহ্নিত ক্লিপবোর্ড",
+			"SYNC_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক করুন",
+			"TYPE_CLIPBOARD": "ক্লিপবোর্ড টাইপ করুন",
+			"VIEW_MORE": "আরো দেখুন",
+			"WINDOW_DISPLAY_TOGGLE": "উইন্ডো প্রদর্শন টগল"
+		},
+		"KEYS": {
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
+		},
+		"LANGUAGE": {
+			"AR": "আরবি",
+			"BN": "বাংলা",
+			"DE": "জার্মান",
+			"EN": "ইংরেজি",
+			"ES": "স্প্যানিশ",
+			"FR": "ফরাসি",
+			"HI": "হিন্দি",
+			"IT": "ইতালীয়",
+			"JA": "জাপানিজ",
+			"KO": "কোরিয়ান",
+			"NL": "ডাচ",
+			"PL": "পোলিশ",
+			"PT": "পর্তুগিজ",
+			"RU": "রাশিয়ান",
+			"TH": "থাই",
+			"TR": "তুর্কি",
+			"UR": "উর্দু",
+			"VI": "ভিয়েতনামী",
+			"ZH": "ম্যান্ডারিন"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "নীচে কেন্দ্র",
+			"BOTTOM_LEFT": "নীচে বাম",
+			"BOTTOM_RIGHT": "নীচে ডান",
+			"CENTER": "কেন্দ্র",
+			"CURSOR": "কার্সার",
+			"LEFT_CENTER": "বাম কেন্দ্র",
+			"RIGHT_CENTER": "ডান কেন্দ্র",
+			"TOP_CENTER": "শীর্ষ কেন্দ্র",
+			"TOP_LEFT": "উপরে বাম",
+			"TOP_RIGHT": "উপরের ডানদিকে",
+			"TRAY_BOTTOM_CENTER": "ট্রে নীচে কেন্দ্র",
+			"TRAY_BOTTOM_LEFT": "ট্রে নীচে বাম",
+			"TRAY_BOTTOM_RIGHT": "নীচে ডানদিকে ট্রে",
+			"TRAY_CENTER": "ট্রে কেন্দ্র",
+			"TRAY_LEFT": "ট্রে বাম",
+			"TRAY_RIGHT": "ট্রে ডান"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "অবস্থান কনফিগার করুন",
+			"DATABASE_LOCATION": "ডাটাবেস অবস্থান",
+			"OPEN": "খোলা",
+			"SYNC": "সিঙ্ক",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক্রোনাইজ করুন"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "ভাষা পরিবর্তন করুন",
+			"CHANGE_WINDOW_POSITION": "জানালার অবস্থান পরিবর্তন করুন",
+			"HTML_CLIPBOARD_TOOLTIP": "এইচটিএমএল ক্লিপবোর্ড টুলটিপ",
+			"KEYBOARD_SHORTCUT": "কীবোর্ড শর্টকাট",
+			"START_CLIPPY_ON_STARTUP": "সিস্টেম স্টার্টআপে Clippy শুরু করুন",
+			"SWITCH_THEME": "থিম পরিবর্তন করুন",
+			"SYSTEM": "সিস্টেম",
+			"WINDOW_SCALE": "উইন্ডো স্কেল"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "সমস্ত সাফ করুন",
+			"CLEAR_FILE": "ফাইল সাফ করুন",
+			"CLEAR_HTML": "Html সাফ করুন",
+			"CLEAR_IMAGE": "ছবি পরিষ্কার করুন",
+			"CLEAR_RTF": "সাফ Rtf",
+			"CLEAR_TEXT": "পাঠ্য সাফ করুন",
+			"DATABASE_INFO": "{{records}} স্থানীয় আইটেম ({{size}}) এই কম্পিউটারে সংরক্ষিত হয়েছে৷",
+			"SQL_DATABASE_INFO": "এসকিউএল ডাটাবেস তথ্য",
+			"STORAGE_ACTIONS": "স্টোরেজ অ্যাকশন"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "আপনার হটকি পরিবর্তন করুন"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "ক্লিপবোর্ড সীমা",
+			"IF_SET_TO_ZERO": "0 তে সেট করা থাকলে ক্লিপবোর্ডের ধরন সম্পূর্ণভাবে এড়িয়ে যাবে",
+			"MAX_FILE_SIZE": "সর্বোচ্চ ফাইলের আকার",
+			"MAX_HTML_SIZE": "সর্বোচ্চ এইচটিএমএল আকার",
+			"MAX_IMAGE_SIZE": "সর্বাধিক ছবির আকার",
+			"MAX_RTF_SIZE": "সর্বোচ্চ Rtf আকার",
+			"MAX_TEXT_SIZE": "সর্বাধিক পাঠ্য আকার"
+		},
+		"TAB": {
+			"BACKUP": "ব্যাকআপ",
+			"GENERAL": "সাধারণ",
+			"HISTORY": "ইতিহাস",
+			"HOTKEYS": "হটকি",
+			"LIMITS": "সীমা"
+		}
+	}
 }

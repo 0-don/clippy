@@ -8,6 +8,7 @@ import { ClipboardStore } from "../../../../store/clipboard-store";
 import { ClipboardModel, ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
+import { useLanguage } from "../../../provider/language-provider";
 import { FileClipboard } from "./file-clipboard";
 import { ImageClipboard } from "./image-clipboard";
 import { TextClipboard } from "./text-clipboard";
@@ -19,14 +20,13 @@ interface BaseClipboardProps {
 }
 
 export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
-  const { setClipboards, resetClipboards } = ClipboardStore;
-  const { clipboard } = props.data;
+  const { t } = useLanguage();
 
   const handleDelete = async (id: number) => {
     await invokeCommand(InvokeCommand.DeleteClipboard, { id });
-    setClipboards((prev) => {
+    ClipboardStore.setClipboards((prev) => {
       const updated = prev.filter((o) => o.clipboard.id !== id);
-      if (!updated.length) resetClipboards();
+      if (!updated.length) ClipboardStore.resetClipboards();
       return updated;
     });
   };
@@ -36,7 +36,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
       id: clipboard.id,
       star: !clipboard.star,
     });
-    setClipboards((prev) =>
+    ClipboardStore.setClipboards((prev) =>
       prev.map((o) =>
         o.clipboard.id === clipboard.id
           ? {
@@ -54,7 +54,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   const handleRtfCopy = async (e: MouseEvent) => {
     e.stopPropagation();
     await invokeCommand(InvokeCommand.CopyClipboard, {
-      id: clipboard.id,
+      id: props.data.clipboard.id,
       type: ClipboardType.Rtf,
     });
   };
@@ -62,7 +62,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   const handleHtmlCopy = async (e: MouseEvent) => {
     e.stopPropagation();
     await invokeCommand(InvokeCommand.CopyClipboard, {
-      id: clipboard.id,
+      id: props.data.clipboard.id,
       type: ClipboardType.Html,
     });
   };
@@ -74,25 +74,25 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
         <VsStarFull
           onClick={(e) => {
             e.stopPropagation();
-            handleStar(clipboard);
+            handleStar(props.data.clipboard);
           }}
-          title="Star"
+          title={t("CLIPBOARD.STAR_FAVORITE")}
           class={`${
-            clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
+            props.data.clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
           } cursor-pointer hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
         />
         <div class="flex items-center gap-1">
           {props.data.rtf && (
             <BsJournalRichtext
               onClick={handleRtfCopy}
-              title="Copy as RTF"
+              title={t("CLIPBOARD.COPY_AS_RTF")}
               class="hidden cursor-pointer text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
             />
           )}
           {props.data.html && (
             <TbSourceCode
               onClick={handleHtmlCopy}
-              title="Copy as HTML"
+              title={t("CLIPBOARD.COPY_AS_HTML")}
               class="hidden cursor-pointer text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
             />
           )}
@@ -100,19 +100,19 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
         <IoTrashOutline
           onClick={(e) => {
             e.stopPropagation();
-            handleDelete(clipboard.id);
+            handleDelete(props.data.clipboard.id);
           }}
-          title="Delete"
+          title={t("CLIPBOARD.DELETE_CLIPBOARD")}
           class="hidden cursor-pointer text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
         />
       </div>
 
       {/* Content rendered by specific clipboard type */}
-      {clipboard.types.includes(ClipboardType.Image) && <ImageClipboard {...props} />}
-      {clipboard.types.includes(ClipboardType.File) && <FileClipboard {...props} />}
-      {(clipboard.types.includes(ClipboardType.Text) ||
-        clipboard.types.includes(ClipboardType.Html) ||
-        clipboard.types.includes(ClipboardType.Rtf)) && <TextClipboard {...props} />}
+      {props.data.clipboard.types.includes(ClipboardType.Image) && <ImageClipboard {...props} />}
+      {props.data.clipboard.types.includes(ClipboardType.File) && <FileClipboard {...props} />}
+      {(props.data.clipboard.types.includes(ClipboardType.Text) ||
+        props.data.clipboard.types.includes(ClipboardType.Html) ||
+        props.data.clipboard.types.includes(ClipboardType.Rtf)) && <TextClipboard {...props} />}
     </div>
   );
 };

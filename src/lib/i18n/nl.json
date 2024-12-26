@@ -1,138 +1,142 @@
 {
-  "ABOUT": {
-    "COPYRIGHT": "Copyright(C) DC. Alle rechten voorbehouden.",
-    "DEVELOPED_BY": "Ontwikkeld door 0-don. Powered by Tauri.",
-    "NO_UPDATES_CURRENTLY_AVAILABLE": "Momenteel geen updates beschikbaar",
-    "OFFICIAL_WEBSITE": "Officiële website"
-  },
-  "CLIPBOARD": {
-    "NO_CLIPBOARDS_YET": "Nog geen klemborden...",
-    "SEARCH_ENTRIES": "Zoekresultaten"
-  },
-  "MAIN": {
-    "HOTKEY": {
-      "ABOUT": "Over",
-      "DIGIT_1": "Cijfer 1",
-      "DIGIT_2": "Cijfer 2",
-      "DIGIT_3": "Cijfer 3",
-      "DIGIT_4": "Cijfer 4",
-      "DIGIT_5": "Cijfer 5",
-      "DIGIT_6": "Cijfer 6",
-      "DIGIT_7": "Cijfer 7",
-      "DIGIT_8": "Cijfer 8",
-      "DIGIT_9": "Cijfer 9",
-      "EXIT": "Uitgang",
-      "HISTORY": "Geschiedenis",
-      "NUM_1": "Nummer 1",
-      "NUM_2": "Nummer 2",
-      "NUM_3": "Nummer 3",
-      "NUM_4": "Nummer 4",
-      "NUM_5": "Nummer 5",
-      "NUM_6": "Nummer 6",
-      "NUM_7": "Nummer 7",
-      "NUM_8": "Nummer 8",
-      "NUM_9": "Nummer 9",
-      "RECENT_CLIPBOARDS": "Recente klemborden",
-      "SCROLL_TO_TOP": "Scroll naar boven",
-      "SETTINGS": "Instellingen",
-      "STARRED_CLIPBOARDS": "Klemborden met sterretjes",
-      "SYNC_CLIPBOARD_HISTORY": "Synchroniseer klembordgeschiedenis",
-      "TYPE_CLIPBOARD": "Type klembord",
-      "VIEW_MORE": "Bekijk meer",
-      "WINDOW_DISPLAY_TOGGLE": "Vensterweergave wisselen"
-    },
-    "KEYS": {
-      "ALT": "Alt",
-      "CTRL": "Ctrl",
-      "SHIFT": "Shift"
-    },
-    "LANGUAGE": {
-      "AR": "Arabisch",
-      "BN": "Bengaals",
-      "DE": "Duits",
-      "EN": "Engels",
-      "ES": "Spaans",
-      "FR": "Frans",
-      "HI": "Hindi",
-      "IT": "Italiaans",
-      "JA": "Japans",
-      "KO": "Koreaans",
-      "NL": "Nederlands",
-      "PL": "Pools",
-      "PT": "Portugees",
-      "RU": "Russisch",
-      "TH": "Thais",
-      "TR": "Turks",
-      "UR": "Urdu",
-      "VI": "Vietnamees",
-      "ZH": "Mandarijn"
-    },
-    "POSITION": {
-      "BOTTOM_CENTER": "Middenonder",
-      "BOTTOM_LEFT": "Linksonder",
-      "BOTTOM_RIGHT": "Rechts onder",
-      "CENTER": "Centrum",
-      "CURSOR": "Cursor",
-      "LEFT_CENTER": "Links midden",
-      "RIGHT_CENTER": "Rechts midden",
-      "TOP_CENTER": "Boven midden",
-      "TOP_LEFT": "Linksboven",
-      "TOP_RIGHT": "Rechtsboven",
-      "TRAY_BOTTOM_CENTER": "Lade onderkant midden",
-      "TRAY_BOTTOM_LEFT": "Lade linksonder",
-      "TRAY_BOTTOM_RIGHT": "Lade rechtsonder",
-      "TRAY_CENTER": "Lade midden",
-      "TRAY_LEFT": "Lade links",
-      "TRAY_RIGHT": "Lade rechts"
-    }
-  },
-  "SETTINGS": {
-    "BACKUP": {
-      "CONFIG_LOCATION": "Configuratielocatie",
-      "DATABASE_LOCATION": "Locatie van de database",
-      "OPEN": "Open",
-      "SYNC": "Synchroniseren",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
-    },
-    "GENERAL": {
-      "CHANGE_LANGUAGE": "Taal wijzigen",
-      "CHANGE_WINDOW_POSITION": "Vensterpositie wijzigen",
-      "HTML_CLIPBOARD_TOOLTIP": "HTML-klembord-tooltip",
-      "KEYBOARD_SHORTCUT": "Sneltoets",
-      "START_CLIPPY_ON_STARTUP": "Start Clippy bij het opstarten van het systeem",
-      "SWITCH_THEME": "Thema wisselen",
-      "SYSTEM": "SYSTEEM",
-      "WINDOW_SCALE": "Venster schaal"
-    },
-    "HISTORY": {
-      "CLEAR_ALL": "Wis alles",
-      "CLEAR_FILE": "Bestand wissen",
-      "CLEAR_HTML": "HTML wissen",
-      "CLEAR_IMAGE": "Duidelijk beeld",
-      "CLEAR_RTF": "Rtf wissen",
-      "CLEAR_TEXT": "Duidelijke tekst",
-      "DATABASE_INFO": "{{records}} lokale items ({{size}}) zijn op deze computer opgeslagen",
-      "SQL_DATABASE_INFO": "SQL-database-info",
-      "STORAGE_ACTIONS": "Opslagacties"
-    },
-    "HOTKEYS": {
-      "CHANGE_YOUR_HOTKEYS": "Verander uw sneltoetsen"
-    },
-    "LIMITS": {
-      "CLIPBOARD_LIMITS": "Klembordlimieten",
-      "IF_SET_TO_ZERO": "Als dit op 0 staat, wordt het klembordtype volledig overgeslagen",
-      "MAX_FILE_SIZE": "Maximale bestandsgrootte",
-      "MAX_HTML_SIZE": "Maximale HTML-grootte",
-      "MAX_IMAGE_SIZE": "Maximale afbeeldingsgrootte",
-      "MAX_RTF_SIZE": "Maximale RTF-grootte",
-      "MAX_TEXT_SIZE": "Maximale tekstgrootte"
-    },
-    "TAB": {
-      "BACKUP": "Back-up",
-      "GENERAL": "Algemeen",
-      "HISTORY": "Geschiedenis",
-      "HOTKEYS": "Sneltoetsen",
-      "LIMITS": "Limieten"
-    }
-  }
+	"ABOUT": {
+		"COPYRIGHT": "Copyright(C) DC. Alle rechten voorbehouden.",
+		"DEVELOPED_BY": "Ontwikkeld door 0-don. Powered by Tauri.",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "Momenteel geen updates beschikbaar",
+		"OFFICIAL_WEBSITE": "Officiële website"
+	},
+	"CLIPBOARD": {
+		"COPY_AS_HTML": "Kopiëren als HTML",
+		"COPY_AS_RTF": "Kopiëren als RTF",
+		"DELETE_CLIPBOARD": "Klembord verwijderen",
+		"NO_CLIPBOARDS_YET": "Nog geen klemborden...",
+		"SEARCH_ENTRIES": "Zoekresultaten",
+		"STAR_FAVORITE": "Favoriete ster"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "Over",
+			"DIGIT_1": "Cijfer 1",
+			"DIGIT_2": "Cijfer 2",
+			"DIGIT_3": "Cijfer 3",
+			"DIGIT_4": "Cijfer 4",
+			"DIGIT_5": "Cijfer 5",
+			"DIGIT_6": "Cijfer 6",
+			"DIGIT_7": "Cijfer 7",
+			"DIGIT_8": "Cijfer 8",
+			"DIGIT_9": "Cijfer 9",
+			"EXIT": "Uitgang",
+			"HISTORY": "Geschiedenis",
+			"NUM_1": "Nummer 1",
+			"NUM_2": "Nummer 2",
+			"NUM_3": "Nummer 3",
+			"NUM_4": "Nummer 4",
+			"NUM_5": "Nummer 5",
+			"NUM_6": "Nummer 6",
+			"NUM_7": "Nummer 7",
+			"NUM_8": "Nummer 8",
+			"NUM_9": "Nummer 9",
+			"RECENT_CLIPBOARDS": "Recente klemborden",
+			"SCROLL_TO_TOP": "Scroll naar boven",
+			"SETTINGS": "Instellingen",
+			"STARRED_CLIPBOARDS": "Klemborden met sterretjes",
+			"SYNC_CLIPBOARD_HISTORY": "Synchroniseer klembordgeschiedenis",
+			"TYPE_CLIPBOARD": "Type klembord",
+			"VIEW_MORE": "Bekijk meer",
+			"WINDOW_DISPLAY_TOGGLE": "Vensterweergave wisselen"
+		},
+		"KEYS": {
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
+		},
+		"LANGUAGE": {
+			"AR": "Arabisch",
+			"BN": "Bengaals",
+			"DE": "Duits",
+			"EN": "Engels",
+			"ES": "Spaans",
+			"FR": "Frans",
+			"HI": "Hindi",
+			"IT": "Italiaans",
+			"JA": "Japans",
+			"KO": "Koreaans",
+			"NL": "Nederlands",
+			"PL": "Pools",
+			"PT": "Portugees",
+			"RU": "Russisch",
+			"TH": "Thais",
+			"TR": "Turks",
+			"UR": "Urdu",
+			"VI": "Vietnamees",
+			"ZH": "Mandarijn"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "Middenonder",
+			"BOTTOM_LEFT": "Linksonder",
+			"BOTTOM_RIGHT": "Rechts onder",
+			"CENTER": "Centrum",
+			"CURSOR": "Cursor",
+			"LEFT_CENTER": "Links midden",
+			"RIGHT_CENTER": "Rechts midden",
+			"TOP_CENTER": "Boven midden",
+			"TOP_LEFT": "Linksboven",
+			"TOP_RIGHT": "Rechtsboven",
+			"TRAY_BOTTOM_CENTER": "Lade onderkant midden",
+			"TRAY_BOTTOM_LEFT": "Lade linksonder",
+			"TRAY_BOTTOM_RIGHT": "Lade rechtsonder",
+			"TRAY_CENTER": "Lade midden",
+			"TRAY_LEFT": "Lade links",
+			"TRAY_RIGHT": "Lade rechts"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CONFIG_LOCATION": "Configuratielocatie",
+			"DATABASE_LOCATION": "Locatie van de database",
+			"OPEN": "Open",
+			"SYNC": "Synchroniseren",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "Taal wijzigen",
+			"CHANGE_WINDOW_POSITION": "Vensterpositie wijzigen",
+			"HTML_CLIPBOARD_TOOLTIP": "HTML-klembord-tooltip",
+			"KEYBOARD_SHORTCUT": "Sneltoets",
+			"START_CLIPPY_ON_STARTUP": "Start Clippy bij het opstarten van het systeem",
+			"SWITCH_THEME": "Thema wisselen",
+			"SYSTEM": "SYSTEEM",
+			"WINDOW_SCALE": "Venster schaal"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "Wis alles",
+			"CLEAR_FILE": "Bestand wissen",
+			"CLEAR_HTML": "HTML wissen",
+			"CLEAR_IMAGE": "Duidelijk beeld",
+			"CLEAR_RTF": "Rtf wissen",
+			"CLEAR_TEXT": "Duidelijke tekst",
+			"DATABASE_INFO": "{{records}} lokale items ({{size}}) zijn op deze computer opgeslagen",
+			"SQL_DATABASE_INFO": "SQL-database-info",
+			"STORAGE_ACTIONS": "Opslagacties"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "Verander uw sneltoetsen"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "Klembordlimieten",
+			"IF_SET_TO_ZERO": "Als dit op 0 staat, wordt het klembordtype volledig overgeslagen",
+			"MAX_FILE_SIZE": "Maximale bestandsgrootte",
+			"MAX_HTML_SIZE": "Maximale HTML-grootte",
+			"MAX_IMAGE_SIZE": "Maximale afbeeldingsgrootte",
+			"MAX_RTF_SIZE": "Maximale RTF-grootte",
+			"MAX_TEXT_SIZE": "Maximale tekstgrootte"
+		},
+		"TAB": {
+			"BACKUP": "Back-up",
+			"GENERAL": "Algemeen",
+			"HISTORY": "Geschiedenis",
+			"HOTKEYS": "Sneltoetsen",
+			"LIMITS": "Limieten"
+		}
+	}
 }
