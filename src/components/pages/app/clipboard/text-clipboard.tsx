@@ -1,14 +1,15 @@
 import Tooltip from "@corvu/tooltip";
-import dayjs from "dayjs";
 import { BsFiletypeHtml, BsJournalRichtext } from "solid-icons/bs";
 import { FiFileText, FiLink } from "solid-icons/fi";
-import { Component } from "solid-js";
+import { Component, createEffect, createSignal } from "solid-js";
 import { rgbCompatible } from "../../../../lib/colors";
 import { invokeCommand } from "../../../../lib/tauri";
 import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardWithRelations } from "../../../../types";
 import { ClipboardTextType, ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
+import { LANGUAGES } from "../../../../utils/constants";
+import dayjs from "../../../../utils/dayjs";
 import { ClipboardHeader } from "./clipboard-header";
 
 interface TextClipboardProps {
@@ -17,7 +18,10 @@ interface TextClipboardProps {
 }
 
 export const TextClipboard: Component<TextClipboardProps> = (props) => {
+  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
+
   let type = ClipboardType.Text;
+
   let data = props.data.text?.data;
   let textType = props.data.text?.type as ClipboardTextType;
 
@@ -68,9 +72,14 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
     e.stopPropagation();
     await invokeCommand(InvokeCommand.CopyClipboard, {
       id: props.data.clipboard.id,
-      type,
+      type: ClipboardType.Text,
     });
   };
+
+  createEffect(() => {
+    dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
+    setFromNowString(dayjs.utc(props.data.clipboard.created_date).fromNow());
+  });
 
   return (
     <Tooltip openDelay={1000}>
@@ -79,12 +88,12 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
           <ClipboardHeader {...props} Icon={getIcon()} />
 
           <div class="min-w-0 flex-1">
-            <p class="w-[calc(100vw-6.5rem)] truncate text-left text-sm">{data}</p>
+            <p class="w-[calc(100vw-6.576rem)] truncate text-left text-sm">{data}</p>
             <div
               class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
               title={new Date(props.data.clipboard.created_date).toLocaleString()}
             >
-              {dayjs.utc(props.data.clipboard.created_date).fromNow()}
+              {fromNowString()}
             </div>
           </div>
         </button>

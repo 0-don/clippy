@@ -18,23 +18,20 @@ use tauri_plugin_positioner::{Position, WindowExt};
 
 /// App
 pub fn init_window() {
-    tauri::async_runtime::spawn(async {
-        let size = calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y).await;
+    #[cfg(any(windows, target_os = "macos"))]
+    {
         get_main_window()
-            .set_size(size)
-            .expect("Failed to set window size");
+            .set_decorations(false)
+            .expect("Failed to set decorations");
+        get_main_window()
+            .set_shadow(false)
+            .expect("Failed to set shadow");
+    }
 
-        #[cfg(any(windows, target_os = "macos"))]
-        {
-            let _ = get_main_window().set_decorations(false);
-            let _ = get_main_window().set_shadow(true);
-        }
-
-        #[cfg(debug_assertions)]
-        {
-            get_main_window().open_devtools();
-        }
-    });
+    #[cfg(debug_assertions)]
+    {
+        get_main_window().open_devtools();
+    }
 }
 
 pub fn toggle_main_window() {
@@ -72,7 +69,6 @@ pub fn toggle_main_window() {
             )
             .expect("Failed to emit change tab event");
         get_main_window().show().expect("Failed to show window");
-
         register_hotkeys(true);
         get_main_window()
             .emit(
@@ -134,27 +130,9 @@ pub fn position_window_near_cursor() {
 
     if let Ok(cursor_position) = window.cursor_position() {
         let window_size = window.outer_size().expect("Failed to get window size");
-
-        // Get current monitor or fallback to primary
         let current_monitor = window
-            .available_monitors()
-            .expect("Failed to get available monitors")
-            .into_iter()
-            .find(|monitor| {
-                let pos = monitor.position();
-                let size = monitor.size();
-                let bounds = (
-                    pos.x as f64,
-                    pos.y as f64,
-                    pos.x as f64 + size.width as f64,
-                    pos.y as f64 + size.height as f64,
-                );
-
-                cursor_position.x >= bounds.0
-                    && cursor_position.x < bounds.2
-                    && cursor_position.y >= bounds.1
-                    && cursor_position.y < bounds.3
-            })
+            .current_monitor()
+            .expect("Failed to get current monitor")
             .unwrap_or_else(|| {
                 window
                     .primary_monitor()
@@ -166,29 +144,34 @@ pub fn position_window_near_cursor() {
         let monitor_pos = current_monitor.position();
         let monitor_size = current_monitor.size();
 
-        // Calculate window position with offset
+        // Account for Windows DPI scaling
+        #[cfg(windows)]
+        let (cursor_x, cursor_y) = (
+            cursor_position.x / scale_factor,
+            cursor_position.y / scale_factor,
+        );
+        #[cfg(not(windows))]
+        let (cursor_x, cursor_y) = (cursor_position.x, cursor_position.y);
+
         let pos = PhysicalPosition::new(
-            ((cursor_position.x + 10.0) * scale_factor) as i32,
-            ((cursor_position.y + 10.0) * scale_factor) as i32,
+            (cursor_x * scale_factor) as i32,
+            (cursor_y * scale_factor) as i32,
         );
 
-        // Calculate monitor bounds in physical pixels
         let monitor_bounds = (
             (monitor_pos.x as f64 * scale_factor) as i32,
             (monitor_pos.y as f64 * scale_factor) as i32,
-            (monitor_pos.x as f64 * scale_factor + monitor_size.width as f64 * scale_factor) as i32,
-            (monitor_pos.y as f64 * scale_factor + monitor_size.height as f64 * scale_factor)
-                as i32,
+            ((monitor_pos.x as f64 + monitor_size.width as f64) * scale_factor) as i32,
+            ((monitor_pos.y as f64 + monitor_size.height as f64) * scale_factor) as i32,
         );
 
-        // Constrain window position within monitor bounds
         let final_pos = PhysicalPosition::new(
             pos.x
                 .max(monitor_bounds.0)
-                .min(monitor_bounds.2 - window_size.width as i32),
+                .min(monitor_bounds.2 - (window_size.width as f64 * scale_factor) as i32),
             pos.y
                 .max(monitor_bounds.1)
-                .min(monitor_bounds.3 - window_size.height as i32),
+                .min(monitor_bounds.3 - (window_size.height as f64 * scale_factor) as i32),
         );
 
         window
@@ -196,7 +179,6 @@ pub fn position_window_near_cursor() {
             .expect("Failed to set window position");
     }
 }
-
 pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
     let aspect_ratio = width as f64 / height as f64;
     if width > MAX_IMAGE_DIMENSIONS || height > MAX_IMAGE_DIMENSIONS {

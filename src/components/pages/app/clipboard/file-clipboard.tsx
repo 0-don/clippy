@@ -1,11 +1,13 @@
-import dayjs from "dayjs";
 import { VsFileBinary } from "solid-icons/vs";
-import { Component } from "solid-js";
+import { Component, createEffect, createSignal } from "solid-js";
 import { invokeCommand } from "../../../../lib/tauri";
+import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardFileModel, ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
 import { formatBytes } from "../../../../utils";
+import { LANGUAGES } from "../../../../utils/constants";
+import dayjs from "../../../../utils/dayjs";
 import { ClipboardHeader } from "./clipboard-header";
 
 interface FileClipboardProps {
@@ -14,6 +16,7 @@ interface FileClipboardProps {
 }
 
 export const FileClipboard: Component<FileClipboardProps> = (props) => {
+  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
     await invokeCommand(InvokeCommand.CopyClipboard, {
@@ -45,6 +48,11 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
       .join("\n");
   };
 
+  createEffect(() => {
+    dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
+    setFromNowString(dayjs.utc(props.data.clipboard.created_date).fromNow());
+  });
+
   const groupedFiles = getGroupedFiles();
 
   return (
@@ -66,7 +74,7 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
           class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
           title={dayjs.utc(props.data.clipboard.created_date).format()}
         >
-          {dayjs.utc(props.data.clipboard.created_date).fromNow()}
+          {fromNowString()}
         </div>
       </div>
     </button>

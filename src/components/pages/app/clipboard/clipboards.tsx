@@ -1,6 +1,3 @@
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import utc from "dayjs/plugin/utc";
 import { FiArrowUp } from "solid-icons/fi";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
@@ -12,9 +9,6 @@ import { HotkeyEvent } from "../../../../types/enums";
 import { ListenEvent } from "../../../../types/tauri-listen";
 import { useLanguage } from "../../../provider/language-provider";
 import { BaseClipboard } from "./base-clipboard";
-
-dayjs.extend(utc);
-dayjs.extend(relativeTime);
 
 export const Clipboards: Component = () => {
   const { t } = useLanguage();

@@ -1,11 +1,13 @@
-import dayjs from "dayjs";
 import { BsImages } from "solid-icons/bs";
-import { Component } from "solid-js";
+import { Component, createEffect, createSignal } from "solid-js";
 import { invokeCommand } from "../../../../lib/tauri";
+import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
 import { InvokeCommand } from "../../../../types/tauri-invoke";
 import { formatBytes } from "../../../../utils";
+import { LANGUAGES } from "../../../../utils/constants";
+import dayjs from "../../../../utils/dayjs";
 import { ClipboardHeader } from "./clipboard-header";
 
 interface ImageClipboardProps {
@@ -15,6 +17,7 @@ interface ImageClipboardProps {
 
 export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
   let dbClickTimer: any;
+  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -33,6 +36,11 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
     e.stopPropagation();
     await invokeCommand(InvokeCommand.SaveClipboardImage, { id: props.data.clipboard.id });
   };
+
+  createEffect(() => {
+    dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
+    setFromNowString(dayjs.utc(props.data.clipboard.created_date).fromNow());
+  });
 
   const imageInfo =
     props.data.image &&
@@ -55,7 +63,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
           class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
           title={dayjs.utc(props.data.clipboard.created_date).format()}
         >
-          {dayjs.utc(props.data.clipboard.created_date).fromNow()}
+          {fromNowString()}
         </div>
       </div>
     </button>
