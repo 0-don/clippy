@@ -128,57 +128,81 @@ pub fn update_main_window_position() {
 pub fn position_window_near_cursor() {
     let window = get_main_window();
 
-    if let Ok(cursor_position) = window.cursor_position() {
-        let window_size = window.outer_size().expect("Failed to get window size");
-        let current_monitor = window
-            .current_monitor()
-            .expect("Failed to get current monitor")
-            .unwrap_or_else(|| {
-                window
-                    .primary_monitor()
-                    .expect("Failed to get primary monitor")
-                    .expect("Failed to get primary monitor")
-            });
+    match window.cursor_position() {
+        Ok(cursor_position) => {
+            let window_size = window.outer_size().expect("Failed to get window size");
 
-        let scale_factor = current_monitor.scale_factor();
-        let monitor_pos = current_monitor.position();
-        let monitor_size = current_monitor.size();
+            // Get all monitors
+            let all_monitors = window
+                .available_monitors()
+                .expect("Failed to get available monitors");
 
-        // Account for Windows DPI scaling
-        #[cfg(windows)]
-        let (cursor_x, cursor_y) = (
-            cursor_position.x / scale_factor,
-            cursor_position.y / scale_factor,
-        );
-        #[cfg(not(windows))]
-        let (cursor_x, cursor_y) = (cursor_position.x, cursor_position.y);
+            // Find the monitor containing the cursor
+            let containing_monitor = all_monitors
+                .into_iter()
+                .find(|monitor| {
+                    let pos = monitor.position();
+                    let size = monitor.size();
+                    let monitor_x_range = pos.x..(pos.x + size.width as i32);
+                    let monitor_y_range = pos.y..(pos.y + size.height as i32);
 
-        let pos = PhysicalPosition::new(
-            (cursor_x * scale_factor) as i32,
-            (cursor_y * scale_factor) as i32,
-        );
+                    monitor_x_range.contains(&(cursor_position.x as i32))
+                        && monitor_y_range.contains(&(cursor_position.y as i32))
+                })
+                .unwrap_or_else(|| {
+                    printlog!("Cursor not found in any monitor, using primary");
+                    window
+                        .primary_monitor()
+                        .expect("Failed to get primary monitor")
+                        .expect("No primary monitor found")
+                });
 
-        let monitor_bounds = (
-            (monitor_pos.x as f64 * scale_factor) as i32,
-            (monitor_pos.y as f64 * scale_factor) as i32,
-            ((monitor_pos.x as f64 + monitor_size.width as f64) * scale_factor) as i32,
-            ((monitor_pos.y as f64 + monitor_size.height as f64) * scale_factor) as i32,
-        );
+            let scale_factor = containing_monitor.scale_factor();
+            let monitor_pos = containing_monitor.position();
+            let monitor_size = containing_monitor.size();
 
-        let final_pos = PhysicalPosition::new(
-            pos.x
-                .max(monitor_bounds.0)
-                .min(monitor_bounds.2 - (window_size.width as f64 * scale_factor) as i32),
-            pos.y
-                .max(monitor_bounds.1)
-                .min(monitor_bounds.3 - (window_size.height as f64 * scale_factor) as i32),
-        );
+            #[cfg(windows)]
+            let (cursor_x, cursor_y) = (
+                cursor_position.x / scale_factor,
+                cursor_position.y / scale_factor,
+            );
+            #[cfg(not(windows))]
+            let (cursor_x, cursor_y) = (cursor_position.x, cursor_position.y);
 
-        window
-            .set_position(final_pos)
-            .expect("Failed to set window position");
+            let pos = PhysicalPosition::new(
+                (cursor_x * scale_factor) as i32,
+                (cursor_y * scale_factor) as i32,
+            );
+
+            let monitor_bounds = (
+                (monitor_pos.x as f64 * scale_factor) as i32,
+                (monitor_pos.y as f64 * scale_factor) as i32,
+                ((monitor_pos.x as f64 + monitor_size.width as f64) * scale_factor) as i32,
+                ((monitor_pos.y as f64 + monitor_size.height as f64) * scale_factor) as i32,
+            );
+
+            let window_width = (window_size.width as f64 * scale_factor) as i32;
+            let window_height = (window_size.height as f64 * scale_factor) as i32;
+
+            let final_pos = PhysicalPosition::new(
+                pos.x
+                    .max(monitor_bounds.0)
+                    .min(monitor_bounds.2 - window_width),
+                pos.y
+                    .max(monitor_bounds.1)
+                    .min(monitor_bounds.3 - window_height),
+            );
+
+            window
+                .set_position(final_pos)
+                .expect("Failed to set window position");
+        }
+        Err(e) => {
+            printlog!("Failed to get cursor position: {:?}", e);
+        }
     }
 }
+
 pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
     let aspect_ratio = width as f64 / height as f64;
     if width > MAX_IMAGE_DIMENSIONS || height > MAX_IMAGE_DIMENSIONS {
