@@ -35,6 +35,10 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
   }
   if (props.data.text?.data && props.data.rtf?.data && props.data.html?.data) {
     type = ClipboardType.Rtf;
+    data = props.data.text.data;
+  }
+  if (!props.data.text?.data && props.data.rtf?.data && props.data.html?.data) {
+    type = ClipboardType.Rtf;
     data = props.data.rtf.data;
   }
 
