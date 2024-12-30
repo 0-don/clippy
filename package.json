@@ -16,8 +16,8 @@
     "icon": "tauri icon"
   },
   "dependencies": {
-    "@corvu/tooltip": "^0.2.1",
-    "@solid-primitives/i18n": "^2.1.1",
+    "@corvu/tooltip": "0.2.1",
+    "@solid-primitives/i18n": "2.1.1",
     "@tauri-apps/api": "2.1.1",
     "dayjs": "1.11.13",
     "solid-icons": "1.1.0",

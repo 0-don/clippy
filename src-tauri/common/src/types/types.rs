@@ -1,9 +1,12 @@
 use global_hotkey::hotkey::HotKey;
+use google_drive3::yup_oauth2;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     pub db: String,
+    #[serde(default)]
+    pub drive_token: Option<yup_oauth2::AccessToken>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

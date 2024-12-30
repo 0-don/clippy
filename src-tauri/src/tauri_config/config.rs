@@ -60,6 +60,7 @@ pub fn create_config() {
 
     let config = Config {
         db: format!("{}", &data_path.db_file_path),
+        drive_token: None,
     };
 
     let _ = fs::write(
