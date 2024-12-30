@@ -9,6 +9,7 @@ path = "src/lib.rs"
 
 [dependencies]
 entity = { path = "../entity" }
+google-drive3 = { version = "6.0.0" }
 global-hotkey = "0"
 sea-orm = "1"
 serde = "1"

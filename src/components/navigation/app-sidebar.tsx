@@ -1,6 +1,8 @@
 import { Component, For, Show } from "solid-js";
+import { invokeCommand } from "../../lib/tauri";
 import { AppStore } from "../../store/app-store";
 import { HotkeyStore } from "../../store/hotkey-store";
+import { InvokeCommand } from "../../types/tauri-invoke";
 import { useLanguage } from "../provider/language-provider";
 
 interface AppSidebarProps {}
@@ -36,6 +38,12 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
           );
         }}
       </For>
+      <button
+        onClick={() => invokeCommand(InvokeCommand.AuthGoogleDrive)}
+        class="relative flex h-6 w-full cursor-pointer select-none items-center justify-center py-5 text-xl text-black hover:text-black dark:text-white dark:hover:text-white"
+      >
+        test
+      </button>
     </Show>
   );
 };
