@@ -28,6 +28,13 @@ export default defineConfig({
           label: "Reference",
           autogenerate: { directory: "reference" },
         },
+        {
+          label: "Legal",
+          items: [
+            { label: "Privacy Policy", slug: "legal/privacy-policy" },
+            { label: "Terms of Service", slug: "legal/terms-of-service" },
+          ],
+        },
       ],
     }),
     tailwind(),
