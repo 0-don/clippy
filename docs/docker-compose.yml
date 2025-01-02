@@ -1,0 +1,21 @@
+services:
+  clippy-docs:
+    container_name: clippy-docs
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: prod
+    restart: always
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.clippy-docs.rule=Host(`clippy.coding.global`) || Host(`www.clippy.coding.global`)"
+      - "traefik.http.routers.clippy-docs.entrypoints=websecure"
+      - "traefik.http.routers.clippy-docs.tls.certresolver=letsencrypt"
+      - "traefik.http.services.clippy-docs.loadbalancer.server.port=4321"
+
+networks:
+  proxy:
+    external: false
+    name: proxy

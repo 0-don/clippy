@@ -38,12 +38,12 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
           );
         }}
       </For>
-      <button
+      {/* <button
         onClick={() => invokeCommand(InvokeCommand.AuthGoogleDrive)}
         class="relative flex h-6 w-full cursor-pointer select-none items-center justify-center py-5 text-xl text-black hover:text-black dark:text-white dark:hover:text-white"
       >
         test
-      </button>
+      </button> */}
     </Show>
   );
 };
