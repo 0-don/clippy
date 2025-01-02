@@ -25,11 +25,11 @@ export default defineConfig({
             {
               label: "Features",
               items: [
-                { label: "Clipboard History", slug: "features/clipboard-history " },
+                { label: "Clipboard History", slug: "features/clipboard-history" },
                 { label: "Global Hotkeys", slug: "features/hotkeys" },
                 { label: "Cloud Sync", slug: "features/cloud-sync" },
                 { label: "File Support", slug: "features/file-support" },
-              ]
+              ],
             },
           ],
         },
