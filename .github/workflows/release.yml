@@ -3,7 +3,7 @@ name: "publish"
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [mastera]
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
