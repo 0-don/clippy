@@ -41,7 +41,7 @@ export interface TauriInvokeCommands {
   //Auth
   [InvokeCommand.AuthGoogleDrive]: {
     args: undefined;
-    return: void;
+    return: string;
   };
 
   // Clipboard commands

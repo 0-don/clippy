@@ -40,12 +40,23 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
       </For>
       {import.meta.env.DEV && (
         <button
-          onClick={() => invokeCommand(InvokeCommand.AuthGoogleDrive)}
-          class="relative flex h-6 w-full cursor-pointer select-none items-center justify-center py-5 text-xl text-black hover:text-black dark:text-white dark:hover:text-white"
+          onClick={async () => {
+            try {
+              const user = await invokeCommand(InvokeCommand.AuthGoogleDrive);
+              console.log(user);
+            } catch (error) {
+              console.error(error);
+            }
+          }}
         >
           {import.meta.env.DEV ? "DEV" : "PROD"}
         </button>
       )}
+      {/* {import.meta.env.DEV && (
+        <button onClick={() => invokeCommand(InvokeCommand.AuthGoogleDrive)} class="">
+          AUTH
+        </button>
+      )} */}
     </Show>
   );
 };
