@@ -21,11 +21,11 @@ export default defineConfig({
           label: "Quick Start",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Installation Guide", slug: "guides/example" },
+            { label: "Installation Guide", slug: "guides/installation" },
             {
               label: "Features",
               items: [
-                { label: "Clipboard History", slug: "features/clipboard-history" },
+                { label: "Clipboard History", slug: "features/clipboard-history " },
                 { label: "Global Hotkeys", slug: "features/hotkeys" },
                 { label: "Cloud Sync", slug: "features/cloud-sync" },
                 { label: "File Support", slug: "features/file-support" },
