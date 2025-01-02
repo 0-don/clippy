@@ -57,8 +57,9 @@ mime_guess = "2"
 tree_magic_mini = "3"
 
 color-backtrace = "0"
+dotenvy = "0"
+google-drive3 = "6"
 
-google-drive3 = { version = "6.0.0" }
 [profile.release]
 # panic = "abort"
 # codegen-units = 1

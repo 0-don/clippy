@@ -935,6 +935,7 @@ dependencies = [
  "chrono",
  "color-backtrace",
  "common",
+ "dotenvy",
  "enigo",
  "entity",
  "global-hotkey",
