@@ -21,6 +21,7 @@ use common::{
         types::CommandError,
     },
 };
+use sea_orm::prelude::Uuid;
 use std::fs::File;
 use tauri::{Emitter, Manager};
 
@@ -56,18 +57,18 @@ pub async fn get_clipboards(
 }
 
 #[tauri::command]
-pub async fn copy_clipboard(id: i32, r#type: ClipboardType) -> Result<bool, CommandError> {
+pub async fn copy_clipboard(id: Uuid, r#type: ClipboardType) -> Result<bool, CommandError> {
     unregister_hotkeys(false);
     Ok(copy_clipboard_from_id(id, r#type).await?)
 }
 
 #[tauri::command]
-pub async fn star_clipboard(id: i32, star: bool) -> Result<bool, CommandError> {
+pub async fn star_clipboard(id: Uuid, star: bool) -> Result<bool, CommandError> {
     Ok(star_clipboard_db(id, star).await?)
 }
 
 #[tauri::command]
-pub async fn delete_clipboard(id: i32) -> Result<(), CommandError> {
+pub async fn delete_clipboard(id: Uuid) -> Result<(), CommandError> {
     delete_clipboard_db(id).await?;
     Ok(())
 }
@@ -82,7 +83,7 @@ pub async fn clear_clipboards(r#type: Option<ClipboardType>) -> Result<(), Comma
 }
 
 #[tauri::command]
-pub async fn save_clipboard_image(id: i32) -> Result<(), CommandError> {
+pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
     let clipboard = get_clipboard_db(id).await?;
 
     let extension = clipboard
