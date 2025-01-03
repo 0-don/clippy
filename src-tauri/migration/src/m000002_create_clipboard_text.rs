@@ -3,7 +3,7 @@ use common::types::enums::ClipboardTextType;
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,
-    schema::{integer, pk_auto, string, text},
+    schema::{string, text, uuid},
 };
 
 #[derive(Iden)]
@@ -26,8 +26,12 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(ClipboardText::Table)
                     .if_not_exists()
-                    .col(pk_auto(ClipboardText::Id))
-                    .col(integer(ClipboardText::ClipboardId).unique_key())
+                    .col(
+                        uuid(ClipboardText::Id)
+                            .not_null()
+                            .primary_key()
+                    )
+                    .col(uuid(ClipboardText::ClipboardId).unique_key())
                     .col(
                         string(ClipboardText::Type)
                             .default(

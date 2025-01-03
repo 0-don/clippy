@@ -1,6 +1,6 @@
 use sea_orm_migration::{
     prelude::*,
-    schema::{boolean, date_time, json, pk_auto},
+    schema::{boolean, date_time, json, uuid},
 };
 
 #[derive(Iden)]
@@ -23,7 +23,11 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Clipboard::Table)
                     .if_not_exists()
-                    .col(pk_auto(Clipboard::Id))
+                    .col(
+                        uuid(Clipboard::Id)
+                            .not_null()
+                            .primary_key()
+                    )
                     .col(json(Clipboard::Types).default(Expr::value("[]")))
                     .col(boolean(Clipboard::Star).default(false))
                     .col(date_time(Clipboard::CreatedDate).default(Expr::current_timestamp()))

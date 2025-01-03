@@ -14,7 +14,7 @@ impl EntityName for Entity {
 
 #[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Eq, Serialize, Deserialize)]
 pub struct Model {
-    pub id: i32,
+    pub id: Uuid,
     pub types: Json,
     pub star: bool,
     pub created_date: DateTime,
@@ -34,9 +34,9 @@ pub enum PrimaryKey {
 }
 
 impl PrimaryKeyTrait for PrimaryKey {
-    type ValueType = i32;
+    type ValueType = Uuid;
     fn auto_increment() -> bool {
-        true
+        false
     }
 }
 
@@ -53,7 +53,7 @@ impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::Id => ColumnType::Integer.def(),
+            Self::Id => ColumnType::Uuid.def(),
             Self::Types => ColumnType::Json.def(),
             Self::Star => ColumnType::Boolean.def(),
             Self::CreatedDate => ColumnType::DateTime.def(),

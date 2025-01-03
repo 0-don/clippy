@@ -1,7 +1,7 @@
 use crate::m000001_create_clipboard::Clipboard;
 use sea_orm_migration::{
     prelude::*,
-    schema::{blob, date_time_null, integer, integer_null, pk_auto, string_null},
+    schema::{blob, date_time_null, integer_null, string_null, uuid},
 };
 
 #[derive(Iden)]
@@ -29,8 +29,8 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(ClipboardFile::Table)
                     .if_not_exists()
-                    .col(pk_auto(ClipboardFile::Id))
-                    .col(integer(ClipboardFile::ClipboardId))
+                    .col(uuid(ClipboardFile::Id).not_null().primary_key())
+                    .col(uuid(ClipboardFile::ClipboardId))
                     .col(string_null(ClipboardFile::Name))
                     .col(string_null(ClipboardFile::Extension))
                     .col(integer_null(ClipboardFile::Size))

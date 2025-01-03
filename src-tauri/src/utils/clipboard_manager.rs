@@ -11,6 +11,7 @@ use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWin
 use common::types::orm_query::ClipboardManager;
 use image::imageops;
 use regex::Regex;
+use sea_orm::prelude::Uuid;
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
@@ -221,6 +222,7 @@ impl ClipboardManagerExt for ClipboardManager {
         printlog!("clipboard types: {:?}", types);
 
         self.clipboard_model = entity::clipboard::ActiveModel {
+            id: Set(Uuid::new_v4()),
             types: Set(ClipboardType::to_json_value(&types)),
             ..Default::default()
         };
