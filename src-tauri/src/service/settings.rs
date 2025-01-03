@@ -6,7 +6,7 @@ use crate::service::hotkey::with_hotkeys;
 use crate::service::window::get_monitor_scale_factor;
 use common::constants::CONFIG_NAME;
 use common::constants::DB_NAME;
-use common::language::get_system_language;
+use common::io::language::get_system_language;
 use common::types::types::Config;
 use common::types::types::DataPath;
 use entity::settings::{self, ActiveModel, Model};

@@ -3,7 +3,7 @@ use sea_orm::{sea_query, EnumIter};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum ClippyPosition {
     #[iden = "cursor"]
@@ -40,7 +40,7 @@ pub enum ClippyPosition {
     TrayBottomCenter,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum FolderLocation {
     #[iden = "database"]
@@ -49,7 +49,7 @@ pub enum FolderLocation {
     Config,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum Language {
     #[iden = "en"]
@@ -92,7 +92,7 @@ pub enum Language {
     Dutch,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum ListenEvent {
     #[iden = "init"]
@@ -107,7 +107,7 @@ pub enum ListenEvent {
     NewClipboard,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum HotkeyEvent {
     #[iden = "window_display_toggle"]
@@ -170,7 +170,7 @@ pub enum HotkeyEvent {
     Num9,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum WebWindow {
     #[iden = "main"]
@@ -181,7 +181,7 @@ pub enum WebWindow {
     Settings,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum ClipboardTextType {
     #[iden = "text"]
@@ -194,7 +194,7 @@ pub enum ClipboardTextType {
     Rgb,
 }
 
-#[derive(Iden, EnumIter, PartialEq, Serialize, Deserialize, Debug, Clone)]
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum ClipboardType {
     #[iden = "text"]

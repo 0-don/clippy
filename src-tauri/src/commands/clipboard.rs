@@ -12,8 +12,8 @@ use crate::{
     tauri_config::config::APP,
     utils::hotkey_manager::unregister_hotkeys,
 };
+use common::io::clipboard::trim_clipboard_data;
 use common::{
-    clipboard::trim_clipboard_data,
     printlog,
     types::{
         enums::{ClipboardType, ListenEvent},

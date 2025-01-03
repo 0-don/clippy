@@ -11,7 +11,7 @@
     -->
 	<preset_collections/>
 	<framework>generic-json</framework>
-	<filename>clippy.babel</filename>
+	<filename>clippy-ui.babel</filename>
 	<source_root_dir>../</source_root_dir>
 	<folder_node>
 		<name/>
