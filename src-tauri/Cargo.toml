@@ -56,9 +56,14 @@ infer = "0"
 mime_guess = "2"
 tree_magic_mini = "3"
 
-color-backtrace = "0"
-dotenvy = "0"
+# clipboard sync
 google-drive3 = "6"
+
+# debug
+color-backtrace = "0"
+# .env
+dotenvy = "0"
+
 
 [profile.release]
 # panic = "abort"

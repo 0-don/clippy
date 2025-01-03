@@ -1,6 +1,7 @@
 use crate::service::global::{get_app, get_main_window};
 use crate::{connection, prelude::*};
-use common::types::enums::{ClipboardTextType, ClipboardType};
+use common::builder::keyword::KeywordBuilder;
+use common::types::enums::{ClipboardTextType, ClipboardType, Language};
 use common::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use entity::clipboard::{self, Model};
 use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
@@ -13,6 +14,8 @@ use sea_orm::{
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use tokio::try_join;
+
+use super::settings::get_settings_db;
 
 pub async fn load_clipboards_with_relations(
     clipboards: Vec<clipboard::Model>,
@@ -167,6 +170,9 @@ pub async fn get_clipboards_db(
     img: Option<bool>,
 ) -> Result<Vec<ClipboardWithRelations>, DbErr> {
     let db = connection::db().await?;
+    let (clipboard_keywords, text_keywords) = KeywordBuilder::build_default();
+
+    let settings = get_settings_db().await?;
 
     let query = clipboard::Entity::find()
         .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
@@ -181,41 +187,85 @@ pub async fn get_clipboards_db(
         .apply_if(img, |q, _| {
             q.filter(clipboard::Column::Types.contains(ClipboardType::Image.to_string()))
         })
-        .apply_if(search, |q, s| {
-            let f = match s.as_str() {
-                "img" | "image" => {
-                    clipboard::Column::Types.contains(ClipboardType::Image.to_string())
+        .apply_if(search.as_ref().map(|s| s.to_lowercase()), |q, s| {
+            if let Some(clip_type) = KeywordBuilder::find_clipboard_type(
+                &s,
+                &Language::from_iso_code(&settings.language),
+                &clipboard_keywords,
+            ) {
+                match clip_type {
+                    ClipboardType::Text => {
+                        if let Some(text_type) = KeywordBuilder::find_text_type(
+                            &s,
+                            &Language::from_iso_code(&settings.language),
+                            &text_keywords,
+                        ) {
+                            q.filter(clipboard_text::Column::Type.eq(text_type.to_string()))
+                        } else {
+                            q.filter(
+                                clipboard_text::Column::Type
+                                    .eq(ClipboardTextType::Text.to_string()),
+                            )
+                        }
+                    }
+                    _ => q.filter(clipboard::Column::Types.contains(clip_type.to_string())),
                 }
-                "file" | "files" => {
-                    clipboard::Column::Types.contains(ClipboardType::File.to_string())
+            } else {
+                // Fallback to full-text search
+                q.filter(
+                    clipboard_text::Column::Data
+                        .contains(&s)
+                        .or(clipboard_file::Column::Name.contains(&s))
+                        .or(clipboard_file::Column::Extension.contains(&s))
+                        .or(clipboard_file::Column::MimeType.contains(&s))
+                        .or(clipboard_image::Column::Extension.contains(&s))
+                        .or(clipboard_text::Column::Type.contains(&s))
+                        .or(clipboard_html::Column::Data.contains(&s))
+                        .or(clipboard_rtf::Column::Data.contains(&s)),
+                )
+            }
+        })
+        .apply_if(search.as_ref().map(|s| s.to_lowercase()), |q, s| {
+            if let Some(clip_type) = KeywordBuilder::find_clipboard_type(
+                &s,
+                &Language::from_iso_code(&settings.language),
+                &clipboard_keywords,
+            ) {
+                match clip_type {
+                    ClipboardType::Text => {
+                        if let Some(text_type) = KeywordBuilder::find_text_type(
+                            &s,
+                            &Language::from_iso_code(&settings.language),
+                            &text_keywords,
+                        ) {
+                            q.filter(clipboard_text::Column::Type.eq(text_type.to_string()))
+                        } else {
+                            q.filter(
+                                clipboard_text::Column::Type
+                                    .eq(ClipboardTextType::Text.to_string()),
+                            )
+                        }
+                    }
+                    _ => q.filter(clipboard::Column::Types.contains(clip_type.to_string())),
                 }
-                "txt" | "text" => {
-                    clipboard_text::Column::Type.eq(ClipboardTextType::Text.to_string())
-                }
-                "lnk" | "link" => {
-                    clipboard_text::Column::Type.eq(ClipboardTextType::Link.to_string())
-                }
-                "clr" | "color" | "colour" => clipboard_text::Column::Type
-                    .eq(ClipboardTextType::Hex.to_string())
-                    .or(clipboard_text::Column::Type.eq(ClipboardTextType::Rgb.to_string())),
-                t @ ("hex" | "rgb") => clipboard_text::Column::Type.eq(t.to_string()),
-                _ => clipboard_text::Column::Data
-                    .contains(&s)
-                    .or(clipboard_file::Column::Name.contains(&s))
-                    .or(clipboard_file::Column::Extension.contains(&s))
-                    .or(clipboard_file::Column::MimeType.contains(&s))
-                    .or(clipboard_file::Column::Name.contains(&s))
-                    .or(clipboard_file::Column::Extension.contains(&s))
-                    .or(clipboard_image::Column::Extension.contains(&s))
-                    .or(clipboard_text::Column::Type.contains(&s))
-                    .or(clipboard_html::Column::Data.contains(&s))
-                    .or(clipboard_rtf::Column::Data.contains(&s)),
-            };
-            q.filter(f)
+            } else {
+                // Fallback to full-text search
+                q.filter(
+                    clipboard_text::Column::Data
+                        .contains(&s)
+                        .or(clipboard_file::Column::Name.contains(&s))
+                        .or(clipboard_file::Column::Extension.contains(&s))
+                        .or(clipboard_file::Column::MimeType.contains(&s))
+                        .or(clipboard_image::Column::Extension.contains(&s))
+                        .or(clipboard_text::Column::Type.contains(&s))
+                        .or(clipboard_html::Column::Data.contains(&s))
+                        .or(clipboard_rtf::Column::Data.contains(&s)),
+                )
+            }
         })
         .offset(cursor)
         .limit(25)
-        .order_by_desc(clipboard::Column::Id);
+        .order_by_desc(clipboard::Column::CreatedDate);
 
     let clipboards = query.all(&db).await?;
     // printlog!("clipboards: {:?}", clipboards);

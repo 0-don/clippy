@@ -4,9 +4,7 @@ use common::{
         MAX_FILE_SIZE_MIN, MAX_HTML_SIZE, MAX_HTML_SIZE_MAX, MAX_HTML_SIZE_MIN, MAX_IMAGE_SIZE,
         MAX_IMAGE_SIZE_MAX, MAX_IMAGE_SIZE_MIN, MAX_RTF_SIZE, MAX_RTF_SIZE_MAX, MAX_RTF_SIZE_MIN,
         MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN,
-    },
-    language::get_system_language,
-    types::enums::{ClippyPosition, Language},
+    }, io::language::get_system_language, types::enums::{ClippyPosition, Language}
 };
 use sea_orm::Iterable;
 use sea_orm_migration::{
