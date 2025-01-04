@@ -1,5 +1,5 @@
 use common::{constants::TOKEN_NAME, printlog, types::types::CommandError};
-use google_drive3::{hyper_rustls, hyper_util, yup_oauth2, DriveHub};
+use google_drive3::{api::Scope, hyper_rustls, hyper_util, yup_oauth2, DriveHub};
 use hyper_util::client::legacy::connect::HttpConnector;
 
 pub struct DriveManager {
@@ -13,13 +13,11 @@ impl DriveManager {
         let client_secret = std::env::var("GOOGLE_CLIENT_SECRET")
             .map_err(|_| CommandError::Error("Missing GOOGLE_CLIENT_SECRET".to_string()))?;
 
-        printlog!("Client ID: {}", client_id);
-
         let secret = yup_oauth2::ApplicationSecret {
             client_id,
             client_secret,
             auth_uri: "https://accounts.google.com/o/oauth2/auth".to_string(),
-            token_uri: "https://oauth2.googleapis.com/token".to_string(),
+            token_uri: "https://accounts.google.com/o/oauth2/token".to_string(),
             redirect_uris: vec!["http://localhost:45955".to_string()],
             ..Default::default()
         };
@@ -58,10 +56,7 @@ impl DriveManager {
 
     pub async fn is_authenticated(&self) -> bool {
         if let Some(hub) = &self.hub {
-            let result = hub
-                .auth
-                .get_token(&["https://www.googleapis.com/auth/drive.file"])
-                .await;
+            let result = hub.auth.get_token(&[Scope::File.as_ref()]).await;
 
             match result {
                 Ok(_) => true,

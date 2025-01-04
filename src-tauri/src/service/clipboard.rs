@@ -4,7 +4,9 @@ use common::builder::keyword::KeywordBuilder;
 use common::types::enums::{ClipboardTextType, ClipboardType, Language};
 use common::types::orm_query::{ClipboardManager, ClipboardWithRelations};
 use entity::clipboard::{self, Model};
-use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
+use entity::{
+    clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text, settings,
+};
 use sea_orm::prelude::Uuid;
 use sea_orm::RelationTrait;
 use sea_orm::{
@@ -14,8 +16,6 @@ use sea_orm::{
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use tokio::try_join;
-
-use super::settings::get_settings_db;
 
 pub async fn load_clipboards_with_relations(
     clipboards: Vec<clipboard::Model>,
@@ -172,7 +172,7 @@ pub async fn get_clipboards_db(
     let db = connection::db().await?;
     let (clipboard_keywords, text_keywords) = KeywordBuilder::build_default();
 
-    let settings = get_settings_db().await?;
+    let settings = get_app().state::<settings::Model>();
 
     let query = clipboard::Entity::find()
         .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
