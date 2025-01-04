@@ -21,9 +21,14 @@ use tauri_plugin_dialog::DialogExt;
 pub async fn get_settings_db() -> Result<Model, DbErr> {
     let db: DatabaseConnection = connection::db().await?;
 
-    let settings = settings::Entity::find_by_id(1).one(&db).await?;
+    let settings = settings::Entity::find_by_id(1)
+        .one(&db)
+        .await?
+        .expect("Settings not found");
 
-    Ok(settings.expect("Settings not found"))
+    get_app().manage(settings.clone());
+
+    Ok(settings)
 }
 
 pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
@@ -183,7 +188,7 @@ pub async fn sync_clipboard_history_disable() {
 }
 
 pub async fn sync_clipboard_history_toggle() {
-    let settings = get_settings_db().await.expect("Failed to get settings");
+    let settings = get_app().state::<settings::Model>();
 
     printlog!("synchronize: {}", settings.synchronize);
     with_hotkeys(false, async move {

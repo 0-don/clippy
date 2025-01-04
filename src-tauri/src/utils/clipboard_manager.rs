@@ -1,5 +1,4 @@
 use crate::prelude::*;
-use crate::service::settings::get_settings_db;
 use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_db},
     global::{get_app, get_app_window},
@@ -9,6 +8,7 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
 use common::types::orm_query::ClipboardManager;
+use entity::settings;
 use image::imageops;
 use regex::Regex;
 use sea_orm::prelude::Uuid;
@@ -29,7 +29,7 @@ pub trait ClipboardManagerExt {
         rtf: Option<String>,
         image_data: Option<Vec<u8>>,
         files: Option<Vec<String>>,
-    ) -> impl std::future::Future<Output = ()> + Send;
+    ) -> ();
     fn parse_image_model(&mut self, img_bytes: Vec<u8>);
     fn parse_file_models(&mut self, file_paths: Vec<String>) -> std::io::Result<()>;
 }
@@ -50,17 +50,24 @@ impl ClipboardManagerExt for ClipboardManager {
         let clipboard = get_app().state::<Clipboard>();
         let mut manager = Self::new();
 
-        manager
-            .parse_model(
-                clipboard.read_text().ok(),
-                clipboard.read_html().ok(),
-                clipboard.read_rtf().ok(),
-                clipboard.read_image_binary().ok(),
-                clipboard.read_files().ok(),
-            )
-            .await;
+        manager.parse_model(
+            clipboard.read_text().ok(),
+            clipboard.read_html().ok(),
+            clipboard.read_rtf().ok(),
+            clipboard.read_image_binary().ok(),
+            clipboard.read_files().ok(),
+        );
 
-        if !manager.check_if_last_is_same().await {
+        // Add check for empty types
+        if let sea_orm::ActiveValue::Set(types_json) = &manager.clipboard_model.types {
+            if let Some(types) = ClipboardType::from_json_value(types_json) {
+                if types.is_empty() {
+                    return;
+                }
+            }
+        }
+
+        if !manager.check_if_last_is_same().await && manager.clipboard_model.types.is_set() {
             let clipboard = insert_clipboard_db(manager)
                 .await
                 .expect("Failed to insert");
@@ -140,7 +147,7 @@ impl ClipboardManagerExt for ClipboardManager {
         }
     }
 
-    async fn parse_model(
+    fn parse_model(
         &mut self,
         text: Option<String>,
         html: Option<String>,
@@ -148,7 +155,7 @@ impl ClipboardManagerExt for ClipboardManager {
         image: Option<Vec<u8>>,
         files: Option<Vec<String>>,
     ) {
-        let settings = get_settings_db().await.expect("Settings failed");
+        let settings = get_app().state::<settings::Model>();
         let mut types = vec![];
 
         if let Some(text) =
