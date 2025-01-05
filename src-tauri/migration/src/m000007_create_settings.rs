@@ -3,8 +3,11 @@ use common::{
         DISPLAY_SCALE, DISPLAY_SCALE_MAX, DISPLAY_SCALE_MIN, MAX_FILE_SIZE, MAX_FILE_SIZE_MAX,
         MAX_FILE_SIZE_MIN, MAX_HTML_SIZE, MAX_HTML_SIZE_MAX, MAX_HTML_SIZE_MIN, MAX_IMAGE_SIZE,
         MAX_IMAGE_SIZE_MAX, MAX_IMAGE_SIZE_MIN, MAX_RTF_SIZE, MAX_RTF_SIZE_MAX, MAX_RTF_SIZE_MIN,
-        MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN,
-    }, io::language::get_system_language, types::enums::{ClippyPosition, Language}
+        MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN, SYNC_LIMIT_SIZE, SYNC_LIMIT_SIZE_MAX,
+        SYNC_LIMIT_SIZE_MIN,
+    },
+    io::language::get_system_language,
+    types::enums::{ClippyPosition, Language},
 };
 use sea_orm::Iterable;
 use sea_orm_migration::{
@@ -19,7 +22,8 @@ enum Settings {
     Language,
     //
     Startup,
-    Synchronize,
+    Sync,
+    SyncLimit,
     Tooltip,
     DarkMode,
     DisplayScale,
@@ -57,7 +61,14 @@ impl MigrationTrait for Migration {
                             ),
                     )
                     .col(boolean(Settings::Startup).default(true))
-                    .col(boolean(Settings::Synchronize).default(false))
+                    .col(boolean(Settings::Sync).default(false))
+                    .col(
+                        integer(Settings::SyncLimit).default(SYNC_LIMIT_SIZE).check(
+                            Expr::col(Settings::SyncLimit)
+                                .gte(SYNC_LIMIT_SIZE_MIN)
+                                .lte(SYNC_LIMIT_SIZE_MAX),
+                        ),
+                    )
                     .col(boolean(Settings::DarkMode).default(true))
                     .col(boolean(Settings::Tooltip).default(true))
                     .col(

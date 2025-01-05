@@ -1,13 +1,18 @@
-use crate::utils::google_drive_manager::DriveManager;
+use crate::{service::sync::SyncProvider, utils::providers::google_drive::GoogleDriveProvider};
 use common::{printlog, types::types::CommandError};
+use std::sync::Arc;
 
 #[tauri::command]
 pub async fn auth_google_drive() -> Result<String, CommandError> {
-    let drive_manager = DriveManager::new().await?;
+    let provider = Arc::new(
+        GoogleDriveProvider::new()
+            .await
+            .expect("Failed to initialize sync provider"),
+    );
 
-    if drive_manager.is_authenticated().await {
+    if provider.is_authenticated().await {
         printlog!("Authenticated");
-        Ok(drive_manager
+        Ok(provider
             .is_authenticated()
             .await
             .then(|| format!("Authenticated"))
