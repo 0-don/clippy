@@ -48,7 +48,7 @@ pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
 
     let mut settings = get_settings_db().await?;
 
-    settings.synchronize = sync;
+    settings.sync = sync;
 
     let active_model: ActiveModel = settings.into();
 
@@ -190,9 +190,9 @@ pub async fn sync_clipboard_history_disable() {
 pub async fn sync_clipboard_history_toggle() {
     let settings = get_app().state::<settings::Model>();
 
-    printlog!("synchronize: {}", settings.synchronize);
+    printlog!("synchronize: {}", settings.sync);
     with_hotkeys(false, async move {
-        if settings.synchronize {
+        if settings.sync {
             sync_clipboard_history_disable().await;
         } else {
             sync_clipboard_history_enable().await;

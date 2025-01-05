@@ -1,13 +1,13 @@
 use crate::prelude::*;
 use crate::service::{
-    clipboard::{get_last_clipboard_db, insert_clipboard_db},
+    clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     global::{get_app, get_app_window},
     window::calculate_thumbnail_dimensions,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
-use common::types::orm_query::ClipboardManager;
+use common::types::orm_query::FullClipboardDbo;
 use entity::settings;
 use image::imageops;
 use regex::Regex;
@@ -19,7 +19,7 @@ use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
 pub trait ClipboardManagerExt {
-    fn new() -> ClipboardManager;
+    fn new() -> FullClipboardDbo;
     fn upsert_clipboard() -> impl std::future::Future<Output = ()> + Send;
     fn check_if_last_is_same(&mut self) -> impl std::future::Future<Output = bool> + Send;
     fn parse_model(
@@ -34,9 +34,9 @@ pub trait ClipboardManagerExt {
     fn parse_file_models(&mut self, file_paths: Vec<String>) -> std::io::Result<()>;
 }
 
-impl ClipboardManagerExt for ClipboardManager {
+impl ClipboardManagerExt for FullClipboardDbo {
     fn new() -> Self {
-        ClipboardManager {
+        FullClipboardDbo {
             clipboard_model: entity::clipboard::ActiveModel::default(),
             clipboard_text_model: entity::clipboard_text::ActiveModel::default(),
             clipboard_html_model: entity::clipboard_html::ActiveModel::default(),
@@ -68,7 +68,7 @@ impl ClipboardManagerExt for ClipboardManager {
         }
 
         if !manager.check_if_last_is_same().await && manager.clipboard_model.types.is_set() {
-            let clipboard = insert_clipboard_db(manager)
+            let clipboard = insert_clipboard_dbo(manager)
                 .await
                 .expect("Failed to insert");
             get_app_window(WebWindow::Main)

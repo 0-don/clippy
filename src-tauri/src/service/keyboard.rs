@@ -1,6 +1,6 @@
 use crate::service::clipboard::get_last_clipboard_db;
 use common::types::enums::ClipboardType;
-use common::types::orm_query::ClipboardWithRelations;
+use common::types::orm_query::FullClipboardDto;
 use enigo::{Enigo, Keyboard, Settings};
 use std::{process::Command, time::Duration};
 use tauri_plugin_dialog::DialogExt;
@@ -58,7 +58,7 @@ pub fn is_tool_installed(tool: &str) -> bool {
         .unwrap_or(false)
 }
 
-fn get_clipboard_content(clipboard_data: &ClipboardWithRelations) -> Option<String> {
+fn get_clipboard_content(clipboard_data: &FullClipboardDto) -> Option<String> {
     let types = ClipboardType::from_json_value(&clipboard_data.clipboard.types)?;
 
     types.iter().find_map(|clipboard_type| {
