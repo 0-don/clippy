@@ -38,7 +38,7 @@ pub fn run() {
             settings::get_settings,
             settings::update_settings,
             settings::toggle_autostart,
-            settings::sync_clipboard_history,
+            settings::change_clipboard_db_location,
             //
             window::open_new_window,
             window::open_browser_url,

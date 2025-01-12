@@ -22,7 +22,7 @@ export enum InvokeCommand {
   GetSettings = "get_settings",
   UpdateSettings = "update_settings",
   ToggleAutostart = "toggle_autostart",
-  SyncClipboardHistory = "sync_clipboard_history",
+  ChangeClipboardDbLocation = "change_clipboard_db_location",
 
   // Window commands
   OpenNewWindow = "open_new_window",
@@ -97,7 +97,7 @@ export interface TauriInvokeCommands {
     args: undefined;
     return: void;
   };
-  [InvokeCommand.SyncClipboardHistory]: {
+  [InvokeCommand.ChangeClipboardDbLocation]: {
     args: undefined;
     return: void;
   };

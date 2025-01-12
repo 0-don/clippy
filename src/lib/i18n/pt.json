@@ -1,144 +1,144 @@
 {
-	"ABOUT": {
-		"ABOUT": "Sobre",
-		"COPYRIGHT": "Direitos de autor(C) DC. Tudo bem reservado.",
-		"DEVELOPED_BY": "Desenvolvido por 0-don. Desenvolvido por Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Nenhuma atualização disponível de momento",
-		"OFFICIAL_WEBSITE": "Site oficial"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "Copiar como HTML",
-		"COPY_AS_RTF": "Copiar como RTF",
-		"DELETE_CLIPBOARD": "Excluir área de transferência",
-		"NO_CLIPBOARDS_YET": "Ainda não há pranchetas...",
-		"SEARCH_ENTRIES": "Entradas de pesquisa",
-		"STAR_FAVORITE": "Favorito das estrelas"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "Sobre",
-			"DIGIT_1": "Dígito 1",
-			"DIGIT_2": "Dígito 2",
-			"DIGIT_3": "Dígito 3",
-			"DIGIT_4": "Dígito 4",
-			"DIGIT_5": "Dígito 5",
-			"DIGIT_6": "Dígito 6",
-			"DIGIT_7": "Dígito 7",
-			"DIGIT_8": "Dígito 8",
-			"DIGIT_9": "Dígito 9",
-			"EXIT": "Saída",
-			"HISTORY": "História",
-			"NUM_1": "Número 1",
-			"NUM_2": "Número 2",
-			"NUM_3": "Número 3",
-			"NUM_4": "Número 4",
-			"NUM_5": "Número 5",
-			"NUM_6": "Número 6",
-			"NUM_7": "Número 7",
-			"NUM_8": "Número 8",
-			"NUM_9": "Número 9",
-			"RECENT_CLIPBOARDS": "Pranchetas recentes",
-			"SCROLL_TO_TOP": "Role para cima",
-			"SETTINGS": "Configurações",
-			"STARRED_CLIPBOARDS": "Pranchetas com estrela",
-			"SYNC_CLIPBOARD_HISTORY": "Sincronizar histórico da área de transferência",
-			"TYPE_CLIPBOARD": "Introduza a área de transferência",
-			"VIEW_MORE": "Ver mais",
-			"WINDOW_DISPLAY_TOGGLE": "Alternar visualização da janela"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Árabe",
-			"BN": "Bengali",
-			"DE": "Alemão",
-			"EN": "Inglês",
-			"ES": "Espanhol",
-			"FR": "Francês",
-			"HI": "Hindi",
-			"IT": "Italiano",
-			"JA": "Japonês",
-			"KO": "Coreano",
-			"NL": "Holandês",
-			"PL": "Polaco",
-			"PT": "Português",
-			"RU": "Russo",
-			"TH": "Tailandês",
-			"TR": "Turco",
-			"UR": "Urdu",
-			"VI": "Vietnamita",
-			"ZH": "Mandarim"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "Centro inferior",
-			"BOTTOM_LEFT": "Canto inferior esquerdo",
-			"BOTTOM_RIGHT": "Canto inferior direito",
-			"CENTER": "Centro",
-			"CURSOR": "Cursor",
-			"LEFT_CENTER": "Centro esquerdo",
-			"RIGHT_CENTER": "Centro direito",
-			"TOP_CENTER": "Centro superior",
-			"TOP_LEFT": "Canto superior esquerdo",
-			"TOP_RIGHT": "Canto superior direito",
-			"TRAY_BOTTOM_CENTER": "Centro inferior da bandeja",
-			"TRAY_BOTTOM_LEFT": "Bandeja inferior esquerda",
-			"TRAY_BOTTOM_RIGHT": "Bandeja inferior direita",
-			"TRAY_CENTER": "Centro da bandeja",
-			"TRAY_LEFT": "Bandeja esquerda",
-			"TRAY_RIGHT": "Bandeja direita"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "Local de configuração",
-			"DATABASE_LOCATION": "Localização da base de dados",
-			"OPEN": "Abrir",
-			"SYNC": "Sincronizar",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Alterar idioma",
-			"CHANGE_WINDOW_POSITION": "Alterar a posição da janela",
-			"HTML_CLIPBOARD_TOOLTIP": "Dica de ferramenta da área de transferência HTML",
-			"KEYBOARD_SHORTCUT": "Atalho de teclado",
-			"START_CLIPPY_ON_STARTUP": "Inicie o Clippy no arranque do sistema",
-			"SWITCH_THEME": "Mudar tema",
-			"SYSTEM": "Sistema",
-			"WINDOW_SCALE": "Escala de janela"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Limpar tudo",
-			"CLEAR_FILE": "Limpar ficheiro",
-			"CLEAR_HTML": "Limpar HTML",
-			"CLEAR_IMAGE": "Limpar imagem",
-			"CLEAR_RTF": "Limpar RTF",
-			"CLEAR_TEXT": "Texto claro",
-			"DATABASE_INFO": "{{records}} itens locais ({{size}}) são salvos neste computador",
-			"SQL_DATABASE_INFO": "Informações da base de dados SQL",
-			"STORAGE_ACTIONS": "Ações de armazenamento"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Mude as suas teclas de atalho"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Limites da área de transferência",
-			"IF_SET_TO_ZERO": "Se definido para 0 o tipo de área de transferência será totalmente ignorado",
-			"MAX_FILE_SIZE": "Tamanho máximo do ficheiro",
-			"MAX_HTML_SIZE": "Tamanho máximo do HTML",
-			"MAX_IMAGE_SIZE": "Tamanho máximo da imagem",
-			"MAX_RTF_SIZE": "Tamanho máximo do Rtf",
-			"MAX_TEXT_SIZE": "Tamanho máximo do texto"
-		},
-		"SETTINGS": "Configurações",
-		"TAB": {
-			"BACKUP": "Backup",
-			"GENERAL": "Em geral",
-			"HISTORY": "História",
-			"HOTKEYS": "Teclas de atalho",
-			"LIMITS": "Limites"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "Sobre",
+    "COPYRIGHT": "Direitos de autor(C) DC. Tudo bem reservado.",
+    "DEVELOPED_BY": "Desenvolvido por 0-don. Desenvolvido por Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "Nenhuma atualização disponível de momento",
+    "OFFICIAL_WEBSITE": "Site oficial"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "Copiar como HTML",
+    "COPY_AS_RTF": "Copiar como RTF",
+    "DELETE_CLIPBOARD": "Excluir área de transferência",
+    "NO_CLIPBOARDS_YET": "Ainda não há pranchetas...",
+    "SEARCH_ENTRIES": "Entradas de pesquisa",
+    "STAR_FAVORITE": "Favorito das estrelas"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "Sobre",
+      "DIGIT_1": "Dígito 1",
+      "DIGIT_2": "Dígito 2",
+      "DIGIT_3": "Dígito 3",
+      "DIGIT_4": "Dígito 4",
+      "DIGIT_5": "Dígito 5",
+      "DIGIT_6": "Dígito 6",
+      "DIGIT_7": "Dígito 7",
+      "DIGIT_8": "Dígito 8",
+      "DIGIT_9": "Dígito 9",
+      "EXIT": "Saída",
+      "HISTORY": "História",
+      "NUM_1": "Número 1",
+      "NUM_2": "Número 2",
+      "NUM_3": "Número 3",
+      "NUM_4": "Número 4",
+      "NUM_5": "Número 5",
+      "NUM_6": "Número 6",
+      "NUM_7": "Número 7",
+      "NUM_8": "Número 8",
+      "NUM_9": "Número 9",
+      "RECENT_CLIPBOARDS": "Pranchetas recentes",
+      "SCROLL_TO_TOP": "Role para cima",
+      "SETTINGS": "Configurações",
+      "STARRED_CLIPBOARDS": "Pranchetas com estrela",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Sincronizar histórico da área de transferência",
+      "TYPE_CLIPBOARD": "Introduza a área de transferência",
+      "VIEW_MORE": "Ver mais",
+      "WINDOW_DISPLAY_TOGGLE": "Alternar visualização da janela"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Árabe",
+      "BN": "Bengali",
+      "DE": "Alemão",
+      "EN": "Inglês",
+      "ES": "Espanhol",
+      "FR": "Francês",
+      "HI": "Hindi",
+      "IT": "Italiano",
+      "JA": "Japonês",
+      "KO": "Coreano",
+      "NL": "Holandês",
+      "PL": "Polaco",
+      "PT": "Português",
+      "RU": "Russo",
+      "TH": "Tailandês",
+      "TR": "Turco",
+      "UR": "Urdu",
+      "VI": "Vietnamita",
+      "ZH": "Mandarim"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "Centro inferior",
+      "BOTTOM_LEFT": "Canto inferior esquerdo",
+      "BOTTOM_RIGHT": "Canto inferior direito",
+      "CENTER": "Centro",
+      "CURSOR": "Cursor",
+      "LEFT_CENTER": "Centro esquerdo",
+      "RIGHT_CENTER": "Centro direito",
+      "TOP_CENTER": "Centro superior",
+      "TOP_LEFT": "Canto superior esquerdo",
+      "TOP_RIGHT": "Canto superior direito",
+      "TRAY_BOTTOM_CENTER": "Centro inferior da bandeja",
+      "TRAY_BOTTOM_LEFT": "Bandeja inferior esquerda",
+      "TRAY_BOTTOM_RIGHT": "Bandeja inferior direita",
+      "TRAY_CENTER": "Centro da bandeja",
+      "TRAY_LEFT": "Bandeja esquerda",
+      "TRAY_RIGHT": "Bandeja direita"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "Local de configuração",
+      "DATABASE_LOCATION": "Localização da base de dados",
+      "OPEN": "Abrir",
+      "SYNC": "Sincronizar",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Alterar idioma",
+      "CHANGE_WINDOW_POSITION": "Alterar a posição da janela",
+      "HTML_CLIPBOARD_TOOLTIP": "Dica de ferramenta da área de transferência HTML",
+      "KEYBOARD_SHORTCUT": "Atalho de teclado",
+      "START_CLIPPY_ON_STARTUP": "Inicie o Clippy no arranque do sistema",
+      "SWITCH_THEME": "Mudar tema",
+      "SYSTEM": "Sistema",
+      "WINDOW_SCALE": "Escala de janela"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Limpar tudo",
+      "CLEAR_FILE": "Limpar ficheiro",
+      "CLEAR_HTML": "Limpar HTML",
+      "CLEAR_IMAGE": "Limpar imagem",
+      "CLEAR_RTF": "Limpar RTF",
+      "CLEAR_TEXT": "Texto claro",
+      "DATABASE_INFO": "{{records}} itens locais ({{size}}) são salvos neste computador",
+      "SQL_DATABASE_INFO": "Informações da base de dados SQL",
+      "STORAGE_ACTIONS": "Ações de armazenamento"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Mude as suas teclas de atalho"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Limites da área de transferência",
+      "IF_SET_TO_ZERO": "Se definido para 0 o tipo de área de transferência será totalmente ignorado",
+      "MAX_FILE_SIZE": "Tamanho máximo do ficheiro",
+      "MAX_HTML_SIZE": "Tamanho máximo do HTML",
+      "MAX_IMAGE_SIZE": "Tamanho máximo da imagem",
+      "MAX_RTF_SIZE": "Tamanho máximo do Rtf",
+      "MAX_TEXT_SIZE": "Tamanho máximo do texto"
+    },
+    "SETTINGS": "Configurações",
+    "TAB": {
+      "BACKUP": "Backup",
+      "GENERAL": "Em geral",
+      "HISTORY": "História",
+      "HOTKEYS": "Teclas de atalho",
+      "LIMITS": "Limites"
+    }
+  }
 }

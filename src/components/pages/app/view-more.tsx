@@ -37,7 +37,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
             </div>
             <p class="px-4 text-base font-semibold">{t(name)}</p>
           </div>
-          {name === "MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY" && (
+          {name === "MAIN.HOTKEY.CHANGE_CLIPBOARD_DB_LOCATION" && (
             <Toggle checked={SettingsStore.settings()?.synchronize} onChange={async () => {}} />
           )}
         </div>
@@ -49,7 +49,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
   return (
     <>
       {/* Sync Clipboard History  */}
-      {createButton("MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY", SettingsStore.syncClipboard)}
+      {createButton("MAIN.HOTKEY.CHANGE_CLIPBOARD_DB_LOCATION", SettingsStore.syncClipboard)}
       {/* Settings */}
       {createButton("MAIN.HOTKEY.SETTINGS", () => SettingsStore.openWindow(WebWindow.Settings, t("SETTINGS.SETTINGS")))}
       {/* About */}
