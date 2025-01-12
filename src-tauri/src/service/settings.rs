@@ -130,7 +130,21 @@ pub fn get_config() -> (Config, DataPath) {
     (config, data_path)
 }
 
-pub async fn sync_clipboard_history_enable() {
+pub async fn change_clipboard_db_location_toggle() {
+    let settings = get_app().state::<settings::Model>();
+
+    printlog!("synchronize: {}", settings.sync);
+    with_hotkeys(false, async move {
+        if settings.sync {
+            change_clipboard_db_location_disable().await;
+        } else {
+            change_clipboard_db_location_enable().await;
+        }
+    })
+    .await;
+}
+
+pub async fn change_clipboard_db_location_enable() {
     // get local config from app data
     let (mut config, data_path) = get_config();
 
@@ -167,7 +181,7 @@ pub async fn sync_clipboard_history_enable() {
     }
 }
 
-pub async fn sync_clipboard_history_disable() {
+pub async fn change_clipboard_db_location_disable() {
     let (mut config, data_path) = get_config();
     // copy backup file to default database location
     fs::copy(&config.db, &data_path.db_file_path).expect("Failed to copy database");
@@ -185,18 +199,4 @@ pub async fn sync_clipboard_history_disable() {
     update_settings_synchronize(false)
         .await
         .expect("Failed to update settings");
-}
-
-pub async fn sync_clipboard_history_toggle() {
-    let settings = get_app().state::<settings::Model>();
-
-    printlog!("synchronize: {}", settings.sync);
-    with_hotkeys(false, async move {
-        if settings.sync {
-            sync_clipboard_history_disable().await;
-        } else {
-            sync_clipboard_history_enable().await;
-        }
-    })
-    .await;
 }

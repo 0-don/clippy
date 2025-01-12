@@ -7,7 +7,7 @@ use crate::{
             get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
         },
         keyboard::{type_last_clipboard, type_last_clipboard_linux},
-        settings::sync_clipboard_history_toggle,
+        settings::change_clipboard_db_location_toggle,
         window::toggle_main_window,
     },
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
@@ -87,7 +87,9 @@ pub async fn parse_hotkey_event(key: &Key) {
                 type_last_clipboard().await;
             }
         }
-        Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
+        Some(HotkeyEvent::ChangeClipboaaardDbLocation) => {
+            change_clipboard_db_location_toggle().await
+        }
         Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => {
             open_window(
                 WebWindow::iter()

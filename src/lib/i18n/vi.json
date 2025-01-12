@@ -1,144 +1,144 @@
 {
-	"ABOUT": {
-		"ABOUT": "Về",
-		"COPYRIGHT": "Bản quyền (C) DC. Mọi quyền được bảo lưu.",
-		"DEVELOPED_BY": "Được phát triển bởi 0-don. Được hỗ trợ bởi Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Hiện tại không có bản cập nhật nào",
-		"OFFICIAL_WEBSITE": "Trang web chính thức"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "Sao chép dưới dạng HTML",
-		"COPY_AS_RTF": "Sao chép dưới dạng RTF",
-		"DELETE_CLIPBOARD": "Xóa clipboard",
-		"NO_CLIPBOARDS_YET": "Chưa có bảng kẹp nào...",
-		"SEARCH_ENTRIES": "Tìm kiếm mục nhập",
-		"STAR_FAVORITE": "Ngôi sao yêu thích"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "Về",
-			"DIGIT_1": "Chữ số 1",
-			"DIGIT_2": "Chữ số 2",
-			"DIGIT_3": "Chữ số 3",
-			"DIGIT_4": "Chữ số 4",
-			"DIGIT_5": "Chữ số 5",
-			"DIGIT_6": "Chữ số 6",
-			"DIGIT_7": "Chữ số 7",
-			"DIGIT_8": "Chữ số 8",
-			"DIGIT_9": "Chữ số 9",
-			"EXIT": "Ra",
-			"HISTORY": "Lịch sử",
-			"NUM_1": "Số 1",
-			"NUM_2": "Số 2",
-			"NUM_3": "Số 3",
-			"NUM_4": "Số 4",
-			"NUM_5": "Số 5",
-			"NUM_6": "Số 6",
-			"NUM_7": "Số 7",
-			"NUM_8": "Số 8",
-			"NUM_9": "Số 9",
-			"RECENT_CLIPBOARDS": "Bảng tạm gần đây",
-			"SCROLL_TO_TOP": "Cuộn lên đầu trang",
-			"SETTINGS": "Cài đặt",
-			"STARRED_CLIPBOARDS": "Bảng tạm có gắn sao",
-			"SYNC_CLIPBOARD_HISTORY": "Đồng bộ Lịch sử Clipboard",
-			"TYPE_CLIPBOARD": "Loại clipboard",
-			"VIEW_MORE": "Xem thêm",
-			"WINDOW_DISPLAY_TOGGLE": "Chuyển đổi hiển thị cửa sổ"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Tiếng Ả Rập",
-			"BN": "Tiếng Bengal",
-			"DE": "Tiếng Đức",
-			"EN": "Tiếng Anh",
-			"ES": "Người Tây Ban Nha",
-			"FR": "Người Pháp",
-			"HI": "Tiếng Hindi",
-			"IT": "Người Ý",
-			"JA": "Tiếng Nhật",
-			"KO": "Hàn Quốc",
-			"NL": "Tiếng Hà Lan",
-			"PL": "Đánh bóng",
-			"PT": "Tiếng Bồ Đào Nha",
-			"RU": "Tiếng Nga",
-			"TH": "Thái Lan",
-			"TR": "Tiếng Thổ Nhĩ Kỳ",
-			"UR": "Tiếng Urdu",
-			"VI": "Tiếng Việt",
-			"ZH": "Tiếng Quan Thoại"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "Trung tâm trên",
-			"BOTTOM_LEFT": "Dưới cùng bên trái",
-			"BOTTOM_RIGHT": "Góc phải ở phía dưới",
-			"CENTER": "Trung tâm",
-			"CURSOR": "Con trỏ",
-			"LEFT_CENTER": "Trái trung tâm",
-			"RIGHT_CENTER": "Trung tâm bên phải",
-			"TOP_CENTER": "Trung tâm hàng đầu",
-			"TOP_LEFT": "Phía trên bên trái",
-			"TOP_RIGHT": "Phía trên bên phải",
-			"TRAY_BOTTOM_CENTER": "Khay đáy ở giữa",
-			"TRAY_BOTTOM_LEFT": "Khay dưới cùng bên trái",
-			"TRAY_BOTTOM_RIGHT": "Khay dưới cùng bên phải",
-			"TRAY_CENTER": "Khay trung tâm",
-			"TRAY_LEFT": "Khay bên trái",
-			"TRAY_RIGHT": "Khay bên phải"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "Vị trí cấu hình",
-			"DATABASE_LOCATION": "Vị trí cơ sở dữ liệu",
-			"OPEN": "Mở",
-			"SYNC": "Đồng bộ",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Thay đổi ngôn ngữ",
-			"CHANGE_WINDOW_POSITION": "Thay đổi vị trí cửa sổ",
-			"HTML_CLIPBOARD_TOOLTIP": "Công cụ chú giải clipboard HTML",
-			"KEYBOARD_SHORTCUT": "Phím tắt",
-			"START_CLIPPY_ON_STARTUP": "Khởi động Clippy khi khởi động hệ thống",
-			"SWITCH_THEME": "Chuyển đổi chủ đề",
-			"SYSTEM": "Hệ thống",
-			"WINDOW_SCALE": "Tỷ lệ cửa sổ"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Làm sạch tất cả",
-			"CLEAR_FILE": "Xóa tập tin",
-			"CLEAR_HTML": "Xóa Html",
-			"CLEAR_IMAGE": "Hình ảnh rõ nét",
-			"CLEAR_RTF": "Xóa Rtf",
-			"CLEAR_TEXT": "Xóa văn bản",
-			"DATABASE_INFO": "{{records}} mục cục bộ ({{size}}) được lưu trên máy tính này",
-			"SQL_DATABASE_INFO": "Thông tin cơ sở dữ liệu SQL",
-			"STORAGE_ACTIONS": "Hành động lưu trữ"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Thay đổi phím nóng của bạn"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Giới hạn của bảng tạm",
-			"IF_SET_TO_ZERO": "Nếu đặt thành 0 thì loại clipboard sẽ bị bỏ qua hoàn toàn",
-			"MAX_FILE_SIZE": "Kích thước tập tin tối đa",
-			"MAX_HTML_SIZE": "Kích thước Html tối đa",
-			"MAX_IMAGE_SIZE": "Kích thước hình ảnh tối đa",
-			"MAX_RTF_SIZE": "Kích thước Rtf tối đa",
-			"MAX_TEXT_SIZE": "Kích thước văn bản tối đa"
-		},
-		"SETTINGS": "Cài đặt",
-		"TAB": {
-			"BACKUP": "Hỗ trợ",
-			"GENERAL": "Tổng quan",
-			"HISTORY": "Lịch sử",
-			"HOTKEYS": "Phím nóng",
-			"LIMITS": "Giới hạn"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "Về",
+    "COPYRIGHT": "Bản quyền (C) DC. Mọi quyền được bảo lưu.",
+    "DEVELOPED_BY": "Được phát triển bởi 0-don. Được hỗ trợ bởi Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "Hiện tại không có bản cập nhật nào",
+    "OFFICIAL_WEBSITE": "Trang web chính thức"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "Sao chép dưới dạng HTML",
+    "COPY_AS_RTF": "Sao chép dưới dạng RTF",
+    "DELETE_CLIPBOARD": "Xóa clipboard",
+    "NO_CLIPBOARDS_YET": "Chưa có bảng kẹp nào...",
+    "SEARCH_ENTRIES": "Tìm kiếm mục nhập",
+    "STAR_FAVORITE": "Ngôi sao yêu thích"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "Về",
+      "DIGIT_1": "Chữ số 1",
+      "DIGIT_2": "Chữ số 2",
+      "DIGIT_3": "Chữ số 3",
+      "DIGIT_4": "Chữ số 4",
+      "DIGIT_5": "Chữ số 5",
+      "DIGIT_6": "Chữ số 6",
+      "DIGIT_7": "Chữ số 7",
+      "DIGIT_8": "Chữ số 8",
+      "DIGIT_9": "Chữ số 9",
+      "EXIT": "Ra",
+      "HISTORY": "Lịch sử",
+      "NUM_1": "Số 1",
+      "NUM_2": "Số 2",
+      "NUM_3": "Số 3",
+      "NUM_4": "Số 4",
+      "NUM_5": "Số 5",
+      "NUM_6": "Số 6",
+      "NUM_7": "Số 7",
+      "NUM_8": "Số 8",
+      "NUM_9": "Số 9",
+      "RECENT_CLIPBOARDS": "Bảng tạm gần đây",
+      "SCROLL_TO_TOP": "Cuộn lên đầu trang",
+      "SETTINGS": "Cài đặt",
+      "STARRED_CLIPBOARDS": "Bảng tạm có gắn sao",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Đồng bộ Lịch sử Clipboard",
+      "TYPE_CLIPBOARD": "Loại clipboard",
+      "VIEW_MORE": "Xem thêm",
+      "WINDOW_DISPLAY_TOGGLE": "Chuyển đổi hiển thị cửa sổ"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Tiếng Ả Rập",
+      "BN": "Tiếng Bengal",
+      "DE": "Tiếng Đức",
+      "EN": "Tiếng Anh",
+      "ES": "Người Tây Ban Nha",
+      "FR": "Người Pháp",
+      "HI": "Tiếng Hindi",
+      "IT": "Người Ý",
+      "JA": "Tiếng Nhật",
+      "KO": "Hàn Quốc",
+      "NL": "Tiếng Hà Lan",
+      "PL": "Đánh bóng",
+      "PT": "Tiếng Bồ Đào Nha",
+      "RU": "Tiếng Nga",
+      "TH": "Thái Lan",
+      "TR": "Tiếng Thổ Nhĩ Kỳ",
+      "UR": "Tiếng Urdu",
+      "VI": "Tiếng Việt",
+      "ZH": "Tiếng Quan Thoại"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "Trung tâm trên",
+      "BOTTOM_LEFT": "Dưới cùng bên trái",
+      "BOTTOM_RIGHT": "Góc phải ở phía dưới",
+      "CENTER": "Trung tâm",
+      "CURSOR": "Con trỏ",
+      "LEFT_CENTER": "Trái trung tâm",
+      "RIGHT_CENTER": "Trung tâm bên phải",
+      "TOP_CENTER": "Trung tâm hàng đầu",
+      "TOP_LEFT": "Phía trên bên trái",
+      "TOP_RIGHT": "Phía trên bên phải",
+      "TRAY_BOTTOM_CENTER": "Khay đáy ở giữa",
+      "TRAY_BOTTOM_LEFT": "Khay dưới cùng bên trái",
+      "TRAY_BOTTOM_RIGHT": "Khay dưới cùng bên phải",
+      "TRAY_CENTER": "Khay trung tâm",
+      "TRAY_LEFT": "Khay bên trái",
+      "TRAY_RIGHT": "Khay bên phải"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "Vị trí cấu hình",
+      "DATABASE_LOCATION": "Vị trí cơ sở dữ liệu",
+      "OPEN": "Mở",
+      "SYNC": "Đồng bộ",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Thay đổi ngôn ngữ",
+      "CHANGE_WINDOW_POSITION": "Thay đổi vị trí cửa sổ",
+      "HTML_CLIPBOARD_TOOLTIP": "Công cụ chú giải clipboard HTML",
+      "KEYBOARD_SHORTCUT": "Phím tắt",
+      "START_CLIPPY_ON_STARTUP": "Khởi động Clippy khi khởi động hệ thống",
+      "SWITCH_THEME": "Chuyển đổi chủ đề",
+      "SYSTEM": "Hệ thống",
+      "WINDOW_SCALE": "Tỷ lệ cửa sổ"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Làm sạch tất cả",
+      "CLEAR_FILE": "Xóa tập tin",
+      "CLEAR_HTML": "Xóa Html",
+      "CLEAR_IMAGE": "Hình ảnh rõ nét",
+      "CLEAR_RTF": "Xóa Rtf",
+      "CLEAR_TEXT": "Xóa văn bản",
+      "DATABASE_INFO": "{{records}} mục cục bộ ({{size}}) được lưu trên máy tính này",
+      "SQL_DATABASE_INFO": "Thông tin cơ sở dữ liệu SQL",
+      "STORAGE_ACTIONS": "Hành động lưu trữ"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Thay đổi phím nóng của bạn"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Giới hạn của bảng tạm",
+      "IF_SET_TO_ZERO": "Nếu đặt thành 0 thì loại clipboard sẽ bị bỏ qua hoàn toàn",
+      "MAX_FILE_SIZE": "Kích thước tập tin tối đa",
+      "MAX_HTML_SIZE": "Kích thước Html tối đa",
+      "MAX_IMAGE_SIZE": "Kích thước hình ảnh tối đa",
+      "MAX_RTF_SIZE": "Kích thước Rtf tối đa",
+      "MAX_TEXT_SIZE": "Kích thước văn bản tối đa"
+    },
+    "SETTINGS": "Cài đặt",
+    "TAB": {
+      "BACKUP": "Hỗ trợ",
+      "GENERAL": "Tổng quan",
+      "HISTORY": "Lịch sử",
+      "HOTKEYS": "Phím nóng",
+      "LIMITS": "Giới hạn"
+    }
+  }
 }

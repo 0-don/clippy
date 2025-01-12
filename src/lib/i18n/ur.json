@@ -1,144 +1,144 @@
 {
-	"ABOUT": {
-		"ABOUT": "کے بارے میں",
-		"COPYRIGHT": "کاپی رائٹ (C) DC۔ تمام حق محفوظ ہیں۔",
-		"DEVELOPED_BY": "0-ڈان کے ذریعہ تیار کردہ۔ توری کے ذریعہ تقویت یافتہ۔",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "فی الحال کوئی اپ ڈیٹ دستیاب نہیں ہے۔",
-		"OFFICIAL_WEBSITE": "سرکاری ویب سائٹ"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "HTML کے بطور کاپی کریں۔",
-		"COPY_AS_RTF": "RTF کے بطور کاپی کریں۔",
-		"DELETE_CLIPBOARD": "کلپ بورڈ کو حذف کریں۔",
-		"NO_CLIPBOARDS_YET": "ابھی تک کوئی کلپ بورڈ نہیں...",
-		"SEARCH_ENTRIES": "اندراجات تلاش کریں۔",
-		"STAR_FAVORITE": "اسٹار پسندیدہ"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "کے بارے میں",
-			"DIGIT_1": "ہندسہ 1",
-			"DIGIT_2": "ہندسہ 2",
-			"DIGIT_3": "ہندسہ 3",
-			"DIGIT_4": "ہندسہ 4",
-			"DIGIT_5": "ہندسہ 5",
-			"DIGIT_6": "ہندسہ 6",
-			"DIGIT_7": "ہندسہ 7",
-			"DIGIT_8": "ہندسہ 8",
-			"DIGIT_9": "ہندسہ 9",
-			"EXIT": "باہر نکلیں۔",
-			"HISTORY": "تاریخ",
-			"NUM_1": "نمبر 1",
-			"NUM_2": "نمبر 2",
-			"NUM_3": "نمبر 3",
-			"NUM_4": "نمبر 4",
-			"NUM_5": "نمبر 5",
-			"NUM_6": "نمبر 6",
-			"NUM_7": "نمبر 7",
-			"NUM_8": "نمبر 8",
-			"NUM_9": "نمبر 9",
-			"RECENT_CLIPBOARDS": "حالیہ کلپ بورڈز",
-			"SCROLL_TO_TOP": "اوپر تک سکرول کریں۔",
-			"SETTINGS": "ترتیبات",
-			"STARRED_CLIPBOARDS": "ستارے والے_کلپ بورڈز",
-			"SYNC_CLIPBOARD_HISTORY": "کلپ بورڈ کی سرگزشت کو مطابقت پذیر بنائیں",
-			"TYPE_CLIPBOARD": "کلپ بورڈ ٹائپ کریں۔",
-			"VIEW_MORE": "مزید دیکھیں",
-			"WINDOW_DISPLAY_TOGGLE": "ونڈو ڈسپلے ٹوگل"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "عربی",
-			"BN": "بنگالی",
-			"DE": "جرمن",
-			"EN": "انگریزی",
-			"ES": "ہسپانوی",
-			"FR": "فرانسیسی",
-			"HI": "ہندی",
-			"IT": "اطالوی",
-			"JA": "جاپانی",
-			"KO": "کورین",
-			"NL": "ڈچ",
-			"PL": "پولش",
-			"PT": "پرتگالی",
-			"RU": "روسی",
-			"TH": "تھائی",
-			"TR": "ترکی",
-			"UR": "اردو",
-			"VI": "ویتنامی",
-			"ZH": "مینڈارن"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "نیچے کا مرکز",
-			"BOTTOM_LEFT": "نیچے بائیں",
-			"BOTTOM_RIGHT": "نیچے دائیں طرف",
-			"CENTER": "مرکز",
-			"CURSOR": "کرسر",
-			"LEFT_CENTER": "بائیں مرکز",
-			"RIGHT_CENTER": "دائیں مرکز",
-			"TOP_CENTER": "سب سے اوپر مرکز",
-			"TOP_LEFT": "اوپر بائیں",
-			"TOP_RIGHT": "اوپر دائیں",
-			"TRAY_BOTTOM_CENTER": "ٹرے نیچے کا مرکز",
-			"TRAY_BOTTOM_LEFT": "ٹرے نیچے بائیں",
-			"TRAY_BOTTOM_RIGHT": "ٹرے نیچے دائیں طرف",
-			"TRAY_CENTER": "ٹرے سینٹر",
-			"TRAY_LEFT": "ٹرے بائیں",
-			"TRAY_RIGHT": "ٹرے دائیں"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "مقام ترتیب دیں۔",
-			"DATABASE_LOCATION": "ڈیٹا بیس کا مقام",
-			"OPEN": "کھولیں۔",
-			"SYNC": "مطابقت پذیری",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "کلپ بورڈ کی تاریخ کو ہم آہنگ کریں۔"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "زبان بدلو",
-			"CHANGE_WINDOW_POSITION": "ونڈو کی پوزیشن تبدیل کریں۔",
-			"HTML_CLIPBOARD_TOOLTIP": "HTML کلپ بورڈ ٹول ٹپ",
-			"KEYBOARD_SHORTCUT": "کی بورڈ شارٹ کٹ",
-			"START_CLIPPY_ON_STARTUP": "سسٹم اسٹارٹ اپ پر کلیپی شروع کریں۔",
-			"SWITCH_THEME": "تھیم سوئچ کریں۔",
-			"SYSTEM": "سسٹم",
-			"WINDOW_SCALE": "کھڑکی کا پیمانہ"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "تمام صاف کریں۔",
-			"CLEAR_FILE": "فائل صاف کریں۔",
-			"CLEAR_HTML": "Html صاف کریں۔",
-			"CLEAR_IMAGE": "تصویر صاف کریں۔",
-			"CLEAR_RTF": "Rtf صاف کریں۔",
-			"CLEAR_TEXT": "متن صاف کریں۔",
-			"DATABASE_INFO": "{{records}} مقامی اشیاء ({{size}}) اس کمپیوٹر پر محفوظ ہیں۔",
-			"SQL_DATABASE_INFO": "ایس کیو ایل ڈیٹا بیس کی معلومات",
-			"STORAGE_ACTIONS": "ذخیرہ کرنے کی کارروائیاں"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "اپنی ہاٹکیز کو تبدیل کریں۔"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "کلپ بورڈ کی حدود",
-			"IF_SET_TO_ZERO": "اگر 0 پر سیٹ کیا جاتا ہے تو کلپ بورڈ کی قسم کو مکمل طور پر چھوڑ دیا جائے گا۔",
-			"MAX_FILE_SIZE": "زیادہ سے زیادہ فائل کا سائز",
-			"MAX_HTML_SIZE": "زیادہ سے زیادہ ایچ ٹی ایم ایل سائز",
-			"MAX_IMAGE_SIZE": "زیادہ سے زیادہ تصویری سائز",
-			"MAX_RTF_SIZE": "زیادہ سے زیادہ Rtf سائز",
-			"MAX_TEXT_SIZE": "زیادہ سے زیادہ متن کا سائز"
-		},
-		"SETTINGS": "ترتیبات",
-		"TAB": {
-			"BACKUP": "بیک اپ",
-			"GENERAL": "جنرل",
-			"HISTORY": "تاریخ",
-			"HOTKEYS": "ہاٹکیز",
-			"LIMITS": "حدود"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "کے بارے میں",
+    "COPYRIGHT": "کاپی رائٹ (C) DC۔ تمام حق محفوظ ہیں۔",
+    "DEVELOPED_BY": "0-ڈان کے ذریعہ تیار کردہ۔ توری کے ذریعہ تقویت یافتہ۔",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "فی الحال کوئی اپ ڈیٹ دستیاب نہیں ہے۔",
+    "OFFICIAL_WEBSITE": "سرکاری ویب سائٹ"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "HTML کے بطور کاپی کریں۔",
+    "COPY_AS_RTF": "RTF کے بطور کاپی کریں۔",
+    "DELETE_CLIPBOARD": "کلپ بورڈ کو حذف کریں۔",
+    "NO_CLIPBOARDS_YET": "ابھی تک کوئی کلپ بورڈ نہیں...",
+    "SEARCH_ENTRIES": "اندراجات تلاش کریں۔",
+    "STAR_FAVORITE": "اسٹار پسندیدہ"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "کے بارے میں",
+      "DIGIT_1": "ہندسہ 1",
+      "DIGIT_2": "ہندسہ 2",
+      "DIGIT_3": "ہندسہ 3",
+      "DIGIT_4": "ہندسہ 4",
+      "DIGIT_5": "ہندسہ 5",
+      "DIGIT_6": "ہندسہ 6",
+      "DIGIT_7": "ہندسہ 7",
+      "DIGIT_8": "ہندسہ 8",
+      "DIGIT_9": "ہندسہ 9",
+      "EXIT": "باہر نکلیں۔",
+      "HISTORY": "تاریخ",
+      "NUM_1": "نمبر 1",
+      "NUM_2": "نمبر 2",
+      "NUM_3": "نمبر 3",
+      "NUM_4": "نمبر 4",
+      "NUM_5": "نمبر 5",
+      "NUM_6": "نمبر 6",
+      "NUM_7": "نمبر 7",
+      "NUM_8": "نمبر 8",
+      "NUM_9": "نمبر 9",
+      "RECENT_CLIPBOARDS": "حالیہ کلپ بورڈز",
+      "SCROLL_TO_TOP": "اوپر تک سکرول کریں۔",
+      "SETTINGS": "ترتیبات",
+      "STARRED_CLIPBOARDS": "ستارے والے_کلپ بورڈز",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "کلپ بورڈ کی سرگزشت کو مطابقت پذیر بنائیں",
+      "TYPE_CLIPBOARD": "کلپ بورڈ ٹائپ کریں۔",
+      "VIEW_MORE": "مزید دیکھیں",
+      "WINDOW_DISPLAY_TOGGLE": "ونڈو ڈسپلے ٹوگل"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "عربی",
+      "BN": "بنگالی",
+      "DE": "جرمن",
+      "EN": "انگریزی",
+      "ES": "ہسپانوی",
+      "FR": "فرانسیسی",
+      "HI": "ہندی",
+      "IT": "اطالوی",
+      "JA": "جاپانی",
+      "KO": "کورین",
+      "NL": "ڈچ",
+      "PL": "پولش",
+      "PT": "پرتگالی",
+      "RU": "روسی",
+      "TH": "تھائی",
+      "TR": "ترکی",
+      "UR": "اردو",
+      "VI": "ویتنامی",
+      "ZH": "مینڈارن"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "نیچے کا مرکز",
+      "BOTTOM_LEFT": "نیچے بائیں",
+      "BOTTOM_RIGHT": "نیچے دائیں طرف",
+      "CENTER": "مرکز",
+      "CURSOR": "کرسر",
+      "LEFT_CENTER": "بائیں مرکز",
+      "RIGHT_CENTER": "دائیں مرکز",
+      "TOP_CENTER": "سب سے اوپر مرکز",
+      "TOP_LEFT": "اوپر بائیں",
+      "TOP_RIGHT": "اوپر دائیں",
+      "TRAY_BOTTOM_CENTER": "ٹرے نیچے کا مرکز",
+      "TRAY_BOTTOM_LEFT": "ٹرے نیچے بائیں",
+      "TRAY_BOTTOM_RIGHT": "ٹرے نیچے دائیں طرف",
+      "TRAY_CENTER": "ٹرے سینٹر",
+      "TRAY_LEFT": "ٹرے بائیں",
+      "TRAY_RIGHT": "ٹرے دائیں"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "مقام ترتیب دیں۔",
+      "DATABASE_LOCATION": "ڈیٹا بیس کا مقام",
+      "OPEN": "کھولیں۔",
+      "SYNC": "مطابقت پذیری",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "کلپ بورڈ کی تاریخ کو ہم آہنگ کریں۔"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "زبان بدلو",
+      "CHANGE_WINDOW_POSITION": "ونڈو کی پوزیشن تبدیل کریں۔",
+      "HTML_CLIPBOARD_TOOLTIP": "HTML کلپ بورڈ ٹول ٹپ",
+      "KEYBOARD_SHORTCUT": "کی بورڈ شارٹ کٹ",
+      "START_CLIPPY_ON_STARTUP": "سسٹم اسٹارٹ اپ پر کلیپی شروع کریں۔",
+      "SWITCH_THEME": "تھیم سوئچ کریں۔",
+      "SYSTEM": "سسٹم",
+      "WINDOW_SCALE": "کھڑکی کا پیمانہ"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "تمام صاف کریں۔",
+      "CLEAR_FILE": "فائل صاف کریں۔",
+      "CLEAR_HTML": "Html صاف کریں۔",
+      "CLEAR_IMAGE": "تصویر صاف کریں۔",
+      "CLEAR_RTF": "Rtf صاف کریں۔",
+      "CLEAR_TEXT": "متن صاف کریں۔",
+      "DATABASE_INFO": "{{records}} مقامی اشیاء ({{size}}) اس کمپیوٹر پر محفوظ ہیں۔",
+      "SQL_DATABASE_INFO": "ایس کیو ایل ڈیٹا بیس کی معلومات",
+      "STORAGE_ACTIONS": "ذخیرہ کرنے کی کارروائیاں"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "اپنی ہاٹکیز کو تبدیل کریں۔"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "کلپ بورڈ کی حدود",
+      "IF_SET_TO_ZERO": "اگر 0 پر سیٹ کیا جاتا ہے تو کلپ بورڈ کی قسم کو مکمل طور پر چھوڑ دیا جائے گا۔",
+      "MAX_FILE_SIZE": "زیادہ سے زیادہ فائل کا سائز",
+      "MAX_HTML_SIZE": "زیادہ سے زیادہ ایچ ٹی ایم ایل سائز",
+      "MAX_IMAGE_SIZE": "زیادہ سے زیادہ تصویری سائز",
+      "MAX_RTF_SIZE": "زیادہ سے زیادہ Rtf سائز",
+      "MAX_TEXT_SIZE": "زیادہ سے زیادہ متن کا سائز"
+    },
+    "SETTINGS": "ترتیبات",
+    "TAB": {
+      "BACKUP": "بیک اپ",
+      "GENERAL": "جنرل",
+      "HISTORY": "تاریخ",
+      "HOTKEYS": "ہاٹکیز",
+      "LIMITS": "حدود"
+    }
+  }
 }

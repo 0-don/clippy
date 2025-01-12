@@ -116,8 +116,8 @@ pub enum HotkeyEvent {
     TypeClipboard,
     #[iden = "scroll_to_top"]
     ScrollToTop,
-    #[iden = "sync_clipboard_history"]
-    SyncClipboardHistory,
+    #[iden = "change_clipboard_db_location"]
+    ChangeClipboaaardDbLocation,
     #[iden = "settings"]
     Settings,
     #[iden = "about"]

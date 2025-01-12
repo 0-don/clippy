@@ -1,144 +1,144 @@
 {
-	"ABOUT": {
-		"ABOUT": "About",
-		"COPYRIGHT": "Copyright(C) DC. All right reserved.",
-		"DEVELOPED_BY": "Developed by 0-don. Powered by Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "No updates currently available",
-		"OFFICIAL_WEBSITE": "Official Website"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "Copy as HTML",
-		"COPY_AS_RTF": "Copy as RTF",
-		"DELETE_CLIPBOARD": "Delete clipboard",
-		"NO_CLIPBOARDS_YET": "No clipboards yet...",
-		"SEARCH_ENTRIES": "Search entries",
-		"STAR_FAVORITE": "Star favorite"
-	},
-	"MAIN": {
-		"HOTKEY": {
-			"ABOUT": "About",
-			"DIGIT_1": "Digit 1",
-			"DIGIT_2": "Digit 2",
-			"DIGIT_3": "Digit 3",
-			"DIGIT_4": "Digit 4",
-			"DIGIT_5": "Digit 5",
-			"DIGIT_6": "Digit 6",
-			"DIGIT_7": "Digit 7",
-			"DIGIT_8": "Digit 8",
-			"DIGIT_9": "Digit 9",
-			"EXIT": "Exit",
-			"HISTORY": "History",
-			"NUM_1": "Num 1",
-			"NUM_2": "Num 2",
-			"NUM_3": "Num 3",
-			"NUM_4": "Num 4",
-			"NUM_5": "Num 5",
-			"NUM_6": "Num 6",
-			"NUM_7": "Num 7",
-			"NUM_8": "Num 8",
-			"NUM_9": "Num 9",
-			"RECENT_CLIPBOARDS": "Recent Clipboards",
-			"SCROLL_TO_TOP": "Scroll to top",
-			"SETTINGS": "Settings",
-			"STARRED_CLIPBOARDS": "Starred Clipboards",
-			"SYNC_CLIPBOARD_HISTORY": "Sync Clipboard History",
-			"TYPE_CLIPBOARD": "Type clipboard",
-			"VIEW_MORE": "View more",
-			"WINDOW_DISPLAY_TOGGLE": "Window display toggle"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Arabic",
-			"BN": "Bengali",
-			"DE": "German",
-			"EN": "English",
-			"ES": "Spanish",
-			"FR": "French",
-			"HI": "Hindi",
-			"IT": "Italian",
-			"JA": "Japanese",
-			"KO": "Korean",
-			"NL": "Dutch",
-			"PL": "Polish",
-			"PT": "Portuguese",
-			"RU": "Russian",
-			"TH": "Thai",
-			"TR": "Turkish",
-			"UR": "Urdu",
-			"VI": "Vietnamese",
-			"ZH": "Mandarin"
-		},
-		"POSITION": {
-			"BOTTOM_CENTER": "Bottom center",
-			"BOTTOM_LEFT": "Bottom left",
-			"BOTTOM_RIGHT": "Bottom right",
-			"CENTER": "Center",
-			"CURSOR": "Cursor",
-			"LEFT_CENTER": "Left center",
-			"RIGHT_CENTER": "Right center",
-			"TOP_CENTER": "Top center",
-			"TOP_LEFT": "Top left",
-			"TOP_RIGHT": "Top right",
-			"TRAY_BOTTOM_CENTER": "Tray bottom center",
-			"TRAY_BOTTOM_LEFT": "Tray bottom left",
-			"TRAY_BOTTOM_RIGHT": "Tray bottom right",
-			"TRAY_CENTER": "Tray center",
-			"TRAY_LEFT": "Tray left",
-			"TRAY_RIGHT": "Tray right"
-		}
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CONFIG_LOCATION": "Config location",
-			"DATABASE_LOCATION": "Database location",
-			"OPEN": "Open",
-			"SYNC": "Sync",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Change language",
-			"CHANGE_WINDOW_POSITION": "Change window position",
-			"HTML_CLIPBOARD_TOOLTIP": "HTML clipboard tooltip",
-			"KEYBOARD_SHORTCUT": "Keyboard shortcut",
-			"START_CLIPPY_ON_STARTUP": "Start Clippy on system startup",
-			"SWITCH_THEME": "Switch Theme",
-			"SYSTEM": "System",
-			"WINDOW_SCALE": "Window scale"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Clear All",
-			"CLEAR_FILE": "Clear File",
-			"CLEAR_HTML": "Clear Html",
-			"CLEAR_IMAGE": "Clear Image",
-			"CLEAR_RTF": "Clear Rtf",
-			"CLEAR_TEXT": "Clear Text",
-			"DATABASE_INFO": "{{records}} local items ({{size}}) are saved on this computer",
-			"SQL_DATABASE_INFO": "SQL Database info",
-			"STORAGE_ACTIONS": "Storage actions"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Change your hotkeys"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Clipboard limits",
-			"IF_SET_TO_ZERO": "If set to 0 the clipboard type will be skipped entirely",
-			"MAX_FILE_SIZE": "Max File size",
-			"MAX_HTML_SIZE": "Max Html size",
-			"MAX_IMAGE_SIZE": "Max Image size",
-			"MAX_RTF_SIZE": "Max Rtf size",
-			"MAX_TEXT_SIZE": "Max Text size"
-		},
-		"SETTINGS": "Settings",
-		"TAB": {
-			"BACKUP": "Backup",
-			"GENERAL": "General",
-			"HISTORY": "History",
-			"HOTKEYS": "Hotkeys",
-			"LIMITS": "Limits"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "About",
+    "COPYRIGHT": "Copyright(C) DC. All right reserved.",
+    "DEVELOPED_BY": "Developed by 0-don. Powered by Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "No updates currently available",
+    "OFFICIAL_WEBSITE": "Official Website"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "Copy as HTML",
+    "COPY_AS_RTF": "Copy as RTF",
+    "DELETE_CLIPBOARD": "Delete clipboard",
+    "NO_CLIPBOARDS_YET": "No clipboards yet...",
+    "SEARCH_ENTRIES": "Search entries",
+    "STAR_FAVORITE": "Star favorite"
+  },
+  "MAIN": {
+    "HOTKEY": {
+      "ABOUT": "About",
+      "DIGIT_1": "Digit 1",
+      "DIGIT_2": "Digit 2",
+      "DIGIT_3": "Digit 3",
+      "DIGIT_4": "Digit 4",
+      "DIGIT_5": "Digit 5",
+      "DIGIT_6": "Digit 6",
+      "DIGIT_7": "Digit 7",
+      "DIGIT_8": "Digit 8",
+      "DIGIT_9": "Digit 9",
+      "EXIT": "Exit",
+      "HISTORY": "History",
+      "NUM_1": "Num 1",
+      "NUM_2": "Num 2",
+      "NUM_3": "Num 3",
+      "NUM_4": "Num 4",
+      "NUM_5": "Num 5",
+      "NUM_6": "Num 6",
+      "NUM_7": "Num 7",
+      "NUM_8": "Num 8",
+      "NUM_9": "Num 9",
+      "RECENT_CLIPBOARDS": "Recent Clipboards",
+      "SCROLL_TO_TOP": "Scroll to top",
+      "SETTINGS": "Settings",
+      "STARRED_CLIPBOARDS": "Starred Clipboards",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Sync Clipboard History",
+      "TYPE_CLIPBOARD": "Type clipboard",
+      "VIEW_MORE": "View more",
+      "WINDOW_DISPLAY_TOGGLE": "Window display toggle"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Arabic",
+      "BN": "Bengali",
+      "DE": "German",
+      "EN": "English",
+      "ES": "Spanish",
+      "FR": "French",
+      "HI": "Hindi",
+      "IT": "Italian",
+      "JA": "Japanese",
+      "KO": "Korean",
+      "NL": "Dutch",
+      "PL": "Polish",
+      "PT": "Portuguese",
+      "RU": "Russian",
+      "TH": "Thai",
+      "TR": "Turkish",
+      "UR": "Urdu",
+      "VI": "Vietnamese",
+      "ZH": "Mandarin"
+    },
+    "POSITION": {
+      "BOTTOM_CENTER": "Bottom center",
+      "BOTTOM_LEFT": "Bottom left",
+      "BOTTOM_RIGHT": "Bottom right",
+      "CENTER": "Center",
+      "CURSOR": "Cursor",
+      "LEFT_CENTER": "Left center",
+      "RIGHT_CENTER": "Right center",
+      "TOP_CENTER": "Top center",
+      "TOP_LEFT": "Top left",
+      "TOP_RIGHT": "Top right",
+      "TRAY_BOTTOM_CENTER": "Tray bottom center",
+      "TRAY_BOTTOM_LEFT": "Tray bottom left",
+      "TRAY_BOTTOM_RIGHT": "Tray bottom right",
+      "TRAY_CENTER": "Tray center",
+      "TRAY_LEFT": "Tray left",
+      "TRAY_RIGHT": "Tray right"
+    }
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CONFIG_LOCATION": "Config location",
+      "DATABASE_LOCATION": "Database location",
+      "OPEN": "Open",
+      "SYNC": "Sync",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Change language",
+      "CHANGE_WINDOW_POSITION": "Change window position",
+      "HTML_CLIPBOARD_TOOLTIP": "HTML clipboard tooltip",
+      "KEYBOARD_SHORTCUT": "Keyboard shortcut",
+      "START_CLIPPY_ON_STARTUP": "Start Clippy on system startup",
+      "SWITCH_THEME": "Switch Theme",
+      "SYSTEM": "System",
+      "WINDOW_SCALE": "Window scale"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Clear All",
+      "CLEAR_FILE": "Clear File",
+      "CLEAR_HTML": "Clear Html",
+      "CLEAR_IMAGE": "Clear Image",
+      "CLEAR_RTF": "Clear Rtf",
+      "CLEAR_TEXT": "Clear Text",
+      "DATABASE_INFO": "{{records}} local items ({{size}}) are saved on this computer",
+      "SQL_DATABASE_INFO": "SQL Database info",
+      "STORAGE_ACTIONS": "Storage actions"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Change your hotkeys"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Clipboard limits",
+      "IF_SET_TO_ZERO": "If set to 0 the clipboard type will be skipped entirely",
+      "MAX_FILE_SIZE": "Max File size",
+      "MAX_HTML_SIZE": "Max Html size",
+      "MAX_IMAGE_SIZE": "Max Image size",
+      "MAX_RTF_SIZE": "Max Rtf size",
+      "MAX_TEXT_SIZE": "Max Text size"
+    },
+    "SETTINGS": "Settings",
+    "TAB": {
+      "BACKUP": "Backup",
+      "GENERAL": "General",
+      "HISTORY": "History",
+      "HOTKEYS": "Hotkeys",
+      "LIMITS": "Limits"
+    }
+  }
 }
