@@ -6,7 +6,7 @@ mod service;
 mod tauri_config;
 mod utils;
 
-use commands::{auth, clipboard, hotkey, settings, window};
+use commands::{clipboard, hotkey, settings, sync, window};
 use tauri_config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
@@ -49,7 +49,7 @@ pub fn run() {
             window::get_config_path,
             window::open_folder,
             //
-            auth::auth_google_drive,
+            sync::sync_is_authenticated,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

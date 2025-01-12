@@ -3,7 +3,7 @@ use common::{printlog, types::types::CommandError};
 use std::sync::Arc;
 
 #[tauri::command]
-pub async fn auth_google_drive() -> Result<String, CommandError> {
+pub async fn sync_is_authenticated() -> Result<String, CommandError> {
     let provider = Arc::new(
         GoogleDriveProvider::new()
             .await

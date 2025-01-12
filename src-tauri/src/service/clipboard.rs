@@ -388,16 +388,19 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
 
     clipboard::Entity::update(model).exec(&db).await?;
 
-    let provider = Arc::new(
-        GoogleDriveProvider::new()
-            .await
-            .expect("Failed to initialize sync provider"),
-    );
+    let delete_id = id.clone();
+    tokio::spawn(async move {
+        let provider = Arc::new(
+            GoogleDriveProvider::new()
+                .await
+                .expect("Failed to initialize sync provider"),
+        );
 
-    provider
-        .delete_by_id(&id)
-        .await
-        .map_err(|e| CommandError::Error(e.to_string()))?;
+        provider
+            .delete_by_id(&delete_id)
+            .await
+            .map_err(|e| CommandError::Error(e.to_string()))
+    });
 
     Ok(true)
 }
@@ -407,16 +410,19 @@ pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
 
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
 
-    let provider = Arc::new(
-        GoogleDriveProvider::new()
-            .await
-            .expect("Failed to initialize sync provider"),
-    );
+    let delete_id = id.clone();
+    tokio::spawn(async move {
+        let provider = Arc::new(
+            GoogleDriveProvider::new()
+                .await
+                .expect("Failed to initialize sync provider"),
+        );
 
-    provider
-        .delete_by_id(&id)
-        .await
-        .map_err(|e| CommandError::Error(e.to_string()))?;
+        provider
+            .delete_by_id(&delete_id)
+            .await
+            .map_err(|e| CommandError::Error(e.to_string()))
+    });
 
     Ok(true)
 }

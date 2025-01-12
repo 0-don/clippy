@@ -30,6 +30,10 @@ export enum InvokeCommand {
   ExitApp = "exit_app",
   OpenFolder = "open_folder",
 
+  // Sync commands
+  SyncIsAuthenticated = "sync_is_authenticated",
+  SyncAuthenticateToggle = "sync_authenticate_toggle",
+
   // App info commands
   GetAppVersion = "get_app_version",
   GetDbInfo = "get_db_info",
