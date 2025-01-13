@@ -109,13 +109,13 @@ impl MigrationTrait for Migration {
         .await?;
 
         hotkey::ActiveModel {
-            event: Set(HotkeyEvent::ChangeClipboaaardDbLocation.to_string()),
+            event: Set(HotkeyEvent::SyncClipboardHistory.to_string()),
             ctrl: Set(false),
             alt: Set(false),
             shift: Set(false),
             key: Set("P".to_string()),
             status: Set(true),
-            name: Set("MAIN.HOTKEY.CHANGE_CLIPBOARD_DB_LOCATION".to_string()),
+            name: Set("MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY".to_string()),
             icon: Set("\"<svg stroke-width=\\\"2\\\" height=\\\"1em\\\" width=\\\"1em\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" viewBox=\\\"0 0 24 24\\\" color=\\\"currentColor\\\" style=\\\"overflow: visible;\\\"><path d=\\\"M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z\\\"></path><path d=\\\"M17 21v-8H7v8M7 3v5h8\\\"></path></svg>\"".to_string()),
             ..Default::default()
         }

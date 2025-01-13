@@ -2,7 +2,7 @@ import { AiTwotoneFolderOpen } from "solid-icons/ai";
 import { BsGearWideConnected } from "solid-icons/bs";
 import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { SiSqlite } from "solid-icons/si";
-import { TbDatabaseStar } from "solid-icons/tb";
+import { TbDatabaseStar, TbExchange } from "solid-icons/tb";
 import { Component, createResource } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { SettingsStore } from "../../../store/settings-store";
@@ -31,7 +31,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <Toggle
             checked={!!SettingsStore.settings()?.synchronize}
             onChange={async () => {
-              await SettingsStore.syncClipboard();
+              await SettingsStore.syncAuthenticateToggle();
               setDatabaseUrl.refetch();
             }}
           />
@@ -47,10 +47,24 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             >
               {databaseUrl()}
             </div>
+          </div>
+          <div class="mt-1 flex items-center justify-end gap-1">
+            <button
+              type="button"
+              onClick={async () => {
+                await SettingsStore.changeClipboardDbLocation();
+                setDatabaseUrl.refetch();
+              }}
+              class="group my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
+            >
+              <TbExchange class="dark:text-white" />
+              <div>{t("SETTINGS.BACKUP.CHANGE_LOCATION")}</div>
+            </button>
+
             <button
               type="button"
               onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Database })}
-              class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
+              class="group my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
             >
               <AiTwotoneFolderOpen class="dark:text-white" />
               <div>{t("SETTINGS.BACKUP.OPEN")}</div>

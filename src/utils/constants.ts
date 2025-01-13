@@ -14,7 +14,7 @@ export const SETTINGS_TAB = [
 ] as const satisfies readonly DictionaryKey[];
 
 export const VIEW_MORE_NAMES = [
-  "MAIN.HOTKEY.CHANGE_CLIPBOARD_DB_LOCATION",
+  "MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY",
   "MAIN.HOTKEY.SETTINGS",
   "MAIN.HOTKEY.ABOUT",
   "MAIN.HOTKEY.EXIT",

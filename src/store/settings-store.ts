@@ -48,7 +48,9 @@ function createSettingsStore() {
     setSettings(settings);
   };
 
-  const syncClipboard = async () => invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
+  const changeClipboardDbLocation = async () => invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
+
+  const syncAuthenticateToggle = async () => invokeCommand(InvokeCommand.SyncAuthenticateToggle);
 
   const openWindow = async (windowName: WebWindow, title: string) =>
     invokeCommand(InvokeCommand.OpenNewWindow, { windowName, title });
@@ -64,7 +66,8 @@ function createSettingsStore() {
     setCurrentTab,
     getCurrentTab,
     initSettings,
-    syncClipboard,
+    changeClipboardDbLocation,
+    syncAuthenticateToggle,
     openWindow,
     exitApp,
   };

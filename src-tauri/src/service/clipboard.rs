@@ -389,7 +389,7 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
     clipboard::Entity::update(model).exec(&db).await?;
 
     let delete_id = id.clone();
-    tokio::spawn(async move {
+    tauri::async_runtime::spawn(async move {
         let provider = Arc::new(
             GoogleDriveProvider::new()
                 .await
@@ -411,7 +411,7 @@ pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
 
     let delete_id = id.clone();
-    tokio::spawn(async move {
+    tauri::async_runtime::spawn(async move {
         let provider = Arc::new(
             GoogleDriveProvider::new()
                 .await

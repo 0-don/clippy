@@ -13,7 +13,7 @@ export enum HotkeyEvent {
   WindowDisplayToggle = "window_display_toggle",
   TypeClipboard = "type_clipboard",
   ScrollToTop = "scroll_to_top",
-  ChangeClipboaaardDbLocation = "change_clipboard_db_location",
+  ChangeClipboardDbLocation = "change_clipboard_db_location",
   Settings = "settings",
   About = "about",
   Exit = "exit",
