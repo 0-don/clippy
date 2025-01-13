@@ -39,6 +39,7 @@ pub fn run() {
             settings::update_settings,
             settings::toggle_autostart,
             settings::change_clipboard_db_location,
+            settings::reset_clipboard_db_location,
             //
             window::open_new_window,
             window::open_browser_url,
@@ -50,6 +51,7 @@ pub fn run() {
             window::open_folder,
             //
             sync::sync_is_authenticated,
+            sync::sync_authenticate_toggle,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

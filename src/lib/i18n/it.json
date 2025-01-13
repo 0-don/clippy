@@ -10,13 +10,14 @@
     "COPY_AS_HTML": "Copia come HTML",
     "COPY_AS_RTF": "Copia come RTF",
     "DELETE_CLIPBOARD": "Elimina appunti",
-    "NO_CLIPBOARDS_YET": "Ancora nessun appunto...",
+    "NO_CLIPBOARDS_YET": "Ancora nessun appunto..",
     "SEARCH_ENTRIES": "Cerca voci",
     "STAR_FAVORITE": "Segna come preferito"
   },
   "MAIN": {
     "HOTKEY": {
       "ABOUT": "Info",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Cambia posizione del database degli appunti",
       "DIGIT_1": "Cifra 1",
       "DIGIT_2": "Cifra 2",
       "DIGIT_3": "Cifra 3",
@@ -27,7 +28,7 @@
       "DIGIT_8": "Cifra 8",
       "DIGIT_9": "Cifra 9",
       "EXIT": "Esci",
-      "HISTORY": "Cronologia",
+      "HISTORY": "Crologia",
       "NUM_1": "Numero 1",
       "NUM_2": "Numero 2",
       "NUM_3": "Numero 3",
@@ -93,6 +94,7 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "CHANGE_LOCATION": "Cambia posizione",
       "CONFIG_LOCATION": "Percorso configurazione",
       "DATABASE_LOCATION": "Percorso database",
       "OPEN": "Apri",

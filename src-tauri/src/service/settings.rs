@@ -2,7 +2,6 @@ use super::clipboard::get_last_clipboard_db;
 use super::global::get_app;
 use crate::connection;
 use crate::prelude::*;
-use crate::service::hotkey::with_hotkeys;
 use crate::service::window::get_monitor_scale_factor;
 use common::constants::CONFIG_NAME;
 use common::constants::DB_NAME;
@@ -43,7 +42,7 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
     Ok(updated_settings)
 }
 
-pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
+pub async fn update_settings_synchronize_db(sync: bool) -> Result<(), DbErr> {
     let db: DatabaseConnection = connection::db().await?;
 
     let mut settings = get_settings_db().await?;
@@ -130,21 +129,7 @@ pub fn get_config() -> (Config, DataPath) {
     (config, data_path)
 }
 
-pub async fn change_clipboard_db_location_toggle() {
-    let settings = get_app().state::<settings::Model>();
-
-    printlog!("synchronize: {}", settings.sync);
-    with_hotkeys(false, async move {
-        if settings.sync {
-            change_clipboard_db_location_disable().await;
-        } else {
-            change_clipboard_db_location_enable().await;
-        }
-    })
-    .await;
-}
-
-pub async fn change_clipboard_db_location_enable() {
+pub fn change_clipboard_db_location_enable() {
     // get local config from app data
     let (mut config, data_path) = get_config();
 
@@ -173,15 +158,10 @@ pub async fn change_clipboard_db_location_enable() {
             &data_path.config_file_path,
             serde_json::to_string(&config).expect("Failed to serialize config"),
         );
-
-        // Now we can await this since we're in an async function
-        update_settings_synchronize(true)
-            .await
-            .expect("Failed to update settings");
     }
 }
 
-pub async fn change_clipboard_db_location_disable() {
+pub fn reset_clipboard_db_location_disable() {
     let (mut config, data_path) = get_config();
     // copy backup file to default database location
     fs::copy(&config.db, &data_path.db_file_path).expect("Failed to copy database");
@@ -195,8 +175,4 @@ pub async fn change_clipboard_db_location_disable() {
         serde_json::to_string(&config).expect("Failed to serialize config"),
     )
     .expect("Failed to serialize config");
-
-    update_settings_synchronize(false)
-        .await
-        .expect("Failed to update settings");
 }

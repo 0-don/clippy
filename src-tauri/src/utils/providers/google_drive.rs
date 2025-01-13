@@ -44,7 +44,7 @@ impl GoogleDriveProvider {
                 .join(TOKEN_NAME);
         let auth = yup_oauth2::InstalledFlowAuthenticator::builder(
             secret,
-            yup_oauth2::InstalledFlowReturnMethod::HTTPRedirect,
+            yup_oauth2::InstalledFlowReturnMethod::Interactive,
         )
         .persist_tokens_to_disk(token_path)
         .build()

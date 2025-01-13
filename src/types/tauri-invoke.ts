@@ -124,6 +124,16 @@ export interface TauriInvokeCommands {
     return: void;
   };
 
+  // Sync commands
+  [InvokeCommand.SyncIsAuthenticated]: {
+    args: undefined;
+    return: boolean;
+  };
+  [InvokeCommand.SyncAuthenticateToggle]: {
+    args: undefined;
+    return: boolean;
+  };
+
   // App info commands
   [InvokeCommand.GetAppVersion]: {
     args: undefined;

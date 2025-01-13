@@ -1,144 +1,146 @@
 {
-  "ABOUT": {
-    "ABOUT": "について",
-    "COPYRIGHT": "Copyright(C) DC. 無断転載禁止。",
-    "DEVELOPED_BY": "0-don によって開発されました。Tauri を搭載しています。",
-    "NO_UPDATES_CURRENTLY_AVAILABLE": "現在利用可能なアップデートはありません",
-    "OFFICIAL_WEBSITE": "公式ウェブサイト"
-  },
-  "CLIPBOARD": {
-    "COPY_AS_HTML": "HTMLとしてコピー",
-    "COPY_AS_RTF": "RTFとしてコピー",
-    "DELETE_CLIPBOARD": "クリップボードを削除",
-    "NO_CLIPBOARDS_YET": "クリップボードはまだありません...",
-    "SEARCH_ENTRIES": "エントリを検索",
-    "STAR_FAVORITE": "スターのお気に入り"
-  },
-  "MAIN": {
-    "HOTKEY": {
-      "ABOUT": "について",
-      "DIGIT_1": "数字1",
-      "DIGIT_2": "2桁目",
-      "DIGIT_3": "3桁目",
-      "DIGIT_4": "数字4",
-      "DIGIT_5": "5桁目",
-      "DIGIT_6": "6桁目",
-      "DIGIT_7": "数字7",
-      "DIGIT_8": "数字8",
-      "DIGIT_9": "数字9",
-      "EXIT": "出口",
-      "HISTORY": "歴史",
-      "NUM_1": "番号 1",
-      "NUM_2": "2番",
-      "NUM_3": "3番",
-      "NUM_4": "4番",
-      "NUM_5": "5番",
-      "NUM_6": "6番",
-      "NUM_7": "7番",
-      "NUM_8": "8番",
-      "NUM_9": "9番",
-      "RECENT_CLIPBOARDS": "最近のクリップボード",
-      "SCROLL_TO_TOP": "トップにスクロールします",
-      "SETTINGS": "設定",
-      "STARRED_CLIPBOARDS": "スター付きクリップボード",
-      "CHANGE_CLIPBOARD_DB_LOCATION": "クリップボード履歴を同期",
-      "TYPE_CLIPBOARD": "クリップボードに入力",
-      "VIEW_MORE": "もっと見る",
-      "WINDOW_DISPLAY_TOGGLE": "ウィンドウ表示切り替え"
-    },
-    "KEYS": {
-      "ALT": "Alt",
-      "CTRL": "Ctrl",
-      "SHIFT": "Shift"
-    },
-    "LANGUAGE": {
-      "AR": "アラビア語",
-      "BN": "ベンガル語",
-      "DE": "ドイツ人",
-      "EN": "英語",
-      "ES": "スペイン語",
-      "FR": "フランス語",
-      "HI": "ヒンディー語",
-      "IT": "イタリアの",
-      "JA": "日本語",
-      "KO": "韓国語",
-      "NL": "オランダ語",
-      "PL": "研磨",
-      "PT": "ポルトガル語",
-      "RU": "ロシア",
-      "TH": "タイ語",
-      "TR": "トルコ語",
-      "UR": "ウルドゥー語",
-      "VI": "ベトナム語",
-      "ZH": "中国語"
-    },
-    "POSITION": {
-      "BOTTOM_CENTER": "下中央",
-      "BOTTOM_LEFT": "左下",
-      "BOTTOM_RIGHT": "右下",
-      "CENTER": "中心",
-      "CURSOR": "カーソル",
-      "LEFT_CENTER": "左中央",
-      "RIGHT_CENTER": "右中央",
-      "TOP_CENTER": "上中央",
-      "TOP_LEFT": "左上",
-      "TOP_RIGHT": "右上",
-      "TRAY_BOTTOM_CENTER": "トレイ下部中央",
-      "TRAY_BOTTOM_LEFT": "トレイ左下",
-      "TRAY_BOTTOM_RIGHT": "トレイ右下",
-      "TRAY_CENTER": "トレイ中央",
-      "TRAY_LEFT": "トレイ左",
-      "TRAY_RIGHT": "トレイ右"
-    }
-  },
-  "SETTINGS": {
-    "BACKUP": {
-      "CONFIG_LOCATION": "設定場所",
-      "DATABASE_LOCATION": "データベースの場所",
-      "OPEN": "開ける",
-      "SYNC": "同期",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "クリップボード履歴を同期する"
-    },
-    "GENERAL": {
-      "CHANGE_LANGUAGE": "言語を変えてください",
-      "CHANGE_WINDOW_POSITION": "ウィンドウの位置を変更する",
-      "HTML_CLIPBOARD_TOOLTIP": "HTML クリップボード ツールチップ",
-      "KEYBOARD_SHORTCUT": "キーボードショートカット",
-      "START_CLIPPY_ON_STARTUP": "システム起動時にClippyを起動する",
-      "SWITCH_THEME": "テーマを切り替える",
-      "SYSTEM": "システム",
-      "WINDOW_SCALE": "ウィンドウスケール"
-    },
-    "HISTORY": {
-      "CLEAR_ALL": "すべてクリア",
-      "CLEAR_FILE": "クリアファイル",
-      "CLEAR_HTML": "HTMLをクリア",
-      "CLEAR_IMAGE": "鮮明な画像",
-      "CLEAR_RTF": "クリア RTF",
-      "CLEAR_TEXT": "クリアテキスト",
-      "DATABASE_INFO": "{{records}} 個のローカル アイテム ({{size}}) がこのコンピューターに保存されています",
-      "SQL_DATABASE_INFO": "SQL データベース情報",
-      "STORAGE_ACTIONS": "ストレージアクション"
-    },
-    "HOTKEYS": {
-      "CHANGE_YOUR_HOTKEYS": "ホットキーを変更する"
-    },
-    "LIMITS": {
-      "CLIPBOARD_LIMITS": "クリップボードの制限",
-      "IF_SET_TO_ZERO": "0に設定するとクリップボードタイプは完全にスキップされます",
-      "MAX_FILE_SIZE": "最大ファイルサイズ",
-      "MAX_HTML_SIZE": "最大 HTML サイズ",
-      "MAX_IMAGE_SIZE": "最大画像サイズ",
-      "MAX_RTF_SIZE": "最大 RTF サイズ",
-      "MAX_TEXT_SIZE": "最大テキストサイズ"
-    },
-    "SETTINGS": "設定",
-    "TAB": {
-      "BACKUP": "バックアップ",
-      "GENERAL": "一般的な",
-      "HISTORY": "歴史",
-      "HOTKEYS": "ホットキー",
-      "LIMITS": "制限"
-    }
-  }
+	"ABOUT": {
+		"ABOUT": "について",
+		"COPYRIGHT": "Copyright(C) DC. 無断転載禁止。",
+		"DEVELOPED_BY": "0-don によって開発されました。Tauri を搭載しています。",
+		"NO_UPDATES_CURRENTLY_AVAILABLE": "現在利用可能なアップデートはありません",
+		"OFFICIAL_WEBSITE": "公式ウェブサイト"
+	},
+	"CLIPBOARD": {
+		"COPY_AS_HTML": "HTMLとしてコピー",
+		"COPY_AS_RTF": "RTFとしてコピー",
+		"DELETE_CLIPBOARD": "クリップボードを削除",
+		"NO_CLIPBOARDS_YET": "クリップボードはまだありません...",
+		"SEARCH_ENTRIES": "エントリを検索",
+		"STAR_FAVORITE": "スターのお気に入り"
+	},
+	"MAIN": {
+		"HOTKEY": {
+			"ABOUT": "について",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "クリップボードのDBの場所を変更する",
+			"DIGIT_1": "数字1",
+			"DIGIT_2": "2桁目",
+			"DIGIT_3": "3桁目",
+			"DIGIT_4": "数字4",
+			"DIGIT_5": "5桁目",
+			"DIGIT_6": "6桁目",
+			"DIGIT_7": "数字7",
+			"DIGIT_8": "数字8",
+			"DIGIT_9": "数字9",
+			"EXIT": "出口",
+			"HISTORY": "歴史",
+			"NUM_1": "番号 1",
+			"NUM_2": "2番",
+			"NUM_3": "3番",
+			"NUM_4": "4番",
+			"NUM_5": "5番",
+			"NUM_6": "6番",
+			"NUM_7": "7番",
+			"NUM_8": "8番",
+			"NUM_9": "9番",
+			"RECENT_CLIPBOARDS": "最近のクリップボード",
+			"SCROLL_TO_TOP": "トップにスクロールします",
+			"SETTINGS": "設定",
+			"STARRED_CLIPBOARDS": "スター付きクリップボード",
+			"SYNC_CLIPBOARD_HISTORY": "クリップボード履歴を同期",
+			"TYPE_CLIPBOARD": "クリップボードに入力",
+			"VIEW_MORE": "もっと見る",
+			"WINDOW_DISPLAY_TOGGLE": "ウィンドウ表示切り替え"
+		},
+		"KEYS": {
+			"ALT": "Alt",
+			"CTRL": "Ctrl",
+			"SHIFT": "Shift"
+		},
+		"LANGUAGE": {
+			"AR": "アラビア語",
+			"BN": "ベンガル語",
+			"DE": "ドイツ人",
+			"EN": "英語",
+			"ES": "スペイン語",
+			"FR": "フランス語",
+			"HI": "ヒンディー語",
+			"IT": "イタリアの",
+			"JA": "日本語",
+			"KO": "韓国語",
+			"NL": "オランダ語",
+			"PL": "研磨",
+			"PT": "ポルトガル語",
+			"RU": "ロシア",
+			"TH": "タイ語",
+			"TR": "トルコ語",
+			"UR": "ウルドゥー語",
+			"VI": "ベトナム語",
+			"ZH": "中国語"
+		},
+		"POSITION": {
+			"BOTTOM_CENTER": "下中央",
+			"BOTTOM_LEFT": "左下",
+			"BOTTOM_RIGHT": "右下",
+			"CENTER": "中心",
+			"CURSOR": "カーソル",
+			"LEFT_CENTER": "左中央",
+			"RIGHT_CENTER": "右中央",
+			"TOP_CENTER": "上中央",
+			"TOP_LEFT": "左上",
+			"TOP_RIGHT": "右上",
+			"TRAY_BOTTOM_CENTER": "トレイ下部中央",
+			"TRAY_BOTTOM_LEFT": "トレイ左下",
+			"TRAY_BOTTOM_RIGHT": "トレイ右下",
+			"TRAY_CENTER": "トレイ中央",
+			"TRAY_LEFT": "トレイ左",
+			"TRAY_RIGHT": "トレイ右"
+		}
+	},
+	"SETTINGS": {
+		"BACKUP": {
+			"CHANGE_LOCATION": "場所を変更する",
+			"CONFIG_LOCATION": "設定場所",
+			"DATABASE_LOCATION": "データベースの場所",
+			"OPEN": "開ける",
+			"SYNC": "同期",
+			"SYNCHRONIZE_CLIPBOARD_HISTORY": "クリップボード履歴を同期する"
+		},
+		"GENERAL": {
+			"CHANGE_LANGUAGE": "言語を変えてください",
+			"CHANGE_WINDOW_POSITION": "ウィンドウの位置を変更する",
+			"HTML_CLIPBOARD_TOOLTIP": "HTML クリップボード ツールチップ",
+			"KEYBOARD_SHORTCUT": "キーボードショートカット",
+			"START_CLIPPY_ON_STARTUP": "システム起動時にClippyを起動する",
+			"SWITCH_THEME": "テーマを切り替える",
+			"SYSTEM": "システム",
+			"WINDOW_SCALE": "ウィンドウスケール"
+		},
+		"HISTORY": {
+			"CLEAR_ALL": "すべてクリア",
+			"CLEAR_FILE": "クリアファイル",
+			"CLEAR_HTML": "HTMLをクリア",
+			"CLEAR_IMAGE": "鮮明な画像",
+			"CLEAR_RTF": "クリア RTF",
+			"CLEAR_TEXT": "クリアテキスト",
+			"DATABASE_INFO": "{{records}} 個のローカル アイテム ({{size}}) がこのコンピューターに保存されています",
+			"SQL_DATABASE_INFO": "SQL データベース情報",
+			"STORAGE_ACTIONS": "ストレージアクション"
+		},
+		"HOTKEYS": {
+			"CHANGE_YOUR_HOTKEYS": "ホットキーを変更する"
+		},
+		"LIMITS": {
+			"CLIPBOARD_LIMITS": "クリップボードの制限",
+			"IF_SET_TO_ZERO": "0に設定するとクリップボードタイプは完全にスキップされます",
+			"MAX_FILE_SIZE": "最大ファイルサイズ",
+			"MAX_HTML_SIZE": "最大 HTML サイズ",
+			"MAX_IMAGE_SIZE": "最大画像サイズ",
+			"MAX_RTF_SIZE": "最大 RTF サイズ",
+			"MAX_TEXT_SIZE": "最大テキストサイズ"
+		},
+		"SETTINGS": "設定",
+		"TAB": {
+			"BACKUP": "バックアップ",
+			"GENERAL": "一般的な",
+			"HISTORY": "歴史",
+			"HOTKEYS": "ホットキー",
+			"LIMITS": "制限"
+		}
+	}
 }

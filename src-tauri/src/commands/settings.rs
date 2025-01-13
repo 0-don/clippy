@@ -1,7 +1,10 @@
 use crate::{
     service::{
         hotkey::with_hotkeys,
-        settings::{change_clipboard_db_location_toggle, get_settings_db, update_settings_db},
+        settings::{
+            change_clipboard_db_location_enable, get_settings_db,
+            reset_clipboard_db_location_disable, update_settings_db,
+        },
     },
     tauri_config::config::autostart,
 };
@@ -32,5 +35,10 @@ pub async fn toggle_autostart() -> Result<(), CommandError> {
 
 #[tauri::command]
 pub async fn change_clipboard_db_location() {
-    change_clipboard_db_location_toggle().await;
+    change_clipboard_db_location_enable();
+}
+
+#[tauri::command]
+pub async fn reset_clipboard_db_location() {
+    reset_clipboard_db_location_disable();
 }
