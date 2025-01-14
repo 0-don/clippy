@@ -29,7 +29,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           </div>
 
           <Toggle
-            checked={!!SettingsStore.settings()?.synchronize}
+            checked={!!SettingsStore.settings()?.sync}
             onChange={async () => {
               await SettingsStore.syncAuthenticateToggle();
               setDatabaseUrl.refetch();

@@ -1,15 +1,9 @@
-extern crate alloc;
-extern crate image;
 use crate::prelude::*;
 use crate::{
-    service::{
-        clipboard::{
-            clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db,
-            get_clipboard_count_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
-        },
-        global::get_main_window,
+    service::clipboard::{
+        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_count_db,
+        get_clipboard_db, get_clipboards_db, star_clipboard_db,
     },
-    tauri_config::config::APP,
     utils::hotkey_manager::unregister_hotkeys,
 };
 use common::io::clipboard::trim_clipboard_data;
@@ -23,6 +17,7 @@ use common::{
 };
 use sea_orm::prelude::Uuid;
 use std::fs::File;
+use tao::global::{get_app, get_main_window};
 use tauri::{Emitter, Manager};
 
 #[tauri::command]
@@ -102,9 +97,7 @@ pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
     )?;
 
     // Create a path for the new image file on the desktop
-    let image_path = APP
-        .get()
-        .ok_or(CommandError::Error("No app handle found".to_string()))?
+    let image_path = get_app()
         .path()
         .desktop_dir()?
         .join(format!("clipboard-{}.{}", id, extension));

@@ -1,20 +1,12 @@
-use crate::{
-    service::{
-        settings::update_settings_synchronize_db,
-        sync::{sync_interval_toggle, SyncProvider},
-    },
-    utils::providers::google_drive::GoogleDriveProvider,
+use crate::service::{
+    settings::update_settings_synchronize_db,
+    sync::{get_sync_provider, sync_interval_toggle},
 };
 use common::{printlog, types::types::CommandError};
-use std::sync::Arc;
 
 #[tauri::command]
 pub async fn sync_is_authenticated() -> Result<bool, CommandError> {
-    let provider = Arc::new(
-        GoogleDriveProvider::new()
-            .await
-            .expect("Failed to initialize sync provider"),
-    );
+    let provider = get_sync_provider().await?;
 
     if provider.is_authenticated().await {
         printlog!("Authenticated");

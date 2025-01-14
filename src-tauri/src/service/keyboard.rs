@@ -2,11 +2,10 @@ use crate::service::clipboard::get_last_clipboard_db;
 use common::types::enums::ClipboardType;
 use common::types::orm_query::FullClipboardDto;
 use enigo::{Enigo, Keyboard, Settings};
+use tao::global::get_app;
 use std::{process::Command, time::Duration};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_dialog::{MessageDialogButtons, MessageDialogKind};
-
-use super::global::get_app;
 
 pub async fn type_last_clipboard() {
     let clipboard = get_last_clipboard_db().await;

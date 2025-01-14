@@ -1,17 +1,15 @@
-use super::global::{get_app, get_main_window};
 use crate::prelude::*;
-use crate::{
-    connection,
-    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
-};
+use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store};
 use common::types::enums::{ListenEvent, WebWindow};
 use core::future::Future;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
+use tao::connection::db;
+use tao::global::{get_app, get_main_window};
 use tauri::{Emitter, Manager};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
-    let db: DatabaseConnection = connection::db().await?;
+    let db: DatabaseConnection = db().await?;
 
     let hotkeys = hotkey::Entity::find().all(&db).await?;
 
@@ -19,7 +17,7 @@ pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
 }
 
 pub async fn update_hotkey_db(hotkey: Model) -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::db().await?;
+    let db: DatabaseConnection = db().await?;
 
     let active_model: ActiveModel = hotkey.into();
 

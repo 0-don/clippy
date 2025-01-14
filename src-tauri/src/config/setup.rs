@@ -1,7 +1,5 @@
-use super::{
-    config::{create_config, init_globals},
-    tray::init_system_tray,
-};
+use tao::{config::create_config, tauri_constants::init_globals};
+use super::tray::init_system_tray;
 use crate::{
     events::{
         clipboard_events::init_clipboard_listener, hotkey_events::init_hotkey_listener,

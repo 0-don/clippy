@@ -1,15 +1,10 @@
-use crate::{
-    service::{
-        hotkey::with_hotkeys,
-        settings::{
-            change_clipboard_db_location_enable, get_settings_db,
-            reset_clipboard_db_location_disable, update_settings_db,
-        },
-    },
-    tauri_config::config::autostart,
+use crate::service::{
+    hotkey::with_hotkeys,
+    settings::{autostart, get_settings_db, update_settings_db},
 };
 use common::types::types::CommandError;
 use entity::settings::Model;
+use tao::config::{change_clipboard_db_location_enable, reset_clipboard_db_location_disable};
 
 #[tauri::command]
 pub async fn get_settings() -> Result<Model, CommandError> {
@@ -17,20 +12,18 @@ pub async fn get_settings() -> Result<Model, CommandError> {
 }
 
 #[tauri::command]
-pub async fn update_settings(settings: Model) -> Result<(), CommandError> {
+pub async fn update_settings(settings: Model) {
     with_hotkeys(false, async move {
         update_settings_db(settings)
             .await
             .expect("Failed to update settings");
     })
     .await;
-
-    Ok(())
 }
 
 #[tauri::command]
-pub async fn toggle_autostart() -> Result<(), CommandError> {
-    Ok(autostart())
+pub async fn toggle_autostart() {
+    autostart()
 }
 
 #[tauri::command]

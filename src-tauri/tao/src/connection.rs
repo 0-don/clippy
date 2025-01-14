@@ -1,7 +1,7 @@
-use crate::prelude::*;
-use crate::service::settings::get_data_path;
+use crate::config::get_data_path;
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
+use sea_orm::{Database, DbConn};
 use std::sync::Once;
 
 #[allow(dead_code)]

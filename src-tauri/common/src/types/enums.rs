@@ -42,6 +42,13 @@ pub enum ClippyPosition {
 
 #[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
+pub enum SyncProviderType {
+    #[iden = "google_drive"]
+    GoogleDrive,
+}
+
+#[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum FolderLocation {
     #[iden = "database"]
     Database,

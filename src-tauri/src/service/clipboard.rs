@@ -1,6 +1,5 @@
-use crate::service::global::{get_app, get_main_window};
-use crate::{connection, prelude::*};
-use crate::{service::sync::SyncProvider, utils::providers::google_drive::GoogleDriveProvider};
+use super::sync::get_sync_provider;
+use crate::prelude::*;
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
 use common::types::enums::{ClipboardTextType, ClipboardType, Language};
@@ -17,7 +16,8 @@ use sea_orm::{
     QueryOrder, QuerySelect, QueryTrait,
 };
 use std::collections::HashMap;
-use std::sync::Arc;
+use tao::connection::db;
+use tao::global::{get_app, get_main_window};
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use tokio::try_join;
@@ -25,9 +25,7 @@ use tokio::try_join;
 pub async fn load_clipboards_with_relations(
     clipboards: Vec<clipboard::Model>,
 ) -> Vec<FullClipboardDto> {
-    let db = connection::db()
-        .await
-        .expect("Failed to establish connection");
+    let db = db().await.expect("Failed to establish connection");
 
     let (texts, htmls, images, rtfs, files) = try_join!(
         clipboards.load_one(clipboard_text::Entity, &db),
@@ -58,7 +56,7 @@ pub async fn load_clipboards_with_relations(
 }
 
 pub async fn get_clipboard_count_db() -> Result<u64, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     let count = clipboard::Entity::find().count(&db).await?;
 
@@ -66,7 +64,7 @@ pub async fn get_clipboard_count_db() -> Result<u64, DbErr> {
 }
 
 pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboardDto, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
     let clipboard = model.clipboard_model.insert(&db).await?;
 
     // Insert text if data exists
@@ -136,7 +134,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
 }
 
 pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<FullClipboardDto, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     // Upsert clipboard - if id exists it will update, otherwise insert
     let clipboard = entity::clipboard::ActiveModel::from(model.clipboard)
@@ -202,7 +200,7 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<FullClipboa
 }
 
 pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
     let clipboard = clipboard::Entity::find_by_id(id)
         .one(&db)
         .await?
@@ -214,7 +212,7 @@ pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
 }
 
 pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     let last_clipboard = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)
@@ -240,7 +238,7 @@ pub async fn get_clipboards_db(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<Vec<FullClipboardDto>, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
     let (clipboard_keywords, text_keywords) = KeywordBuilder::build_default();
 
     let settings = get_app().state::<settings::Model>();
@@ -344,7 +342,7 @@ pub async fn get_clipboards_db(
 }
 
 pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
     let settings: tauri::State<'_, settings::Model> = get_app().state::<settings::Model>();
 
     let sync_amount_clipboards = clipboard::Entity::find()
@@ -378,7 +376,7 @@ pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbE
 }
 
 pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandError> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     let model = clipboard::ActiveModel {
         id: Set(id),
@@ -390,11 +388,7 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
 
     let delete_id = id.clone();
     tauri::async_runtime::spawn(async move {
-        let provider = Arc::new(
-            GoogleDriveProvider::new()
-                .await
-                .expect("Failed to initialize sync provider"),
-        );
+        let provider = get_sync_provider().await?;
 
         provider
             .delete_by_id(&delete_id)
@@ -406,17 +400,13 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
 }
 
 pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     clipboard::Entity::delete_by_id(id).exec(&db).await?;
 
     let delete_id = id.clone();
     tauri::async_runtime::spawn(async move {
-        let provider = Arc::new(
-            GoogleDriveProvider::new()
-                .await
-                .expect("Failed to initialize sync provider"),
-        );
+        let provider = get_sync_provider().await?;
 
         provider
             .delete_by_id(&delete_id)
@@ -428,7 +418,7 @@ pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
 }
 
 pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     match r#type {
         None => {
@@ -512,7 +502,7 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
 }
 
 pub async fn count_clipboards_db() -> Result<u64, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     let count = clipboard::Entity::find().count(&db).await?;
 
@@ -520,7 +510,7 @@ pub async fn count_clipboards_db() -> Result<u64, DbErr> {
 }
 
 pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, NaiveDateTime>, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     let clipboards = clipboard::Entity::find()
         .select_only()
@@ -534,7 +524,7 @@ pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, NaiveDateTime>, Db
 }
 
 pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
-    let db = connection::db().await?;
+    let db = db().await?;
 
     let model = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)

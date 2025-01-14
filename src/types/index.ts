@@ -108,11 +108,12 @@ export type Hotkey = {
 export type Settings = {
   id: number;
   language: Language;
-
   startup: boolean;
-  synchronize: boolean;
-  tooltip: boolean;
+  sync: boolean;
+  sync_limit: number;
+  sync_provider: "google_drive";
   dark_mode: boolean;
+  tooltip: boolean;
   display_scale: number;
   position: ClippyPosition;
 
