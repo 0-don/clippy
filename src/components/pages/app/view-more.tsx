@@ -1,4 +1,4 @@
-import { Component, Show } from "solid-js";
+import { Component, createEffect, Show } from "solid-js";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { Hotkey } from "../../../types";
@@ -11,6 +11,10 @@ interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
   const { t } = useLanguage();
+
+  createEffect(() => {
+    console.log(SettingsStore.settings());
+  });
 
   const createButton = (name: ViewMoreName, callback: () => void) => {
     const hotkey = HotkeyStore.hotkeys().find((key) => key.name === name) as Hotkey;
@@ -38,7 +42,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
             <p class="px-4 text-base font-semibold">{t(name)}</p>
           </div>
           {name === "MAIN.HOTKEY.SYNC_CLIPBOARD_HISTORY" && (
-            <Toggle checked={SettingsStore.settings()?.synchronize} onChange={async () => {}} />
+            <Toggle checked={SettingsStore.settings()?.sync} onChange={async () => {}} />
           )}
         </div>
         <hr class="border-zinc-700" />

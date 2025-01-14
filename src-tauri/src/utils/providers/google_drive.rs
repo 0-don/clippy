@@ -1,25 +1,52 @@
-use crate::service::{global::get_app, sync::SyncProvider};
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
     constants::{BACKUP_FILE_PREFIX, TOKEN_NAME},
-    types::{orm_query::FullClipboardDto, types::CommandError},
+    types::{
+        orm_query::FullClipboardDto,
+        sync::{CachedFiles, SyncProvider},
+        types::CommandError,
+    },
 };
 use entity::settings;
-use google_drive3::{api::*, hyper_rustls, hyper_util, yup_oauth2, DriveHub};
+use google_drive3::{
+    api::*,
+    hyper_rustls, hyper_util,
+    yup_oauth2::{self, authenticator_delegate::InstalledFlowDelegate},
+    DriveHub,
+};
 use http_body_util::BodyExt;
 use migration::async_trait;
 use sea_orm::prelude::Uuid;
 use std::{
     collections::HashMap,
+    future::Future,
     io::Cursor,
+    pin::Pin,
     sync::{Arc, Mutex},
     time::{Duration, Instant},
 };
+use tao::{config::get_data_path, global::get_app};
 use tauri::Manager;
+use tauri_plugin_opener::OpenerExt;
 
-struct CachedFiles {
-    files: Vec<File>,
-    timestamp: Instant,
+pub struct BrowserUrlOpenFlowDelegate;
+
+#[async_trait::async_trait]
+impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
+    fn present_user_url<'a>(
+        &'a self,
+        url: &'a str,
+        _need_code: bool,
+    ) -> Pin<Box<dyn Future<Output = Result<String, String>> + Send + 'a>> {
+        Box::pin(async move {
+            println!("{}", url);
+            get_app()
+                .opener()
+                .open_url(url, None::<String>)
+                .expect("Failed to open URL");
+            Ok(String::new())
+        })
+    }
 }
 
 pub struct GoogleDriveProvider {
@@ -39,13 +66,13 @@ impl GoogleDriveProvider {
             ..Default::default()
         };
 
-        let token_path =
-            std::path::Path::new(&crate::service::settings::get_data_path().config_path)
-                .join(TOKEN_NAME);
+        let token_path = std::path::Path::new(&get_data_path().config_path).join(TOKEN_NAME);
+
         let auth = yup_oauth2::InstalledFlowAuthenticator::builder(
             secret,
-            yup_oauth2::InstalledFlowReturnMethod::Interactive,
+            yup_oauth2::InstalledFlowReturnMethod::HTTPRedirect,
         )
+        .flow_delegate(Box::new(BrowserUrlOpenFlowDelegate))
         .persist_tokens_to_disk(token_path)
         .build()
         .await?;

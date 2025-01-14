@@ -14,13 +14,6 @@ pub struct FullClipboardDto {
     pub files: Vec<clipboard_file::Model>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ClipboardsResponse {
-    pub clipboards: Vec<FullClipboardDto>,
-    pub total: u64,
-    pub has_more: bool,
-}
-
 #[derive(Debug, Clone)]
 pub struct FullClipboardDbo {
     pub clipboard_model: entity::clipboard::ActiveModel,
@@ -30,3 +23,11 @@ pub struct FullClipboardDbo {
     pub clipboard_rtf_model: entity::clipboard_rtf::ActiveModel,
     pub clipboard_files_model: Vec<entity::clipboard_file::ActiveModel>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClipboardsResponse {
+    pub clipboards: Vec<FullClipboardDto>,
+    pub total: u64,
+    pub has_more: bool,
+}
+

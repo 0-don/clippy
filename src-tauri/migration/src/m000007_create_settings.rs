@@ -7,7 +7,7 @@ use common::{
         SYNC_LIMIT_SIZE_MIN,
     },
     io::language::get_system_language,
-    types::enums::{ClippyPosition, Language},
+    types::enums::{ClippyPosition, Language, SyncProviderType},
 };
 use sea_orm::Iterable;
 use sea_orm_migration::{
@@ -24,6 +24,7 @@ enum Settings {
     Startup,
     Sync,
     SyncLimit,
+    SyncProvider,
     Tooltip,
     DarkMode,
     DisplayScale,
@@ -68,6 +69,22 @@ impl MigrationTrait for Migration {
                                 .gte(SYNC_LIMIT_SIZE_MIN)
                                 .lte(SYNC_LIMIT_SIZE_MAX),
                         ),
+                    )
+                    .col(
+                        string(Settings::SyncProvider)
+                            .default(
+                                SyncProviderType::iter()
+                                    .next()
+                                    .expect("no default value")
+                                    .to_string(),
+                            )
+                            .check(
+                                Expr::col(Settings::SyncProvider).is_in(
+                                    SyncProviderType::iter()
+                                        .map(|x| x.to_string())
+                                        .collect::<Vec<String>>(),
+                                ),
+                            ),
                     )
                     .col(boolean(Settings::DarkMode).default(true))
                     .col(boolean(Settings::Tooltip).default(true))

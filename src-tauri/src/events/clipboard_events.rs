@@ -1,5 +1,6 @@
-use crate::{service::global::get_app, utils::clipboard_manager::ClipboardManagerExt};
+use crate::utils::clipboard_manager::ClipboardManagerExt;
 use common::types::orm_query::FullClipboardDbo;
+use tao::global::get_app;
 use tauri::{Listener, Manager};
 use tauri_plugin_clipboard::Clipboard;
 

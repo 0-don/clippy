@@ -1,7 +1,6 @@
 use crate::prelude::*;
 use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
-    global::{get_app, get_app_window},
     window::calculate_thumbnail_dimensions,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
@@ -12,6 +11,7 @@ use entity::settings;
 use image::imageops;
 use regex::Regex;
 use sea_orm::prelude::Uuid;
+use tao::global::{get_app, get_app_window};
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;

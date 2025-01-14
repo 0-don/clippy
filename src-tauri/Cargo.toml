@@ -15,7 +15,7 @@ name = "tauri_app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [workspace]
-members = [".", "migration", "entity", "common"]
+members = [".", "migration", "entity", "common", "tao"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -24,6 +24,7 @@ tauri-build = { version = "2", features = [] }
 entity = { path = "entity" }
 migration = { path = "migration" }
 common = { path = "common" }
+tao = { path = "tao" }
 
 color-backtrace = "0"
 

@@ -1,13 +1,12 @@
 mod commands;
-mod connection;
+mod config;
 mod events;
 mod prelude;
 mod service;
-mod tauri_config;
 mod utils;
 
 use commands::{clipboard, hotkey, settings, sync, window};
-use tauri_config::setup;
+use config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

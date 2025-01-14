@@ -1,15 +1,12 @@
-use super::global::{get_app, get_main_window};
 use crate::prelude::*;
-use crate::{
-    service::global::get_window_stop_tx,
-    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
-};
+use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys};
 use common::constants::{
     ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
     SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
 };
 use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
 use entity::settings;
+use tao::global::{get_app, get_main_window, get_window_stop_tx};
 use std::env;
 use std::process::Command;
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
@@ -215,7 +212,7 @@ pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
 }
 
 pub async fn create_about_window(title: Option<String>) {
-    let app = crate::service::global::get_app();
+    let app = get_app();
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window(WebWindow::About.to_string().as_str()) {
@@ -241,7 +238,7 @@ pub async fn create_about_window(title: Option<String>) {
 }
 
 pub async fn create_settings_window(title: Option<String>) {
-    let app = crate::service::global::get_app();
+    let app = get_app();
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window(WebWindow::Settings.to_string().as_str()) {
