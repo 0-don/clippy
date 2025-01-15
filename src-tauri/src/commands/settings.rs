@@ -1,6 +1,5 @@
-use crate::service::{
-    hotkey::with_hotkeys,
-    settings::{autostart, get_settings_db, update_settings_db},
+use crate::service::settings::{
+    autostart, get_settings_db, init_window_settings, update_settings_db,
 };
 use common::types::types::CommandError;
 use entity::settings::Model;
@@ -13,7 +12,7 @@ pub async fn get_settings() -> Result<Model, CommandError> {
 
 #[tauri::command]
 pub async fn update_settings(settings: Model) {
-    with_hotkeys(false, async move {
+    init_window_settings(async move {
         update_settings_db(settings)
             .await
             .expect("Failed to update settings");

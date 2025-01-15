@@ -14,7 +14,7 @@ export function listenEvent<EventName extends keyof TauriListenEvents>(
 
 export function invokeCommand<Command extends keyof TauriInvokeCommands>(
   command: Command,
-  args?: TauriInvokeCommands[Command]["args"]
+  ...args: TauriInvokeCommands[Command]["args"] extends undefined ? [] : [TauriInvokeCommands[Command]["args"]]
 ): Promise<TauriInvokeCommands[Command]["return"]> {
-  return invoke(command, args);
+  return invoke(command, args[0]);
 }

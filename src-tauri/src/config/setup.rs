@@ -1,4 +1,3 @@
-use tao::{config::create_config, tauri_constants::init_globals};
 use super::tray::init_system_tray;
 use crate::{
     events::{
@@ -7,6 +6,7 @@ use crate::{
     },
     service::{settings::init_settings, sync::init_sync_interval, window::init_window},
 };
+use tao::{config::create_config, tauri_constants::init_globals};
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
     init_globals(app);

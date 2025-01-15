@@ -51,6 +51,7 @@ pub fn run() {
             //
             sync::sync_is_authenticated,
             sync::sync_authenticate_toggle,
+            sync::sync_limit_change,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

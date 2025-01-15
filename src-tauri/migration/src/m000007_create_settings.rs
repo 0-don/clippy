@@ -3,7 +3,7 @@ use common::{
         DISPLAY_SCALE, DISPLAY_SCALE_MAX, DISPLAY_SCALE_MIN, MAX_FILE_SIZE, MAX_FILE_SIZE_MAX,
         MAX_FILE_SIZE_MIN, MAX_HTML_SIZE, MAX_HTML_SIZE_MAX, MAX_HTML_SIZE_MIN, MAX_IMAGE_SIZE,
         MAX_IMAGE_SIZE_MAX, MAX_IMAGE_SIZE_MIN, MAX_RTF_SIZE, MAX_RTF_SIZE_MAX, MAX_RTF_SIZE_MIN,
-        MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN, SYNC_LIMIT_SIZE, SYNC_LIMIT_SIZE_MAX,
+        MAX_TEXT_SIZE, MAX_TEXT_SIZE_MIN, SYNC_LIMIT_SIZE_DEV, SYNC_LIMIT_SIZE_MAX,
         SYNC_LIMIT_SIZE_MIN,
     },
     io::language::get_system_language,
@@ -43,6 +43,12 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let sync_size = if cfg!(debug_assertions) {
+            SYNC_LIMIT_SIZE_DEV
+        } else {
+            SYNC_LIMIT_SIZE_MAX
+        };
+
         manager
             .create_table(
                 Table::create()
@@ -64,7 +70,7 @@ impl MigrationTrait for Migration {
                     .col(boolean(Settings::Startup).default(true))
                     .col(boolean(Settings::Sync).default(false))
                     .col(
-                        integer(Settings::SyncLimit).default(SYNC_LIMIT_SIZE).check(
+                        integer(Settings::SyncLimit).default(sync_size).check(
                             Expr::col(Settings::SyncLimit)
                                 .gte(SYNC_LIMIT_SIZE_MIN)
                                 .lte(SYNC_LIMIT_SIZE_MAX),

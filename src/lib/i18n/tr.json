@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "Yapılandırma konumu",
 			"DATABASE_LOCATION": "Veritabanı konumu",
 			"OPEN": "Açık",
+			"RESET_LOCATION": "Konumu sıfırla",
 			"SYNC": "Senkronizasyon",
+			"SYNC_LIMIT": "Kaç panonun senkronize edilmesi gerekiyor?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
 		},
 		"GENERAL": {

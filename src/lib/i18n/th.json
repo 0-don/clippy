@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "กำหนดค่าตำแหน่ง",
 			"DATABASE_LOCATION": "ตำแหน่งที่ตั้งฐานข้อมูล",
 			"OPEN": "เปิด",
+			"RESET_LOCATION": "รีเซ็ตตำแหน่ง",
 			"SYNC": "การซิงค์",
+			"SYNC_LIMIT": "จะต้องซิงค์คลิปบอร์ดกี่อัน?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด"
 		},
 		"GENERAL": {

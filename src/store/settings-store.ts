@@ -50,6 +50,8 @@ function createSettingsStore() {
 
   const changeClipboardDbLocation = async () => invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
 
+  const resetClipboardDbLocation = async () => invokeCommand(InvokeCommand.ResetClipboardDbLocation);
+
   const syncAuthenticateToggle = async () => invokeCommand(InvokeCommand.SyncAuthenticateToggle);
 
   const openWindow = async (windowName: WebWindow, title: string) =>
@@ -67,6 +69,7 @@ function createSettingsStore() {
     getCurrentTab,
     initSettings,
     changeClipboardDbLocation,
+    resetClipboardDbLocation,
     syncAuthenticateToggle,
     openWindow,
     exitApp,

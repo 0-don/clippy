@@ -1,4 +1,4 @@
-use crate::config::get_data_path;
+use crate::config::{get_config, get_data_path};
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{Database, DbConn};
@@ -9,7 +9,7 @@ static INIT: Once = Once::new();
 
 pub async fn db() -> Result<DbConn, DbErr> {
     let database_url = if cfg!(debug_assertions) {
-        format!("sqlite://../{}?mode=rwc", DB_NAME)
+        get_debug_database_url()
     } else {
         get_prod_database_url()
     };
@@ -43,4 +43,14 @@ fn get_prod_database_url() -> String {
     let db = format!("sqlite://{}?mode=rwc", config.db);
 
     db
+}
+
+fn get_debug_database_url() -> String {
+    let (config, data_path) = get_config();
+
+    if config.db != data_path.db_file_path {
+        format!("sqlite://{}?mode=rwc", config.db)
+    } else {
+        format!("sqlite://../{}?mode=rwc", DB_NAME)
+    }
 }

@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "Emplacement de la configuration",
 			"DATABASE_LOCATION": "Emplacement de la base de données",
 			"OPEN": "Ouvrir",
+			"RESET_LOCATION": "Réinitialiser l'emplacement",
 			"SYNC": "Synchroniser",
+			"SYNC_LIMIT": "Combien de presse-papiers doivent être synchronisés ?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
 		},
 		"GENERAL": {

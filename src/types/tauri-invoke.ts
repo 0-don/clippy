@@ -23,6 +23,7 @@ export enum InvokeCommand {
   UpdateSettings = "update_settings",
   ToggleAutostart = "toggle_autostart",
   ChangeClipboardDbLocation = "change_clipboard_db_location",
+  ResetClipboardDbLocation = "reset_clipboard_db_location",
 
   // Window commands
   OpenNewWindow = "open_new_window",
@@ -33,6 +34,7 @@ export enum InvokeCommand {
   // Sync commands
   SyncIsAuthenticated = "sync_is_authenticated",
   SyncAuthenticateToggle = "sync_authenticate_toggle",
+  SyncLimitChange = "sync_limit_change",
 
   // App info commands
   GetAppVersion = "get_app_version",
@@ -105,6 +107,10 @@ export interface TauriInvokeCommands {
     args: undefined;
     return: void;
   };
+  [InvokeCommand.ResetClipboardDbLocation]: {
+    args: undefined;
+    return: void;
+  };
 
   // Window commands
   [InvokeCommand.OpenNewWindow]: {
@@ -132,6 +138,10 @@ export interface TauriInvokeCommands {
   [InvokeCommand.SyncAuthenticateToggle]: {
     args: undefined;
     return: boolean;
+  };
+  [InvokeCommand.SyncLimitChange]: {
+    args: { syncLimit: number };
+    return: Settings;
   };
 
   // App info commands

@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "Ubicación de configuración",
 			"DATABASE_LOCATION": "Ubicación de la base de datos",
 			"OPEN": "Abierto",
+			"RESET_LOCATION": "Restablecer ubicación",
 			"SYNC": "Sincronizar",
+			"SYNC_LIMIT": "¿Cuántos portapapeles se deben sincronizar?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
 		},
 		"GENERAL": {

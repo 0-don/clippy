@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "구성 위치",
 			"DATABASE_LOCATION": "데이터베이스 위치",
 			"OPEN": "열려 있는",
+			"RESET_LOCATION": "위치 재설정",
 			"SYNC": "동조",
+			"SYNC_LIMIT": "몇 개의 클립보드를 동기화해야 하나요?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"
 		},
 		"GENERAL": {
