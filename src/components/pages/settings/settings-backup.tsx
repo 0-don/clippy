@@ -1,13 +1,15 @@
 import { AiTwotoneFolderOpen } from "solid-icons/ai";
+import { BiRegularReset } from "solid-icons/bi";
 import { BsGearWideConnected } from "solid-icons/bs";
-import { RiDeviceSave3Fill } from "solid-icons/ri";
 import { SiSqlite } from "solid-icons/si";
-import { TbDatabaseStar, TbExchange } from "solid-icons/tb";
-import { Component, createResource } from "solid-js";
+import { TbDatabaseStar, TbExchange, TbNumber } from "solid-icons/tb";
+import { Component, createResource, Show } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
+import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
-import { FolderLocation } from "../../../types/enums";
+import { FolderLocation, HotkeyEvent } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
+import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { useLanguage } from "../../provider/language-provider";
@@ -24,7 +26,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
       <TextBlock Icon={TbDatabaseStar} title={t("SETTINGS.BACKUP.SYNC")}>
         <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
           <div class="flex items-center space-x-2 truncate">
-            <RiDeviceSave3Fill />
+            <div innerHTML={HotkeyStore.getHotkeyIcon(HotkeyEvent.SyncClipboardHistory)} class="relative" />
             <h6 class="text-sm">{t("SETTINGS.BACKUP.SYNCHRONIZE_CLIPBOARD_HISTORY")}</h6>
           </div>
 
@@ -32,10 +34,33 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             checked={!!SettingsStore.settings()?.sync}
             onChange={async () => {
               await SettingsStore.syncAuthenticateToggle();
-              setDatabaseUrl.refetch();
+              // SettingsStore.setSettings({ ...SettingsStore.settings()!, sync: !SettingsStore.settings()!.sync });
             }}
           />
         </div>
+
+        <Show when={SettingsStore.settings()?.sync}>
+          <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+            <div class="flex items-center space-x-2 truncate">
+              <TbNumber />
+              <h6 class="text-sm">{t("SETTINGS.BACKUP.SYNC_LIMIT")}</h6>
+            </div>
+
+            <Input
+              type="number"
+              min={0}
+              max={1000}
+              value={SettingsStore.settings()!.sync_limit}
+              debounce={1000}
+              onInput={async (e) => {
+                const settings = await invokeCommand(InvokeCommand.SyncLimitChange, {
+                  syncLimit: Number(e.target.value),
+                });
+                SettingsStore.setSettings(settings);
+              }}
+            />
+          </div>
+        </Show>
       </TextBlock>
 
       <TextBlock Icon={SiSqlite} title={t("SETTINGS.BACKUP.DATABASE_LOCATION")}>
@@ -49,6 +74,18 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             </div>
           </div>
           <div class="mt-1 flex items-center justify-end gap-1">
+            <button
+              type="button"
+              onClick={async () => {
+                await SettingsStore.resetClipboardDbLocation();
+                setDatabaseUrl.refetch();
+              }}
+              class="group my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
+            >
+              <BiRegularReset class="dark:text-white" />
+              <div>{t("SETTINGS.BACKUP.RESET_LOCATION")}</div>
+            </button>
+
             <button
               type="button"
               onClick={async () => {

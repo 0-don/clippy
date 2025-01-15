@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "配置位置",
 			"DATABASE_LOCATION": "数据库位置",
 			"OPEN": "打开",
+			"RESET_LOCATION": "重置位置",
 			"SYNC": "同步",
+			"SYNC_LIMIT": "应该同步多少个剪贴板？",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"
 		},
 		"GENERAL": {

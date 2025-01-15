@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "Local de configuração",
 			"DATABASE_LOCATION": "Localização da base de dados",
 			"OPEN": "Abrir",
+			"RESET_LOCATION": "Redefinir local",
 			"SYNC": "Sincronizar",
+			"SYNC_LIMIT": "Quantas áreas de transferência devem ser sincronizadas?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
 		},
 		"GENERAL": {

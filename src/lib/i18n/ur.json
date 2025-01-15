@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "مقام ترتیب دیں۔",
 			"DATABASE_LOCATION": "ڈیٹا بیس کا مقام",
 			"OPEN": "کھولیں۔",
+			"RESET_LOCATION": "مقام کو دوبارہ ترتیب دیں۔",
 			"SYNC": "مطابقت پذیری",
+			"SYNC_LIMIT": "کتنے کلپ بورڈز کو مطابقت پذیر ہونا چاہئے؟",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "کلپ بورڈ کی تاریخ کو ہم آہنگ کریں۔"
 		},
 		"GENERAL": {

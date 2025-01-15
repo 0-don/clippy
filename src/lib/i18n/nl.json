@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "Configuratielocatie",
 			"DATABASE_LOCATION": "Locatie van de database",
 			"OPEN": "Open",
+			"RESET_LOCATION": "Locatie resetten",
 			"SYNC": "Synchroniseren",
+			"SYNC_LIMIT": "Hoeveel klemborden moeten er worden gesynchroniseerd?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
 		},
 		"GENERAL": {

@@ -1,3 +1,6 @@
+use crate::service::settings::{
+    get_settings_db, init_window_settings, update_settings_synchronize_db,
+};
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
     constants::{BACKUP_FILE_PREFIX, TOKEN_NAME},
@@ -27,12 +30,32 @@ use std::{
 };
 use tao::{config::get_data_path, global::get_app};
 use tauri::Manager;
+use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_opener::OpenerExt;
 
+#[derive(Debug)]
 pub struct BrowserUrlOpenFlowDelegate;
 
 #[async_trait::async_trait]
 impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
+    /// Configure a custom redirect uri if needed.
+    fn redirect_uri(&self) -> Option<&str> {
+        println!("Redirecting to custom URI {:?}", &self);
+        // tauri::async_runtime::spawn(async {
+        //     init_window_settings(async {
+        //         let new_sync_state = !get_settings_db()
+        //             .await
+        //             .expect("Failed to get settings")
+        //             .sync;
+        //         update_settings_synchronize_db(new_sync_state)
+        //             .await
+        //             .expect("Failed to update settings");
+        //     })
+        //     .await;
+        // });
+        None
+    }
+
     fn present_user_url<'a>(
         &'a self,
         url: &'a str,
@@ -40,6 +63,10 @@ impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
     ) -> Pin<Box<dyn Future<Output = Result<String, String>> + Send + 'a>> {
         Box::pin(async move {
             println!("{}", url);
+            let clipboard = get_app().state::<Clipboard>();
+            clipboard
+                .write_text(url.to_string())
+                .expect("Failed to write URL to clipboard");
             get_app()
                 .opener()
                 .open_url(url, None::<String>)

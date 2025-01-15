@@ -1,4 +1,4 @@
-use super::settings::{get_settings_db, update_settings_synchronize_db};
+use super::settings::get_settings_db;
 use crate::{
     prelude::*, service::clipboard::*, utils::providers::google_drive::GoogleDriveProvider,
 };
@@ -36,7 +36,7 @@ impl SyncManager {
         let interval_secs = self.interval_secs;
         tauri::async_runtime::spawn(async move {
             let mut interval = interval(Duration::from_secs(interval_secs));
-            
+
             loop {
                 tokio::select! {
                     _ = interval.tick() => {
@@ -104,7 +104,6 @@ pub fn init_sync_interval() {
 
 pub async fn sync_interval_toggle() -> Result<bool, CommandError> {
     let new_sync_state = !get_settings_db().await?.sync;
-    update_settings_synchronize_db(new_sync_state).await?;
 
     if new_sync_state {
         let provider = Arc::new(GoogleDriveProvider::new().await?);

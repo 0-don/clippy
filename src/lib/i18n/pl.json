@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "Lokalizacja konfiguracji",
 			"DATABASE_LOCATION": "Lokalizacja bazy danych",
 			"OPEN": "Otwarty",
+			"RESET_LOCATION": "Zresetuj lokalizację",
 			"SYNC": "Synchronizacja",
+			"SYNC_LIMIT": "Ile schowków powinno być synchronizowanych?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
 		},
 		"GENERAL": {

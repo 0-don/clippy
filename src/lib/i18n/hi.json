@@ -98,7 +98,9 @@
 			"CONFIG_LOCATION": "कॉन्फ़िगरेशन स्थान",
 			"DATABASE_LOCATION": "डेटाबेस स्थान",
 			"OPEN": "खुला",
+			"RESET_LOCATION": "स्थान रीसेट करें",
 			"SYNC": "साथ-साथ करना",
+			"SYNC_LIMIT": "कितने क्लिपबोर्ड को सिंक किया जाना चाहिए?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें"
 		},
 		"GENERAL": {

@@ -15,6 +15,8 @@ function createHotkeyStore() {
 
   const getHotkey = (event: HotkeyEvent) => hotkeys().find((h) => h.event === event);
 
+  const getHotkeyIcon = (event: HotkeyEvent) => JSON.parse(getHotkey(event)!.icon);
+
   const initHotkeys = async () => {
     const hotkeys = await invokeCommand(InvokeCommand.GetHotkeys);
     setHotkeys(hotkeys);
@@ -28,6 +30,7 @@ function createHotkeyStore() {
     updateHotkey,
     initHotkeys,
     getHotkey,
+    getHotkeyIcon,
   };
 }
 

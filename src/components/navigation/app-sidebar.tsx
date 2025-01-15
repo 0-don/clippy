@@ -1,8 +1,6 @@
 import { Component, For, Show } from "solid-js";
-import { invokeCommand } from "../../lib/tauri";
 import { AppStore } from "../../store/app-store";
 import { HotkeyStore } from "../../store/hotkey-store";
-import { InvokeCommand } from "../../types/tauri-invoke";
 import { useLanguage } from "../provider/language-provider";
 
 interface AppSidebarProps {}
@@ -38,20 +36,6 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
           );
         }}
       </For>
-      {import.meta.env.DEV && (
-        <button
-          onClick={async () => {
-            try {
-              const user = await invokeCommand(InvokeCommand.AuthGoogleDrive);
-              console.log(user);
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-        >
-          {import.meta.env.DEV ? "DEV" : "PROD"}
-        </button>
-      )}
       {/* {import.meta.env.DEV && (
         <button onClick={() => invokeCommand(InvokeCommand.AuthGoogleDrive)} class="">
           AUTH

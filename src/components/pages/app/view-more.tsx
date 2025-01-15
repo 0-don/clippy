@@ -1,4 +1,4 @@
-import { Component, createEffect, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { Hotkey } from "../../../types";
@@ -11,10 +11,6 @@ interface ViewMoreProps {}
 
 export const ViewMore: Component<ViewMoreProps> = ({}) => {
   const { t } = useLanguage();
-
-  createEffect(() => {
-    console.log(SettingsStore.settings());
-  });
 
   const createButton = (name: ViewMoreName, callback: () => void) => {
     const hotkey = HotkeyStore.hotkeys().find((key) => key.name === name) as Hotkey;
