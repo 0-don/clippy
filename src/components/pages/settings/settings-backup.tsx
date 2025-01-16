@@ -32,10 +32,12 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
 
           <Toggle
             checked={!!SettingsStore.settings()?.sync}
-            onChange={async () => {
-              await SettingsStore.syncAuthenticateToggle();
-              // SettingsStore.setSettings({ ...SettingsStore.settings()!, sync: !SettingsStore.settings()!.sync });
-            }}
+            onClick={
+              !SettingsStore.settings()?.sync
+                ? async () => void (await SettingsStore.syncAuthenticateToggle())
+                : undefined
+            }
+            onChange={async () => void (await SettingsStore.syncAuthenticateToggle())}
           />
         </div>
 

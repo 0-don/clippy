@@ -1,6 +1,4 @@
-use crate::service::settings::{
-    get_settings_db, init_window_settings, update_settings_synchronize_db,
-};
+use crate::service::settings::{init_window_settings, update_settings_synchronize_db};
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
     constants::{BACKUP_FILE_PREFIX, TOKEN_NAME},
@@ -38,24 +36,6 @@ pub struct BrowserUrlOpenFlowDelegate;
 
 #[async_trait::async_trait]
 impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
-    /// Configure a custom redirect uri if needed.
-    fn redirect_uri(&self) -> Option<&str> {
-        println!("Redirecting to custom URI {:?}", &self);
-        // tauri::async_runtime::spawn(async {
-        //     init_window_settings(async {
-        //         let new_sync_state = !get_settings_db()
-        //             .await
-        //             .expect("Failed to get settings")
-        //             .sync;
-        //         update_settings_synchronize_db(new_sync_state)
-        //             .await
-        //             .expect("Failed to update settings");
-        //     })
-        //     .await;
-        // });
-        None
-    }
-
     fn present_user_url<'a>(
         &'a self,
         url: &'a str,
@@ -114,10 +94,22 @@ impl GoogleDriveProvider {
                         .build(),
                 );
 
-        Ok(Self {
+        let provider = Self {
             hub: DriveHub::new(client, auth),
             cache: Arc::new(Mutex::new(None)),
-        })
+        };
+
+        // Check if we're authenticated after initialization
+        if provider.is_authenticated().await {
+            init_window_settings(async {
+                update_settings_synchronize_db(true)
+                    .await
+                    .expect("Failed to update settings");
+            })
+            .await
+        }
+
+        Ok(provider)
     }
 
     async fn fetch_all_clipboard_files(&self) -> Result<Vec<File>, Box<dyn std::error::Error>> {
