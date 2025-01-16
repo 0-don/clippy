@@ -1,4 +1,4 @@
-use super::settings::get_settings_db;
+use super::settings::{get_settings_db, init_window_settings, update_settings_synchronize_db};
 use crate::{
     prelude::*, service::clipboard::*, utils::providers::google_drive::GoogleDriveProvider,
 };
@@ -115,6 +115,12 @@ pub async fn sync_interval_toggle() -> Result<bool, CommandError> {
             *sync_manager = Some(manager);
         }
     } else {
+        init_window_settings(async {
+            update_settings_synchronize_db(false)
+                .await
+                .expect("Failed to update settings");
+        })
+        .await;
         let manager = SYNC_MANAGER.lock().unwrap().take();
         if let Some(mut manager) = manager {
             manager.stop().await;
