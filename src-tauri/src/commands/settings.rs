@@ -1,6 +1,4 @@
-use crate::service::settings::{
-    autostart, get_settings_db, init_window_settings, update_settings_db,
-};
+use crate::service::settings::{autostart, get_settings_db, update_settings_db};
 use common::types::types::CommandError;
 use entity::settings::Model;
 use tao::config::{change_clipboard_db_location_enable, reset_clipboard_db_location_disable};
@@ -12,12 +10,9 @@ pub async fn get_settings() -> Result<Model, CommandError> {
 
 #[tauri::command]
 pub async fn update_settings(settings: Model) {
-    init_window_settings(async move {
-        update_settings_db(settings)
-            .await
-            .expect("Failed to update settings");
-    })
-    .await;
+    update_settings_db(settings)
+        .await
+        .expect("Failed to update settings");
 }
 
 #[tauri::command]

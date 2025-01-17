@@ -1,75 +1,93 @@
-use crate::{prelude::*, service::clipboard::*};
-use common::types::sync::SyncProvider;
-
-use std::{
-    sync::{Arc, Mutex},
-    time::Duration,
+use crate::prelude::*;
+use crate::service::{
+    clipboard::{get_clipboard_uuids_db, get_sync_amount_cliboards_db, insert_clipboard_dto},
+    sync::get_sync_provider,
 };
-use tokio::{sync::mpsc, time::interval};
-
-pub static SYNC_MANAGER: Mutex<Option<SyncManager>> = Mutex::new(None);
+use sea_orm::prelude::Uuid;
+use std::time::Duration;
+use tokio_cron_scheduler::{Job, JobScheduler};
 
 pub struct SyncManager {
-    provider: Arc<dyn SyncProvider>,
-    interval_secs: u64,
-    shutdown_tx: Option<mpsc::Sender<()>>,
+    pub scheduler: JobScheduler,
+    pub job_id: Option<Uuid>,
 }
 
 impl SyncManager {
-    pub fn new(provider: Arc<dyn SyncProvider>, interval_secs: u64) -> Self {
+    pub async fn new() -> Self {
         Self {
-            provider,
-            interval_secs,
-            shutdown_tx: None,
+            scheduler: JobScheduler::new()
+                .await
+                .expect("Failed to create scheduler"),
+            job_id: None,
+        }
+    }
+
+    async fn sync_job() {
+        let provider = get_sync_provider().await;
+        if provider.is_authenticated().await {
+            let existing_clipboards = get_clipboard_uuids_db()
+                .await
+                .expect("Failed to get clipboard UUIDs");
+
+            let remote_clipboards = provider
+                .fetch_new_clipboards(&existing_clipboards)
+                .await
+                .expect("Failed to fetch remote clipboards");
+
+            printlog!("(remote) {} new clipboards", remote_clipboards.len());
+
+            for clipboard in remote_clipboards {
+                if let Err(e) = insert_clipboard_dto(clipboard).await {
+                    printlog!("Error inserting remote clipboard: {}", e);
+                }
+            }
+
+            let local_clipboards = get_sync_amount_cliboards_db()
+                .await
+                .expect("Failed to get local clipboards");
+
+            if let Err(e) = provider.upload_clipboards(&local_clipboards).await {
+                printlog!("Error uploading clipboards: {}", e);
+            }
         }
     }
 
     pub async fn start(&mut self) {
-        let (tx, mut rx) = mpsc::channel(1);
-        self.shutdown_tx = Some(tx);
-        let provider = self.provider.clone();
-        let interval_secs = self.interval_secs;
-        tauri::async_runtime::spawn(async move {
-            let mut interval = interval(Duration::from_secs(interval_secs));
+        if self.job_id.is_some() {
+            printlog!("Sync already running");
+            return;
+        }
+        let interval_secs = if cfg!(debug_assertions) { 5 } else { 30 };
 
-            loop {
-                tokio::select! {
-                    _ = interval.tick() => {
-                        printlog!("Syncing clipboards...");
-                        if provider.is_authenticated().await {
-                            let existing_clipboards = get_clipboard_uuids_db().await
-                                .expect("Failed to get clipboard UUIDs");
+        let job = Job::new_repeated_async(Duration::from_secs(interval_secs), move |_, _| {
+            Box::pin(async move {
+                Self::sync_job().await;
+            })
+        })
+        .expect("Failed to create job");
 
-                            let remote_clipboards = provider.fetch_clipboards(&existing_clipboards).await
-                                .expect("Failed to fetch remote clipboards");
+        let job_id = self
+            .scheduler
+            .add(job)
+            .await
+            .expect("Failed to add job to scheduler");
+        self.job_id = Some(job_id);
 
-                            printlog!("New {} remote clipboards", remote_clipboards.len());
-
-                            for clipboard in remote_clipboards {
-                                if let Err(e) = insert_clipboard_dto(clipboard).await {
-                                    printlog!("Error inserting remote clipboard: {}", e);
-                                }
-                            }
-
-                            let local_clipboards = get_sync_amount_cliboards_db().await
-                                .expect("Failed to get local clipboards");
-
-                            if let Err(e) = provider.upload_clipboards(&local_clipboards).await {
-                                printlog!("Error uploading clipboards: {}", e);
-                            }
-                        } else {
-                            printlog!("Not authenticated for sync");
-                        }
-                    }
-                    _ = rx.recv() => break
-                }
-            }
-        });
+        if let Err(err) = self.scheduler.start().await {
+            printlog!("Error starting scheduler: {}", err);
+        }
+        printlog!("Sync loop started");
     }
 
     pub async fn stop(&mut self) {
-        if let Some(tx) = self.shutdown_tx.take() {
-            let _ = tx.send(()).await;
+        if let Some(job_id) = self.job_id {
+            if let Err(err) = self.scheduler.remove(&job_id).await {
+                printlog!("Error removing job: {}", err);
+            }
+            self.job_id = None;
+            printlog!("Sync loop stopped");
+        } else {
+            printlog!("Sync loop not running");
         }
     }
 }

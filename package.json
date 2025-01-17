@@ -24,7 +24,7 @@
     "solid-js": "1.9.4"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "2.2.4",
+    "@tauri-apps/cli": "2.2.5",
     "autoprefixer": "10.4.20",
     "cross-env": "7.0.3",
     "postcss": "8.5.1",

@@ -367,7 +367,7 @@ pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbE
         .collect::<Vec<_>>();
 
     printlog!(
-        "clipboards regular: {:?} clipboards favorite: {:?}",
+        "(local) clipboards: {:?} favorite: {:?}",
         sync_amount_clipboards.len(),
         sync_favorite_clipboards.len()
     );
@@ -388,7 +388,7 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
 
     let delete_id = id.clone();
     tauri::async_runtime::spawn(async move {
-        let provider = get_sync_provider().await?;
+        let provider = get_sync_provider().await;
 
         provider
             .delete_by_id(&delete_id)
@@ -406,7 +406,7 @@ pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
 
     let delete_id = id.clone();
     tauri::async_runtime::spawn(async move {
-        let provider = get_sync_provider().await?;
+        let provider = get_sync_provider().await;
 
         provider
             .delete_by_id(&delete_id)
