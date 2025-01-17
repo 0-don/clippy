@@ -9,6 +9,7 @@ import { Settings, SettingsTab } from "../types";
 import { WebWindow } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { SETTINGS_TAB, SettingsTabName } from "../utils/constants";
+import { AppStore } from "./app-store";
 
 function createSettingsStore() {
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
@@ -43,9 +44,11 @@ function createSettingsStore() {
     await invokeCommand(InvokeCommand.ToggleAutostart);
   };
 
-  const initSettings = async () => {
+  const init = async () => {
     const settings = await invokeCommand(InvokeCommand.GetSettings);
     setSettings(settings);
+    AppStore.darkMode();
+    AppStore.setLocale.refetch();
   };
 
   const changeClipboardDbLocation = async () => invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
@@ -67,12 +70,13 @@ function createSettingsStore() {
     setTabs,
     setCurrentTab,
     getCurrentTab,
-    initSettings,
+    init,
     changeClipboardDbLocation,
     resetClipboardDbLocation,
     syncAuthenticateToggle,
     openWindow,
     exitApp,
+    
   };
 }
 

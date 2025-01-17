@@ -102,8 +102,12 @@ pub enum Language {
 #[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum ListenEvent {
-    #[iden = "init"]
-    Init,
+    #[iden = "init_clipboards"]
+    InitClipboards,
+    #[iden = "init_hotkeys"]
+    InitHotkeys,
+    #[iden = "init_settings"]
+    InitSettings,
     #[iden = "enable_global_hotkey_event"]
     EnableGlobalHotkeyEvent,
     #[iden = "change_tab"]

@@ -73,7 +73,7 @@ pub async fn parse_hotkey_event(key: &Key) {
                 .emit(ListenEvent::ScrollToTop.to_string().as_str(), ())
                 .expect("Failed to emit event");
             get_main_window()
-                .emit(ListenEvent::Init.to_string().as_str(), ())
+                .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
                 .expect("Failed to emit event");
         }
         Some(HotkeyEvent::TypeClipboard) => {

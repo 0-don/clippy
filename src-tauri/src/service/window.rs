@@ -6,9 +6,9 @@ use common::constants::{
 };
 use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
 use entity::settings;
-use tao::global::{get_app, get_main_window, get_window_stop_tx};
 use std::env;
 use std::process::Command;
+use tao::global::{get_app, get_main_window, get_window_stop_tx};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
 use tauri_plugin_positioner::{Position, WindowExt};
@@ -50,9 +50,16 @@ pub fn toggle_main_window() {
             )
             .expect("Failed to emit set global hotkey event");
     } else {
+        let settings = get_app().state::<settings::Model>();
+        printlog!(
+            "toggle_main_window - Current app state settings: {:?}",
+            settings
+        );
+
         update_main_window_position();
 
         let size = calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y);
+        printlog!("size with scale {}: {:?}", settings.display_scale, size);
         get_main_window()
             .set_size(size)
             .expect("Failed to set window size");
@@ -325,6 +332,8 @@ fn get_x11_scaling_factor() -> Option<f32> {
 
 pub fn calculate_logical_size(width: i32, height: i32) -> LogicalSize<u32> {
     let settings = get_app().state::<settings::Model>();
+
+    printlog!("calculate settings: {:?}", settings);
 
     let physical_width = (width as f32 * settings.display_scale) as u32;
     let physical_height = (height as f32 * settings.display_scale) as u32;

@@ -72,7 +72,7 @@ pub async fn delete_clipboard(id: Uuid) -> Result<(), CommandError> {
 pub async fn clear_clipboards(r#type: Option<ClipboardType>) -> Result<(), CommandError> {
     clear_clipboards_db(r#type).await?;
     get_main_window()
-        .emit(ListenEvent::Init.to_string().as_str(), ())
+        .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
         .expect("Failed to emit");
     Ok(())
 }

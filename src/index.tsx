@@ -1,4 +1,4 @@
-import { createResource, onMount } from "solid-js";
+import { onMount } from "solid-js";
 import { render } from "solid-js/web";
 import App from "./components/pages/app/app";
 import LanguageProvider from "./components/provider/language-provider";
@@ -6,14 +6,20 @@ import { listenEvent } from "./lib/tauri";
 import { AppStore } from "./store/app-store";
 import { ClipboardStore } from "./store/clipboard-store";
 import { HotkeyStore } from "./store/hotkey-store";
+import { SettingsStore } from "./store/settings-store";
 import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
 
 const Index = () => {
-  createResource(AppStore.init);
+  onMount(() => {
+    SettingsStore.init();
+    HotkeyStore.init();
+  });
 
   onMount(() => {
-    listenEvent(ListenEvent.Init, AppStore.init);
+    listenEvent(ListenEvent.InitSettings, SettingsStore.init);
+
+    listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
 
     listenEvent(ListenEvent.EnableGlobalHotkeyEvent, HotkeyStore.enableGlobalHotkeyEvent);
 
