@@ -1,17 +1,14 @@
 use super::clipboard::get_last_clipboard_db;
 use crate::prelude::*;
 use crate::service::window::get_monitor_scale_factor;
-use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store};
 use common::io::language::get_system_language;
-use common::types::enums::{ListenEvent, WebWindow};
-use core::future::Future;
+use common::types::enums::ListenEvent;
 use entity::settings::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use tao::connection::db;
 use tao::global::get_app;
-use tao::global::get_main_window;
-use tauri::Emitter;
 use tauri::Manager;
+use tauri::{Emitter, EventTarget};
 use tauri_plugin_autostart::AutoLaunchManager;
 
 pub fn autostart() {
@@ -46,11 +43,13 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
 
     let active_model: ActiveModel = settings.into();
 
-    let _ = settings::Entity::update(active_model.reset_all())
+    let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    Ok(get_settings_db().await?)
+    init_settings_window();
+
+    Ok(settings)
 }
 
 pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Model, DbErr> {
@@ -62,11 +61,13 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
 
     let active_model: ActiveModel = settings.into();
 
-    let _ = settings::Entity::update(active_model.reset_all())
+    let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    Ok(get_settings_db().await?)
+    init_settings_window();
+
+    Ok(settings)
 }
 
 pub fn init_settings() {
@@ -89,35 +90,12 @@ pub fn init_settings() {
     });
 }
 
-pub async fn init_window_settings<T, F>(action: F) -> T
-where
-    F: Future<Output = T>,
-{
-    unregister_hotkeys(true);
-
-    let result = action.await;
-    upsert_hotkeys_in_store()
-        .await
-        .expect("Failed to upsert hotkeys in store");
-
-    register_hotkeys(false);
-    get_main_window()
-        .emit(ListenEvent::InitSettings.to_string().as_str(), ())
-        .expect("Failed to emit init event");
-    get_main_window()
-        .emit(ListenEvent::InitHotkeys.to_string().as_str(), ())
-        .expect("Failed to emit init event");
-
-    if let Some(settings_window) =
-        get_app().get_webview_window(WebWindow::Settings.to_string().as_str())
-    {
-        settings_window
-            .emit(ListenEvent::InitSettings.to_string().as_str(), ())
-            .expect("Failed to emit init event");
-        settings_window
-            .emit(ListenEvent::InitHotkeys.to_string().as_str(), ())
-            .expect("Failed to emit init event");
-    }
-
-    result
+pub fn init_settings_window() {
+    get_app()
+        .emit_to(
+            EventTarget::any(),
+            ListenEvent::InitSettings.to_string().as_str(),
+            (),
+        )
+        .expect("Failed to emit download progress event");
 }

@@ -1,10 +1,13 @@
-use crate::service::settings::{init_window_settings, update_settings_synchronize_db};
+use crate::{
+    service::settings::update_settings_synchronize_db, utils::providers::create_clipboard_filename,
+};
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
     constants::{BACKUP_FILE_PREFIX, TOKEN_NAME},
+    printlog,
     types::{
         orm_query::FullClipboardDto,
-        sync::{CachedFiles, SyncProvider},
+        sync::{ClippyInfo, GoogleDriveProvider, SyncProvider},
         types::CommandError,
     },
 };
@@ -18,20 +21,14 @@ use google_drive3::{
 use http_body_util::BodyExt;
 use migration::async_trait;
 use sea_orm::prelude::Uuid;
-use std::{
-    collections::HashMap,
-    future::Future,
-    io::Cursor,
-    pin::Pin,
-    sync::{Arc, Mutex},
-    time::{Duration, Instant},
-};
+use std::{collections::HashMap, future::Future, io::Cursor, pin::Pin};
 use tao::{config::get_data_path, global::get_app};
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_opener::OpenerExt;
 
-#[derive(Debug)]
+use super::parse_clipboard_info;
+
 pub struct BrowserUrlOpenFlowDelegate;
 
 #[async_trait::async_trait]
@@ -56,14 +53,9 @@ impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
     }
 }
 
-pub struct GoogleDriveProvider {
-    hub: DriveHub<hyper_rustls::HttpsConnector<hyper_util::client::legacy::connect::HttpConnector>>,
-    cache: Arc<Mutex<Option<CachedFiles>>>,
-}
+pub struct GoogleDriveProviderImpl(GoogleDriveProvider);
 
-impl GoogleDriveProvider {
-    const CACHE_TTL: Duration = Duration::from_secs(20);
-
+impl GoogleDriveProviderImpl {
     pub async fn new() -> Result<Self, CommandError> {
         let secret = yup_oauth2::ApplicationSecret {
             client_id: std::env::var("GOOGLE_CLIENT_ID")?,
@@ -94,22 +86,20 @@ impl GoogleDriveProvider {
                         .build(),
                 );
 
-        let provider = Self {
+        let provider = GoogleDriveProvider {
             hub: DriveHub::new(client, auth),
-            cache: Arc::new(Mutex::new(None)),
         };
 
-        // Check if we're authenticated after initialization
-        if provider.is_authenticated().await {
-            init_window_settings(async {
-                update_settings_synchronize_db(true)
-                    .await
-                    .expect("Failed to update settings");
-            })
-            .await
+        let impl_provider = Self(provider); // Changed: Use tuple struct initialization
+
+        if impl_provider.is_authenticated().await {
+            println!("Authenticated with Google Drive");
+            update_settings_synchronize_db(true)
+                .await
+                .expect("Failed to update settings");
         }
 
-        Ok(provider)
+        Ok(impl_provider)
     }
 
     async fn fetch_all_clipboard_files(&self) -> Result<Vec<File>, Box<dyn std::error::Error>> {
@@ -117,6 +107,7 @@ impl GoogleDriveProvider {
         let mut page_token = None;
 
         while let Ok((_, file_list)) = self
+            .0
             .hub
             .files()
             .list()
@@ -137,32 +128,13 @@ impl GoogleDriveProvider {
             page_token = file_list.next_page_token;
         }
 
-        println!("Found {} remote clipboard files", all_files.len());
+        printlog!("(remote) found {} clipboards", all_files.len());
 
         Ok(all_files)
     }
 
-    async fn get_remote_files(&self) -> Result<Vec<File>, Box<dyn std::error::Error>> {
-        // Check cache first
-        if let Some(cache) = &*self.cache.lock().unwrap() {
-            if cache.timestamp.elapsed() < Self::CACHE_TTL {
-                return Ok(cache.files.clone());
-            }
-        }
-
-        let files = self.fetch_all_clipboard_files().await?;
-
-        // Update cache
-        *self.cache.lock().unwrap() = Some(CachedFiles {
-            files: files.clone(),
-            timestamp: Instant::now(),
-        });
-
-        Ok(files)
-    }
-
     async fn cleanup_old_backups(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let files = self.get_remote_files().await?;
+        let files = self.fetch_all_clipboard_files().await?;
         let settings = get_app().state::<settings::Model>();
 
         let mut to_delete: Vec<_> = files
@@ -171,19 +143,21 @@ impl GoogleDriveProvider {
                 f.clone()
                     .id
                     .zip(f.clone().name)
-                    .zip(Self::parse_clipboard_info(&f.name.as_ref()?))
+                    .zip(parse_clipboard_info(&f.name.as_ref()?, &f.id.as_ref()?))
                     .map(|((id, name), info)| (id, name, info))
             })
-            .filter(|(_, _, (_, star, _))| !star)
-            .map(|(id, name, (_, _, timestamp))| (id, name, timestamp))
+            .filter(|(_, _, remote)| !remote.starred) // Changed from tuple to struct access
+            .map(|(id, name, remote)| (id, name, remote.timestamp)) // Changed from tuple to struct access
             .collect();
 
         to_delete.sort_by_key(|(_, _, ts)| *ts);
         let delete_count = to_delete.len().saturating_sub(settings.sync_limit as usize);
 
+        // Rest remains the same
         for (id, name, _) in to_delete.into_iter().take(delete_count) {
             println!("Deleting old clipboard: {}", name);
-            self.hub
+            self.0
+                .hub
                 .files()
                 .delete(&id)
                 .add_scope(Scope::Appdata.as_ref())
@@ -191,23 +165,12 @@ impl GoogleDriveProvider {
                 .await?;
         }
 
-        // Invalidate cache after deletions
-        *self.cache.lock().unwrap() = None;
         Ok(())
-    }
-
-    fn parse_clipboard_info(filename: &str) -> Option<(Uuid, bool, NaiveDateTime)> {
-        let [_, timestamp, star, uuid]: [&str; 4] =
-            filename.split('_').collect::<Vec<_>>().try_into().ok()?;
-        Some((
-            Uuid::parse_str(uuid.trim_end_matches(".json")).ok()?,
-            star.parse().ok()?,
-            NaiveDateTime::parse_from_str(timestamp, "%Y%m%d%H%M%S").ok()?,
-        ))
     }
 
     async fn download_clipboard(&self, id: &str) -> Result<String, Box<dyn std::error::Error>> {
         let (mut response, _) = self
+            .0
             .hub
             .files()
             .get(id)
@@ -224,21 +187,37 @@ impl GoogleDriveProvider {
 }
 
 #[async_trait::async_trait]
-impl SyncProvider for GoogleDriveProvider {
-    async fn fetch_clipboards(
+impl SyncProvider for GoogleDriveProviderImpl {
+    async fn fetch_all_clipboards(&self) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>> {
+        let filelist = self.fetch_all_clipboard_files().await?;
+        let mut clipboards = Vec::new();
+
+        for file in filelist {
+            if let Some(remote) = parse_clipboard_info(
+                &file.name.as_ref().expect("No name"),
+                file.id.as_ref().expect("No ID"),
+            ) {
+                clipboards.push(remote);
+            }
+        }
+
+        Ok(clipboards)
+    }
+
+    async fn fetch_new_clipboards(
         &self,
         existing_clipboards: &HashMap<Uuid, NaiveDateTime>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
-        let filelist = self.get_remote_files().await?;
+        let filelist = self.fetch_all_clipboard_files().await?;
         let mut clipboards = Vec::new();
 
         for file in filelist {
             if let Some(id) = file.id.as_ref() {
-                if let Some((uuid, _star, timestamp)) =
-                    Self::parse_clipboard_info(&file.name.as_ref().expect("No name"))
+                if let Some(remote) =
+                    parse_clipboard_info(&file.name.as_ref().expect("No name"), id.as_ref())
                 {
-                    if let Some(existing_timestamp) = existing_clipboards.get(&uuid) {
-                        if existing_timestamp >= &timestamp {
+                    if let Some(existing_timestamp) = existing_clipboards.get(&remote.id) {
+                        if existing_timestamp >= &remote.timestamp {
                             continue;
                         }
                     }
@@ -255,7 +234,6 @@ impl SyncProvider for GoogleDriveProvider {
                 }
             }
         }
-
         Ok(clipboards)
     }
 
@@ -263,34 +241,28 @@ impl SyncProvider for GoogleDriveProvider {
         &self,
         local_clipboards: &[FullClipboardDto],
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let remote_files = self.get_remote_files().await?;
+        let remote_files = self.fetch_all_clipboard_files().await?;
         let remote_map: HashMap<Uuid, (String, NaiveDateTime)> = remote_files
             .iter()
             .filter_map(|f| {
-                Self::parse_clipboard_info(&f.name.as_ref()?).and_then(
-                    |(uuid, _star, timestamp)| {
-                        f.id.as_ref().map(|id| (uuid, (id.clone(), timestamp)))
-                    },
-                )
+                parse_clipboard_info(&f.name.as_ref()?, f.id.as_ref()?).and_then(|remote| {
+                    f.id.as_ref()
+                        .map(|id| (remote.id, (id.clone(), remote.timestamp)))
+                })
             })
             .collect();
 
         for clipboard in local_clipboards {
-            if let Some((remote_id, remote_timestamp)) = remote_map.get(&clipboard.clipboard.id) {
+            if let Some((_remote_id, remote_timestamp)) = remote_map.get(&clipboard.clipboard.id) {
                 if remote_timestamp >= &clipboard.clipboard.created_date {
                     continue;
                 }
-                self.hub.files().delete(remote_id).doit().await?;
-                // Invalidate cache after deletion
-                *self.cache.lock().unwrap() = None;
             }
 
-            let file_name = format!(
-                "{}_{}_{}_{}.json",
-                BACKUP_FILE_PREFIX,
-                clipboard.clipboard.created_date.format("%Y%m%d%H%M%S"),
+            let file_name = create_clipboard_filename(
+                &clipboard.clipboard.created_date,
                 clipboard.clipboard.star,
-                clipboard.clipboard.id
+                &clipboard.clipboard.id,
             );
 
             println!("Uploading clipboard: {}", file_name);
@@ -303,7 +275,8 @@ impl SyncProvider for GoogleDriveProvider {
                 ..Default::default()
             };
 
-            self.hub
+            self.0
+                .hub
                 .files()
                 .create(file)
                 .add_scope(Scope::Appdata.as_ref())
@@ -321,8 +294,8 @@ impl SyncProvider for GoogleDriveProvider {
         let files = self.fetch_all_clipboard_files().await?;
 
         let file_id = files.into_iter().find_map(|file| {
-            if let Some((uuid, _, _)) = Self::parse_clipboard_info(&file.name.as_ref()?) {
-                if &uuid == clipboard_uuid {
+            if let Some(remote) = parse_clipboard_info(&file.name.as_ref()?, file.id.as_ref()?) {
+                if &remote.id == clipboard_uuid {
                     file.id
                 } else {
                     None
@@ -333,7 +306,8 @@ impl SyncProvider for GoogleDriveProvider {
         });
 
         if let Some(file_id) = file_id {
-            self.hub
+            self.0
+                .hub
                 .files()
                 .delete(&file_id)
                 .add_scope(Scope::Appdata.as_ref())
@@ -346,7 +320,7 @@ impl SyncProvider for GoogleDriveProvider {
     }
 
     async fn is_authenticated(&self) -> bool {
-        match self.hub.auth.get_token(&[Scope::Appdata.as_ref()]).await {
+        match self.0.hub.auth.get_token(&[Scope::Appdata.as_ref()]).await {
             Ok(_) => true,
             Err(_) => false,
         }

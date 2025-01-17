@@ -1,5 +1,5 @@
 use crate::service::{
-    settings::{get_settings_db, init_window_settings, update_settings_synchronize_db},
+    settings::{get_settings_db, update_settings_synchronize_db},
     sync::{get_sync_provider, sync_interval_toggle},
 };
 use common::{printlog, types::types::CommandError};
@@ -9,7 +9,7 @@ use tao::connection::db;
 
 #[tauri::command]
 pub async fn sync_is_authenticated() -> Result<bool, CommandError> {
-    let provider = get_sync_provider().await?;
+    let provider = get_sync_provider().await;
 
     if provider.is_authenticated().await {
         printlog!("Authenticated");
@@ -27,15 +27,10 @@ pub async fn sync_is_authenticated() -> Result<bool, CommandError> {
 }
 
 #[tauri::command]
-pub async fn sync_authenticate_toggle() -> Result<(), CommandError> {
-    init_window_settings(async {
-        let _ = sync_interval_toggle()
-            .await
-            .expect("Failed to toggle sync interval");
-    })
-    .await;
-
-    Ok(())
+pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
+    Ok(sync_interval_toggle()
+        .await
+        .expect("Failed to toggle sync interval"))
 }
 
 #[tauri::command]
