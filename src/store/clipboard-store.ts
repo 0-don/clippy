@@ -28,7 +28,7 @@ function createClipboardStore() {
     setClipboards((prev) => [clipboard, ...prev]);
   };
 
-  const initClipboards = async () => {
+  const init = async () => {
     setWhere(initialWhere);
     const clipboards = await getClipboards();
     setClipboards(clipboards);
@@ -101,7 +101,7 @@ function createClipboardStore() {
     getClipboards,
     clipboardRef,
     setClipboardRef,
-    initClipboards,
+    init,
     handleKeyDown,
     selectedIndex,
     setSelectedIndex,

@@ -46,11 +46,11 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
 
     let active_model: ActiveModel = settings.into();
 
-    let updated_settings = settings::Entity::update(active_model.reset_all())
+    let _ = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    Ok(updated_settings)
+    Ok(get_settings_db().await?)
 }
 
 pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Model, DbErr> {
@@ -102,14 +102,20 @@ where
 
     register_hotkeys(false);
     get_main_window()
-        .emit(ListenEvent::Init.to_string().as_str(), ())
+        .emit(ListenEvent::InitSettings.to_string().as_str(), ())
+        .expect("Failed to emit init event");
+    get_main_window()
+        .emit(ListenEvent::InitHotkeys.to_string().as_str(), ())
         .expect("Failed to emit init event");
 
     if let Some(settings_window) =
         get_app().get_webview_window(WebWindow::Settings.to_string().as_str())
     {
         settings_window
-            .emit(ListenEvent::Init.to_string().as_str(), ())
+            .emit(ListenEvent::InitSettings.to_string().as_str(), ())
+            .expect("Failed to emit init event");
+        settings_window
+            .emit(ListenEvent::InitHotkeys.to_string().as_str(), ())
             .expect("Failed to emit init event");
     }
 
