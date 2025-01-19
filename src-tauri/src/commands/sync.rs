@@ -1,30 +1,11 @@
 use crate::service::{
-    settings::{get_settings_db, update_settings_synchronize_db},
+    settings::get_settings_db,
     sync::{get_sync_provider, sync_interval_toggle},
 };
-use common::{printlog, types::types::CommandError};
+use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, EntityTrait};
 use tao::connection::db;
-
-#[tauri::command]
-pub async fn sync_is_authenticated() -> Result<bool, CommandError> {
-    let provider = get_sync_provider().await;
-
-    if provider.is_authenticated().await {
-        printlog!("Authenticated");
-        update_settings_synchronize_db(true).await?;
-        Ok(provider
-            .is_authenticated()
-            .await
-            .then(|| true)
-            .unwrap_or(false))
-    } else {
-        printlog!("Authentication failed");
-        update_settings_synchronize_db(false).await?;
-        Err(CommandError::Error("Authentication failed".to_string()))
-    }
-}
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {

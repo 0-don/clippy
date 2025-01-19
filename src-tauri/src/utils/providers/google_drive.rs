@@ -289,7 +289,6 @@ impl SyncProvider for GoogleDriveProviderImpl {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let settings = get_settings_db().await?;
 
-        printlog!("sync limit: {}", settings.sync_limit);
         if remote_clipboards.len() <= settings.sync_limit as usize {
             return Ok(());
         }

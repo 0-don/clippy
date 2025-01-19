@@ -1,15 +1,15 @@
-use super::sync::get_sync_provider;
+use super::settings::get_global_settings;
+use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
 use crate::service::settings::get_settings_db;
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
-use common::types::enums::{ClipboardTextType, ClipboardType, Language};
+use common::io::clipboard::trim_clipboard_data;
+use common::types::enums::{ClipboardTextType, ClipboardType, Language, ListenEvent, WebWindow};
 use common::types::orm_query::{FullClipboardDbo, FullClipboardDto};
 use common::types::types::CommandError;
 use entity::clipboard::{self, Model};
-use entity::{
-    clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text, settings,
-};
+use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
 use sea_orm::prelude::Uuid;
 use sea_orm::RelationTrait;
 use sea_orm::{
@@ -18,8 +18,8 @@ use sea_orm::{
 };
 use std::collections::HashMap;
 use tao::connection::db;
-use tao::global::{get_app, get_main_window};
-use tauri::Manager;
+use tao::global::{get_app, get_app_window, get_main_window};
+use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 use tokio::try_join;
 
@@ -190,14 +190,23 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<FullClipboa
         Vec::new()
     };
 
-    Ok(FullClipboardDto {
+    let clipboard = FullClipboardDto {
         clipboard,
         text,
         html,
         image,
         rtf,
         files,
-    })
+    };
+
+    get_app_window(WebWindow::Main)
+        .emit(
+            ListenEvent::NewClipboard.to_string().as_str(),
+            trim_clipboard_data(vec![clipboard.clone()]).get(0),
+        )
+        .expect("Failed to emit");
+
+    Ok(clipboard)
 }
 
 pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
@@ -242,7 +251,7 @@ pub async fn get_clipboards_db(
     let db = db().await?;
     let (clipboard_keywords, text_keywords) = KeywordBuilder::build_default();
 
-    let settings = get_app().state::<settings::Model>();
+    let settings = get_global_settings();
 
     let query = clipboard::Entity::find()
         .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
@@ -413,10 +422,18 @@ pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
 
 pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), DbErr> {
     let db = db().await?;
+    let settings = get_settings_db().await?;
+    let mut remote_clipboards_to_delete = Vec::new();
 
     match r#type {
         None => {
-            // Keep existing behavior - delete all non-starred clipboards
+            let clipboards_to_delete = clipboard::Entity::find()
+                .filter(clipboard::Column::Star.eq(false))
+                .all(&db)
+                .await?;
+            remote_clipboards_to_delete.extend(clipboards_to_delete);
+
+            // Delete all non-starred clipboards
             clipboard::Entity::delete_many()
                 .filter(clipboard::Column::Star.eq(false))
                 .exec(&db)
@@ -474,6 +491,8 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                     types.retain(|t| t != &clipboard_type);
 
                     if types.is_empty() {
+                        remote_clipboards_to_delete.push(clipboard.clone());
+
                         // If no types remain, delete the clipboard
                         clipboard::Entity::delete_by_id(clipboard.id.clone())
                             .exec(&db)
@@ -490,6 +509,39 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                 }
             }
         }
+    }
+
+    // Handle remote deletion if sync is enabled
+    if settings.sync && !remote_clipboards_to_delete.is_empty() {
+        tauri::async_runtime::spawn(async move {
+            let provider = get_sync_provider().await;
+            let manager = get_sync_manager().await;
+
+            // Fetch all remote clipboards
+            let remote_clipboards = provider.fetch_all_clipboards().await.unwrap_or_default();
+
+            // Stop the sync manager before making changes
+            manager.lock().await.stop().await;
+
+            // Filter remote clipboards that match our local ones to delete
+            let remote_to_delete: Vec<_> = remote_clipboards
+                .iter()
+                .filter(|remote| {
+                    remote_clipboards_to_delete
+                        .iter()
+                        .any(|local| local.id == remote.id)
+                })
+                .filter_map(|remote| remote.provider_id.as_ref())
+                .collect();
+
+            // Delete filtered clipboards using their provider IDs
+            for provider_id in remote_to_delete {
+                provider.delete_by_id(provider_id).await;
+            }
+
+            // Restart the sync manager
+            manager.lock().await.start().await;
+        });
     }
 
     Ok(())

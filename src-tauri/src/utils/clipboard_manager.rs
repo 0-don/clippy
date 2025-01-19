@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::service::settings::get_global_settings;
 use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
@@ -7,7 +8,6 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
 use common::types::orm_query::FullClipboardDbo;
-use entity::settings;
 use image::imageops;
 use regex::Regex;
 use sea_orm::prelude::Uuid;
@@ -155,7 +155,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
         image: Option<Vec<u8>>,
         files: Option<Vec<String>>,
     ) {
-        let settings = get_app().state::<settings::Model>();
+        let settings = get_global_settings();
         let mut types = vec![];
 
         if let Some(text) =
