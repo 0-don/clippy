@@ -42,9 +42,23 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
 
     let active_model: ActiveModel = settings.into();
 
-    let _ = settings::Entity::update(active_model.reset_all())
+    let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
+
+    if settings.sync {
+        tauri::async_runtime::spawn(async {
+            let provider = get_sync_provider().await;
+            let remote_clipboards = provider
+                .fetch_all_clipboards()
+                .await
+                .expect("Failed to fetch all clipboards");
+            provider
+                .cleanup_old_clipboards(&remote_clipboards)
+                .await
+                .expect("Failed to cleanup old clipboards");
+        });
+    }
 
     Ok(get_settings_db().await?)
 }

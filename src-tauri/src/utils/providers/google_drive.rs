@@ -1,5 +1,7 @@
+use super::parse_clipboard_info;
 use crate::{
-    service::settings::update_settings_synchronize_db, utils::providers::create_clipboard_filename,
+    service::settings::{get_settings_db, update_settings_synchronize_db},
+    utils::providers::create_clipboard_filename,
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
@@ -11,7 +13,6 @@ use common::{
         types::CommandError,
     },
 };
-use entity::settings;
 use google_drive3::{
     api::*,
     hyper_rustls, hyper_util,
@@ -27,8 +28,6 @@ use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_opener::OpenerExt;
 
-use super::parse_clipboard_info;
-
 pub struct BrowserUrlOpenFlowDelegate;
 
 #[async_trait::async_trait]
@@ -39,9 +38,8 @@ impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
         _need_code: bool,
     ) -> Pin<Box<dyn Future<Output = Result<String, String>> + Send + 'a>> {
         Box::pin(async move {
-            println!("{}", url);
-            let clipboard = get_app().state::<Clipboard>();
-            clipboard
+            get_app()
+                .state::<Clipboard>()
                 .write_text(url.to_string())
                 .expect("Failed to write URL to clipboard");
             get_app()
@@ -93,7 +91,7 @@ impl GoogleDriveProviderImpl {
         let impl_provider = Self(provider); // Changed: Use tuple struct initialization
 
         if impl_provider.is_authenticated().await {
-            println!("Authenticated with Google Drive");
+            printlog!("authenticated with Google Drive");
             update_settings_synchronize_db(true)
                 .await
                 .expect("Failed to update settings");
@@ -132,43 +130,144 @@ impl GoogleDriveProviderImpl {
 
         Ok(all_files)
     }
+}
 
-    async fn cleanup_old_backups(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let files = self.fetch_all_clipboard_files().await?;
-        let settings = get_app().state::<settings::Model>();
+#[async_trait::async_trait]
+impl SyncProvider for GoogleDriveProviderImpl {
+    async fn fetch_all_clipboards(&self) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>> {
+        let filelist = self.fetch_all_clipboard_files().await?;
+        let mut clipboards = Vec::new();
 
-        let mut to_delete: Vec<_> = files
-            .iter()
-            .filter_map(|f| {
-                f.clone()
-                    .id
-                    .zip(f.clone().name)
-                    .zip(parse_clipboard_info(&f.name.as_ref()?, &f.id.as_ref()?))
-                    .map(|((id, name), info)| (id, name, info))
-            })
-            .filter(|(_, _, remote)| !remote.starred) // Changed from tuple to struct access
-            .map(|(id, name, remote)| (id, name, remote.timestamp)) // Changed from tuple to struct access
-            .collect();
-
-        to_delete.sort_by_key(|(_, _, ts)| *ts);
-        let delete_count = to_delete.len().saturating_sub(settings.sync_limit as usize);
-
-        // Rest remains the same
-        for (id, name, _) in to_delete.into_iter().take(delete_count) {
-            println!("Deleting old clipboard: {}", name);
-            self.0
-                .hub
-                .files()
-                .delete(&id)
-                .add_scope(Scope::Appdata.as_ref())
-                .doit()
-                .await?;
+        for file in filelist {
+            if let Some(remote) =
+                parse_clipboard_info(&file.name.as_ref().expect("No name"), file.id)
+            {
+                clipboards.push(remote);
+            }
         }
 
-        Ok(())
+        Ok(clipboards)
     }
 
-    async fn download_clipboard(&self, id: &str) -> Result<String, Box<dyn std::error::Error>> {
+    async fn fetch_new_clipboards(
+        &self,
+        local_clipboards: &HashMap<Uuid, NaiveDateTime>,
+        remote_clipboards: &Vec<ClippyInfo>,
+    ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
+        let mut clipboards = Vec::new();
+
+        for file in remote_clipboards {
+            if let Some(existing_timestamp) = local_clipboards.get(&file.id) {
+                if existing_timestamp >= &file.timestamp {
+                    continue;
+                }
+            }
+
+            printlog!(
+                "downloading clipboard: {} from {} starred: {}",
+                file.id,
+                file.timestamp,
+                file.starred
+            );
+
+            if let Some(id) = &file.provider_id {
+                clipboards.push(self.download_by_id(id).await?);
+            }
+        }
+
+        Ok(clipboards)
+    }
+
+    async fn upload_clipboards(
+        &self,
+        new_local_clipboards: &[FullClipboardDto],
+        remote_clipboards: &mut Vec<ClippyInfo>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let remote_map: HashMap<Uuid, NaiveDateTime> = remote_clipboards
+            .iter()
+            .map(|clip| (clip.id, clip.timestamp))
+            .collect();
+
+        let remote_count = remote_clipboards.len();
+
+        for clipboard in new_local_clipboards {
+            if let Some(remote_clipboard) = remote_map.get(&clipboard.clipboard.id) {
+                if remote_clipboard >= &clipboard.clipboard.created_date {
+                    continue;
+                }
+            }
+
+            let file_name = create_clipboard_filename(
+                &clipboard.clipboard.id,
+                &clipboard.clipboard.created_date,
+                &clipboard.clipboard.star,
+            );
+
+            printlog!(
+                "uploading clipboard: {} from {} starred: {}",
+                clipboard.clipboard.id,
+                clipboard.clipboard.created_date,
+                clipboard.clipboard.star
+            );
+
+            let file = File {
+                name: Some(file_name),
+                mime_type: Some("application/json".into()),
+                created_time: Some(Utc.from_utc_datetime(&clipboard.clipboard.created_date)),
+                parents: Some(vec!["appDataFolder".into()]),
+                ..Default::default()
+            };
+
+            let (_, file) = self
+                .0
+                .hub
+                .files()
+                .create(file)
+                .add_scope(Scope::Appdata.as_ref())
+                .upload(
+                    Cursor::new(serde_json::to_string(&clipboard)?),
+                    "application/json".parse()?,
+                )
+                .await?;
+
+            remote_clipboards.push(
+                parse_clipboard_info(file.name.as_ref().expect("No name"), file.id)
+                    .expect("Failed to parse clipboard info"),
+            );
+        }
+
+        Ok(remote_clipboards.len() > remote_count)
+    }
+
+    async fn delete_by_id(&self, id: &String) {
+        self.0
+            .hub
+            .files()
+            .delete(&id)
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
+            .await
+            .expect("Failed to delete clipboard");
+    }
+
+    async fn delete_by_uuid(&self, uuid: &Uuid) {
+        let files = self
+            .fetch_all_clipboard_files()
+            .await
+            .expect("Failed to fetch clipboards");
+        for file in files {
+            if let Some(remote) = parse_clipboard_info(&file.name.unwrap(), file.id.clone()) {
+                if remote.id == *uuid {
+                    self.delete_by_id(&file.id.as_ref().expect("No id")).await;
+                    break;
+                }
+            }
+        }
+    }
+    async fn download_by_id(
+        &self,
+        id: &String,
+    ) -> Result<FullClipboardDto, Box<dyn std::error::Error>> {
         let (mut response, _) = self
             .0
             .hub
@@ -180,143 +279,45 @@ impl GoogleDriveProviderImpl {
             .doit()
             .await?;
 
-        Ok(String::from_utf8(
-            response.body_mut().collect().await?.to_bytes().to_vec(),
-        )?)
-    }
-}
-
-#[async_trait::async_trait]
-impl SyncProvider for GoogleDriveProviderImpl {
-    async fn fetch_all_clipboards(&self) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>> {
-        let filelist = self.fetch_all_clipboard_files().await?;
-        let mut clipboards = Vec::new();
-
-        for file in filelist {
-            if let Some(remote) = parse_clipboard_info(
-                &file.name.as_ref().expect("No name"),
-                file.id.as_ref().expect("No ID"),
-            ) {
-                clipboards.push(remote);
-            }
-        }
-
-        Ok(clipboards)
+        let content = String::from_utf8(response.body_mut().collect().await?.to_bytes().to_vec())?;
+        Ok(serde_json::from_str(&content)?)
     }
 
-    async fn fetch_new_clipboards(
+    async fn cleanup_old_clipboards(
         &self,
-        existing_clipboards: &HashMap<Uuid, NaiveDateTime>,
-    ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
-        let filelist = self.fetch_all_clipboard_files().await?;
-        let mut clipboards = Vec::new();
-
-        for file in filelist {
-            if let Some(id) = file.id.as_ref() {
-                if let Some(remote) =
-                    parse_clipboard_info(&file.name.as_ref().expect("No name"), id.as_ref())
-                {
-                    if let Some(existing_timestamp) = existing_clipboards.get(&remote.id) {
-                        if existing_timestamp >= &remote.timestamp {
-                            continue;
-                        }
-                    }
-
-                    println!("Downloading clipboard: {:?}", file.name);
-                    match self.download_clipboard(id).await {
-                        Ok(content) => {
-                            if let Ok(clipboard) = serde_json::from_str(&content) {
-                                clipboards.push(clipboard);
-                            }
-                        }
-                        Err(e) => println!("Error downloading clipboard {:?}: {}", file.name, e),
-                    }
-                }
-            }
-        }
-        Ok(clipboards)
-    }
-
-    async fn upload_clipboards(
-        &self,
-        local_clipboards: &[FullClipboardDto],
+        remote_clipboards: &Vec<ClippyInfo>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let remote_files = self.fetch_all_clipboard_files().await?;
-        let remote_map: HashMap<Uuid, (String, NaiveDateTime)> = remote_files
+        let settings = get_settings_db().await?;
+
+        printlog!("sync limit: {}", settings.sync_limit);
+        if remote_clipboards.len() <= settings.sync_limit as usize {
+            return Ok(());
+        }
+
+        let mut clipboards = remote_clipboards
             .iter()
-            .filter_map(|f| {
-                parse_clipboard_info(&f.name.as_ref()?, f.id.as_ref()?).and_then(|remote| {
-                    f.id.as_ref()
-                        .map(|id| (remote.id, (id.clone(), remote.timestamp)))
-                })
-            })
-            .collect();
+            .filter(|clip| !clip.starred)
+            .map(|file| (file.provider_id.as_ref().expect("No provider id"), file))
+            .collect::<Vec<_>>();
 
-        for clipboard in local_clipboards {
-            if let Some((_remote_id, remote_timestamp)) = remote_map.get(&clipboard.clipboard.id) {
-                if remote_timestamp >= &clipboard.clipboard.created_date {
-                    continue;
-                }
-            }
+        clipboards.sort_by_key(|(_, info)| info.timestamp);
 
-            let file_name = create_clipboard_filename(
-                &clipboard.clipboard.created_date,
-                clipboard.clipboard.star,
-                &clipboard.clipboard.id,
+        let files_to_delete = clipboards
+            .len()
+            .saturating_sub(settings.sync_limit as usize);
+
+        for (id, info) in clipboards.into_iter().take(files_to_delete) {
+            printlog!(
+                "deleting clipboard: {} from {} starred: {}",
+                info.id,
+                info.timestamp,
+                info.starred
             );
 
-            println!("Uploading clipboard: {}", file_name);
-
-            let file = File {
-                name: Some(file_name),
-                mime_type: Some("application/json".into()),
-                created_time: Some(Utc.from_utc_datetime(&clipboard.clipboard.created_date)),
-                parents: Some(vec!["appDataFolder".into()]),
-                ..Default::default()
-            };
-
-            self.0
-                .hub
-                .files()
-                .create(file)
-                .add_scope(Scope::Appdata.as_ref())
-                .upload(
-                    Cursor::new(serde_json::to_string(&clipboard)?),
-                    "application/json".parse()?,
-                )
-                .await?;
+            self.delete_by_id(id).await;
         }
 
-        self.cleanup_old_backups().await
-    }
-
-    async fn delete_by_id(&self, clipboard_uuid: &Uuid) -> Result<(), Box<dyn std::error::Error>> {
-        let files = self.fetch_all_clipboard_files().await?;
-
-        let file_id = files.into_iter().find_map(|file| {
-            if let Some(remote) = parse_clipboard_info(&file.name.as_ref()?, file.id.as_ref()?) {
-                if &remote.id == clipboard_uuid {
-                    file.id
-                } else {
-                    None
-                }
-            } else {
-                None
-            }
-        });
-
-        if let Some(file_id) = file_id {
-            self.0
-                .hub
-                .files()
-                .delete(&file_id)
-                .add_scope(Scope::Appdata.as_ref())
-                .doit()
-                .await?;
-            Ok(())
-        } else {
-            Err("No file found with the specified UUID".into())
-        }
+        Ok(())
     }
 
     async fn is_authenticated(&self) -> bool {

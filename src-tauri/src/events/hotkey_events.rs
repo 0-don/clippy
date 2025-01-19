@@ -45,7 +45,7 @@ pub fn init_hotkey_listener() {
         loop {
             if let Ok(event) = receiver.try_recv() {
                 if event.state == HotKeyState::Pressed {
-                    let hotkey = get_hotkey_store().get(&event.id).cloned();
+                    let hotkey: Option<Key> = get_hotkey_store().get(&event.id).cloned();
                     if let Some(hotkey) = hotkey {
                         parse_hotkey_event(&hotkey).await;
                     }

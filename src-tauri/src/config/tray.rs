@@ -19,7 +19,7 @@ pub fn init_system_tray() -> Result<(), Box<dyn std::error::Error>> {
             get_app()
                 .default_window_icon()
                 .expect("failed to get default icon")
-                .clone(),
+                .to_owned(),
         )
         .menu(&menu)
         .on_menu_event(|app, event| {
