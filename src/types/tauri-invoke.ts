@@ -32,7 +32,6 @@ export enum InvokeCommand {
   OpenFolder = "open_folder",
 
   // Sync commands
-  SyncIsAuthenticated = "sync_is_authenticated",
   SyncAuthenticateToggle = "sync_authenticate_toggle",
   SyncLimitChange = "sync_limit_change",
 
@@ -131,10 +130,6 @@ export interface TauriInvokeCommands {
   };
 
   // Sync commands
-  [InvokeCommand.SyncIsAuthenticated]: {
-    args: undefined;
-    return: boolean;
-  };
   [InvokeCommand.SyncAuthenticateToggle]: {
     args: undefined;
     return: boolean;

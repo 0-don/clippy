@@ -49,7 +49,6 @@ pub fn run() {
             window::get_config_path,
             window::open_folder,
             //
-            sync::sync_is_authenticated,
             sync::sync_authenticate_toggle,
             sync::sync_limit_change,
         ])

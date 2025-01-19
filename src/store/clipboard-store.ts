@@ -24,8 +24,15 @@ function createClipboardStore() {
     return response.clipboards;
   };
 
-  const addClipboard = (clipboard: ClipboardWithRelations) => {
-    setClipboards((prev) => [clipboard, ...prev]);
+  const newClipboard = (clipboard: ClipboardWithRelations) => {
+    setClipboards((prev) => {
+      const newClipboards = [clipboard, ...prev];
+      return newClipboards.sort((a, b) => {
+        const dateA = new Date(a.clipboard.created_date).getTime();
+        const dateB = new Date(b.clipboard.created_date).getTime();
+        return dateB - dateA;
+      });
+    });
   };
 
   const init = async () => {
@@ -90,7 +97,7 @@ function createClipboardStore() {
 
   return {
     clipboards,
-    newClipboard: addClipboard,
+    newClipboard,
     setClipboards,
     where,
     setWhere,

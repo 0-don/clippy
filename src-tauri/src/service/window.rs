@@ -1,3 +1,4 @@
+use super::settings::get_global_settings;
 use crate::prelude::*;
 use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys};
 use common::constants::{
@@ -5,7 +6,6 @@ use common::constants::{
     SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
 };
 use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
-use entity::settings;
 use std::env;
 use std::process::Command;
 use tao::global::{get_app, get_main_window, get_window_stop_tx};
@@ -50,14 +50,10 @@ pub fn toggle_main_window() {
             )
             .expect("Failed to emit set global hotkey event");
     } else {
-        let settings = get_app().state::<settings::Model>();
-
         update_main_window_position();
 
-        let size = calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y);
-        printlog!("size with scale {}: {:?}", settings.display_scale, size);
         get_main_window()
-            .set_size(size)
+            .set_size(calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y))
             .expect("Failed to set window size");
 
         get_main_window()
@@ -84,7 +80,7 @@ pub fn toggle_main_window() {
 }
 
 pub fn update_main_window_position() {
-    let settings = get_app().state::<settings::Model>();
+    let settings = get_global_settings();
 
     if settings.position == ClippyPosition::Cursor.to_string() {
         position_window_near_cursor();
@@ -327,7 +323,7 @@ fn get_x11_scaling_factor() -> Option<f32> {
 }
 
 pub fn calculate_logical_size(width: i32, height: i32) -> LogicalSize<u32> {
-    let settings = get_app().state::<settings::Model>();
+    let settings = get_global_settings();
 
     let physical_width = (width as f32 * settings.display_scale) as u32;
     let physical_height = (height as f32 * settings.display_scale) as u32;

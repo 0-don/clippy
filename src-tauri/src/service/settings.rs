@@ -1,3 +1,5 @@
+use std::sync::Mutex;
+
 use super::clipboard::get_last_clipboard_db;
 use crate::prelude::*;
 use crate::service::window::get_monitor_scale_factor;
@@ -33,9 +35,9 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
         .await?
         .expect("Settings not found");
 
-    get_app().manage(settings.clone());
-
-    printlog!("scale: {}", settings.display_scale);
+    let state = get_app().state::<Mutex<Model>>();
+    let mut locked_settings = state.lock().unwrap();
+    *locked_settings = settings.clone();
 
     Ok(settings)
 }
@@ -51,7 +53,9 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
 
     init_settings_window();
 
-    get_app().manage(settings.clone());
+    let state = get_app().state::<Mutex<Model>>();
+    let mut locked_settings = state.lock().unwrap();
+    *locked_settings = settings.clone();
 
     Ok(settings)
 }
@@ -71,12 +75,16 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
 
     init_settings_window();
 
-    get_app().manage(settings.clone());
+    let state = get_app().state::<Mutex<Model>>();
+    let mut locked_settings = state.lock().unwrap();
+    *locked_settings = settings.clone();
 
     Ok(settings)
 }
 
 pub fn init_settings() {
+    get_app().manage(Mutex::new(settings::Model::default()));
+
     tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(async {
             let last_clipboard = get_last_clipboard_db().await;
@@ -104,4 +112,10 @@ pub fn init_settings_window() {
             (),
         )
         .expect("Failed to emit download progress event");
+}
+
+pub fn get_global_settings() -> Model {
+    let state = get_app().state::<Mutex<Model>>();
+    let locked_settings = state.lock().unwrap();
+    locked_settings.clone()
 }

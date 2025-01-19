@@ -4,7 +4,6 @@ use crate::{
     utils::{providers::google_drive::GoogleDriveProviderImpl, sync_manager::SyncManager},
 };
 use common::types::{enums::SyncProviderType, sync::SyncProvider, types::CommandError};
-use entity::settings;
 use std::sync::Arc;
 use tao::global::get_app;
 use tauri::{Manager, State};
@@ -15,7 +14,12 @@ pub async fn get_sync_provider() -> State<'static, Arc<dyn SyncProvider>> {
         return sync_state;
     }
 
-    let provider = match get_app().state::<settings::Model>().sync_provider.as_str() {
+    let provider = match get_settings_db()
+        .await
+        .expect("settings failed")
+        .sync_provider
+        .as_str()
+    {
         s if s == SyncProviderType::GoogleDrive.to_string() => Arc::new(
             GoogleDriveProviderImpl::new()
                 .await
