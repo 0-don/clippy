@@ -3,91 +3,85 @@ use crate::service::{
     clipboard::{get_clipboard_uuids_db, get_sync_amount_cliboards_db, insert_clipboard_dto},
     sync::get_sync_provider,
 };
-use sea_orm::prelude::Uuid;
 use std::time::Duration;
-use tokio_cron_scheduler::{Job, JobScheduler};
+use tokio::{task::JoinHandle, time};
 
 pub struct SyncManager {
-    pub scheduler: JobScheduler,
-    pub job_id: Option<Uuid>,
+    job_handle: Option<JoinHandle<()>>,
+    is_running: bool,
 }
 
 impl SyncManager {
     pub async fn new() -> Self {
         Self {
-            scheduler: JobScheduler::new()
-                .await
-                .expect("Failed to create scheduler"),
-            job_id: None,
+            job_handle: None,
+            is_running: false,
         }
     }
 
-    async fn sync_job() {
+    async fn sync_job() -> Result<(), Box<dyn std::error::Error>> {
         let provider = get_sync_provider().await;
         if provider.is_authenticated().await {
-            let existing_clipboards = get_clipboard_uuids_db()
-                .await
-                .expect("Failed to get clipboard UUIDs");
+            let local_clipboards = get_clipboard_uuids_db().await?;
+            let mut remote_clipboards = provider.fetch_all_clipboards().await?;
 
-            let remote_clipboards = provider
-                .fetch_new_clipboards(&existing_clipboards)
-                .await
-                .expect("Failed to fetch remote clipboards");
+            let new_clipboards = provider
+                .fetch_new_clipboards(&local_clipboards, &remote_clipboards)
+                .await?;
 
-            printlog!("(remote) {} new clipboards", remote_clipboards.len());
-
-            for clipboard in remote_clipboards {
-                if let Err(e) = insert_clipboard_dto(clipboard).await {
-                    printlog!("Error inserting remote clipboard: {}", e);
-                }
+            for clipboard in new_clipboards {
+                insert_clipboard_dto(clipboard).await?;
             }
 
-            let local_clipboards = get_sync_amount_cliboards_db()
-                .await
-                .expect("Failed to get local clipboards");
+            let new_local_clipboards = get_sync_amount_cliboards_db().await?;
 
-            if let Err(e) = provider.upload_clipboards(&local_clipboards).await {
-                printlog!("Error uploading clipboards: {}", e);
+            let has_added_new_clipboards = provider
+                .upload_clipboards(&new_local_clipboards, &mut remote_clipboards)
+                .await?;
+
+            if has_added_new_clipboards {
+                provider.cleanup_old_clipboards(&remote_clipboards).await?;
             }
         }
+
+        Ok(())
     }
 
     pub async fn start(&mut self) {
-        if self.job_id.is_some() {
-            printlog!("Sync already running");
+        if self.is_running {
+            printlog!("sync already running");
             return;
         }
-        let interval_secs = if cfg!(debug_assertions) { 5 } else { 30 };
 
-        let job = Job::new_repeated_async(Duration::from_secs(interval_secs), move |_, _| {
-            Box::pin(async move {
-                Self::sync_job().await;
-            })
-        })
-        .expect("Failed to create job");
+        let interval = if cfg!(debug_assertions) {
+            Duration::from_secs(10)
+        } else {
+            Duration::from_secs(30)
+        };
 
-        let job_id = self
-            .scheduler
-            .add(job)
-            .await
-            .expect("Failed to add job to scheduler");
-        self.job_id = Some(job_id);
+        // Create a new sync task
+        let handle = tokio::spawn(async move {
+            let mut interval = time::interval(interval);
+            loop {
+                interval.tick().await;
+                if let Err(e) = Self::sync_job().await {
+                    printlog!("sync job failed: {:?}", e);
+                }
+            }
+        });
 
-        if let Err(err) = self.scheduler.start().await {
-            printlog!("Error starting scheduler: {}", err);
-        }
-        printlog!("Sync loop started");
+        self.job_handle = Some(handle);
+        self.is_running = true;
+        printlog!("sync loop started");
     }
 
     pub async fn stop(&mut self) {
-        if let Some(job_id) = self.job_id {
-            if let Err(err) = self.scheduler.remove(&job_id).await {
-                printlog!("Error removing job: {}", err);
-            }
-            self.job_id = None;
-            printlog!("Sync loop stopped");
+        if let Some(handle) = self.job_handle.take() {
+            handle.abort();
+            self.is_running = false;
+            printlog!("sync loop stopped");
         } else {
-            printlog!("Sync loop not running");
+            printlog!("sync loop not running");
         }
     }
 }

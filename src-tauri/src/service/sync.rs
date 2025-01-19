@@ -24,7 +24,7 @@ pub async fn get_sync_provider() -> State<'static, Arc<dyn SyncProvider>> {
         _ => panic!("Provider type not implemented"),
     };
 
-    get_app().manage(provider.to_owned() as Arc<dyn SyncProvider>);
+    get_app().manage(provider.clone() as Arc<dyn SyncProvider>);
     get_app().state()
 }
 
@@ -32,7 +32,6 @@ pub async fn get_sync_manager() -> State<'static, Mutex<SyncManager>> {
     match get_app().try_state() {
         Some(manager) => manager,
         None => {
-            printlog!("creating new SyncManager");
             let manager = Mutex::new(SyncManager::new().await);
             get_app().manage(manager);
             get_app().state()
@@ -54,13 +53,18 @@ pub async fn sync_interval_toggle() -> Result<bool, CommandError> {
     let new_sync_state = !get_settings_db().await?.sync;
 
     if new_sync_state {
+        // Trying to enable sync
         let provider = get_sync_provider().await;
         if !provider.is_authenticated().await {
             update_settings_synchronize_db(false).await?;
             return Err(CommandError::Error("Authentication failed".to_string()));
         }
+
+        // Don't stop existing sync if enabling - just start a new one
         get_sync_manager().await.lock().await.start().await;
+        update_settings_synchronize_db(true).await?;
     } else {
+        // Trying to disable sync
         get_sync_manager().await.lock().await.stop().await;
         update_settings_synchronize_db(false).await?;
     }

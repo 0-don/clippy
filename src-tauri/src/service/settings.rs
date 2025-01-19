@@ -35,6 +35,8 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
 
     get_app().manage(settings.clone());
 
+    printlog!("scale: {}", settings.display_scale);
+
     Ok(settings)
 }
 
@@ -48,6 +50,8 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
         .await?;
 
     init_settings_window();
+
+    get_app().manage(settings.clone());
 
     Ok(settings)
 }
@@ -66,6 +70,8 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
         .await?;
 
     init_settings_window();
+
+    get_app().manage(settings.clone());
 
     Ok(settings)
 }

@@ -4,7 +4,7 @@ use sea_orm::prelude::Uuid;
 
 pub mod google_drive;
 
-pub fn parse_clipboard_info(filename: &str, provider_id: &str) -> Option<ClippyInfo> {
+pub fn parse_clipboard_info(filename: &str, provider_id: Option<String>) -> Option<ClippyInfo> {
     let [_, timestamp, star, uuid]: [&str; 4] =
         filename.split('_').collect::<Vec<_>>().try_into().ok()?;
 
@@ -16,11 +16,11 @@ pub fn parse_clipboard_info(filename: &str, provider_id: &str) -> Option<ClippyI
         id,
         starred,
         timestamp,
-        provider_id: provider_id.to_string(),
+        provider_id,
     })
 }
 
-pub fn create_clipboard_filename(created_date: &NaiveDateTime, star: bool, id: &Uuid) -> String {
+pub fn create_clipboard_filename(id: &Uuid, created_date: &NaiveDateTime, star: &bool) -> String {
     format!(
         "{}_{}_{}_{}.json",
         BACKUP_FILE_PREFIX,

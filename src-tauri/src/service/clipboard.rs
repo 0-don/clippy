@@ -1,5 +1,6 @@
 use super::sync::get_sync_provider;
 use crate::prelude::*;
+use crate::service::settings::get_settings_db;
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
 use common::types::enums::{ClipboardTextType, ClipboardType, Language};
@@ -72,7 +73,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut text_model = model.clipboard_text_model;
             text_model.id = Set(Uuid::new_v4());
-            text_model.clipboard_id = Set(clipboard.id.clone());
+            text_model.clipboard_id = Set(clipboard.id);
             Some(text_model.insert(&db).await?)
         }
         _ => None,
@@ -94,7 +95,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut image_model = model.clipboard_image_model;
             image_model.id = Set(Uuid::new_v4());
-            image_model.clipboard_id = Set(clipboard.id.clone());
+            image_model.clipboard_id = Set(clipboard.id);
             Some(image_model.insert(&db).await?)
         }
         _ => None,
@@ -105,7 +106,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut rtf_model = model.clipboard_rtf_model;
             rtf_model.id = Set(Uuid::new_v4());
-            rtf_model.clipboard_id = Set(clipboard.id.clone());
+            rtf_model.clipboard_id = Set(clipboard.id);
             Some(rtf_model.insert(&db).await?)
         }
         _ => None,
@@ -115,7 +116,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         let mut files = Vec::new();
         for mut file_model in model.clipboard_files_model {
             file_model.id = Set(Uuid::new_v4());
-            file_model.clipboard_id = Set(clipboard.id.clone());
+            file_model.clipboard_id = Set(clipboard.id);
             files.push(file_model.insert(&db).await?);
         }
         files
@@ -343,7 +344,7 @@ pub async fn get_clipboards_db(
 
 pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
     let db = db().await?;
-    let settings: tauri::State<'_, settings::Model> = get_app().state::<settings::Model>();
+    let settings = get_settings_db().await?;
 
     let sync_amount_clipboards = clipboard::Entity::find()
         .limit(settings.sync_limit as u64)
@@ -357,20 +358,19 @@ pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbE
         .all(&db)
         .await?;
 
-    let clipboards = sync_amount_clipboards
-        .clone()
-        .into_iter()
-        .chain(sync_favorite_clipboards.clone())
-        .map(|clipboard| (clipboard.id.clone(), clipboard))
-        .collect::<HashMap<_, _>>() // Collects into HashMap using ID as key
-        .into_values()
-        .collect::<Vec<_>>();
-
     printlog!(
         "(local) clipboards: {:?} favorite: {:?}",
         sync_amount_clipboards.len(),
         sync_favorite_clipboards.len()
     );
+
+    let clipboards = sync_amount_clipboards
+        .into_iter()
+        .chain(sync_favorite_clipboards)
+        .map(|clipboard| (clipboard.id, clipboard))
+        .collect::<HashMap<_, _>>() // Collects into HashMap using ID as key
+        .into_values()
+        .collect::<Vec<_>>();
 
     Ok(load_clipboards_with_relations(clipboards).await)
 }
@@ -390,10 +390,7 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
     tauri::async_runtime::spawn(async move {
         let provider = get_sync_provider().await;
 
-        provider
-            .delete_by_id(&delete_id)
-            .await
-            .map_err(|e| CommandError::Error(e.to_string()))
+        provider.delete_by_uuid(&delete_id).await
     });
 
     Ok(true)
@@ -408,10 +405,7 @@ pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
     tauri::async_runtime::spawn(async move {
         let provider = get_sync_provider().await;
 
-        provider
-            .delete_by_id(&delete_id)
-            .await
-            .map_err(|e| CommandError::Error(e.to_string()))
+        provider.delete_by_uuid(&delete_id).await
     });
 
     Ok(true)
@@ -444,31 +438,31 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                 match clipboard_type {
                     ClipboardType::Text => {
                         clipboard_text::Entity::delete_many()
-                            .filter(clipboard_text::Column::ClipboardId.eq(clipboard.id.clone()))
+                            .filter(clipboard_text::Column::ClipboardId.eq(clipboard.id))
                             .exec(&db)
                             .await?;
                     }
                     ClipboardType::Image => {
                         clipboard_image::Entity::delete_many()
-                            .filter(clipboard_image::Column::ClipboardId.eq(clipboard.id.clone()))
+                            .filter(clipboard_image::Column::ClipboardId.eq(clipboard.id))
                             .exec(&db)
                             .await?;
                     }
                     ClipboardType::Html => {
                         clipboard_html::Entity::delete_many()
-                            .filter(clipboard_html::Column::ClipboardId.eq(clipboard.id.clone()))
+                            .filter(clipboard_html::Column::ClipboardId.eq(clipboard.id))
                             .exec(&db)
                             .await?;
                     }
                     ClipboardType::Rtf => {
                         clipboard_rtf::Entity::delete_many()
-                            .filter(clipboard_rtf::Column::ClipboardId.eq(clipboard.id.clone()))
+                            .filter(clipboard_rtf::Column::ClipboardId.eq(clipboard.id))
                             .exec(&db)
                             .await?;
                     }
                     ClipboardType::File => {
                         clipboard_file::Entity::delete_many()
-                            .filter(clipboard_file::Column::ClipboardId.eq(clipboard.id.clone()))
+                            .filter(clipboard_file::Column::ClipboardId.eq(clipboard.id))
                             .exec(&db)
                             .await?;
                     }

@@ -949,7 +949,6 @@ dependencies = [
  "tauri-plugin-positioner",
  "tauri-plugin-shell",
  "tokio",
- "tokio-cron-scheduler",
  "tree_magic_mini",
 ]
 

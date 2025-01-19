@@ -1,9 +1,9 @@
 use crate::prelude::*;
 use crate::service::hotkey::get_all_hotkeys_db;
-#[cfg(any(target_os = "windows", target_os = "macos"))]
-use tao::global::get_app;
 use common::{constants::GLOBAL_EVENTS, types::types::Key};
 use global_hotkey::hotkey::HotKey;
+#[cfg(any(target_os = "windows", target_os = "macos"))]
+use tao::global::get_app;
 use tao::global::{get_hotkey_manager, get_hotkey_store};
 
 pub fn register_hotkeys(all: bool) {
@@ -40,7 +40,7 @@ fn register_hotkeys_inner(all: bool) {
     let mut hotkeys_to_register = Vec::new();
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if !hotkey.state && (all || hotkey.is_global) {
-            hotkeys_to_register.push(hotkey.hotkey.clone());
+            hotkeys_to_register.push(hotkey.hotkey);
             hotkey.state = true;
         }
     }
@@ -54,7 +54,7 @@ fn unregister_hotkeys_inner(all: bool) {
     let mut hotkeys_to_unregister = Vec::new();
     for (_, hotkey) in get_hotkey_store().iter_mut() {
         if hotkey.state && (all || !hotkey.is_global) {
-            hotkeys_to_unregister.push(hotkey.hotkey.clone());
+            hotkeys_to_unregister.push(hotkey.hotkey);
             hotkey.state = false;
         }
     }
@@ -95,7 +95,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             state: false,
             is_global: GLOBAL_EVENTS.contains(&hotkey.event),
             event: hotkey.event,
-            key_str: hotkey_str.clone(),
+            key_str: hotkey_str,
             ctrl: hotkey.ctrl,
             alt: hotkey.alt,
             shift: hotkey.shift,
@@ -118,7 +118,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
                 state: false,
                 is_global: false,
                 event: format!("digit_{}", i),
-                key_str: hotkey_digit.clone(),
+                key_str: hotkey_digit,
                 ctrl: false,
                 alt: false,
                 shift: false,
