@@ -13,7 +13,7 @@ pub struct SyncManager {
 }
 
 impl SyncManager {
-    pub async fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             job_handle: None,
             is_running: false,

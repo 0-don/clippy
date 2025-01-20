@@ -370,8 +370,6 @@ impl SyncProvider for GoogleDriveProviderImpl {
             )
             .await?;
 
-        printlog!("(remote) uploaded settings");
-
         Ok(settings.clone())
     }
 
@@ -397,8 +395,6 @@ impl SyncProvider for GoogleDriveProviderImpl {
         let content = String::from_utf8(response.body_mut().collect().await?.to_bytes().to_vec())?;
 
         let settings: HashMap<String, serde_json::Value> = serde_json::from_str(&content)?;
-
-        printlog!("(remote) downloaded settings");
 
         Ok(settings)
     }

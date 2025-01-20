@@ -515,7 +515,7 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
     if settings.sync && !remote_clipboards_to_delete.is_empty() {
         tauri::async_runtime::spawn(async move {
             let provider = get_sync_provider().await;
-            let manager = get_sync_manager().await;
+            let manager = get_sync_manager();
 
             // Fetch all remote clipboards
             let remote_clipboards = provider.fetch_all_clipboards().await.unwrap_or_default();
