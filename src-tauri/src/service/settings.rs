@@ -4,7 +4,6 @@ use std::sync::Mutex;
 use super::clipboard::get_last_clipboard_db;
 use super::sync::upsert_settings_sync;
 use crate::prelude::*;
-use crate::service::sync::get_sync_manager;
 use crate::service::window::get_monitor_scale_factor;
 use common::io::language::get_system_language;
 use common::types::enums::ListenEvent;
@@ -40,7 +39,7 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
         .expect("Settings not found");
 
     let state = get_app().state::<Mutex<Model>>();
-    let mut locked_settings = state.lock().unwrap();
+    let mut locked_settings = state.lock().expect("Failed to lock settings");
     *locked_settings = settings.clone();
 
     Ok(settings)
@@ -56,7 +55,7 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, CommandError> 
         .await?;
 
     let state = get_app().state::<Mutex<Model>>();
-    let mut locked_settings = state.lock().unwrap();
+    let mut locked_settings = state.lock().expect("Failed to lock settings");
     *locked_settings = settings.clone();
 
     upsert_settings_sync(&settings).expect("Failed to upsert settings");
@@ -80,10 +79,8 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
         .await?;
 
     let state = get_app().state::<Mutex<Model>>();
-    let mut locked_settings = state.lock().unwrap();
+    let mut locked_settings = state.lock().expect("Failed to lock settings");
     *locked_settings = settings.clone();
-
-    upsert_settings_sync(&settings).expect("Failed to upsert settings");
 
     init_settings_window();
 
@@ -118,6 +115,7 @@ pub async fn update_settings_from_sync(
     if settings.is_empty() {
         return Ok(());
     }
+
     let db: DatabaseConnection = db().await?;
     let current_settings = get_settings_db().await?;
 
@@ -130,6 +128,15 @@ pub async fn update_settings_from_sync(
     let merged_value = match current_value {
         serde_json::Value::Object(mut map) => {
             for (key, value) in settings {
+                // Skip display_scale as it is calculated
+                if key == "display_scale" {
+                    continue;
+                }
+
+                if key == "startup" {
+                    continue;
+                }
+
                 if map.contains_key(&key) {
                     // Only update if types match or can be converted
                     if let Ok(converted) =
@@ -153,16 +160,13 @@ pub async fn update_settings_from_sync(
             .await?;
 
         let state = get_app().state::<Mutex<Model>>();
-        let mut locked_settings = state.lock().unwrap();
-        *locked_settings = settings.clone();
+        let mut locked_settings = state.lock().expect("Failed to lock settings");
+        *locked_settings = settings;
 
         init_settings_window();
 
-        get_sync_manager().lock().await.stop().await;
-        get_sync_manager().lock().await.start().await;
+        printlog!("(remote) downloaded settings");
     }
-
-    printlog!("(remote) downloaded settings");
 
     Ok(())
 }
@@ -179,6 +183,6 @@ pub fn init_settings_window() {
 
 pub fn get_global_settings() -> Model {
     let state = get_app().state::<Mutex<Model>>();
-    let locked_settings = state.lock().unwrap();
+    let locked_settings = state.lock().expect("Failed to lock settings");
     locked_settings.clone()
 }

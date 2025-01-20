@@ -9,7 +9,7 @@ pub enum Clipboard {
     Id,
     Types,
     Star,
-    CreatedDate,
+    CreatedAt,
 }
 
 #[derive(DeriveMigrationName)]
@@ -23,14 +23,10 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Clipboard::Table)
                     .if_not_exists()
-                    .col(
-                        uuid(Clipboard::Id)
-                            .not_null()
-                            .primary_key()
-                    )
+                    .col(uuid(Clipboard::Id).not_null().primary_key())
                     .col(json(Clipboard::Types).default(Expr::value("[]")))
                     .col(boolean(Clipboard::Star).default(false))
-                    .col(date_time(Clipboard::CreatedDate).default(Expr::current_timestamp()))
+                    .col(date_time(Clipboard::CreatedAt).default(Expr::current_timestamp()))
                     .to_owned(),
             )
             .await

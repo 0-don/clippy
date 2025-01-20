@@ -5,18 +5,20 @@ use sea_orm::prelude::Uuid;
 use serde_json::Value;
 use std::collections::HashMap;
 
+#[derive(Clone)]
 pub struct ClippyInfo {
     pub id: Uuid,
+    pub provider_id: String,
     pub starred: bool,
-    pub timestamp: NaiveDateTime,
-    pub provider_id: Option<String>,
+    pub created_at: NaiveDateTime,
+    pub deleted_at: Option<NaiveDateTime>,
 }
 
 #[async_trait::async_trait]
 pub trait SyncProvider: Send + Sync {
     async fn fetch_all_clipboards(&self) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>>;
 
-    async fn fetch_new_clipboards(
+    async fn compare_and_fetch_new_clipboards(
         &self,
         local_clipboards: &HashMap<Uuid, NaiveDateTime>,
         remote_clipboards: &Vec<ClippyInfo>,
@@ -28,9 +30,9 @@ pub trait SyncProvider: Send + Sync {
         remote_clipboards: &mut Vec<ClippyInfo>,
     ) -> Result<bool, Box<dyn std::error::Error>>;
 
-    async fn delete_by_id(&self, id: &String);
+    async fn mark_for_deletion(&self, clippy: &ClippyInfo);
 
-    async fn delete_by_uuid(&self, uuid: &Uuid);
+    async fn mark_for_deletion_by_uuid(&self, uuid: &Uuid);
 
     async fn download_by_id(
         &self,
@@ -50,7 +52,7 @@ pub trait SyncProvider: Send + Sync {
     async fn upsert_settings(
         &self,
         settings: &HashMap<String, Value>,
-    ) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>>;
+    ) -> Result<(), Box<dyn std::error::Error>>;
 
     async fn get_settings(&self) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>>;
 
