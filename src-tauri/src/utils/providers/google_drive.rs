@@ -5,7 +5,7 @@ use crate::{
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
-    constants::{BACKUP_FILE_PREFIX, TOKEN_NAME},
+    constants::{BACKUP_FILE_PREFIX, BACKUP_SETTINGS_PREFIX, TOKEN_NAME},
     printlog,
     types::{
         orm_query::FullClipboardDto,
@@ -22,6 +22,7 @@ use google_drive3::{
 use http_body_util::BodyExt;
 use migration::async_trait;
 use sea_orm::prelude::Uuid;
+use serde_json::Value;
 use std::{collections::HashMap, future::Future, io::Cursor, pin::Pin};
 use tao::{config::get_data_path, global::get_app};
 use tauri::Manager;
@@ -130,6 +131,21 @@ impl GoogleDriveProviderImpl {
 
         Ok(all_files)
     }
+
+    async fn find_settings_file(&self) -> Result<Option<File>, Box<dyn std::error::Error>> {
+        let (_, file_list) = self
+            .0
+            .hub
+            .files()
+            .list()
+            .q(&format!("name contains '{}'", BACKUP_SETTINGS_PREFIX))
+            .spaces("appDataFolder")
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
+            .await?;
+
+        Ok(file_list.files.and_then(|files| files.into_iter().next()))
+    }
 }
 
 #[async_trait::async_trait]
@@ -178,7 +194,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         Ok(clipboards)
     }
 
-    async fn upload_clipboards(
+    async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
         remote_clipboards: &mut Vec<ClippyInfo>,
@@ -197,43 +213,9 @@ impl SyncProvider for GoogleDriveProviderImpl {
                 }
             }
 
-            let file_name = create_clipboard_filename(
-                &clipboard.clipboard.id,
-                &clipboard.clipboard.created_date,
-                &clipboard.clipboard.star,
-            );
+            let remote_clipboard = self.upload_clipboard(clipboard).await?;
 
-            printlog!(
-                "uploading clipboard: {} from {} starred: {}",
-                clipboard.clipboard.id,
-                clipboard.clipboard.created_date,
-                clipboard.clipboard.star
-            );
-
-            let file = File {
-                name: Some(file_name),
-                mime_type: Some("application/json".into()),
-                created_time: Some(Utc.from_utc_datetime(&clipboard.clipboard.created_date)),
-                parents: Some(vec!["appDataFolder".into()]),
-                ..Default::default()
-            };
-
-            let (_, file) = self
-                .0
-                .hub
-                .files()
-                .create(file)
-                .add_scope(Scope::Appdata.as_ref())
-                .upload(
-                    Cursor::new(serde_json::to_string(&clipboard)?),
-                    "application/json".parse()?,
-                )
-                .await?;
-
-            remote_clipboards.push(
-                parse_clipboard_info(file.name.as_ref().expect("No name"), file.id)
-                    .expect("Failed to parse clipboard info"),
-            );
+            remote_clipboards.push(remote_clipboard);
         }
 
         Ok(remote_clipboards.len() > remote_count)
@@ -248,6 +230,8 @@ impl SyncProvider for GoogleDriveProviderImpl {
             .doit()
             .await
             .expect("Failed to delete clipboard");
+
+        printlog!("deleted clipboard: {}", id);
     }
 
     async fn delete_by_uuid(&self, uuid: &Uuid) {
@@ -317,6 +301,106 @@ impl SyncProvider for GoogleDriveProviderImpl {
         }
 
         Ok(())
+    }
+
+    async fn upload_clipboard(
+        &self,
+        clipboard: &FullClipboardDto,
+    ) -> Result<ClippyInfo, Box<dyn std::error::Error>> {
+        let file_name = create_clipboard_filename(
+            &clipboard.clipboard.id,
+            &clipboard.clipboard.created_date,
+            &clipboard.clipboard.star,
+        );
+
+        printlog!(
+            "uploading clipboard: {} from {} starred: {}",
+            clipboard.clipboard.id,
+            clipboard.clipboard.created_date,
+            clipboard.clipboard.star
+        );
+
+        let file = File {
+            name: Some(file_name),
+            mime_type: Some("application/json".into()),
+            created_time: Some(Utc.from_utc_datetime(&clipboard.clipboard.created_date)),
+            parents: Some(vec!["appDataFolder".into()]),
+            ..Default::default()
+        };
+
+        let (_, file) = self
+            .0
+            .hub
+            .files()
+            .create(file)
+            .add_scope(Scope::Appdata.as_ref())
+            .upload(
+                Cursor::new(serde_json::to_string(&clipboard)?),
+                "application/json".parse()?,
+            )
+            .await?;
+
+        Ok(
+            parse_clipboard_info(file.name.as_ref().expect("No name"), file.id)
+                .expect("Failed to parse clipboard info"),
+        )
+    }
+
+    async fn upsert_settings(
+        &self,
+        settings: &HashMap<String, Value>,
+    ) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>> {
+        let file = File {
+            name: Some(format!("{}.json", BACKUP_SETTINGS_PREFIX)),
+            mime_type: Some("application/json".into()),
+            parents: Some(vec!["appDataFolder".into()]),
+            ..Default::default()
+        };
+
+        // Upload the settings (will overwrite if exists)
+        let (_, _) = self
+            .0
+            .hub
+            .files()
+            .create(file)
+            .add_scope(Scope::Appdata.as_ref())
+            .upload(
+                Cursor::new(serde_json::to_string(settings)?),
+                "application/json".parse()?,
+            )
+            .await?;
+
+        printlog!("(remote) uploaded settings");
+
+        Ok(settings.clone())
+    }
+
+    async fn get_settings(
+        &self,
+    ) -> Result<HashMap<String, serde_json::Value>, Box<dyn std::error::Error>> {
+        let file = match self.find_settings_file().await? {
+            Some(f) => f,
+            None => return Ok(HashMap::new()),
+        };
+
+        let (mut response, _) = self
+            .0
+            .hub
+            .files()
+            .get(&file.id.unwrap())
+            .param("alt", "media")
+            .acknowledge_abuse(true)
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
+            .await?;
+
+        let content = String::from_utf8(response.body_mut().collect().await?.to_bytes().to_vec())?;
+
+        let settings: HashMap<String, serde_json::Value> = serde_json::from_str(&content)?;
+
+        printlog!("(remote) downloaded settings");
+
+        Ok(settings)
     }
 
     async fn is_authenticated(&self) -> bool {

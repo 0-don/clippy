@@ -134,7 +134,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     })
 }
 
-pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<FullClipboardDto, DbErr> {
+pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> {
     let db = db().await?;
 
     // Upsert clipboard - if id exists it will update, otherwise insert
@@ -202,11 +202,11 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<FullClipboa
     get_app_window(WebWindow::Main)
         .emit(
             ListenEvent::NewClipboard.to_string().as_str(),
-            trim_clipboard_data(vec![clipboard.clone()]).get(0),
+            trim_clipboard_data(vec![clipboard]).get(0),
         )
         .expect("Failed to emit");
 
-    Ok(clipboard)
+    Ok(())
 }
 
 pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {

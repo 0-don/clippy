@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::service::settings::update_settings_from_sync;
 use crate::service::{
     clipboard::{get_clipboard_uuids_db, get_sync_amount_cliboards_db, insert_clipboard_dto},
     sync::get_sync_provider,
@@ -22,6 +23,9 @@ impl SyncManager {
     async fn sync_job() -> Result<(), Box<dyn std::error::Error>> {
         let provider = get_sync_provider().await;
         if provider.is_authenticated().await {
+            let settings = provider.get_settings().await?;
+            update_settings_from_sync(settings).await?;
+
             let local_clipboards = get_clipboard_uuids_db().await?;
             let mut remote_clipboards = provider.fetch_all_clipboards().await?;
 
@@ -36,7 +40,7 @@ impl SyncManager {
             let new_local_clipboards = get_sync_amount_cliboards_db().await?;
 
             let has_added_new_clipboards = provider
-                .upload_clipboards(&new_local_clipboards, &mut remote_clipboards)
+                .upload_new_clipboards(&new_local_clipboards, &mut remote_clipboards)
                 .await?;
 
             if has_added_new_clipboards {
