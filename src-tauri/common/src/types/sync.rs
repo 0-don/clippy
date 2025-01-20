@@ -2,6 +2,7 @@ use super::orm_query::FullClipboardDto;
 use chrono::NaiveDateTime;
 use google_drive3::{hyper_rustls, hyper_util, DriveHub};
 use sea_orm::prelude::Uuid;
+use serde_json::Value;
 use std::collections::HashMap;
 
 pub struct ClippyInfo {
@@ -21,7 +22,7 @@ pub trait SyncProvider: Send + Sync {
         remote_clipboards: &Vec<ClippyInfo>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>>;
 
-    async fn upload_clipboards(
+    async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
         remote_clipboards: &mut Vec<ClippyInfo>,
@@ -40,6 +41,18 @@ pub trait SyncProvider: Send + Sync {
         &self,
         remote_clipboards: &Vec<ClippyInfo>,
     ) -> Result<(), Box<dyn std::error::Error>>;
+
+    async fn upload_clipboard(
+        &self,
+        clipboard: &FullClipboardDto,
+    ) -> Result<ClippyInfo, Box<dyn std::error::Error>>;
+
+    async fn upsert_settings(
+        &self,
+        settings: &HashMap<String, Value>,
+    ) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>>;
+
+    async fn get_settings(&self) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>>;
 
     async fn is_authenticated(&self) -> bool;
 }

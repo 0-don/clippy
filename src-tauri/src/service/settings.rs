@@ -1,10 +1,13 @@
+use std::collections::HashMap;
 use std::sync::Mutex;
 
 use super::clipboard::get_last_clipboard_db;
+use super::sync::upsert_settings_sync;
 use crate::prelude::*;
 use crate::service::window::get_monitor_scale_factor;
 use common::io::language::get_system_language;
 use common::types::enums::ListenEvent;
+use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use tao::connection::db;
@@ -42,7 +45,7 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
     Ok(settings)
 }
 
-pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
+pub async fn update_settings_db(settings: Model) -> Result<Model, CommandError> {
     let db: DatabaseConnection = db().await?;
 
     let active_model: ActiveModel = settings.into();
@@ -51,11 +54,13 @@ pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
         .exec(&db)
         .await?;
 
-    init_settings_window();
-
     let state = get_app().state::<Mutex<Model>>();
     let mut locked_settings = state.lock().unwrap();
     *locked_settings = settings.clone();
+
+    upsert_settings_sync(&settings).expect("Failed to upsert settings");
+
+    init_settings_window();
 
     Ok(settings)
 }
@@ -73,11 +78,13 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
         .exec(&db)
         .await?;
 
-    init_settings_window();
-
     let state = get_app().state::<Mutex<Model>>();
     let mut locked_settings = state.lock().unwrap();
     *locked_settings = settings.clone();
+
+    upsert_settings_sync(&settings).expect("Failed to upsert settings");
+
+    init_settings_window();
 
     Ok(settings)
 }
@@ -102,6 +109,51 @@ pub fn init_settings() {
                 .expect("Failed to update settings");
         })
     });
+}
+
+pub async fn update_settings_from_sync(
+    settings: HashMap<String, serde_json::Value>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if settings.is_empty() {
+        return Ok(());
+    }
+    let db: DatabaseConnection = db().await?;
+    let current_settings = get_settings_db().await?;
+
+    // Convert current settings to Value to get the schema structure
+    let current_value = serde_json::to_value(&current_settings)?;
+
+    // Merge the remote settings with current settings
+    // This preserves the structure and types of the current settings
+    // while only updating fields that exist in both
+    let merged_value = match current_value {
+        serde_json::Value::Object(mut map) => {
+            for (key, value) in settings {
+                if map.contains_key(&key) {
+                    // Only update if types match or can be converted
+                    if let Ok(converted) =
+                        serde_json::from_value::<serde_json::Value>(value.clone())
+                    {
+                        map.insert(key, converted);
+                    }
+                }
+            }
+            serde_json::Value::Object(map)
+        }
+        _ => return Ok(()),
+    };
+
+    // Deserialize back into settings model, ignoring errors for individual fields
+    if let Ok(new_settings) = serde_json::from_value::<settings::Model>(merged_value) {
+        let active_model: settings::ActiveModel = new_settings.into();
+        settings::Entity::update(active_model.reset_all())
+            .exec(&db)
+            .await?;
+
+        init_settings_window();
+    }
+
+    Ok(())
 }
 
 pub fn init_settings_window() {

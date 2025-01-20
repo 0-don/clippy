@@ -1,6 +1,6 @@
 use crate::service::{
     settings::get_settings_db,
-    sync::{get_sync_provider, sync_interval_toggle},
+    sync::{get_sync_provider, sync_toggle, upsert_settings_sync},
 };
 use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel};
@@ -9,9 +9,7 @@ use tao::connection::db;
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
-    Ok(sync_interval_toggle()
-        .await
-        .expect("Failed to toggle sync interval"))
+    Ok(sync_toggle().await?)
 }
 
 #[tauri::command]
@@ -28,7 +26,7 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
         .await?;
 
     if settings.sync {
-        tauri::async_runtime::spawn(async {
+        tauri::async_runtime::spawn(async move {
             let provider = get_sync_provider().await;
             let remote_clipboards = provider
                 .fetch_all_clipboards()
@@ -38,6 +36,8 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
                 .cleanup_old_clipboards(&remote_clipboards)
                 .await
                 .expect("Failed to cleanup old clipboards");
+
+            upsert_settings_sync(&settings).expect("Failed to upsert settings");
         });
     }
 
