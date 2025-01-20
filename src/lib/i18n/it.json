@@ -10,13 +10,14 @@
 		"COPY_AS_HTML": "Copia come HTML",
 		"COPY_AS_RTF": "Copia come RTF",
 		"DELETE_CLIPBOARD": "Elimina appunti",
-		"NO_CLIPBOARDS_YET": "Ancora nessuna clipboard...",
+		"NO_CLIPBOARDS_YET": "Ancora nessun appunto..",
 		"SEARCH_ENTRIES": "Cerca voci",
 		"STAR_FAVORITE": "Segna come preferito"
 	},
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "Info",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Cambia posizione del database degli appunti",
 			"DIGIT_1": "Cifra 1",
 			"DIGIT_2": "Cifra 2",
 			"DIGIT_3": "Cifra 3",
@@ -40,7 +41,7 @@
 			"RECENT_CLIPBOARDS": "Appunti recenti",
 			"SCROLL_TO_TOP": "Scorri fino all'inizio",
 			"SETTINGS": "Impostazioni",
-			"STARRED_CLIPBOARDS": "Clipboard con stelle",
+			"STARRED_CLIPBOARDS": "Stelle appunti",
 			"SYNC_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
 			"TYPE_CLIPBOARD": "Tipo appunti",
 			"VIEW_MORE": "Visualizza altro",
@@ -93,16 +94,19 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Cambia posizione",
 			"CONFIG_LOCATION": "Percorso configurazione",
 			"DATABASE_LOCATION": "Percorso database",
 			"OPEN": "Apri",
+			"RESET_LOCATION": "Reimposta posizione",
 			"SYNC": "Sincronizza",
+			"SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambia lingua UI",
 			"CHANGE_WINDOW_POSITION": "Modifica posizione finestra",
-			"HTML_CLIPBOARD_TOOLTIP": "Suggeriemnti appunti HTML",
+			"HTML_CLIPBOARD_TOOLTIP": "Suggerimenti appunti HTML",
 			"KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
 			"START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",
 			"SWITCH_THEME": "Modifica tema",

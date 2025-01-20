@@ -8,8 +8,6 @@ import { Tabs } from "../types";
 import { HotkeyEvent } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { LANGUAGES, LANGUAGE_KEY, TAB_NAMES, Tab } from "../utils/constants";
-import { ClipboardStore } from "./clipboard-store";
-import { HotkeyStore } from "./hotkey-store";
 import { SettingsStore } from "./settings-store";
 
 function createAppStore() {
@@ -49,14 +47,6 @@ function createAppStore() {
   const changeTab = (id: Tab) => setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
   const getCurrentTab = () => tabs().find((s) => s.current)!;
 
-  const init = async () => {
-    HotkeyStore.initHotkeys();
-    ClipboardStore.initClipboards();
-    await SettingsStore.initSettings();
-    darkMode();
-    setLocale.refetch();
-  };
-
   const darkMode = () =>
     SettingsStore.settings()?.dark_mode
       ? document.querySelector("html")?.classList?.add?.("dark")
@@ -69,7 +59,6 @@ function createAppStore() {
     setTabs,
     changeTab,
     getCurrentTab,
-    init,
     darkMode,
   };
 }

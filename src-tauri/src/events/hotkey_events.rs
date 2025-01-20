@@ -1,13 +1,10 @@
+use crate::commands::sync::sync_authenticate_toggle;
 use crate::prelude::*;
 use crate::service::window::open_window;
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
-        global::{
-            get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
-        },
         keyboard::{type_last_clipboard, type_last_clipboard_linux},
-        settings::sync_clipboard_history_toggle,
         window::toggle_main_window,
     },
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
@@ -17,6 +14,9 @@ use common::types::types::Key;
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
 use regex::Regex;
+use tao::global::{
+    get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
+};
 use tauri::Emitter;
 use tokio::sync::oneshot;
 
@@ -45,7 +45,7 @@ pub fn init_hotkey_listener() {
         loop {
             if let Ok(event) = receiver.try_recv() {
                 if event.state == HotKeyState::Pressed {
-                    let hotkey = get_hotkey_store().get(&event.id).cloned();
+                    let hotkey: Option<Key> = get_hotkey_store().get(&event.id).cloned();
                     if let Some(hotkey) = hotkey {
                         parse_hotkey_event(&hotkey).await;
                     }
@@ -75,7 +75,7 @@ pub async fn parse_hotkey_event(key: &Key) {
                 .emit(ListenEvent::ScrollToTop.to_string().as_str(), ())
                 .expect("Failed to emit event");
             get_main_window()
-                .emit(ListenEvent::Init.to_string().as_str(), ())
+                .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
                 .expect("Failed to emit event");
         }
         Some(HotkeyEvent::TypeClipboard) => {
@@ -87,7 +87,9 @@ pub async fn parse_hotkey_event(key: &Key) {
                 type_last_clipboard().await;
             }
         }
-        Some(HotkeyEvent::SyncClipboardHistory) => sync_clipboard_history_toggle().await,
+        Some(HotkeyEvent::SyncClipboardHistory) => {
+            let _ = sync_authenticate_toggle().await;
+        }
         Some(e @ (HotkeyEvent::Settings | HotkeyEvent::About)) => {
             open_window(
                 WebWindow::iter()

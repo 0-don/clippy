@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "Hakkında",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Pano Db konumunu değiştir",
 			"DIGIT_1": "Rakam 1",
 			"DIGIT_2": "Rakam 2",
 			"DIGIT_3": "Rakam 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Konumu değiştir",
 			"CONFIG_LOCATION": "Yapılandırma konumu",
 			"DATABASE_LOCATION": "Veritabanı konumu",
 			"OPEN": "Açık",
+			"RESET_LOCATION": "Konumu sıfırla",
 			"SYNC": "Senkronizasyon",
+			"SYNC_LIMIT": "Kaç panonun senkronize edilmesi gerekiyor?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
 		},
 		"GENERAL": {

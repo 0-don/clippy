@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "Về",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Thay đổi vị trí clipboard DB",
 			"DIGIT_1": "Chữ số 1",
 			"DIGIT_2": "Chữ số 2",
 			"DIGIT_3": "Chữ số 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Thay đổi vị trí",
 			"CONFIG_LOCATION": "Vị trí cấu hình",
 			"DATABASE_LOCATION": "Vị trí cơ sở dữ liệu",
 			"OPEN": "Mở",
+			"RESET_LOCATION": "Đặt lại vị trí",
 			"SYNC": "Đồng bộ",
+			"SYNC_LIMIT": "Cần đồng bộ bao nhiêu bảng tạm?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"
 		},
 		"GENERAL": {

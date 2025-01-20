@@ -5,7 +5,7 @@ use entity::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ClipboardWithRelations {
+pub struct FullClipboardDto {
     pub clipboard: clipboard::Model,
     pub text: Option<clipboard_text::Model>,
     pub html: Option<clipboard_html::Model>,
@@ -14,15 +14,8 @@ pub struct ClipboardWithRelations {
     pub files: Vec<clipboard_file::Model>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ClipboardsResponse {
-    pub clipboards: Vec<ClipboardWithRelations>,
-    pub total: u64,
-    pub has_more: bool,
-}
-
 #[derive(Debug, Clone)]
-pub struct ClipboardManager {
+pub struct FullClipboardDbo {
     pub clipboard_model: entity::clipboard::ActiveModel,
     pub clipboard_text_model: entity::clipboard_text::ActiveModel,
     pub clipboard_html_model: entity::clipboard_html::ActiveModel,
@@ -30,3 +23,11 @@ pub struct ClipboardManager {
     pub clipboard_rtf_model: entity::clipboard_rtf::ActiveModel,
     pub clipboard_files_model: Vec<entity::clipboard_file::ActiveModel>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClipboardsResponse {
+    pub clipboards: Vec<FullClipboardDto>,
+    pub total: u64,
+    pub has_more: bool,
+}
+

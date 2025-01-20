@@ -1,17 +1,11 @@
-use crate::prelude::*;
-use crate::service::global::get_app;
-use crate::service::settings::{get_data_path, get_settings_db};
-use common::types::enums::WebWindow;
-use common::types::hotkey::SafeHotKeyManager;
-use common::types::types::{Config, Key};
+use common::types::{enums::WebWindow, hotkey::SafeHotKeyManager, types::Key};
 use global_hotkey::GlobalHotKeyManager;
-use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
-use std::sync::OnceLock;
-use std::sync::{Arc, Mutex};
+use sea_orm::Iden;
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex, OnceLock},
+};
 use tauri::{Manager, WebviewWindow};
-use tauri_plugin_autostart::AutoLaunchManager;
 use tokio::sync::oneshot;
 
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
@@ -49,46 +43,4 @@ pub fn init_globals(app: &mut tauri::App) {
                 .expect("Failed to get window"),
         )))
         .expect("Failed to set main window");
-}
-
-pub fn create_config() {
-    let data_path = get_data_path();
-
-    if Path::new(&data_path.config_file_path).exists() {
-        return;
-    }
-
-    let config = Config {
-        db: format!("{}", &data_path.db_file_path),
-    };
-
-    let _ = fs::write(
-        &data_path.config_file_path,
-        serde_json::to_string(&config).expect("Failed to serialize config"),
-    );
-
-    printlog!(
-        "config path {}",
-        get_app()
-            .path()
-            .app_data_dir()
-            .expect("Failed to get app data dir")
-            .to_string_lossy()
-            .to_string()
-    );
-}
-
-pub fn autostart() {
-    tauri::async_runtime::spawn(async {
-        let app: &tauri::AppHandle = get_app();
-        let settings = get_settings_db().await.expect("Failed to get settings");
-        let manager: tauri::State<'_, AutoLaunchManager> = app.state::<AutoLaunchManager>();
-
-        // Use the manager as needed
-        if settings.startup && !manager.is_enabled().expect("Failed to check auto-launch") {
-            manager.enable().expect("Failed to enable auto-launch");
-        } else {
-            manager.disable().expect("Failed to disable auto-launch");
-        }
-    });
 }

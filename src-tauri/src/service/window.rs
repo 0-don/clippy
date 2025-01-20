@@ -1,10 +1,6 @@
-use super::global::{get_app, get_main_window};
+use super::settings::get_global_settings;
 use crate::prelude::*;
-use crate::service::settings::get_settings_db;
-use crate::{
-    service::global::get_window_stop_tx,
-    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys},
-};
+use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys};
 use common::constants::{
     ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
     SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
@@ -12,6 +8,7 @@ use common::constants::{
 use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
 use std::env;
 use std::process::Command;
+use tao::global::{get_app, get_main_window, get_window_stop_tx};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
 use tauri_plugin_positioner::{Position, WindowExt};
@@ -54,14 +51,11 @@ pub fn toggle_main_window() {
             .expect("Failed to emit set global hotkey event");
     } else {
         update_main_window_position();
-        tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(async {
-                let size = calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y).await;
-                get_main_window()
-                    .set_size(size)
-                    .expect("Failed to set window size");
-            })
-        });
+
+        get_main_window()
+            .set_size(calculate_logical_size(MAIN_WINDOW_X, MAIN_WINDOW_Y))
+            .expect("Failed to set window size");
+
         get_main_window()
             .emit(
                 ListenEvent::ChangeTab.to_string().as_str(),
@@ -86,43 +80,37 @@ pub fn toggle_main_window() {
 }
 
 pub fn update_main_window_position() {
-    tokio::task::block_in_place(|| {
-        tokio::runtime::Handle::current().block_on(async {
-            let settings = get_settings_db().await.expect("Failed to get settings");
+    let settings = get_global_settings();
 
-            if settings.position == ClippyPosition::Cursor.to_string() {
-                position_window_near_cursor();
-                return;
-            }
+    if settings.position == ClippyPosition::Cursor.to_string() {
+        position_window_near_cursor();
+        return;
+    }
 
-            let position = match settings.position.as_str() {
-                s if s == ClippyPosition::TopLeft.to_string() => Position::TopLeft,
-                s if s == ClippyPosition::TopRight.to_string() => Position::TopRight,
-                s if s == ClippyPosition::BottomLeft.to_string() => Position::BottomLeft,
-                s if s == ClippyPosition::BottomRight.to_string() => Position::BottomRight,
-                s if s == ClippyPosition::TopCenter.to_string() => Position::TopCenter,
-                s if s == ClippyPosition::BottomCenter.to_string() => Position::BottomCenter,
-                s if s == ClippyPosition::LeftCenter.to_string() => Position::LeftCenter,
-                s if s == ClippyPosition::RightCenter.to_string() => Position::RightCenter,
-                s if s == ClippyPosition::Center.to_string() => Position::Center,
-                s if s == ClippyPosition::TrayLeft.to_string() => Position::TrayLeft,
-                s if s == ClippyPosition::TrayBottomLeft.to_string() => Position::TrayBottomLeft,
-                s if s == ClippyPosition::TrayRight.to_string() => Position::TrayRight,
-                s if s == ClippyPosition::TrayBottomRight.to_string() => Position::TrayBottomRight,
-                s if s == ClippyPosition::TrayCenter.to_string() => Position::TrayCenter,
-                s if s == ClippyPosition::TrayBottomCenter.to_string() => {
-                    Position::TrayBottomCenter
-                }
-                _ => Position::BottomRight, // default fallback
-            };
+    let position = match settings.position.as_str() {
+        s if s == ClippyPosition::TopLeft.to_string() => Position::TopLeft,
+        s if s == ClippyPosition::TopRight.to_string() => Position::TopRight,
+        s if s == ClippyPosition::BottomLeft.to_string() => Position::BottomLeft,
+        s if s == ClippyPosition::BottomRight.to_string() => Position::BottomRight,
+        s if s == ClippyPosition::TopCenter.to_string() => Position::TopCenter,
+        s if s == ClippyPosition::BottomCenter.to_string() => Position::BottomCenter,
+        s if s == ClippyPosition::LeftCenter.to_string() => Position::LeftCenter,
+        s if s == ClippyPosition::RightCenter.to_string() => Position::RightCenter,
+        s if s == ClippyPosition::Center.to_string() => Position::Center,
+        s if s == ClippyPosition::TrayLeft.to_string() => Position::TrayLeft,
+        s if s == ClippyPosition::TrayBottomLeft.to_string() => Position::TrayBottomLeft,
+        s if s == ClippyPosition::TrayRight.to_string() => Position::TrayRight,
+        s if s == ClippyPosition::TrayBottomRight.to_string() => Position::TrayBottomRight,
+        s if s == ClippyPosition::TrayCenter.to_string() => Position::TrayCenter,
+        s if s == ClippyPosition::TrayBottomCenter.to_string() => Position::TrayBottomCenter,
+        _ => Position::BottomRight, // default fallback
+    };
 
-            get_main_window()
-                .as_ref()
-                .window()
-                .move_window(position)
-                .expect("Failed to move window");
-        })
-    });
+    get_main_window()
+        .as_ref()
+        .window()
+        .move_window(position)
+        .expect("Failed to move window");
 }
 
 pub fn position_window_near_cursor() {
@@ -223,7 +211,7 @@ pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
 }
 
 pub async fn create_about_window(title: Option<String>) {
-    let app = crate::service::global::get_app();
+    let app = get_app();
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window(WebWindow::About.to_string().as_str()) {
@@ -244,12 +232,12 @@ pub async fn create_about_window(title: Option<String>) {
     .expect("Failed to build window");
 
     window
-        .set_size(calculate_logical_size(ABOUT_WINDOW_X, ABOUT_WINDOW_Y).await)
+        .set_size(calculate_logical_size(ABOUT_WINDOW_X, ABOUT_WINDOW_Y))
         .expect("Failed to set window size");
 }
 
 pub async fn create_settings_window(title: Option<String>) {
-    let app = crate::service::global::get_app();
+    let app = get_app();
 
     // Close existing window if it exists
     if let Some(window) = app.get_webview_window(WebWindow::Settings.to_string().as_str()) {
@@ -269,7 +257,7 @@ pub async fn create_settings_window(title: Option<String>) {
     .expect("Failed to build window");
 
     window
-        .set_size(calculate_logical_size(SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y).await)
+        .set_size(calculate_logical_size(SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y))
         .expect("Failed to set window size");
 }
 
@@ -334,8 +322,8 @@ fn get_x11_scaling_factor() -> Option<f32> {
     None
 }
 
-pub async fn calculate_logical_size(width: i32, height: i32) -> LogicalSize<u32> {
-    let settings = get_settings_db().await.expect("Failed to get settings");
+pub fn calculate_logical_size(width: i32, height: i32) -> LogicalSize<u32> {
+    let settings = get_global_settings();
 
     let physical_width = (width as f32 * settings.display_scale) as u32;
     let physical_height = (height as f32 * settings.display_scale) as u32;

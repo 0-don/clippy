@@ -1,19 +1,13 @@
-extern crate alloc;
-extern crate image;
 use crate::prelude::*;
 use crate::{
-    service::{
-        clipboard::{
-            clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db,
-            get_clipboard_count_db, get_clipboard_db, get_clipboards_db, star_clipboard_db,
-        },
-        global::get_main_window,
+    service::clipboard::{
+        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_count_db,
+        get_clipboard_db, get_clipboards_db, star_clipboard_db,
     },
-    tauri_config::config::APP,
     utils::hotkey_manager::unregister_hotkeys,
 };
+use common::io::clipboard::trim_clipboard_data;
 use common::{
-    clipboard::trim_clipboard_data,
     printlog,
     types::{
         enums::{ClipboardType, ListenEvent},
@@ -21,7 +15,9 @@ use common::{
         types::CommandError,
     },
 };
+use sea_orm::prelude::Uuid;
 use std::fs::File;
+use tao::global::{get_app, get_main_window};
 use tauri::{Emitter, Manager};
 
 #[tauri::command]
@@ -56,18 +52,18 @@ pub async fn get_clipboards(
 }
 
 #[tauri::command]
-pub async fn copy_clipboard(id: i32, r#type: ClipboardType) -> Result<bool, CommandError> {
+pub async fn copy_clipboard(id: Uuid, r#type: ClipboardType) -> Result<bool, CommandError> {
     unregister_hotkeys(false);
     Ok(copy_clipboard_from_id(id, r#type).await?)
 }
 
 #[tauri::command]
-pub async fn star_clipboard(id: i32, star: bool) -> Result<bool, CommandError> {
+pub async fn star_clipboard(id: Uuid, star: bool) -> Result<bool, CommandError> {
     Ok(star_clipboard_db(id, star).await?)
 }
 
 #[tauri::command]
-pub async fn delete_clipboard(id: i32) -> Result<(), CommandError> {
+pub async fn delete_clipboard(id: Uuid) -> Result<(), CommandError> {
     delete_clipboard_db(id).await?;
     Ok(())
 }
@@ -76,13 +72,13 @@ pub async fn delete_clipboard(id: i32) -> Result<(), CommandError> {
 pub async fn clear_clipboards(r#type: Option<ClipboardType>) -> Result<(), CommandError> {
     clear_clipboards_db(r#type).await?;
     get_main_window()
-        .emit(ListenEvent::Init.to_string().as_str(), ())
+        .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
         .expect("Failed to emit");
     Ok(())
 }
 
 #[tauri::command]
-pub async fn save_clipboard_image(id: i32) -> Result<(), CommandError> {
+pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
     let clipboard = get_clipboard_db(id).await?;
 
     let extension = clipboard
@@ -101,9 +97,7 @@ pub async fn save_clipboard_image(id: i32) -> Result<(), CommandError> {
     )?;
 
     // Create a path for the new image file on the desktop
-    let image_path = APP
-        .get()
-        .ok_or(CommandError::Error("No app handle found".to_string()))?
+    let image_path = get_app()
         .path()
         .desktop_dir()?
         .join(format!("clipboard-{}.{}", id, extension));

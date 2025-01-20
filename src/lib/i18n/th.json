@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "เกี่ยวกับ",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "เปลี่ยนตำแหน่งฐานข้อมูลคลิปบอร์ด",
 			"DIGIT_1": "หลักที่ 1",
 			"DIGIT_2": "หลักที่ 2",
 			"DIGIT_3": "หลักที่ 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "เปลี่ยนตำแหน่ง",
 			"CONFIG_LOCATION": "กำหนดค่าตำแหน่ง",
 			"DATABASE_LOCATION": "ตำแหน่งที่ตั้งฐานข้อมูล",
 			"OPEN": "เปิด",
+			"RESET_LOCATION": "รีเซ็ตตำแหน่ง",
 			"SYNC": "การซิงค์",
+			"SYNC_LIMIT": "จะต้องซิงค์คลิปบอร์ดกี่อัน?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด"
 		},
 		"GENERAL": {

@@ -1,9 +1,7 @@
-use crate::{constants::MAX_TEXT_PREVIEW, types::orm_query::ClipboardWithRelations};
+use crate::{constants::MAX_TEXT_PREVIEW, types::orm_query::FullClipboardDto};
 use tl::{parse, ParserOptions};
 
-pub fn trim_clipboard_data(
-    mut clipboards: Vec<ClipboardWithRelations>,
-) -> Vec<ClipboardWithRelations> {
+pub fn trim_clipboard_data(mut clipboards: Vec<FullClipboardDto>) -> Vec<FullClipboardDto> {
     for clipboard in &mut clipboards {
         // Trim text content
         if let Some(text) = &mut clipboard.text {

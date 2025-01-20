@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "Acerca de",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Cambiar la ubicación de la base de datos del portapapeles",
 			"DIGIT_1": "Dígito 1",
 			"DIGIT_2": "Dígito 2",
 			"DIGIT_3": "Dígito 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Cambiar ubicación",
 			"CONFIG_LOCATION": "Ubicación de configuración",
 			"DATABASE_LOCATION": "Ubicación de la base de datos",
 			"OPEN": "Abierto",
+			"RESET_LOCATION": "Restablecer ubicación",
 			"SYNC": "Sincronizar",
+			"SYNC_LIMIT": "¿Cuántos portapapeles se deben sincronizar?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
 		},
 		"GENERAL": {

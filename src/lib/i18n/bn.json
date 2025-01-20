@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "সম্পর্কে",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "ক্লিপবোর্ড ডিবি অবস্থান পরিবর্তন করুন",
 			"DIGIT_1": "অঙ্ক 1",
 			"DIGIT_2": "সংখ্যা 2",
 			"DIGIT_3": "অঙ্ক 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "অবস্থান পরিবর্তন করুন",
 			"CONFIG_LOCATION": "অবস্থান কনফিগার করুন",
 			"DATABASE_LOCATION": "ডাটাবেস অবস্থান",
 			"OPEN": "খোলা",
+			"RESET_LOCATION": "অবস্থান রিসেট করুন",
 			"SYNC": "সিঙ্ক",
+			"SYNC_LIMIT": "কয়টি ক্লিপবোর্ড সিঙ্ক করা উচিত?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক্রোনাইজ করুন"
 		},
 		"GENERAL": {

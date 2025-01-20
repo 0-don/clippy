@@ -1,60 +1,98 @@
+use std::collections::HashMap;
+use std::sync::Mutex;
+
 use super::clipboard::get_last_clipboard_db;
-use super::global::get_app;
-use crate::connection;
+use super::sync::upsert_settings_sync;
 use crate::prelude::*;
-use crate::service::hotkey::with_hotkeys;
+use crate::service::sync::get_sync_manager;
 use crate::service::window::get_monitor_scale_factor;
-use common::constants::CONFIG_NAME;
-use common::constants::DB_NAME;
-use common::language::get_system_language;
-use common::types::types::Config;
-use common::types::types::DataPath;
+use common::io::language::get_system_language;
+use common::types::enums::ListenEvent;
+use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
-use std::{
-    fs::{self},
-    path::{Path, PathBuf},
-};
+use tao::connection::db;
+use tao::global::get_app;
 use tauri::Manager;
-use tauri_plugin_dialog::DialogExt;
+use tauri::{Emitter, EventTarget};
+use tauri_plugin_autostart::AutoLaunchManager;
 
-pub async fn get_settings_db() -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::db().await?;
+pub fn autostart() {
+    tauri::async_runtime::spawn(async {
+        let settings = get_settings_db().await.expect("Failed to get settings");
+        let manager: tauri::State<'_, AutoLaunchManager> = get_app().state::<AutoLaunchManager>();
 
-    let settings = settings::Entity::find_by_id(1).one(&db).await?;
-
-    Ok(settings.expect("Settings not found"))
+        // Use the manager as needed
+        if settings.startup && !manager.is_enabled().expect("Failed to check auto-launch") {
+            manager.enable().expect("Failed to enable auto-launch");
+        } else {
+            manager.disable().expect("Failed to disable auto-launch");
+        }
+    });
 }
 
-pub async fn update_settings_db(settings: Model) -> Result<Model, DbErr> {
-    let db: DatabaseConnection = connection::db().await?;
+pub async fn get_settings_db() -> Result<Model, DbErr> {
+    let db: DatabaseConnection = db().await?;
+
+    let settings = settings::Entity::find_by_id(1)
+        .one(&db)
+        .await?
+        .expect("Settings not found");
+
+    let state = get_app().state::<Mutex<Model>>();
+    let mut locked_settings = state.lock().unwrap();
+    *locked_settings = settings.clone();
+
+    Ok(settings)
+}
+
+pub async fn update_settings_db(settings: Model) -> Result<Model, CommandError> {
+    let db: DatabaseConnection = db().await?;
 
     let active_model: ActiveModel = settings.into();
 
-    let updated_settings = settings::Entity::update(active_model.reset_all())
+    let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    Ok(updated_settings)
+    let state = get_app().state::<Mutex<Model>>();
+    let mut locked_settings = state.lock().unwrap();
+    *locked_settings = settings.clone();
+
+    upsert_settings_sync(&settings).expect("Failed to upsert settings");
+
+    init_settings_window();
+
+    Ok(settings)
 }
 
-pub async fn update_settings_synchronize(sync: bool) -> Result<(), DbErr> {
-    let db: DatabaseConnection = connection::db().await?;
+pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Model, DbErr> {
+    let db: DatabaseConnection = db().await?;
 
     let mut settings = get_settings_db().await?;
 
-    settings.synchronize = sync;
+    settings.sync = sync;
 
     let active_model: ActiveModel = settings.into();
 
-    let _ = settings::Entity::update(active_model.reset_all())
+    let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    Ok(())
+    let state = get_app().state::<Mutex<Model>>();
+    let mut locked_settings = state.lock().unwrap();
+    *locked_settings = settings.clone();
+
+    upsert_settings_sync(&settings).expect("Failed to upsert settings");
+
+    init_settings_window();
+
+    Ok(settings)
 }
 
 pub fn init_settings() {
+    get_app().manage(Mutex::new(settings::Model::default()));
+
     tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(async {
             let last_clipboard = get_last_clipboard_db().await;
@@ -74,124 +112,73 @@ pub fn init_settings() {
     });
 }
 
-pub fn get_data_path() -> DataPath {
-    let config_path = if cfg!(debug_assertions) {
-        // Get absolute project root directory
-        let current_dir = std::env::current_dir()
-            .expect("Failed to get current directory")
-            .parent()
-            .expect("Failed to get parent directory")
-            .to_path_buf();
+pub async fn update_settings_from_sync(
+    settings: HashMap<String, serde_json::Value>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if settings.is_empty() {
+        return Ok(());
+    }
+    let db: DatabaseConnection = db().await?;
+    let current_settings = get_settings_db().await?;
 
-        current_dir.to_string_lossy().to_string()
-    } else {
-        // Use app data dir in production
-        get_app()
-            .path()
-            .app_data_dir()
-            .expect("Failed to get app data dir")
-            .to_string_lossy()
-            .to_string()
+    // Convert current settings to Value to get the schema structure
+    let current_value = serde_json::to_value(&current_settings)?;
+
+    // Merge the remote settings with current settings
+    // This preserves the structure and types of the current settings
+    // while only updating fields that exist in both
+    let merged_value = match current_value {
+        serde_json::Value::Object(mut map) => {
+            for (key, value) in settings {
+                if map.contains_key(&key) {
+                    // Only update if types match or can be converted
+                    if let Ok(converted) =
+                        serde_json::from_value::<serde_json::Value>(value.clone())
+                    {
+                        map.insert(key, converted);
+                    }
+                }
+            }
+            serde_json::Value::Object(map)
+        }
+        _ => return Ok(()),
     };
 
-    fs::create_dir_all(&config_path).expect("Failed to create config directory");
+    // Deserialize back into settings model, ignoring errors for individual fields
+    if let Ok(new_settings) = serde_json::from_value::<settings::Model>(merged_value) {
+        let active_model: settings::ActiveModel = new_settings.into();
 
-    let config_file_path = [&config_path, CONFIG_NAME]
-        .iter()
-        .collect::<PathBuf>()
-        .to_string_lossy()
-        .to_string();
+        let settings = settings::Entity::update(active_model.reset_all())
+            .exec(&db)
+            .await?;
 
-    let db_file_path = [&config_path, DB_NAME]
-        .iter()
-        .collect::<PathBuf>()
-        .to_string_lossy()
-        .to_string();
+        let state = get_app().state::<Mutex<Model>>();
+        let mut locked_settings = state.lock().unwrap();
+        *locked_settings = settings.clone();
 
-    DataPath {
-        config_path,
-        db_file_path,
-        config_file_path,
+        init_settings_window();
+
+        get_sync_manager().lock().await.stop().await;
+        get_sync_manager().lock().await.start().await;
     }
+
+    printlog!("(remote) downloaded settings");
+
+    Ok(())
 }
 
-pub fn get_config() -> (Config, DataPath) {
-    let data_path = get_data_path();
-
-    let json = std::fs::read_to_string(&data_path.config_file_path).expect("Failed to read file");
-
-    let config: Config = serde_json::from_str(&json).expect("Failed to parse JSON");
-
-    (config, data_path)
+pub fn init_settings_window() {
+    get_app()
+        .emit_to(
+            EventTarget::any(),
+            ListenEvent::InitSettings.to_string().as_str(),
+            (),
+        )
+        .expect("Failed to emit download progress event");
 }
 
-pub async fn sync_clipboard_history_enable() {
-    // get local config from app data
-    let (mut config, data_path) = get_config();
-
-    // Use blocking_pick_folder for synchronous folder selection
-    if let Some(dir) = get_app().dialog().file().blocking_pick_folder() {
-        // Convert path to string
-        let dir = dir.to_string();
-        let dir_file = format!("{}/clippy.sqlite", &dir);
-
-        // check if backup file exists
-        if !Path::new(&dir_file).exists() {
-            // copy current database to backup location
-            printlog!(
-                "copying database to backup location {} {}",
-                &config.db,
-                &dir_file
-            );
-            fs::copy(&config.db, &dir_file).expect("Failed to copy database");
-        }
-
-        // overwrite config database location
-        config.db = dir_file;
-
-        // overwrite config file
-        let _ = fs::write(
-            &data_path.config_file_path,
-            serde_json::to_string(&config).expect("Failed to serialize config"),
-        );
-
-        // Now we can await this since we're in an async function
-        update_settings_synchronize(true)
-            .await
-            .expect("Failed to update settings");
-    }
-}
-
-pub async fn sync_clipboard_history_disable() {
-    let (mut config, data_path) = get_config();
-    // copy backup file to default database location
-    fs::copy(&config.db, &data_path.db_file_path).expect("Failed to copy database");
-
-    // overwrite config database default location
-    config.db = data_path.db_file_path;
-
-    // overwrite config file
-    fs::write(
-        &data_path.config_file_path,
-        serde_json::to_string(&config).expect("Failed to serialize config"),
-    )
-    .expect("Failed to serialize config");
-
-    update_settings_synchronize(false)
-        .await
-        .expect("Failed to update settings");
-}
-
-pub async fn sync_clipboard_history_toggle() {
-    let settings = get_settings_db().await.expect("Failed to get settings");
-
-    printlog!("synchronize: {}", settings.synchronize);
-    with_hotkeys(false, async move {
-        if settings.synchronize {
-            sync_clipboard_history_disable().await;
-        } else {
-            sync_clipboard_history_enable().await;
-        }
-    })
-    .await;
+pub fn get_global_settings() -> Model {
+    let state = get_app().state::<Mutex<Model>>();
+    let locked_settings = state.lock().unwrap();
+    locked_settings.clone()
 }

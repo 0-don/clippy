@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "에 대한",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "클립보드 Db 위치 변경",
 			"DIGIT_1": "숫자 1",
 			"DIGIT_2": "숫자 2",
 			"DIGIT_3": "숫자 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "위치 변경",
 			"CONFIG_LOCATION": "구성 위치",
 			"DATABASE_LOCATION": "데이터베이스 위치",
 			"OPEN": "열려 있는",
+			"RESET_LOCATION": "위치 재설정",
 			"SYNC": "동조",
+			"SYNC_LIMIT": "몇 개의 클립보드를 동기화해야 하나요?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"
 		},
 		"GENERAL": {

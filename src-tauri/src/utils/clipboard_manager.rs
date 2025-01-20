@@ -1,16 +1,17 @@
 use crate::prelude::*;
-use crate::service::settings::get_settings_db;
+use crate::service::settings::get_global_settings;
 use crate::service::{
-    clipboard::{get_last_clipboard_db, insert_clipboard_db},
-    global::{get_app, get_app_window},
+    clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
-use common::types::orm_query::ClipboardManager;
+use common::types::orm_query::FullClipboardDbo;
 use image::imageops;
 use regex::Regex;
+use sea_orm::prelude::Uuid;
+use tao::global::{get_app, get_app_window};
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
@@ -18,7 +19,7 @@ use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
 pub trait ClipboardManagerExt {
-    fn new() -> ClipboardManager;
+    fn new() -> FullClipboardDbo;
     fn upsert_clipboard() -> impl std::future::Future<Output = ()> + Send;
     fn check_if_last_is_same(&mut self) -> impl std::future::Future<Output = bool> + Send;
     fn parse_model(
@@ -28,14 +29,14 @@ pub trait ClipboardManagerExt {
         rtf: Option<String>,
         image_data: Option<Vec<u8>>,
         files: Option<Vec<String>>,
-    ) -> impl std::future::Future<Output = ()> + Send;
+    ) -> ();
     fn parse_image_model(&mut self, img_bytes: Vec<u8>);
     fn parse_file_models(&mut self, file_paths: Vec<String>) -> std::io::Result<()>;
 }
 
-impl ClipboardManagerExt for ClipboardManager {
+impl ClipboardManagerExt for FullClipboardDbo {
     fn new() -> Self {
-        ClipboardManager {
+        FullClipboardDbo {
             clipboard_model: entity::clipboard::ActiveModel::default(),
             clipboard_text_model: entity::clipboard_text::ActiveModel::default(),
             clipboard_html_model: entity::clipboard_html::ActiveModel::default(),
@@ -49,18 +50,25 @@ impl ClipboardManagerExt for ClipboardManager {
         let clipboard = get_app().state::<Clipboard>();
         let mut manager = Self::new();
 
-        manager
-            .parse_model(
-                clipboard.read_text().ok(),
-                clipboard.read_html().ok(),
-                clipboard.read_rtf().ok(),
-                clipboard.read_image_binary().ok(),
-                clipboard.read_files().ok(),
-            )
-            .await;
+        manager.parse_model(
+            clipboard.read_text().ok(),
+            clipboard.read_html().ok(),
+            clipboard.read_rtf().ok(),
+            clipboard.read_image_binary().ok(),
+            clipboard.read_files().ok(),
+        );
 
-        if !manager.check_if_last_is_same().await {
-            let clipboard = insert_clipboard_db(manager)
+        // Add check for empty types
+        if let sea_orm::ActiveValue::Set(types_json) = &manager.clipboard_model.types {
+            if let Some(types) = ClipboardType::from_json_value(types_json) {
+                if types.is_empty() {
+                    return;
+                }
+            }
+        }
+
+        if !manager.check_if_last_is_same().await && manager.clipboard_model.types.is_set() {
+            let clipboard = insert_clipboard_dbo(manager)
                 .await
                 .expect("Failed to insert");
             get_app_window(WebWindow::Main)
@@ -139,7 +147,7 @@ impl ClipboardManagerExt for ClipboardManager {
         }
     }
 
-    async fn parse_model(
+    fn parse_model(
         &mut self,
         text: Option<String>,
         html: Option<String>,
@@ -147,7 +155,7 @@ impl ClipboardManagerExt for ClipboardManager {
         image: Option<Vec<u8>>,
         files: Option<Vec<String>>,
     ) {
-        let settings = get_settings_db().await.expect("Settings failed");
+        let settings = get_global_settings();
         let mut types = vec![];
 
         if let Some(text) =
@@ -221,6 +229,7 @@ impl ClipboardManagerExt for ClipboardManager {
         printlog!("clipboard types: {:?}", types);
 
         self.clipboard_model = entity::clipboard::ActiveModel {
+            id: Set(Uuid::new_v4()),
             types: Set(ClipboardType::to_json_value(&types)),
             ..Default::default()
         };

@@ -9,8 +9,15 @@ path = "src/lib.rs"
 
 [dependencies]
 entity = { path = "../entity" }
-global-hotkey = "0"
-sea-orm = "1"
+
+async-trait = "0"
+tokio = "1"
+
 serde = "1"
 serde_json = "1"
+
+google-drive3 = "6"
+global-hotkey = "0"
+sea-orm = "1"
 tl = "0"
+chrono = "0"

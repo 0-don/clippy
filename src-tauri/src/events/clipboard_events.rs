@@ -1,5 +1,6 @@
-use crate::{service::global::get_app, utils::clipboard_manager::ClipboardManagerExt};
-use common::types::orm_query::ClipboardManager;
+use crate::utils::clipboard_manager::ClipboardManagerExt;
+use common::types::orm_query::FullClipboardDbo;
+use tao::global::get_app;
 use tauri::{Listener, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
@@ -15,7 +16,7 @@ pub fn init_clipboard_listener() {
         "plugin:clipboard://clipboard-monitor/update",
         move |_event| {
             tauri::async_runtime::spawn(async {
-                ClipboardManager::upsert_clipboard().await;
+                FullClipboardDbo::upsert_clipboard().await;
             });
         },
     );

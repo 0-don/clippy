@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "About",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Change clipboard Db location",
 			"DIGIT_1": "Digit 1",
 			"DIGIT_2": "Digit 2",
 			"DIGIT_3": "Digit 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Change location",
 			"CONFIG_LOCATION": "Config location",
 			"DATABASE_LOCATION": "Database location",
 			"OPEN": "Open",
+			"RESET_LOCATION": "Reset location",
 			"SYNC": "Sync",
+			"SYNC_LIMIT": "How many clipboards should be synced?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
 		},
 		"GENERAL": {

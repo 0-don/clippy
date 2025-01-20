@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "کے بارے میں",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "کلپ بورڈ Db مقام تبدیل کریں۔",
 			"DIGIT_1": "ہندسہ 1",
 			"DIGIT_2": "ہندسہ 2",
 			"DIGIT_3": "ہندسہ 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "مقام تبدیل کریں۔",
 			"CONFIG_LOCATION": "مقام ترتیب دیں۔",
 			"DATABASE_LOCATION": "ڈیٹا بیس کا مقام",
 			"OPEN": "کھولیں۔",
+			"RESET_LOCATION": "مقام کو دوبارہ ترتیب دیں۔",
 			"SYNC": "مطابقت پذیری",
+			"SYNC_LIMIT": "کتنے کلپ بورڈز کو مطابقت پذیر ہونا چاہئے؟",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "کلپ بورڈ کی تاریخ کو ہم آہنگ کریں۔"
 		},
 		"GENERAL": {

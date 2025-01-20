@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "Sobre",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Alterar localização do banco de dados da área de transferência",
 			"DIGIT_1": "Dígito 1",
 			"DIGIT_2": "Dígito 2",
 			"DIGIT_3": "Dígito 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Alterar localização",
 			"CONFIG_LOCATION": "Local de configuração",
 			"DATABASE_LOCATION": "Localização da base de dados",
 			"OPEN": "Abrir",
+			"RESET_LOCATION": "Redefinir local",
 			"SYNC": "Sincronizar",
+			"SYNC_LIMIT": "Quantas áreas de transferência devem ser sincronizadas?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
 		},
 		"GENERAL": {
