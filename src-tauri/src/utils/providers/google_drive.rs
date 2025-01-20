@@ -156,7 +156,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
         for file in filelist {
             if let Some(remote) =
-                parse_clipboard_info(&file.name.as_ref().expect("No name"), file.id)
+                parse_clipboard_info(&file.name.expect("No name"), &file.id.expect("No id"))
             {
                 clipboards.push(remote);
             }
@@ -165,7 +165,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         Ok(clipboards)
     }
 
-    async fn fetch_new_clipboards(
+    async fn compare_and_fetch_new_clipboards(
         &self,
         local_clipboards: &HashMap<Uuid, NaiveDateTime>,
         remote_clipboards: &Vec<ClippyInfo>,
@@ -173,8 +173,13 @@ impl SyncProvider for GoogleDriveProviderImpl {
         let mut clipboards = Vec::new();
 
         for file in remote_clipboards {
+            // Skip if the clipboard is marked for deletion
+            if file.deleted_at.is_some() {
+                continue;
+            }
+
             if let Some(existing_timestamp) = local_clipboards.get(&file.id) {
-                if existing_timestamp >= &file.timestamp {
+                if existing_timestamp >= &file.created_at {
                     continue;
                 }
             }
@@ -182,13 +187,11 @@ impl SyncProvider for GoogleDriveProviderImpl {
             printlog!(
                 "downloading clipboard: {} from {} starred: {}",
                 file.id,
-                file.timestamp,
+                file.created_at,
                 file.starred
             );
 
-            if let Some(id) = &file.provider_id {
-                clipboards.push(self.download_by_id(id).await?);
-            }
+            clipboards.push(self.download_by_id(&file.provider_id).await?);
         }
 
         Ok(clipboards)
@@ -201,48 +204,56 @@ impl SyncProvider for GoogleDriveProviderImpl {
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let remote_map: HashMap<Uuid, NaiveDateTime> = remote_clipboards
             .iter()
-            .map(|clip| (clip.id, clip.timestamp))
+            .map(|clip| (clip.id, clip.created_at))
             .collect();
 
         let remote_count = remote_clipboards.len();
 
         for clipboard in new_local_clipboards {
-            if let Some(remote_clipboard) = remote_map.get(&clipboard.clipboard.id) {
-                if remote_clipboard >= &clipboard.clipboard.created_date {
+            if let Some(remote_created_at) = remote_map.get(&clipboard.clipboard.id) {
+                if remote_created_at >= &clipboard.clipboard.created_at {
                     continue;
                 }
             }
 
-            let remote_clipboard = self.upload_clipboard(clipboard).await?;
-
-            remote_clipboards.push(remote_clipboard);
+            remote_clipboards.push(self.upload_clipboard(clipboard).await?);
         }
 
         Ok(remote_clipboards.len() > remote_count)
     }
 
-    async fn delete_by_id(&self, id: &String) {
+    async fn mark_for_deletion(&self, clippy: &ClippyInfo) {
+        let new_name = create_clipboard_filename(&clippy.id, &clippy.starred, &clippy.created_at);
+
+        let file = google_drive3::api::File {
+            name: Some(new_name),
+            ..Default::default()
+        };
+
         self.0
             .hub
             .files()
-            .delete(&id)
+            .update(file, &clippy.provider_id)
             .add_scope(Scope::Appdata.as_ref())
-            .doit()
+            .doit_without_upload()
             .await
-            .expect("Failed to delete clipboard");
+            .expect("Failed to rename file");
 
-        printlog!("deleted clipboard: {}", id);
+        printlog!("(remote) marked clipboard for deletion: {}", clippy.id);
     }
 
-    async fn delete_by_uuid(&self, uuid: &Uuid) {
+    async fn mark_for_deletion_by_uuid(&self, uuid: &Uuid) {
         let files = self
             .fetch_all_clipboard_files()
             .await
             .expect("Failed to fetch clipboards");
         for file in files {
-            if let Some(remote) = parse_clipboard_info(&file.name.unwrap(), file.id.clone()) {
+            if let Some(remote) = parse_clipboard_info(
+                &file.name.expect("No name"),
+                file.id.as_ref().expect("No id"),
+            ) {
                 if remote.id == *uuid {
-                    self.delete_by_id(&file.id.as_ref().expect("No id")).await;
+                    self.mark_for_deletion(&remote).await;
                     break;
                 }
             }
@@ -277,27 +288,27 @@ impl SyncProvider for GoogleDriveProviderImpl {
             return Ok(());
         }
 
-        let mut clipboards = remote_clipboards
+        let mut clipboards: Vec<_> = remote_clipboards
             .iter()
             .filter(|clip| !clip.starred)
-            .map(|file| (file.provider_id.as_ref().expect("No provider id"), file))
-            .collect::<Vec<_>>();
+            .collect();
 
-        clipboards.sort_by_key(|(_, info)| info.timestamp);
+        clipboards.sort_by_key(|info| info.created_at);
 
         let files_to_delete = clipboards
             .len()
             .saturating_sub(settings.sync_limit as usize);
 
-        for (id, info) in clipboards.into_iter().take(files_to_delete) {
+        for clippy in clipboards.into_iter().take(files_to_delete) {
             printlog!(
-                "deleting clipboard: {} from {} starred: {}",
-                info.id,
-                info.timestamp,
-                info.starred
+                "deleting clipboard: {} from {} starred: {} deleted: {:?}",
+                clippy.id,
+                clippy.created_at,
+                clippy.starred,
+                clippy.deleted_at
             );
 
-            self.delete_by_id(id).await;
+            self.mark_for_deletion(clippy).await;
         }
 
         Ok(())
@@ -309,21 +320,21 @@ impl SyncProvider for GoogleDriveProviderImpl {
     ) -> Result<ClippyInfo, Box<dyn std::error::Error>> {
         let file_name = create_clipboard_filename(
             &clipboard.clipboard.id,
-            &clipboard.clipboard.created_date,
             &clipboard.clipboard.star,
+            &clipboard.clipboard.created_at,
         );
 
         printlog!(
             "uploading clipboard: {} from {} starred: {}",
             clipboard.clipboard.id,
-            clipboard.clipboard.created_date,
-            clipboard.clipboard.star
+            clipboard.clipboard.created_at,
+            clipboard.clipboard.star,
         );
 
         let file = File {
             name: Some(file_name),
             mime_type: Some("application/json".into()),
-            created_time: Some(Utc.from_utc_datetime(&clipboard.clipboard.created_date)),
+            created_time: Some(Utc.from_utc_datetime(&clipboard.clipboard.created_at)),
             parents: Some(vec!["appDataFolder".into()]),
             ..Default::default()
         };
@@ -340,16 +351,17 @@ impl SyncProvider for GoogleDriveProviderImpl {
             )
             .await?;
 
-        Ok(
-            parse_clipboard_info(file.name.as_ref().expect("No name"), file.id)
-                .expect("Failed to parse clipboard info"),
+        Ok(parse_clipboard_info(
+            file.name.as_ref().expect("No name"),
+            file.id.as_ref().expect("No id"),
         )
+        .expect("Failed to parse clipboard info"))
     }
 
     async fn upsert_settings(
         &self,
         settings: &HashMap<String, Value>,
-    ) -> Result<HashMap<String, Value>, Box<dyn std::error::Error>> {
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let file = File {
             name: Some(format!("{}.json", BACKUP_SETTINGS_PREFIX)),
             mime_type: Some("application/json".into()),
@@ -370,7 +382,9 @@ impl SyncProvider for GoogleDriveProviderImpl {
             )
             .await?;
 
-        Ok(settings.clone())
+        printlog!("(remote) uploaded settings");
+
+        Ok(())
     }
 
     async fn get_settings(
@@ -385,7 +399,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
             .0
             .hub
             .files()
-            .get(&file.id.unwrap())
+            .get(&file.id.expect("No id"))
             .param("alt", "media")
             .acknowledge_abuse(true)
             .add_scope(Scope::Appdata.as_ref())

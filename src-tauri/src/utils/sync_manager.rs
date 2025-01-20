@@ -1,9 +1,11 @@
 use crate::prelude::*;
+use crate::service::clipboard::delete_clipboards_db;
 use crate::service::settings::update_settings_from_sync;
 use crate::service::{
     clipboard::{get_clipboard_uuids_db, get_sync_amount_cliboards_db, insert_clipboard_dto},
     sync::get_sync_provider,
 };
+use sea_orm::prelude::Uuid;
 use std::time::Duration;
 use tokio::{task::JoinHandle, time};
 
@@ -29,8 +31,19 @@ impl SyncManager {
             let local_clipboards = get_clipboard_uuids_db().await?;
             let mut remote_clipboards = provider.fetch_all_clipboards().await?;
 
+            let deleted_clipboards: Vec<Uuid> = remote_clipboards
+                .clone()
+                .into_iter()
+                .filter(|clipboard| clipboard.deleted_at.is_some())
+                .map(|clipboard| clipboard.id)
+                .collect();
+
+            delete_clipboards_db(deleted_clipboards)
+                .await
+                .expect("Error deleting clipboards");
+
             let new_clipboards = provider
-                .fetch_new_clipboards(&local_clipboards, &remote_clipboards)
+                .compare_and_fetch_new_clipboards(&local_clipboards, &remote_clipboards)
                 .await?;
 
             for clipboard in new_clipboards {

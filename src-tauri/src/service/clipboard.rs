@@ -344,7 +344,7 @@ pub async fn get_clipboards_db(
         })
         .offset(cursor)
         .limit(25)
-        .order_by_desc(clipboard::Column::CreatedDate);
+        .order_by_desc(clipboard::Column::CreatedAt);
 
     let clipboards = query.all(&db).await?;
     // printlog!("clipboards: {:?}", clipboards);
@@ -357,13 +357,13 @@ pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbE
 
     let sync_amount_clipboards = clipboard::Entity::find()
         .limit(settings.sync_limit as u64)
-        .order_by_desc(clipboard::Column::CreatedDate)
+        .order_by_desc(clipboard::Column::CreatedAt)
         .all(&db)
         .await?;
 
     let sync_favorite_clipboards = clipboard::Entity::find()
         .filter(clipboard::Column::Star.eq(true))
-        .order_by_desc(clipboard::Column::CreatedDate)
+        .order_by_desc(clipboard::Column::CreatedAt)
         .all(&db)
         .await?;
 
@@ -399,25 +399,29 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
     tauri::async_runtime::spawn(async move {
         let provider = get_sync_provider().await;
 
-        provider.delete_by_uuid(&delete_id).await
+        provider.mark_for_deletion_by_uuid(&delete_id).await
     });
 
     Ok(true)
 }
 
-pub async fn delete_clipboard_db(id: Uuid) -> Result<bool, CommandError> {
+pub async fn delete_clipboards_db(ids: Vec<Uuid>) -> Result<(), CommandError> {
     let db = db().await?;
 
-    clipboard::Entity::delete_by_id(id).exec(&db).await?;
+    clipboard::Entity::delete_many()
+        .filter(clipboard::Column::Id.is_in(ids.clone()))
+        .exec(&db)
+        .await?;
 
-    let delete_id = id.clone();
     tauri::async_runtime::spawn(async move {
         let provider = get_sync_provider().await;
 
-        provider.delete_by_uuid(&delete_id).await
+        for id in ids {
+            provider.mark_for_deletion_by_uuid(&id).await
+        }
     });
 
-    Ok(true)
+    Ok(())
 }
 
 pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), DbErr> {
@@ -531,12 +535,11 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                         .iter()
                         .any(|local| local.id == remote.id)
                 })
-                .filter_map(|remote| remote.provider_id.as_ref())
                 .collect();
 
             // Delete filtered clipboards using their provider IDs
-            for provider_id in remote_to_delete {
-                provider.delete_by_id(provider_id).await;
+            for clippy in remote_to_delete {
+                provider.mark_for_deletion(clippy).await;
             }
 
             // Restart the sync manager
@@ -560,8 +563,8 @@ pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, NaiveDateTime>, Db
 
     let clipboards = clipboard::Entity::find()
         .select_only()
-        .columns([clipboard::Column::Id, clipboard::Column::CreatedDate])
-        .order_by_desc(clipboard::Column::CreatedDate)
+        .columns([clipboard::Column::Id, clipboard::Column::CreatedAt])
+        .order_by_desc(clipboard::Column::CreatedAt)
         .into_tuple()
         .all(&db)
         .await?;
@@ -617,8 +620,8 @@ pub async fn copy_clipboard_from_id(
                 .filter_map(|f| {
                     let path = std::env::temp_dir().join(format!(
                         "{}.{}",
-                        f.name.as_ref().unwrap(),
-                        f.extension.as_ref().unwrap()
+                        f.name.as_ref().expect("Failed to get file name"),
+                        f.extension.as_ref().expect("Failed to get file extension")
                     ));
                     std::fs::write(&path, &f.data).ok()?;
                     Some(if cfg!(windows) {

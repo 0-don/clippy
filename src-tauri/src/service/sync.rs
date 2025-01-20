@@ -15,8 +15,11 @@ pub fn upsert_settings_sync(settings: &settings::Model) -> Result<(), CommandErr
         let settings_map: HashMap<String, serde_json::Value> =
             serde_json::from_value(serde_json::to_value(settings.clone())?)?;
         tauri::async_runtime::spawn(async move {
-            let provider = get_sync_provider().await;
-            let _ = provider.upsert_settings(&settings_map).await;
+            get_sync_provider()
+                .await
+                .upsert_settings(&settings_map)
+                .await
+                .expect("Failed to upsert settings");
         });
     }
     Ok(())

@@ -19,7 +19,7 @@ pub struct Model {
     pub id: Uuid,
     pub types: Json,
     pub star: bool,
-    pub created_date: DateTime,
+    pub created_at: DateTime,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -27,7 +27,7 @@ pub enum Column {
     Id,
     Types,
     Star,
-    CreatedDate,
+    CreatedAt,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -58,7 +58,7 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::Uuid.def(),
             Self::Types => ColumnType::Json.def(),
             Self::Star => ColumnType::Boolean.def(),
-            Self::CreatedDate => ColumnType::DateTime.def(),
+            Self::CreatedAt => ColumnType::DateTime.def(),
         }
     }
 }

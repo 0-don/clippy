@@ -16,6 +16,14 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
+
+      - name: Create env file
+        run: |
+          touch .env
+          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} > .env
+          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+          cat .env
+
       
       - name: Docker run
         run: cd docs && docker compose up -d --force-recreate --build

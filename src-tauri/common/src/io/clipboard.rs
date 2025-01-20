@@ -37,7 +37,7 @@ pub fn trim_clipboard_data(mut clipboards: Vec<FullClipboardDto>) -> Vec<FullCli
 fn extract_and_truncate_html_body(html: &str, max_length: usize) -> String {
     if let Ok(dom) = parse(html, ParserOptions::default()) {
         if let Some(body) = dom.query_selector("body").and_then(|mut iter| iter.next()) {
-            let node = body.get(dom.parser()).unwrap();
+            let node = body.get(dom.parser()).expect("Failed to get body node");
             let body_html = node.inner_html(dom.parser());
             return truncate_text(&body_html, max_length);
         }

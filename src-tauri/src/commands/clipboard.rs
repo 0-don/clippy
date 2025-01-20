@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use crate::{
     service::clipboard::{
-        clear_clipboards_db, copy_clipboard_from_id, delete_clipboard_db, get_clipboard_count_db,
+        clear_clipboards_db, copy_clipboard_from_id, delete_clipboards_db, get_clipboard_count_db,
         get_clipboard_db, get_clipboards_db, star_clipboard_db,
     },
     utils::hotkey_manager::unregister_hotkeys,
@@ -64,7 +64,7 @@ pub async fn star_clipboard(id: Uuid, star: bool) -> Result<bool, CommandError> 
 
 #[tauri::command]
 pub async fn delete_clipboard(id: Uuid) -> Result<(), CommandError> {
-    delete_clipboard_db(id).await?;
+    delete_clipboards_db(vec![id]).await?;
     Ok(())
 }
 

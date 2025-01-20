@@ -15,12 +15,7 @@ pub static TOKEN_NAME: &str = "token.json";
 
 pub static BACKUP_SETTINGS_PREFIX: &str = "settings";
 pub static BACKUP_FILE_PREFIX: &str = "clippy";
-pub static BACKUP_FILE_FORMAT: LazyLock<String> = LazyLock::new(|| {
-    format!(
-        "{}_{}_{}_{}.json",
-        BACKUP_FILE_PREFIX, "{timestamp}", "{favorite}", "{id}"
-    )
-});
+pub static BACKDUP_DATE_FORMAT: &str = "%Y%m%d%H%M%S";
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
