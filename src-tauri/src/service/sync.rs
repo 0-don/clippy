@@ -45,11 +45,11 @@ pub async fn get_sync_provider() -> State<'static, Arc<dyn SyncProvider>> {
     get_app().state()
 }
 
-pub async fn get_sync_manager() -> State<'static, Mutex<SyncManager>> {
+pub fn get_sync_manager() -> State<'static, Mutex<SyncManager>> {
     match get_app().try_state() {
         Some(manager) => manager,
         None => {
-            let manager = Mutex::new(SyncManager::new().await);
+            let manager = Mutex::new(SyncManager::new());
             get_app().manage(manager);
             get_app().state()
         }
@@ -60,7 +60,7 @@ pub fn init_sync_interval() {
     tauri::async_runtime::spawn(async {
         if let Ok(settings) = get_settings_db().await {
             if settings.sync {
-                get_sync_manager().await.lock().await.start().await;
+                get_sync_manager().lock().await.start().await;
             }
         }
     });
@@ -78,11 +78,11 @@ pub async fn sync_toggle() -> Result<bool, CommandError> {
         }
 
         // Don't stop existing sync if enabling - just start a new one
-        get_sync_manager().await.lock().await.start().await;
+        get_sync_manager().lock().await.start().await;
         update_settings_synchronize_db(true).await?;
     } else {
         // Trying to disable sync
-        get_sync_manager().await.lock().await.stop().await;
+        get_sync_manager().lock().await.stop().await;
         update_settings_synchronize_db(false).await?;
     }
 

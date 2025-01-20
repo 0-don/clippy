@@ -4,6 +4,7 @@ use std::sync::Mutex;
 use super::clipboard::get_last_clipboard_db;
 use super::sync::upsert_settings_sync;
 use crate::prelude::*;
+use crate::service::sync::get_sync_manager;
 use crate::service::window::get_monitor_scale_factor;
 use common::io::language::get_system_language;
 use common::types::enums::ListenEvent;
@@ -146,12 +147,22 @@ pub async fn update_settings_from_sync(
     // Deserialize back into settings model, ignoring errors for individual fields
     if let Ok(new_settings) = serde_json::from_value::<settings::Model>(merged_value) {
         let active_model: settings::ActiveModel = new_settings.into();
-        settings::Entity::update(active_model.reset_all())
+
+        let settings = settings::Entity::update(active_model.reset_all())
             .exec(&db)
             .await?;
 
+        let state = get_app().state::<Mutex<Model>>();
+        let mut locked_settings = state.lock().unwrap();
+        *locked_settings = settings.clone();
+
         init_settings_window();
+
+        get_sync_manager().lock().await.stop().await;
+        get_sync_manager().lock().await.start().await;
     }
+
+    printlog!("(remote) downloaded settings");
 
     Ok(())
 }
