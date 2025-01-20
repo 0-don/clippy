@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "О",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Изменить расположение базы данных буфера обмена",
 			"DIGIT_1": "Цифра 1",
 			"DIGIT_2": "Цифра 2",
 			"DIGIT_3": "Цифра 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Изменить местоположение",
 			"CONFIG_LOCATION": "Расположение конфигурации",
 			"DATABASE_LOCATION": "Расположение базы данных",
 			"OPEN": "Открыть",
+			"RESET_LOCATION": "Сбросить местоположение",
 			"SYNC": "Синхронизировать",
+			"SYNC_LIMIT": "Сколько буферов обмена следует синхронизировать?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена"
 		},
 		"GENERAL": {

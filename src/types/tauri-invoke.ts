@@ -2,6 +2,9 @@ import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings } fro
 import { ClipboardType, FolderLocation, WebWindow } from "./enums";
 
 export enum InvokeCommand {
+  //Auth
+  AuthGoogleDrive = "auth_google_drive",
+
   // Clipboard commands
   GetClipboards = "get_clipboards",
   DeleteClipboard = "delete_clipboard",
@@ -19,13 +22,18 @@ export enum InvokeCommand {
   GetSettings = "get_settings",
   UpdateSettings = "update_settings",
   ToggleAutostart = "toggle_autostart",
-  SyncClipboardHistory = "sync_clipboard_history",
+  ChangeClipboardDbLocation = "change_clipboard_db_location",
+  ResetClipboardDbLocation = "reset_clipboard_db_location",
 
   // Window commands
   OpenNewWindow = "open_new_window",
   OpenBrowserUrl = "open_browser_url",
   ExitApp = "exit_app",
   OpenFolder = "open_folder",
+
+  // Sync commands
+  SyncAuthenticateToggle = "sync_authenticate_toggle",
+  SyncLimitChange = "sync_limit_change",
 
   // App info commands
   GetAppVersion = "get_app_version",
@@ -35,6 +43,12 @@ export enum InvokeCommand {
 }
 
 export interface TauriInvokeCommands {
+  //Auth
+  [InvokeCommand.AuthGoogleDrive]: {
+    args: undefined;
+    return: string;
+  };
+
   // Clipboard commands
   [InvokeCommand.GetClipboards]: {
     args: ClipboardWhere;
@@ -88,14 +102,18 @@ export interface TauriInvokeCommands {
     args: undefined;
     return: void;
   };
-  [InvokeCommand.SyncClipboardHistory]: {
+  [InvokeCommand.ChangeClipboardDbLocation]: {
+    args: undefined;
+    return: void;
+  };
+  [InvokeCommand.ResetClipboardDbLocation]: {
     args: undefined;
     return: void;
   };
 
   // Window commands
   [InvokeCommand.OpenNewWindow]: {
-    args: { windowName: WebWindow, title: string };
+    args: { windowName: WebWindow; title: string };
     return: void;
   };
   [InvokeCommand.OpenBrowserUrl]: {
@@ -109,6 +127,16 @@ export interface TauriInvokeCommands {
   [InvokeCommand.OpenFolder]: {
     args: { location: FolderLocation };
     return: void;
+  };
+
+  // Sync commands
+  [InvokeCommand.SyncAuthenticateToggle]: {
+    args: undefined;
+    return: boolean;
+  };
+  [InvokeCommand.SyncLimitChange]: {
+    args: { syncLimit: number };
+    return: Settings;
   };
 
   // App info commands

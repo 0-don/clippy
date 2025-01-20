@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "Over",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Wijzig de locatie van de klembord-DB",
 			"DIGIT_1": "Cijfer 1",
 			"DIGIT_2": "Cijfer 2",
 			"DIGIT_3": "Cijfer 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Locatie wijzigen",
 			"CONFIG_LOCATION": "Configuratielocatie",
 			"DATABASE_LOCATION": "Locatie van de database",
 			"OPEN": "Open",
+			"RESET_LOCATION": "Locatie resetten",
 			"SYNC": "Synchroniseren",
+			"SYNC_LIMIT": "Hoeveel klemborden moeten er worden gesynchroniseerd?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
 		},
 		"GENERAL": {

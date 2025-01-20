@@ -11,6 +11,16 @@ pub static GLOBAL_EVENTS: LazyLock<Vec<String>> = LazyLock::new(|| {
 
 pub static DB_NAME: &str = "clippy.sqlite";
 pub static CONFIG_NAME: &str = "config.json";
+pub static TOKEN_NAME: &str = "token.json";
+
+pub static BACKUP_SETTINGS_PREFIX: &str = "settings";
+pub static BACKUP_FILE_PREFIX: &str = "clippy";
+pub static BACKUP_FILE_FORMAT: LazyLock<String> = LazyLock::new(|| {
+    format!(
+        "{}_{}_{}_{}.json",
+        BACKUP_FILE_PREFIX, "{timestamp}", "{favorite}", "{id}"
+    )
+});
 
 pub static MAIN_WINDOW_X: i32 = 375;
 pub static MAIN_WINDOW_Y: i32 = 600;
@@ -23,6 +33,11 @@ pub static SETTINGS_WINDOW_Y: i32 = 580;
 
 pub static MAX_IMAGE_DIMENSIONS: u32 = 1280;
 pub static MAX_TEXT_PREVIEW: usize = 500; // Adjust preview length as needed
+
+pub static SYNC_LIMIT_SIZE_DEV: u64 = 10;
+pub static SYNC_LIMIT_SIZE_PROD: u64 = 100;
+pub static SYNC_LIMIT_SIZE_MIN: u64 = 0;
+pub static SYNC_LIMIT_SIZE_MAX: u64 = 1000;
 
 pub static DISPLAY_SCALE: f32 = 1.0;
 pub static DISPLAY_SCALE_MIN: f32 = 0.5;

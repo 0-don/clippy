@@ -1,13 +1,12 @@
 mod commands;
-mod connection;
+mod config;
 mod events;
 mod prelude;
 mod service;
-mod tauri_config;
 mod utils;
 
-use commands::{clipboard, hotkey, settings, window};
-use tauri_config::setup;
+use commands::{clipboard, hotkey, settings, sync, window};
+use config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -38,7 +37,8 @@ pub fn run() {
             settings::get_settings,
             settings::update_settings,
             settings::toggle_autostart,
-            settings::sync_clipboard_history,
+            settings::change_clipboard_db_location,
+            settings::reset_clipboard_db_location,
             //
             window::open_new_window,
             window::open_browser_url,
@@ -48,6 +48,9 @@ pub fn run() {
             window::get_db_path,
             window::get_config_path,
             window::open_folder,
+            //
+            sync::sync_authenticate_toggle,
+            sync::sync_limit_change,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

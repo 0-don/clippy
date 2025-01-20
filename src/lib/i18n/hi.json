@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "के बारे में",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "क्लिपबोर्ड Db स्थान बदलें",
 			"DIGIT_1": "अंक 1",
 			"DIGIT_2": "अंक 2",
 			"DIGIT_3": "अंक 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "स्थान बदलें",
 			"CONFIG_LOCATION": "कॉन्फ़िगरेशन स्थान",
 			"DATABASE_LOCATION": "डेटाबेस स्थान",
 			"OPEN": "खुला",
+			"RESET_LOCATION": "स्थान रीसेट करें",
 			"SYNC": "साथ-साथ करना",
+			"SYNC_LIMIT": "कितने क्लिपबोर्ड को सिंक किया जाना चाहिए?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें"
 		},
 		"GENERAL": {

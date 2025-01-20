@@ -1,5 +1,5 @@
 use crate::{
-    service::hotkey::{get_all_hotkeys_db, update_hotkey_db, with_hotkeys},
+    service::hotkey::{get_all_hotkeys_db, init_hotkey_window, update_hotkey_db},
     utils::hotkey_manager::unregister_hotkeys,
 };
 use common::types::types::CommandError;
@@ -12,12 +12,11 @@ pub async fn get_hotkeys() -> Result<Vec<Model>, CommandError> {
 
 #[tauri::command]
 pub async fn update_hotkey(hotkey: Model) {
-    with_hotkeys(false, async move {
-        update_hotkey_db(hotkey)
-            .await
-            .expect("Failed to update hotkey");
-    })
-    .await;
+    update_hotkey_db(hotkey)
+        .await
+        .expect("Failed to update hotkey");
+
+    init_hotkey_window();
 }
 
 #[tauri::command]

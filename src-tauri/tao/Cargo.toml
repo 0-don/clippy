@@ -1,0 +1,27 @@
+[package]
+name = "tao"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+name = "tao"
+path = "src/lib.rs"
+
+[dependencies]
+entity = { path = "../entity" }
+common = { path = "../common" }
+migration = { path = "../migration" }
+
+async-trait = "0"
+tokio = "1"
+tokio-cron-scheduler = "0"
+serde = "1"
+serde_json = "1"
+
+tauri = "2"
+tauri-plugin-dialog = "2"
+google-drive3 = "6"
+global-hotkey = "0"
+sea-orm = "1"
+tl = "0"
+chrono = "0"

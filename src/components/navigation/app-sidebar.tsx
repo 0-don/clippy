@@ -36,6 +36,11 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
           );
         }}
       </For>
+      {/* {import.meta.env.DEV && (
+        <button onClick={() => invokeCommand(InvokeCommand.AuthGoogleDrive)} class="">
+          AUTH
+        </button>
+      )} */}
     </Show>
   );
 };

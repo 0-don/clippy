@@ -9,6 +9,7 @@ import { Settings, SettingsTab } from "../types";
 import { WebWindow } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { SETTINGS_TAB, SettingsTabName } from "../utils/constants";
+import { AppStore } from "./app-store";
 
 function createSettingsStore() {
   const [tabs, setTabs] = createSignal<SettingsTab[]>([
@@ -43,12 +44,18 @@ function createSettingsStore() {
     await invokeCommand(InvokeCommand.ToggleAutostart);
   };
 
-  const initSettings = async () => {
+  const init = async () => {
     const settings = await invokeCommand(InvokeCommand.GetSettings);
     setSettings(settings);
+    AppStore.darkMode();
+    AppStore.setLocale.refetch();
   };
 
-  const syncClipboard = async () => invokeCommand(InvokeCommand.SyncClipboardHistory);
+  const changeClipboardDbLocation = async () => invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
+
+  const resetClipboardDbLocation = async () => invokeCommand(InvokeCommand.ResetClipboardDbLocation);
+
+  const syncAuthenticateToggle = async () => invokeCommand(InvokeCommand.SyncAuthenticateToggle);
 
   const openWindow = async (windowName: WebWindow, title: string) =>
     invokeCommand(InvokeCommand.OpenNewWindow, { windowName, title });
@@ -63,10 +70,13 @@ function createSettingsStore() {
     setTabs,
     setCurrentTab,
     getCurrentTab,
-    initSettings,
-    syncClipboard,
+    init,
+    changeClipboardDbLocation,
+    resetClipboardDbLocation,
+    syncAuthenticateToggle,
     openWindow,
     exitApp,
+    
   };
 }
 

@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "عن",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "تغيير موقع قاعدة بيانات الحافظة",
 			"DIGIT_1": "الرقم 1",
 			"DIGIT_2": "الرقم 2",
 			"DIGIT_3": "الرقم 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "تغيير الموقع",
 			"CONFIG_LOCATION": "موقع التكوين",
 			"DATABASE_LOCATION": "موقع قاعدة البيانات",
 			"OPEN": "يفتح",
+			"RESET_LOCATION": "إعادة تعيين الموقع",
 			"SYNC": "المزامنة",
+			"SYNC_LIMIT": "كم عدد الحافظات التي يجب مزامنتها؟",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"
 		},
 		"GENERAL": {

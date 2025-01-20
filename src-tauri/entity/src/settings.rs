@@ -12,12 +12,16 @@ impl EntityName for Entity {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Serialize, Deserialize)]
+#[derive(
+    Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel, Serialize, Deserialize, Default,
+)]
 pub struct Model {
     pub id: i32,
     pub language: String,
     pub startup: bool,
-    pub synchronize: bool,
+    pub sync: bool,
+    pub sync_limit: i32,
+    pub sync_provider: String,
     pub dark_mode: bool,
     pub tooltip: bool,
     pub display_scale: f32,
@@ -34,7 +38,9 @@ pub enum Column {
     Id,
     Language,
     Startup,
-    Synchronize,
+    Sync,
+    SyncLimit,
+    SyncProvider,
     DarkMode,
     Tooltip,
     DisplayScale,
@@ -68,7 +74,9 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::Integer.def(),
             Self::Language => ColumnType::String(StringLen::N(2u32)).def(),
             Self::Startup => ColumnType::Boolean.def(),
-            Self::Synchronize => ColumnType::Boolean.def(),
+            Self::Sync => ColumnType::Boolean.def(),
+            Self::SyncLimit => ColumnType::Integer.def(),
+            Self::SyncProvider => ColumnType::String(StringLen::None).def(),
             Self::DarkMode => ColumnType::Boolean.def(),
             Self::Tooltip => ColumnType::Boolean.def(),
             Self::DisplayScale => ColumnType::Float.def(),

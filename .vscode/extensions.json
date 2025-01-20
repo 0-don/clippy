@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "vadimcn.vscode-lldb",
+    "tauri-apps.tauri-vscode",
+    "qwtel.sqlite-viewer",
+    "bradlc.vscode-tailwindcss",
+    "inlang.vs-code-extension",
+    "esbenp.prettier-vscode",
+  ],
+  "unwantedRecommendations": []
+}

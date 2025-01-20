@@ -17,6 +17,7 @@
 	"MAIN": {
 		"HOTKEY": {
 			"ABOUT": "O",
+			"CHANGE_CLIPBOARD_DB_LOCATION": "Zmień lokalizację schowka w bazie danych",
 			"DIGIT_1": "Cyfra 1",
 			"DIGIT_2": "Cyfra 2",
 			"DIGIT_3": "Cyfra 3",
@@ -93,10 +94,13 @@
 	},
 	"SETTINGS": {
 		"BACKUP": {
+			"CHANGE_LOCATION": "Zmień lokalizację",
 			"CONFIG_LOCATION": "Lokalizacja konfiguracji",
 			"DATABASE_LOCATION": "Lokalizacja bazy danych",
 			"OPEN": "Otwarty",
+			"RESET_LOCATION": "Zresetuj lokalizację",
 			"SYNC": "Synchronizacja",
+			"SYNC_LIMIT": "Ile schowków powinno być synchronizowanych?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
 		},
 		"GENERAL": {

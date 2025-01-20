@@ -1,4 +1,3 @@
-import { createResource, onMount } from "solid-js";
 import { Show, render } from "solid-js/web";
 import { SettingsBackup } from "./components/pages/settings/settings-backup";
 import { SettingsGeneral } from "./components/pages/settings/settings-general";
@@ -8,15 +7,21 @@ import { SettingsLimits } from "./components/pages/settings/settings-limits";
 import { Tabs } from "./components/pages/settings/settings-tabs";
 import LanguageProvider from "./components/provider/language-provider";
 import { listenEvent } from "./lib/tauri";
-import { AppStore } from "./store/app-store";
+import { HotkeyStore } from "./store/hotkey-store";
 import { SettingsStore } from "./store/settings-store";
 import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
+import { onMount } from "solid-js";
 
 const Settings = () => {
-  createResource(AppStore.init);
+  listenEvent(ListenEvent.InitSettings, SettingsStore.init);
 
-  onMount(() => listenEvent(ListenEvent.Init, AppStore.init));
+  listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
+
+  onMount(() => {
+    SettingsStore.init();
+    HotkeyStore.init();
+  });
 
   return (
     <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:bg-dark dark:text-white">

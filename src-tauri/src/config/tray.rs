@@ -1,4 +1,5 @@
-use crate::service::{global::get_app, window::toggle_main_window};
+use crate::service::window::toggle_main_window;
+use tao::global::get_app;
 use tauri::{
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,
@@ -18,7 +19,7 @@ pub fn init_system_tray() -> Result<(), Box<dyn std::error::Error>> {
             get_app()
                 .default_window_icon()
                 .expect("failed to get default icon")
-                .clone(),
+                .to_owned(),
         )
         .menu(&menu)
         .on_menu_event(|app, event| {
