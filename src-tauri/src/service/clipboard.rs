@@ -425,12 +425,6 @@ pub async fn delete_clipboards_db(
         .exec(&db)
         .await?;
 
-    if !command.unwrap_or(false) {
-        get_main_window()
-            .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
-            .expect("Failed to emit event");
-    }
-
     // Only spawn deletion task if records were actually deleted
     if result.rows_affected > 0 && settings.lock().expect("Failed to lock settings").sync {
         // Get the actually deleted IDs by querying what remains
@@ -449,15 +443,28 @@ pub async fn delete_clipboards_db(
 
         tauri::async_runtime::spawn(async move {
             let provider = get_sync_provider().await;
-            let files = provider
+
+            let clipboards = provider
                 .fetch_all_clipboards()
                 .await
                 .expect("Failed to fetch clipboards")
                 .into_iter()
                 .filter(|c| deleted_ids.contains(&c.id))
                 .collect::<Vec<_>>();
-            for file in files {
-                provider.mark_for_deletion(&file).await;
+
+            if command.is_none() && !clipboards.is_empty() {
+                get_main_window()
+                    .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
+                    .expect("Failed to emit event");
+            }
+            
+            for clippy in clipboards {
+                printlog!(
+                    "deleting remote clipboard: {:?} command: {:?}",
+                    clippy.id,
+                    command
+                );
+                provider.mark_for_deletion(&clippy).await;
                 break;
             }
         });

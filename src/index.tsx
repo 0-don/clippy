@@ -17,6 +17,8 @@ const Index = () => {
   });
 
   onMount(() => {
+    listenEvent(ListenEvent.InitClipboards, ClipboardStore.init);
+
     listenEvent(ListenEvent.InitSettings, SettingsStore.init);
 
     listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
