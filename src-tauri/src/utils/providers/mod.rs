@@ -33,13 +33,20 @@ pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clip
     })
 }
 
-pub fn create_clipboard_filename(id: &Uuid, starred: &bool, created_at: &NaiveDateTime) -> String {
+pub fn create_clipboard_filename(
+    id: &Uuid,
+    starred: &bool,
+    created_at: &NaiveDateTime,
+    deleted_at: Option<NaiveDateTime>,
+) -> String {
     format!(
         "{}_{}_{}_{}_{}.json",
         BACKUP_FILE_PREFIX,
         id,
         starred,
         created_at.format(BACKDUP_DATE_FORMAT),
-        "None"
+        deleted_at
+            .map(|date| date.format(BACKDUP_DATE_FORMAT).to_string())
+            .unwrap_or_else(|| "None".to_string())
     )
 }

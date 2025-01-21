@@ -64,7 +64,7 @@ pub async fn star_clipboard(id: Uuid, star: bool) -> Result<bool, CommandError> 
 
 #[tauri::command]
 pub async fn delete_clipboard(id: Uuid) -> Result<(), CommandError> {
-    delete_clipboards_db(vec![id]).await?;
+    delete_clipboards_db(vec![id], Some(true)).await?;
     Ok(())
 }
 
