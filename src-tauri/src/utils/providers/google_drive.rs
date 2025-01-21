@@ -258,7 +258,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
             .add_scope(Scope::Appdata.as_ref())
             .doit()
             .await
-            .expect("Failed to delete clipboard");
+            .ok();
     }
 
     async fn download_by_id(
