@@ -162,6 +162,9 @@ impl SyncProvider for GoogleDriveProviderImpl {
             }
         }
 
+        // Sort by created_at
+        clipboards.sort_by_key(|info| info.created_at);
+
         Ok(clipboards)
     }
 
@@ -170,7 +173,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         local_clipboards: &HashMap<Uuid, NaiveDateTime>,
         remote_clipboards: &Vec<ClippyInfo>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
-        let mut clipboards = Vec::new();
+        let mut new_clipboards = Vec::new();
 
         for file in remote_clipboards {
             // Skip if the clipboard is marked for deletion
@@ -191,23 +194,23 @@ impl SyncProvider for GoogleDriveProviderImpl {
                 file.starred
             );
 
-            clipboards.push(self.download_by_id(&file.provider_id).await?);
+            new_clipboards.push(self.download_by_id(&file.provider_id).await?);
         }
 
-        Ok(clipboards)
+        Ok(new_clipboards)
     }
 
     async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
-        remote_clipboards: &mut Vec<ClippyInfo>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+        remote_clipboards: &Vec<ClippyInfo>,
+    ) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>> {
+        let mut new_clipboards = Vec::new();
+
         let remote_map: HashMap<Uuid, NaiveDateTime> = remote_clipboards
             .iter()
             .map(|clip| (clip.id, clip.created_at))
             .collect();
-
-        let remote_count = remote_clipboards.len();
 
         for clipboard in new_local_clipboards {
             if let Some(remote_created_at) = remote_map.get(&clipboard.clipboard.id) {
@@ -216,14 +219,19 @@ impl SyncProvider for GoogleDriveProviderImpl {
                 }
             }
 
-            remote_clipboards.push(self.upload_clipboard(clipboard).await?);
+            new_clipboards.push(self.upload_clipboard(clipboard).await?);
         }
 
-        Ok(remote_clipboards.len() > remote_count)
+        Ok(new_clipboards)
     }
 
     async fn mark_for_deletion(&self, clippy: &ClippyInfo) {
-        let new_name = create_clipboard_filename(&clippy.id, &clippy.starred, &clippy.created_at);
+        let new_name = create_clipboard_filename(
+            &clippy.id,
+            &clippy.starred,
+            &clippy.created_at,
+            Some(Utc::now().naive_utc()),
+        );
 
         let file = google_drive3::api::File {
             name: Some(new_name),
@@ -242,23 +250,17 @@ impl SyncProvider for GoogleDriveProviderImpl {
         printlog!("(remote) marked clipboard for deletion: {}", clippy.id);
     }
 
-    async fn mark_for_deletion_by_uuid(&self, uuid: &Uuid) {
-        let files = self
-            .fetch_all_clipboard_files()
+    async fn delete_clipboard(&self, clippy: &ClippyInfo) {
+        self.0
+            .hub
+            .files()
+            .delete(&clippy.provider_id)
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
             .await
-            .expect("Failed to fetch clipboards");
-        for file in files {
-            if let Some(remote) = parse_clipboard_info(
-                &file.name.expect("No name"),
-                file.id.as_ref().expect("No id"),
-            ) {
-                if remote.id == *uuid {
-                    self.mark_for_deletion(&remote).await;
-                    break;
-                }
-            }
-        }
+            .expect("Failed to delete clipboard");
     }
+
     async fn download_by_id(
         &self,
         id: &String,
@@ -283,32 +285,58 @@ impl SyncProvider for GoogleDriveProviderImpl {
         remote_clipboards: &Vec<ClippyInfo>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let settings = get_settings_db().await?;
+        let sync_limit = settings.sync_limit as usize;
 
-        if remote_clipboards.len() <= settings.sync_limit as usize {
-            return Ok(());
-        }
-
-        let mut clipboards: Vec<_> = remote_clipboards
+        // Get all non-starred clipboards
+        let mut all_clipboards: Vec<_> = remote_clipboards
             .iter()
             .filter(|clip| !clip.starred)
             .collect();
 
-        clipboards.sort_by_key(|info| info.created_at);
+        // Sort by creation date
+        all_clipboards.sort_by_key(|info| info.created_at);
 
-        let files_to_delete = clipboards
-            .len()
-            .saturating_sub(settings.sync_limit as usize);
+        // Find all marked-for-deletion indices
+        let marked_indices: Vec<usize> = all_clipboards
+            .iter()
+            .enumerate()
+            .filter(|(_, clip)| clip.deleted_at.is_some())
+            .map(|(idx, _)| idx)
+            .collect();
 
-        for clippy in clipboards.into_iter().take(files_to_delete) {
-            printlog!(
-                "deleting clipboard: {} from {} starred: {} deleted: {:?}",
-                clippy.id,
-                clippy.created_at,
-                clippy.starred,
-                clippy.deleted_at
-            );
+        // Only delete if we have clipboards beyond the sync limit
+        if all_clipboards.len() <= sync_limit {
+            return Ok(());
+        }
 
-            self.mark_for_deletion(clippy).await;
+        if let Some(&last_marked_idx) = marked_indices.last() {
+            // Calculate how many clipboards we need to delete
+            let total_to_delete = all_clipboards.len() - sync_limit;
+
+            // Only delete if we can remove everything up to and including the last marked clipboard
+            if total_to_delete > last_marked_idx {
+                // Delete oldest clipboards including the marked ones
+                for clippy in all_clipboards.iter().take(total_to_delete) {
+                    printlog!(
+                        "deleting clipboard: {} from {} (marked: {})",
+                        clippy.id,
+                        clippy.created_at,
+                        clippy.deleted_at.is_some()
+                    );
+                    self.delete_clipboard(clippy).await;
+                }
+            }
+        } else {
+            // No marked clipboards - normal cleanup
+            let to_delete = all_clipboards.len() - sync_limit;
+            for clippy in all_clipboards.iter().take(to_delete) {
+                printlog!(
+                    "deleting clipboard: {} from {}",
+                    clippy.id,
+                    clippy.created_at
+                );
+                self.delete_clipboard(clippy).await;
+            }
         }
 
         Ok(())
@@ -322,6 +350,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
             &clipboard.clipboard.id,
             &clipboard.clipboard.star,
             &clipboard.clipboard.created_at,
+            None,
         );
 
         printlog!(
@@ -356,6 +385,44 @@ impl SyncProvider for GoogleDriveProviderImpl {
             file.id.as_ref().expect("No id"),
         )
         .expect("Failed to parse clipboard info"))
+    }
+
+    async fn star_clipboard(&self, clippy: &FullClipboardDto) {
+        let clipboards = self
+            .fetch_all_clipboards()
+            .await
+            .expect("Failed to fetch clipboards");
+
+        let remote_clipboards = clipboards
+            .iter()
+            .find(|clip| clip.id == clippy.clipboard.id);
+
+        if let Some(remote_clipboard) = remote_clipboards {
+            let new_name = create_clipboard_filename(
+                &remote_clipboard.id,
+                &remote_clipboard.starred,
+                &remote_clipboard.created_at,
+                None,
+            );
+
+            let file = google_drive3::api::File {
+                name: Some(new_name),
+                ..Default::default()
+            };
+
+            self.0
+                .hub
+                .files()
+                .update(file, &remote_clipboard.provider_id)
+                .add_scope(Scope::Appdata.as_ref())
+                .doit_without_upload()
+                .await
+                .expect("Failed to rename file");
+        } else {
+            self.upload_clipboard(clippy)
+                .await
+                .expect("Failed to upload clipboard");
+        }
     }
 
     async fn upsert_settings(

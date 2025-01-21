@@ -9,7 +9,9 @@ use common::types::enums::{ClipboardTextType, ClipboardType, Language, ListenEve
 use common::types::orm_query::{FullClipboardDbo, FullClipboardDto};
 use common::types::types::CommandError;
 use entity::clipboard::{self, Model};
-use entity::{clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
+use entity::{
+    clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text, settings,
+};
 use sea_orm::prelude::Uuid;
 use sea_orm::RelationTrait;
 use sea_orm::{
@@ -17,6 +19,7 @@ use sea_orm::{
     QueryOrder, QuerySelect, QueryTrait,
 };
 use std::collections::HashMap;
+use std::sync::Mutex;
 use tao::connection::db;
 use tao::global::{get_app, get_app_window, get_main_window};
 use tauri::{Emitter, Manager};
@@ -351,11 +354,11 @@ pub async fn get_clipboards_db(
     Ok(load_clipboards_with_relations(clipboards).await)
 }
 
-pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
+pub async fn get_latest_syncable_cliboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
     let db = db().await?;
     let settings = get_settings_db().await?;
 
-    let sync_amount_clipboards = clipboard::Entity::find()
+    let latest_syncable_clipboards = clipboard::Entity::find()
         .limit(settings.sync_limit as u64)
         .order_by_desc(clipboard::Column::CreatedAt)
         .all(&db)
@@ -369,11 +372,11 @@ pub async fn get_sync_amount_cliboards_db() -> Result<Vec<FullClipboardDto>, DbE
 
     printlog!(
         "(local) clipboards: {:?} favorite: {:?}",
-        sync_amount_clipboards.len(),
+        latest_syncable_clipboards.len(),
         sync_favorite_clipboards.len()
     );
 
-    let clipboards = sync_amount_clipboards
+    let clipboards = latest_syncable_clipboards
         .into_iter()
         .chain(sync_favorite_clipboards)
         .map(|clipboard| (clipboard.id, clipboard))
@@ -393,33 +396,72 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
         ..Default::default()
     };
 
-    clipboard::Entity::update(model).exec(&db).await?;
+    let clipboard = clipboard::Entity::update(model).exec(&db).await?;
 
-    let delete_id = id.clone();
-    tauri::async_runtime::spawn(async move {
-        let provider = get_sync_provider().await;
+    let settings = get_app().state::<Mutex<settings::Model>>();
+    if settings.lock().expect("Failed to lock settings").sync {
+        let clipboard = load_clipboards_with_relations(vec![clipboard])
+            .await
+            .remove(0);
 
-        provider.mark_for_deletion_by_uuid(&delete_id).await
-    });
+        tauri::async_runtime::spawn(async move {
+            let provider = get_sync_provider().await;
+            provider.star_clipboard(&clipboard).await
+        });
+    }
 
     Ok(true)
 }
 
-pub async fn delete_clipboards_db(ids: Vec<Uuid>) -> Result<(), CommandError> {
+pub async fn delete_clipboards_db(
+    ids: Vec<Uuid>,
+    command: Option<bool>,
+) -> Result<(), CommandError> {
+    let settings = get_app().state::<Mutex<settings::Model>>();
     let db = db().await?;
 
-    clipboard::Entity::delete_many()
+    let result = clipboard::Entity::delete_many()
         .filter(clipboard::Column::Id.is_in(ids.clone()))
         .exec(&db)
         .await?;
 
-    tauri::async_runtime::spawn(async move {
-        let provider = get_sync_provider().await;
+    if !command.unwrap_or(false) {
+        get_main_window()
+            .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
+            .expect("Failed to emit event");
+    }
 
-        for id in ids {
-            provider.mark_for_deletion_by_uuid(&id).await
-        }
-    });
+    // Only spawn deletion task if records were actually deleted
+    if result.rows_affected > 0 && settings.lock().expect("Failed to lock settings").sync {
+        // Get the actually deleted IDs by querying what remains
+        let remaining_ids = clipboard::Entity::find()
+            .filter(clipboard::Column::Id.is_in(ids.clone()))
+            .select_only()
+            .column(clipboard::Column::Id)
+            .into_tuple()
+            .all(&db)
+            .await?;
+
+        let deleted_ids: Vec<Uuid> = ids
+            .into_iter()
+            .filter(|id| !remaining_ids.contains(id))
+            .collect();
+
+        tauri::async_runtime::spawn(async move {
+            let provider = get_sync_provider().await;
+            let files = provider
+                .fetch_all_clipboards()
+                .await
+                .expect("Failed to fetch clipboards")
+                .into_iter()
+                .filter(|c| deleted_ids.contains(&c.id))
+                .collect::<Vec<_>>();
+            for file in files {
+                provider.mark_for_deletion(&file).await;
+                break;
+            }
+        });
+    }
 
     Ok(())
 }

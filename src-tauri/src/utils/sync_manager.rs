@@ -2,7 +2,7 @@ use crate::prelude::*;
 use crate::service::clipboard::delete_clipboards_db;
 use crate::service::settings::update_settings_from_sync;
 use crate::service::{
-    clipboard::{get_clipboard_uuids_db, get_sync_amount_cliboards_db, insert_clipboard_dto},
+    clipboard::{get_clipboard_uuids_db, get_latest_syncable_cliboards_db, insert_clipboard_dto},
     sync::get_sync_provider,
 };
 use sea_orm::prelude::Uuid;
@@ -38,7 +38,7 @@ impl SyncManager {
                 .map(|clipboard| clipboard.id)
                 .collect();
 
-            delete_clipboards_db(deleted_clipboards)
+            delete_clipboards_db(deleted_clipboards, None)
                 .await
                 .expect("Error deleting clipboards");
 
@@ -50,15 +50,15 @@ impl SyncManager {
                 insert_clipboard_dto(clipboard).await?;
             }
 
-            let new_local_clipboards = get_sync_amount_cliboards_db().await?;
+            let new_local_clipboards = get_latest_syncable_cliboards_db().await?;
 
-            let has_added_new_clipboards = provider
-                .upload_new_clipboards(&new_local_clipboards, &mut remote_clipboards)
+            let new_remote_clipboards = provider
+                .upload_new_clipboards(&new_local_clipboards, &remote_clipboards)
                 .await?;
 
-            if has_added_new_clipboards {
-                provider.cleanup_old_clipboards(&remote_clipboards).await?;
-            }
+            remote_clipboards.extend(new_remote_clipboards.into_iter());
+
+            provider.cleanup_old_clipboards(&remote_clipboards).await?;
         }
 
         Ok(())
