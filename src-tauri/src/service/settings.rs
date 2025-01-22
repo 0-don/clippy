@@ -1,6 +1,3 @@
-use std::collections::HashMap;
-use std::sync::Mutex;
-
 use super::clipboard::get_last_clipboard_db;
 use super::sync::upsert_settings_sync;
 use crate::prelude::*;
@@ -8,8 +5,10 @@ use crate::service::window::get_monitor_scale_factor;
 use common::io::language::get_system_language;
 use common::types::enums::ListenEvent;
 use common::types::types::CommandError;
-use entity::settings::{self, ActiveModel, Model};
+use entity::settings;
 use sea_orm::{ActiveModelTrait, EntityTrait};
+use std::collections::HashMap;
+use std::sync::Mutex;
 use tao::connection::db;
 use tao::global::get_app;
 use tauri::Manager;
@@ -30,7 +29,7 @@ pub fn autostart() {
     });
 }
 
-pub async fn get_settings_db() -> Result<Model, DbErr> {
+pub async fn get_settings_db() -> Result<settings::Model, DbErr> {
     let db: DatabaseConnection = db().await?;
 
     let settings = settings::Entity::find_by_id(1)
@@ -38,25 +37,23 @@ pub async fn get_settings_db() -> Result<Model, DbErr> {
         .await?
         .expect("Settings not found");
 
-    let state = get_app().state::<Mutex<Model>>();
-    let mut locked_settings = state.lock().expect("Failed to lock settings");
-    *locked_settings = settings.clone();
+    set_global_settings(settings.clone());
 
     Ok(settings)
 }
 
-pub async fn update_settings_db(settings: Model) -> Result<Model, CommandError> {
+pub async fn update_settings_db(
+    settings: settings::Model,
+) -> Result<settings::Model, CommandError> {
     let db: DatabaseConnection = db().await?;
 
-    let active_model: ActiveModel = settings.into();
+    let active_model: settings::ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    let state = get_app().state::<Mutex<Model>>();
-    let mut locked_settings = state.lock().expect("Failed to lock settings");
-    *locked_settings = settings.clone();
+    set_global_settings(settings.clone());
 
     upsert_settings_sync(&settings).expect("Failed to upsert settings");
 
@@ -72,15 +69,13 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
 
     settings.sync = sync;
 
-    let active_model: ActiveModel = settings.into();
+    let active_model: settings::ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
         .exec(&db)
         .await?;
 
-    let state = get_app().state::<Mutex<Model>>();
-    let mut locked_settings = state.lock().expect("Failed to lock settings");
-    *locked_settings = settings.clone();
+    set_global_settings(settings.clone());
 
     init_settings_window();
 
@@ -159,9 +154,7 @@ pub async fn update_settings_from_sync(
             .exec(&db)
             .await?;
 
-        let state = get_app().state::<Mutex<Model>>();
-        let mut locked_settings = state.lock().expect("Failed to lock settings");
-        *locked_settings = settings;
+        set_global_settings(settings);
 
         init_settings_window();
 
@@ -181,8 +174,14 @@ pub fn init_settings_window() {
         .expect("Failed to emit download progress event");
 }
 
-pub fn get_global_settings() -> Model {
-    let state = get_app().state::<Mutex<Model>>();
+pub fn get_global_settings() -> settings::Model {
+    let state = get_app().state::<Mutex<settings::Model>>();
     let locked_settings = state.lock().expect("Failed to lock settings");
     locked_settings.clone()
+}
+
+pub fn set_global_settings(settings: settings::Model) {
+    let state = get_app().state::<Mutex<settings::Model>>();
+    let mut locked_settings = state.lock().expect("Failed to lock settings");
+    *locked_settings = settings;
 }

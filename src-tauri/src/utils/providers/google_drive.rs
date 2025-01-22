@@ -9,7 +9,7 @@ use common::{
     printlog,
     types::{
         orm_query::FullClipboardDto,
-        sync::{ClippyInfo, GoogleDriveProvider, SyncProvider},
+        sync::{Clippy, GoogleDriveProvider, SyncProvider},
         types::CommandError,
     },
 };
@@ -150,7 +150,7 @@ impl GoogleDriveProviderImpl {
 
 #[async_trait::async_trait]
 impl SyncProvider for GoogleDriveProviderImpl {
-    async fn fetch_all_clipboards(&self) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>> {
+    async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>> {
         let filelist = self.fetch_all_clipboard_files().await?;
         let mut clipboards = Vec::new();
 
@@ -171,7 +171,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
     async fn compare_and_fetch_new_clipboards(
         &self,
         local_clipboards: &HashMap<Uuid, NaiveDateTime>,
-        remote_clipboards: &Vec<ClippyInfo>,
+        remote_clipboards: &Vec<Clippy>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
 
@@ -188,10 +188,10 @@ impl SyncProvider for GoogleDriveProviderImpl {
             }
 
             printlog!(
-                "downloading clipboard: {} from {} starred: {}",
+                "downloading clipboard: {} from {} star: {}",
                 file.id,
                 file.created_at,
-                file.starred
+                file.star
             );
 
             new_clipboards.push(self.download_by_id(&file.provider_id).await?);
@@ -203,8 +203,8 @@ impl SyncProvider for GoogleDriveProviderImpl {
     async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
-        remote_clipboards: &Vec<ClippyInfo>,
-    ) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>> {
+        remote_clipboards: &Vec<Clippy>,
+    ) -> Result<Vec<Clippy>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
 
         let remote_map: HashMap<Uuid, NaiveDateTime> = remote_clipboards
@@ -225,10 +225,11 @@ impl SyncProvider for GoogleDriveProviderImpl {
         Ok(new_clipboards)
     }
 
-    async fn mark_for_deletion(&self, clippy: &ClippyInfo) {
+    async fn mark_for_deletion(&self, clippy: &Clippy) {
         let new_name = create_clipboard_filename(
             &clippy.id,
-            &clippy.starred,
+            &clippy.star,
+            &clippy.encrypted,
             &clippy.created_at,
             Some(Utc::now().naive_utc()),
         );
@@ -250,7 +251,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         printlog!("(remote) marked clipboard for deletion: {}", clippy.id);
     }
 
-    async fn delete_clipboard(&self, clippy: &ClippyInfo) {
+    async fn delete_clipboard(&self, clippy: &Clippy) {
         self.0
             .hub
             .files()
@@ -282,7 +283,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
     async fn cleanup_old_clipboards(
         &self,
-        remote_clipboards: &Vec<ClippyInfo>,
+        remote_clipboards: &Vec<Clippy>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let settings = get_settings_db().await?;
         let sync_limit = settings.sync_limit as usize;
@@ -290,7 +291,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         // Get all non-starred clipboards
         let mut all_clipboards: Vec<_> = remote_clipboards
             .iter()
-            .filter(|clip| !clip.starred)
+            .filter(|clip| !clip.star)
             .collect();
 
         // Sort by creation date
@@ -345,10 +346,11 @@ impl SyncProvider for GoogleDriveProviderImpl {
     async fn upload_clipboard(
         &self,
         clipboard: &FullClipboardDto,
-    ) -> Result<ClippyInfo, Box<dyn std::error::Error>> {
+    ) -> Result<Clippy, Box<dyn std::error::Error>> {
         let file_name = create_clipboard_filename(
             &clipboard.clipboard.id,
             &clipboard.clipboard.star,
+            &clipboard.clipboard.encrypted,
             &clipboard.clipboard.created_at,
             None,
         );
@@ -387,6 +389,36 @@ impl SyncProvider for GoogleDriveProviderImpl {
         .expect("Failed to parse clipboard info"))
     }
 
+    async fn update_clipboard(
+        &self,
+        _local_clipboard: &FullClipboardDto,
+        remote_clipboard: &Clippy,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let new_name = create_clipboard_filename(
+            &remote_clipboard.id,
+            &remote_clipboard.star,
+            &remote_clipboard.encrypted,
+            &remote_clipboard.created_at,
+            None,
+        );
+
+        let file = google_drive3::api::File {
+            name: Some(new_name),
+            ..Default::default()
+        };
+
+        self.0
+            .hub
+            .files()
+            .update(file, &remote_clipboard.provider_id)
+            .add_scope(Scope::Appdata.as_ref())
+            .doit_without_upload()
+            .await
+            .expect("Failed to rename file");
+
+        Ok(())
+    }
+
     async fn star_clipboard(&self, clippy: &FullClipboardDto) {
         let clipboards = self
             .fetch_all_clipboards()
@@ -400,7 +432,8 @@ impl SyncProvider for GoogleDriveProviderImpl {
         if let Some(remote_clipboard) = remote_clipboards {
             let new_name = create_clipboard_filename(
                 &remote_clipboard.id,
-                &remote_clipboard.starred,
+                &remote_clipboard.star,
+                &remote_clipboard.encrypted,
                 &remote_clipboard.created_at,
                 None,
             );

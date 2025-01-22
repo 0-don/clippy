@@ -44,7 +44,7 @@ export interface ClipboardModel {
   id: number;
   types: ClipboardType[];
   star: boolean;
-  created_date: string;
+  created_at: string;
 }
 
 export interface ClipboardTextModel {

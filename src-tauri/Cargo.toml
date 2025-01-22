@@ -26,8 +26,6 @@ migration = { path = "migration" }
 common = { path = "common" }
 tao = { path = "tao" }
 
-color-backtrace = "0"
-
 tauri = { version = "2", features = [
   "macos-private-api",
   "devtools",
@@ -39,7 +37,7 @@ tauri-plugin-dialog = "2"
 tauri-plugin-clipboard = "2"
 tauri-plugin-opener = "2"
 tauri-plugin-autostart = "2"
-global-hotkey = "0"
+global-hotkey = "0" # tauri-plugin-global-hotkey
 
 sea-orm = "1"
 tokio = { version = "1", features = ["full"] }
@@ -49,12 +47,15 @@ serde_json = "1"
 
 dotenvy = "0"
 chrono = "0"
-enigo = "0"
 regex = "1"
+
+# keyboard input
+enigo = "0"
 
 # image
 image = "0"
 base64 = "0"
+
 # file mime parser
 infer = "0"
 mime_guess = "2"
@@ -63,6 +64,9 @@ tree_magic_mini = "3"
 # clipboard sync
 google-drive3 = "6"
 http-body-util = "0"
+
+# cipher
+ring = "0"
 
 [profile.release]
 # panic = "abort"

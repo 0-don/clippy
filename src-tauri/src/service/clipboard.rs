@@ -417,7 +417,7 @@ pub async fn delete_clipboards_db(
     ids: Vec<Uuid>,
     command: Option<bool>,
 ) -> Result<(), CommandError> {
-    let settings = get_app().state::<Mutex<settings::Model>>();
+    let settings = get_global_settings();
     let db = db().await?;
 
     let result = clipboard::Entity::delete_many()
@@ -426,7 +426,7 @@ pub async fn delete_clipboards_db(
         .await?;
 
     // Only spawn deletion task if records were actually deleted
-    if result.rows_affected > 0 && settings.lock().expect("Failed to lock settings").sync {
+    if result.rows_affected > 0 && settings.sync {
         // Get the actually deleted IDs by querying what remains
         let remaining_ids = clipboard::Entity::find()
             .filter(clipboard::Column::Id.is_in(ids.clone()))

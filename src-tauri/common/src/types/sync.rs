@@ -6,33 +6,34 @@ use serde_json::Value;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
-pub struct ClippyInfo {
+pub struct Clippy {
     pub id: Uuid,
     pub provider_id: String,
-    pub starred: bool,
+    pub star: bool,
+    pub encrypted: bool,
     pub created_at: NaiveDateTime,
     pub deleted_at: Option<NaiveDateTime>,
 }
 
 #[async_trait::async_trait]
 pub trait SyncProvider: Send + Sync {
-    async fn fetch_all_clipboards(&self) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>>;
+    async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>>;
 
     async fn compare_and_fetch_new_clipboards(
         &self,
         local_clipboards: &HashMap<Uuid, NaiveDateTime>,
-        remote_clipboards: &Vec<ClippyInfo>,
+        remote_clipboards: &Vec<Clippy>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>>;
 
     async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
-        remote_clipboards: &Vec<ClippyInfo>,
-    ) -> Result<Vec<ClippyInfo>, Box<dyn std::error::Error>>;
+        remote_clipboards: &Vec<Clippy>,
+    ) -> Result<Vec<Clippy>, Box<dyn std::error::Error>>;
 
-    async fn mark_for_deletion(&self, clippy: &ClippyInfo);
+    async fn mark_for_deletion(&self, clippy: &Clippy);
 
-    async fn delete_clipboard(&self, clippy: &ClippyInfo);
+    async fn delete_clipboard(&self, clippy: &Clippy);
 
     async fn download_by_id(
         &self,
@@ -42,13 +43,19 @@ pub trait SyncProvider: Send + Sync {
     async fn upload_clipboard(
         &self,
         clipboard: &FullClipboardDto,
-    ) -> Result<ClippyInfo, Box<dyn std::error::Error>>;
+    ) -> Result<Clippy, Box<dyn std::error::Error>>;
+
+    async fn update_clipboard(
+        &self,
+        local_clipboard: &FullClipboardDto,
+        remote_clipboard: &Clippy,
+    ) -> Result<(), Box<dyn std::error::Error>>;
 
     async fn star_clipboard(&self, clippy: &FullClipboardDto);
 
     async fn cleanup_old_clipboards(
         &self,
-        remote_clipboards: &Vec<ClippyInfo>,
+        remote_clipboards: &Vec<Clippy>,
     ) -> Result<(), Box<dyn std::error::Error>>;
 
     async fn upsert_settings(

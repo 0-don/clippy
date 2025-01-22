@@ -4,7 +4,6 @@
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv()?;
-    color_backtrace::install();
 
     #[cfg(target_os = "linux")]
     {

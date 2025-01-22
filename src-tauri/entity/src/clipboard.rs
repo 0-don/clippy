@@ -19,6 +19,7 @@ pub struct Model {
     pub id: Uuid,
     pub types: Json,
     pub star: bool,
+    pub encrypted: bool,
     pub created_at: DateTime,
 }
 
@@ -27,6 +28,7 @@ pub enum Column {
     Id,
     Types,
     Star,
+    Encrypted,
     CreatedAt,
 }
 
@@ -58,6 +60,7 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::Uuid.def(),
             Self::Types => ColumnType::Json.def(),
             Self::Star => ColumnType::Boolean.def(),
+            Self::Encrypted => ColumnType::Boolean.def(),
             Self::CreatedAt => ColumnType::DateTime.def(),
         }
     }
