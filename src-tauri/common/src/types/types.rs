@@ -45,6 +45,12 @@ pub enum CommandError {
     Error(String),
 }
 
+impl CommandError {
+    pub fn new(msg: &str) -> Self {
+        CommandError::Error(msg.to_string())
+    }
+}
+
 // Simplified error handling using a single variant
 impl<E: std::error::Error> From<E> for CommandError {
     fn from(err: E) -> Self {

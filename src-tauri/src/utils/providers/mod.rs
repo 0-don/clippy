@@ -1,14 +1,14 @@
 use chrono::NaiveDateTime;
 use common::{
     constants::{BACKDUP_DATE_FORMAT, BACKUP_FILE_PREFIX},
-    types::sync::ClippyInfo,
+    types::sync::Clippy,
 };
 use sea_orm::prelude::Uuid;
 
 pub mod google_drive;
 
-pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<ClippyInfo> {
-    let [_, uuid, star, created_at, deleted_at]: [&str; 5] = filename
+pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clippy> {
+    let [_, uuid, star, encrypted, created_at, deleted_at]: [&str; 6] = filename
         .trim_end_matches(".json")
         .split('_')
         .collect::<Vec<_>>()
@@ -17,18 +17,20 @@ pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clip
 
     let id = Uuid::parse_str(uuid).ok()?;
     let starred = star.parse().ok()?;
-    let created_date = NaiveDateTime::parse_from_str(created_at, BACKDUP_DATE_FORMAT).ok()?;
-    let deleted_date = if deleted_at == "None" {
+    let encrypted = encrypted.parse().ok()?;
+    let created_at = NaiveDateTime::parse_from_str(created_at, BACKDUP_DATE_FORMAT).ok()?;
+    let deleted_at = if deleted_at == "None" {
         None
     } else {
         Some(NaiveDateTime::parse_from_str(deleted_at, BACKDUP_DATE_FORMAT).ok()?)
     };
 
-    Some(ClippyInfo {
+    Some(Clippy {
         id,
-        starred,
-        created_at: created_date,
-        deleted_at: deleted_date,
+        star: starred,
+        encrypted,
+        created_at,
+        deleted_at,
         provider_id: provider_id.clone(),
     })
 }
@@ -36,14 +38,16 @@ pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clip
 pub fn create_clipboard_filename(
     id: &Uuid,
     starred: &bool,
+    encrypted: &bool,
     created_at: &NaiveDateTime,
     deleted_at: Option<NaiveDateTime>,
 ) -> String {
     format!(
-        "{}_{}_{}_{}_{}.json",
+        "{}_{}_{}_{}_{}_{}.json",
         BACKUP_FILE_PREFIX,
         id,
         starred,
+        encrypted,
         created_at.format(BACKDUP_DATE_FORMAT),
         deleted_at
             .map(|date| date.format(BACKDUP_DATE_FORMAT).to_string())

@@ -1,5 +1,5 @@
 use crate::service::{
-    settings::get_settings_db,
+    settings::{get_global_settings, init_settings_window, set_global_settings},
     sync::{get_sync_provider, sync_toggle, upsert_settings_sync},
 };
 use common::types::types::CommandError;
@@ -15,7 +15,7 @@ pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
 #[tauri::command]
 pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, CommandError> {
     let db: DatabaseConnection = db().await?;
-    let mut settings = get_settings_db().await?;
+    let mut settings = get_global_settings();
 
     settings.sync_limit = sync_limit;
 
@@ -26,6 +26,7 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
         .await?;
 
     if settings.sync {
+        let remote_settings = settings.clone();
         tauri::async_runtime::spawn(async move {
             let provider = get_sync_provider().await;
             let remote_clipboards = provider
@@ -37,9 +38,12 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
                 .await
                 .expect("Failed to cleanup old clipboards");
 
-            upsert_settings_sync(&settings).expect("Failed to upsert settings");
+            upsert_settings_sync(&remote_settings).expect("Failed to upsert settings");
         });
     }
 
-    Ok(get_settings_db().await?)
+    set_global_settings(settings.clone());
+    init_settings_window();
+
+    Ok(settings)
 }

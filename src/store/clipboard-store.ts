@@ -28,8 +28,8 @@ function createClipboardStore() {
     setClipboards((prev) => {
       const newClipboards = [clipboard, ...prev];
       return newClipboards.sort((a, b) => {
-        const dateA = new Date(a.clipboard.created_date).getTime();
-        const dateB = new Date(b.clipboard.created_date).getTime();
+        const dateA = new Date(a.clipboard.created_at).getTime();
+        const dateB = new Date(b.clipboard.created_at).getTime();
         return dateB - dateA;
       });
     });

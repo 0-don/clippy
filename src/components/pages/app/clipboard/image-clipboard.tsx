@@ -17,7 +17,7 @@ interface ImageClipboardProps {
 
 export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
   let dbClickTimer: any;
-  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
+  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_at).fromNow());
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -39,7 +39,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
 
   createEffect(() => {
     dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
-    setFromNowString(dayjs.utc(props.data.clipboard.created_date).fromNow());
+    setFromNowString(dayjs.utc(props.data.clipboard.created_at).fromNow());
   });
 
   const imageInfo =
@@ -61,7 +61,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
         )}
         <div
           class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
-          title={dayjs.utc(props.data.clipboard.created_date).format()}
+          title={dayjs.utc(props.data.clipboard.created_at).format()}
         >
           {fromNowString()}
         </div>

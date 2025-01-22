@@ -18,7 +18,7 @@ interface TextClipboardProps {
 }
 
 export const TextClipboard: Component<TextClipboardProps> = (props) => {
-  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
+  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_at).fromNow());
 
   let type = ClipboardType.Text;
 
@@ -82,7 +82,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
 
   createEffect(() => {
     dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
-    setFromNowString(dayjs.utc(props.data.clipboard.created_date).fromNow());
+    setFromNowString(dayjs.utc(props.data.clipboard.created_at).fromNow());
   });
 
   return (
@@ -100,7 +100,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
             </p>
             <div
               class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
-              title={new Date(props.data.clipboard.created_date).toLocaleString()}
+              title={new Date(props.data.clipboard.created_at).toLocaleString()}
             >
               {fromNowString()}
             </div>

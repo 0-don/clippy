@@ -5,7 +5,7 @@ mod prelude;
 mod service;
 mod utils;
 
-use commands::{clipboard, hotkey, settings, sync, window};
+use commands::{cipher, clipboard, hotkey, settings, sync, window};
 use config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
@@ -51,6 +51,10 @@ pub fn run() {
             //
             sync::sync_authenticate_toggle,
             sync::sync_limit_change,
+            //
+            //
+            cipher::enable_encryption,
+            cipher::disable_encryption,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

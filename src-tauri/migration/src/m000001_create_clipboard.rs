@@ -9,6 +9,7 @@ pub enum Clipboard {
     Id,
     Types,
     Star,
+    Encrypted,
     CreatedAt,
 }
 
@@ -26,6 +27,7 @@ impl MigrationTrait for Migration {
                     .col(uuid(Clipboard::Id).not_null().primary_key())
                     .col(json(Clipboard::Types).default(Expr::value("[]")))
                     .col(boolean(Clipboard::Star).default(false))
+                    .col(boolean(Clipboard::Encrypted).default(false))
                     .col(date_time(Clipboard::CreatedAt).default(Expr::current_timestamp()))
                     .to_owned(),
             )

@@ -16,7 +16,7 @@ interface FileClipboardProps {
 }
 
 export const FileClipboard: Component<FileClipboardProps> = (props) => {
-  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_date).fromNow());
+  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_at).fromNow());
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -51,7 +51,7 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
 
   createEffect(() => {
     dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
-    setFromNowString(dayjs.utc(props.data.clipboard.created_date).fromNow());
+    setFromNowString(dayjs.utc(props.data.clipboard.created_at).fromNow());
   });
 
   const groupedFiles = getGroupedFiles();
@@ -73,7 +73,7 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
         </div>
         <div
           class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
-          title={dayjs.utc(props.data.clipboard.created_date).format()}
+          title={dayjs.utc(props.data.clipboard.created_at).format()}
         >
           {fromNowString()}
         </div>
