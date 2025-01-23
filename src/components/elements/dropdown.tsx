@@ -18,16 +18,16 @@ export const Dropdown: Component<DropdownProps> = (props) => {
   return (
     <div
       onClick={() => ref()?.dispatchEvent(new MouseEvent("mousedown"))}
-      class={`${props.className ? props.className : ""} group flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus:outline-none focus:ring-0 dark:border-dark-light dark:bg-dark-light dark:text-white`}
+      class={`${props.className ? props.className : ""} group dark:border-dark-light dark:bg-dark-light flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus:ring-0 focus:outline-hidden dark:text-white`}
     >
       <select
         ref={setRef}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
-        class="appearance-none bg-transparent text-sm focus:outline-none focus:ring-0"
+        class="cursor-pointer appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden"
       >
         {props.items.map((item) => (
-          <option value={item.value} selected={item.value === props.value} class="!text-red-500 dark:!text-red-600">
+          <option value={item.value} selected={item.value === props.value} class="text-red-500! dark:text-red-600!">
             {t(item.label as DictionaryKey) || item.label}
           </option>
         ))}

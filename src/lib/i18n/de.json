@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Bestätige das Passwort",
 			"DECRYPT": "Alle Zwischenablagen entschlüsseln",
 			"ENCRYPT": "Alle Zwischenablagen verschlüsseln",
 			"ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
-			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden"
+			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden",
+			"PASSWORD": "Passwort"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Sprache ändern",

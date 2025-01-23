@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "确认密码",
 			"DECRYPT": "解密所有剪贴板",
 			"ENCRYPT": "加密所有剪贴板",
 			"ENCRYPT_DECRYPT": "加密/解密",
-			"INFO": "所有剪贴板都已加密，如果密码丢失则无法恢复"
+			"INFO": "所有剪贴板都已加密，如果密码丢失则无法恢复",
+			"PASSWORD": "密码"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "改变语言",

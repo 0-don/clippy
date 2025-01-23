@@ -9,6 +9,7 @@ import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation, HotkeyEvent } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
+import { Button } from "../../elements/button";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
@@ -32,11 +33,6 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
 
           <Toggle
             checked={!!SettingsStore.settings()?.sync}
-            onClick={
-              !SettingsStore.settings()?.sync
-                ? async () => void (await SettingsStore.syncAuthenticateToggle())
-                : undefined
-            }
             onChange={async () => void (await SettingsStore.syncAuthenticateToggle())}
           />
         </div>
@@ -66,69 +62,58 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
       </TextBlock>
 
       <TextBlock Icon={SiSqlite} title={t("SETTINGS.BACKUP.DATABASE_LOCATION")}>
-        <div class="list-disc px-5 pb-5 pt-2.5">
+        <div class="list-disc px-5 pt-2.5 pb-5">
           <div class="relative w-full cursor-pointer">
             <div
               title={databaseUrl()}
-              class="w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
+              class="dark:border-dark-light dark:bg-dark-light dark:focus:bg-dark-dark w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-hidden dark:text-white"
             >
               {databaseUrl()}
             </div>
           </div>
-          <div class="mt-1 flex items-center justify-end gap-1">
-            <button
-              type="button"
+          <div class="mt-1.5 flex items-center justify-end gap-1.5">
+            <Button
+              label="SETTINGS.BACKUP.RESET_LOCATION"
               onClick={async () => {
                 await SettingsStore.resetClipboardDbLocation();
                 setDatabaseUrl.refetch();
               }}
-              class="group my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
-            >
-              <BiRegularReset class="dark:text-white" />
-              <div>{t("SETTINGS.BACKUP.RESET_LOCATION")}</div>
-            </button>
+              Icon={BiRegularReset}
+            />
 
-            <button
-              type="button"
+            <Button
+              label="SETTINGS.BACKUP.CHANGE_LOCATION"
               onClick={async () => {
                 await SettingsStore.changeClipboardDbLocation();
                 setDatabaseUrl.refetch();
               }}
-              class="group my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
-            >
-              <TbExchange class="dark:text-white" />
-              <div>{t("SETTINGS.BACKUP.CHANGE_LOCATION")}</div>
-            </button>
+              Icon={TbExchange}
+            />
 
-            <button
-              type="button"
+            <Button
+              label="SETTINGS.BACKUP.OPEN"
               onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Database })}
-              class="group my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
-            >
-              <AiTwotoneFolderOpen class="dark:text-white" />
-              <div>{t("SETTINGS.BACKUP.OPEN")}</div>
-            </button>
+              Icon={AiTwotoneFolderOpen}
+            />
           </div>
         </div>
       </TextBlock>
 
       <TextBlock Icon={BsGearWideConnected} title={t("SETTINGS.BACKUP.CONFIG_LOCATION")}>
-        <div class="list-disc px-5 pb-5 pt-2.5">
+        <div class="list-disc px-5 pt-2.5 pb-5">
           <div class="relative w-full cursor-pointer">
             <div
               title={configUrl()}
-              class="w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-none dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
+              class="dark:border-dark-light dark:bg-dark-light dark:focus:bg-dark-dark w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-hidden dark:text-white"
             >
               {configUrl()}
             </div>
-            <button
-              type="button"
+            <Button
+              label="SETTINGS.BACKUP.OPEN"
+              className="absolute inset-y-0 right-0"
               onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Config })}
-              class="group absolute inset-y-0 right-1 my-1 flex items-center space-x-1 rounded bg-gray-600 px-2 text-xs text-white group-hover:bg-gray-400"
-            >
-              <AiTwotoneFolderOpen class="dark:text-white" />
-              <div>{t("SETTINGS.BACKUP.OPEN")}</div>
-            </button>
+              Icon={AiTwotoneFolderOpen}
+            />
           </div>
         </div>
       </TextBlock>

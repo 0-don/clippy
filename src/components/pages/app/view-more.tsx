@@ -18,7 +18,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
     return (
       <button
         type="button"
-        class="w-full cursor-pointer select-none px-3 hover:bg-zinc-200 dark:hover:bg-neutral-700"
+        class="w-full cursor-pointer px-3 select-none hover:bg-zinc-200 dark:hover:bg-neutral-700"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -30,7 +30,7 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
             <div class="relative">
               <div innerHTML={JSON.parse(hotkey.icon)} class="text-2xl" />
               <Show when={HotkeyStore.globalHotkeyEvent() && hotkey.status}>
-                <div class="absolute left-0 top-0 -ml-2 -mt-3 rounded-sm bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
+                <div class="absolute top-0 left-0 -mt-3 -ml-2 rounded-xs bg-zinc-800 px-1 text-[12px] font-semibold text-white dark:bg-zinc-600">
                   {hotkey.key}
                 </div>
               </Show>

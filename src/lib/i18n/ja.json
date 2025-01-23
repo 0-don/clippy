@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "クリップボード履歴を同期する"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "パスワードを認証する",
 			"DECRYPT": "すべてのクリップボードを復号化する",
 			"ENCRYPT": "すべてのクリップボードを暗号化",
 			"ENCRYPT_DECRYPT": "暗号化/復号化",
-			"INFO": "すべてのクリップボードは暗号化されており、パスワードを紛失した場合は何も復元できません。"
+			"INFO": "すべてのクリップボードは暗号化されており、パスワードを紛失した場合は何も復元できません。",
+			"PASSWORD": "パスワード"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "言語を変えてください",

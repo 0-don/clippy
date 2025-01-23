@@ -11,10 +11,10 @@ use common::types::orm_query::FullClipboardDbo;
 use image::imageops;
 use regex::Regex;
 use sea_orm::prelude::Uuid;
-use tao::global::{get_app, get_app_window};
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
+use tao::global::{get_app, get_app_window};
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
@@ -263,10 +263,10 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 self.clipboard_image_model = entity::clipboard_image::ActiveModel {
                     size: Set(Some(img_bytes.len().to_string())),
                     data: Set(img_bytes),
+                    thumbnail: Set(base64_thumbnail),
+                    extension: Set(extension),
                     width: Set(Some(width as i32)),
                     height: Set(Some(height as i32)),
-                    extension: Set(extension),
-                    thumbnail: Set(Some(base64_thumbnail)),
                     ..Default::default()
                 };
             }
