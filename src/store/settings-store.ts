@@ -1,4 +1,4 @@
-import { BsDatabaseFillGear } from "solid-icons/bs";
+import { BsDatabaseFillGear, BsDatabaseLock } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { TbResize } from "solid-icons/tb";
@@ -17,16 +17,21 @@ function createSettingsStore() {
     { name: SETTINGS_TAB[1], Icon: BsDatabaseFillGear, current: false },
     {
       name: SETTINGS_TAB[2],
-      Icon: VsHistory,
+      Icon: BsDatabaseLock,
       current: false,
     },
     {
       name: SETTINGS_TAB[3],
-      Icon: RiDeviceKeyboardFill,
+      Icon: VsHistory,
       current: false,
     },
     {
       name: SETTINGS_TAB[4],
+      Icon: RiDeviceKeyboardFill,
+      current: false,
+    },
+    {
+      name: SETTINGS_TAB[5],
       Icon: TbResize,
       current: false,
     },
@@ -76,7 +81,6 @@ function createSettingsStore() {
     syncAuthenticateToggle,
     openWindow,
     exitApp,
-    
   };
 }
 

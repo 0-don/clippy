@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Ile schowków powinno być synchronizowanych?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Odszyfruj wszystkie schowki",
+			"ENCRYPT": "Zaszyfruj wszystkie schowki",
+			"ENCRYPT_DECRYPT": "Szyfruj / Odszyfruj",
+			"INFO": "Wszystkie schowki są szyfrowane, jeśli hasło zostanie utracone, nie będzie można go odzyskać"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Zmień język",
 			"CHANGE_WINDOW_POSITION": "Zmień położenie okna",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Ustawienia",
 		"TAB": {
 			"BACKUP": "Kopia zapasowa",
+			"ENCRYPTION": "Szyfrowanie",
 			"GENERAL": "Ogólny",
 			"HISTORY": "Historia",
 			"HOTKEYS": "Klawisze skrótu",

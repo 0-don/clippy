@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Kaç panonun senkronize edilmesi gerekiyor?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Tüm panoları şifresini çöz",
+			"ENCRYPT": "Tüm panoları şifrele",
+			"ENCRYPT_DECRYPT": "Şifrele / Şifresini çöz",
+			"INFO": "Tüm panolar şifrelenmiştir, şifre kaybolduğunda hiçbir şey geri yüklenemez"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Dili değiştir",
 			"CHANGE_WINDOW_POSITION": "Pencere konumunu değiştir",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Ayarlar",
 		"TAB": {
 			"BACKUP": "Yedekleme",
+			"ENCRYPTION": "Şifreleme",
 			"GENERAL": "Genel",
 			"HISTORY": "Tarih",
 			"HOTKEYS": "Kısayollar",

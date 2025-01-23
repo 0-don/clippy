@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "몇 개의 클립보드를 동기화해야 하나요?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "모든 클립보드를 해독합니다",
+			"ENCRYPT": "모든 클립보드 암호화",
+			"ENCRYPT_DECRYPT": "암호화 / 복호화",
+			"INFO": "모든 클립보드는 암호화되어 있으므로 비밀번호를 분실하면 아무것도 복구할 수 없습니다."
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "언어 변경",
 			"CHANGE_WINDOW_POSITION": "창 위치 변경",
@@ -139,6 +145,7 @@
 		"SETTINGS": "설정",
 		"TAB": {
 			"BACKUP": "지원",
+			"ENCRYPTION": "암호화",
 			"GENERAL": "일반적인",
 			"HISTORY": "역사",
 			"HOTKEYS": "단축키",

@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Cần đồng bộ bao nhiêu bảng tạm?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Giải mã tất cả các clipboard",
+			"ENCRYPT": "Mã hóa tất cả các clipboard",
+			"ENCRYPT_DECRYPT": "Mã hóa / Giải mã",
+			"INFO": "Tất cả các bảng tạm đều được mã hóa, nếu mất mật khẩu thì không thể khôi phục lại được"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Thay đổi ngôn ngữ",
 			"CHANGE_WINDOW_POSITION": "Thay đổi vị trí cửa sổ",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Cài đặt",
 		"TAB": {
 			"BACKUP": "Hỗ trợ",
+			"ENCRYPTION": "Mã hóa",
 			"GENERAL": "Tổng quan",
 			"HISTORY": "Lịch sử",
 			"HOTKEYS": "Phím nóng",

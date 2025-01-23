@@ -9,7 +9,7 @@ export const Tabs: Component<TabsProps> = ({}) => {
 
   return (
     <div class="border-b border-gray-500">
-      <nav class="-mb-px flex justify-center gap-2">
+      <nav class="-mb-px flex justify-center">
         <For each={SettingsStore.tabs()}>
           {({ Icon, current, name }) => (
             <button

@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Hoeveel klemborden moeten er worden gesynchroniseerd?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Alle klemborden decoderen",
+			"ENCRYPT": "Versleutel alle klemborden",
+			"ENCRYPT_DECRYPT": "Versleutelen / Ontsleutelen",
+			"INFO": "Alle klemborden zijn gecodeerd, als het wachtwoord verloren gaat, kan er niets worden hersteld"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Taal wijzigen",
 			"CHANGE_WINDOW_POSITION": "Vensterpositie wijzigen",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Instellingen",
 		"TAB": {
 			"BACKUP": "Back-up",
+			"ENCRYPTION": "Encryptie",
 			"GENERAL": "Algemeen",
 			"HISTORY": "Geschiedenis",
 			"HOTKEYS": "Sneltoetsen",

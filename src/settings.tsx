@@ -1,5 +1,7 @@
+import { onMount } from "solid-js";
 import { Show, render } from "solid-js/web";
 import { SettingsBackup } from "./components/pages/settings/settings-backup";
+import { SettingsEncryption } from "./components/pages/settings/settings-encryption";
 import { SettingsGeneral } from "./components/pages/settings/settings-general";
 import { SettingsHistory } from "./components/pages/settings/settings-history";
 import { SettingsHotkeys } from "./components/pages/settings/settings-hotkeys";
@@ -11,7 +13,6 @@ import { HotkeyStore } from "./store/hotkey-store";
 import { SettingsStore } from "./store/settings-store";
 import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
-import { onMount } from "solid-js";
 
 const Settings = () => {
   listenEvent(ListenEvent.InitSettings, SettingsStore.init);
@@ -33,6 +34,10 @@ const Settings = () => {
 
         <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.BACKUP"}>
           <SettingsBackup />
+        </Show>
+
+        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.ENCRYPTION"}>
+          <SettingsEncryption />
         </Show>
 
         <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.HISTORY"}>

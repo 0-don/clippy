@@ -19,11 +19,11 @@ pub struct Model {
     pub id: Uuid,
     pub clipboard_id: Uuid,
     pub data: Vec<u8>,
+    pub thumbnail: String,
     pub extension: Option<String>,
     pub width: Option<i32>,
     pub height: Option<i32>,
     pub size: Option<String>,
-    pub thumbnail: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -31,11 +31,11 @@ pub enum Column {
     Id,
     ClipboardId,
     Data,
+    Thumbnail,
     Extension,
     Width,
     Height,
     Size,
-    Thumbnail,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -62,11 +62,11 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::Uuid.def(),
             Self::ClipboardId => ColumnType::Uuid.def().unique(),
             Self::Data => ColumnType::Blob.def(),
+            Self::Thumbnail => ColumnType::Text.def(),
             Self::Extension => ColumnType::String(StringLen::None).def().null(),
             Self::Width => ColumnType::Integer.def().null(),
             Self::Height => ColumnType::Integer.def().null(),
             Self::Size => ColumnType::String(StringLen::None).def().null(),
-            Self::Thumbnail => ColumnType::Text.def().null(),
         }
     }
 }

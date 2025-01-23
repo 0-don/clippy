@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Decifrare tutti gli appunti",
+			"ENCRYPT": "Crittografa tutti gli appunti",
+			"ENCRYPT_DECRYPT": "Crittografare/Decifrare",
+			"INFO": "Tutti gli appunti sono crittografati, se la password viene persa non è possibile ripristinarla"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambia lingua UI",
 			"CHANGE_WINDOW_POSITION": "Modifica posizione finestra",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Impostazioni",
 		"TAB": {
 			"BACKUP": "Backup",
+			"ENCRYPTION": "Crittografia",
 			"GENERAL": "Generale",
 			"HISTORY": "Cronologia",
 			"HOTKEYS": "Tasti scelta rapida",

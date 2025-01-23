@@ -7,6 +7,7 @@ import { invokeCommand } from "../../../lib/tauri";
 import { ClipboardType } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { formatBytes } from "../../../utils";
+import { Button } from "../../elements/button";
 import { TextBlock } from "../../elements/text-block";
 import { useLanguage } from "../../provider/language-provider";
 
@@ -44,14 +45,7 @@ export const SettingsHistory: Component = () => {
       <TextBlock Icon={BsDeviceHdd} title={t("SETTINGS.HISTORY.STORAGE_ACTIONS")}>
         <div class="flex w-full flex-wrap justify-center gap-2 px-5 pb-5">
           {CLIPBOARD_TYPES.map(({ type, label }) => (
-            <button
-              type="button"
-              onClick={() => handleClear(type)}
-              class="inline-flex items-center space-x-2 rounded bg-zinc-600 px-1 py-1 text-xs font-bold text-white hover:bg-zinc-700"
-            >
-              <FiTrash2 />
-              <span>{t(label)}</span>
-            </button>
+            <Button label={label} onClick={() => handleClear(type)} Icon={FiTrash2} />
           ))}
         </div>
       </TextBlock>

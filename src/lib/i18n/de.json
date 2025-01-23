@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Wie viele Zwischenablagen sollen synchronisiert werden?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Alle Zwischenablagen entschlüsseln",
+			"ENCRYPT": "Alle Zwischenablagen verschlüsseln",
+			"ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
+			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Sprache ändern",
 			"CHANGE_WINDOW_POSITION": "Fensterposition ändern",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Einstellungen",
 		"TAB": {
 			"BACKUP": "Sicherung",
+			"ENCRYPTION": "Verschlüsselung",
 			"GENERAL": "Allgemein",
 			"HISTORY": "Geschichte",
 			"HOTKEYS": "Tastenkombinationen",
