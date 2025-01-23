@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Bevestig wachtwoord",
 			"DECRYPT": "Alle klemborden decoderen",
 			"ENCRYPT": "Versleutel alle klemborden",
 			"ENCRYPT_DECRYPT": "Versleutelen / Ontsleutelen",
-			"INFO": "Alle klemborden zijn gecodeerd, als het wachtwoord verloren gaat, kan er niets worden hersteld"
+			"INFO": "Alle klemborden zijn gecodeerd, als het wachtwoord verloren gaat, kan er niets worden hersteld",
+			"PASSWORD": "Wachtwoord"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Taal wijzigen",

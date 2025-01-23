@@ -55,9 +55,9 @@ export const Clipboards: Component = () => {
             onClick={ClipboardStore.init}
           >
             <div class="relative flex items-center justify-center py-1">
-              <FiArrowUp class="text-xl !text-white dark:!text-white" />
+              <FiArrowUp class="text-xl text-white! dark:text-white!" />
               <Show when={HotkeyStore.globalHotkeyEvent()}>
-                <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-sm bg-zinc-600 px-1 text-[12px] font-semibold">
+                <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-xs bg-zinc-600 px-1 text-[12px] font-semibold">
                   {HotkeyStore.hotkeys().find((key) => key.event === HotkeyEvent.ScrollToTop)?.key}
                 </div>
               </Show>

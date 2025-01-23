@@ -1,7 +1,7 @@
 use crate::m000001_create_clipboard::Clipboard;
 use sea_orm_migration::{
     prelude::*,
-    schema::{blob, integer_null, string_null, text, text_null, uuid},
+    schema::{blob, integer_null, string_null, text, uuid},
 };
 
 #[derive(Iden)]

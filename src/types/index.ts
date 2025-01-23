@@ -116,7 +116,7 @@ export type Settings = {
   tooltip: boolean;
   display_scale: number;
   position: ClippyPosition;
-
+  encryption: boolean;
   max_file_size: number;
   max_image_size: number;
   max_text_size: number;

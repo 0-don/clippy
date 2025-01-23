@@ -20,6 +20,7 @@ export const VIEW_MORE_NAMES = [
   "MAIN.HOTKEY.ABOUT",
   "MAIN.HOTKEY.EXIT",
 ] as const satisfies readonly DictionaryKey[];
+
 export const TAB_NAMES = [
   "MAIN.HOTKEY.RECENT_CLIPBOARDS",
   "MAIN.HOTKEY.STARRED_CLIPBOARDS",
@@ -35,7 +36,6 @@ export const TABS = [
 ] as const;
 
 export type SettingsTabName = (typeof SETTINGS_TAB)[number];
-
 export type ViewMoreName = (typeof VIEW_MORE_NAMES)[number];
 export type TabName = (typeof TAB_NAMES)[number];
 export type Tab = (typeof TABS)[number];

@@ -1,6 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-dark-light: #333333;
+  --color-dark: #252526;
+  --color-dark-dark: #1c1c1c;
+
+  --color-gray-dark: #aaaaaa;
+}
+/** @type {import('tailwindcss').Config} */
+
+/* dark: {
+light: "#333333",
+DEFAULT: "#252526",
+dark: "#1c1c1c",
+},
+gray: {
+dark: "#aaaaaa",
+}, */
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 ::-webkit-scrollbar {
   @apply h-[2px] w-[2px];
@@ -9,10 +45,10 @@
   @apply h-0 w-0;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-t from-transparent via-indigo-600 to-transparent;
+  @apply bg-linear-to-t from-transparent via-indigo-600 to-transparent;
 }
 ::-webkit-scrollbar-thumb:horizontal {
-  @apply bg-gradient-to-l from-transparent via-indigo-600 to-transparent;
+  @apply bg-linear-to-l from-transparent via-indigo-600 to-transparent;
 }
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-transparent;
@@ -43,5 +79,5 @@ input::-webkit-inner-spin-button {
 }
 
 .clipboard {
-  @apply flex w-full cursor-pointer select-none items-center gap-2 border-b border-zinc-400 px-3 py-2 hover:bg-zinc-200 focus:outline-none dark:border-b-zinc-700 dark:hover:bg-neutral-700;
+  @apply flex w-full cursor-pointer select-none items-center gap-2 border-b border-zinc-400 px-3 py-2 hover:bg-zinc-200 focus:outline-hidden dark:border-b-zinc-700 dark:hover:bg-neutral-700;
 }

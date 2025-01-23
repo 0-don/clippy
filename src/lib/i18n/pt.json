@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Confirme a sua senha",
 			"DECRYPT": "Descriptografar todas as áreas de transferência",
 			"ENCRYPT": "Criptografar todas as áreas de transferência",
 			"ENCRYPT_DECRYPT": "Criptografar / Descriptografar",
-			"INFO": "Todas as áreas de transferência são criptografadas, se a senha for perdida, nada pode ser restaurado"
+			"INFO": "Todas as áreas de transferência são criptografadas, se a senha for perdida, nada pode ser restaurado",
+			"PASSWORD": "Senha"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Alterar idioma",

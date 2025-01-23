@@ -20,7 +20,7 @@ export const Button: Component<ButtonProps> = (props) => {
     <button
       type={props.type || "button"}
       onClick={props.onClick}
-      class={`flex items-center rounded bg-zinc-600 px-1 py-1 text-xs font-bold text-white hover:bg-zinc-700 ${props.className}`}
+      class={`flex cursor-pointer items-center rounded-sm bg-zinc-600 px-1 py-1 text-xs font-bold text-white hover:bg-zinc-700 ${props.className}`}
     >
       {props.Icon && <props.Icon class={`mr-2 text-lg ${props.iconClassName}`} />}
       {props.children}

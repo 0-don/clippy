@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Potwierdź hasło",
 			"DECRYPT": "Odszyfruj wszystkie schowki",
 			"ENCRYPT": "Zaszyfruj wszystkie schowki",
 			"ENCRYPT_DECRYPT": "Szyfruj / Odszyfruj",
-			"INFO": "Wszystkie schowki są szyfrowane, jeśli hasło zostanie utracone, nie będzie można go odzyskać"
+			"INFO": "Wszystkie schowki są szyfrowane, jeśli hasło zostanie utracone, nie będzie można go odzyskać",
+			"PASSWORD": "Hasło"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Zmień język",

@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Conferma password",
 			"DECRYPT": "Decifrare tutti gli appunti",
 			"ENCRYPT": "Crittografa tutti gli appunti",
 			"ENCRYPT_DECRYPT": "Crittografare/Decifrare",
-			"INFO": "Tutti gli appunti sono crittografati, se la password viene persa non è possibile ripristinarla"
+			"INFO": "Tutti gli appunti sono crittografati, se la password viene persa non è possibile ripristinarla",
+			"PASSWORD": "Parola d'ordine"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambia lingua UI",

@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Confirmar Contraseña",
 			"DECRYPT": "Descifrar todos los portapapeles",
 			"ENCRYPT": "Cifrar todos los portapapeles",
 			"ENCRYPT_DECRYPT": "Encriptar / Descifrar",
-			"INFO": "Todos los portapapeles están encriptados, si se pierde la contraseña no se puede restaurar nada"
+			"INFO": "Todos los portapapeles están encriptados, si se pierde la contraseña no se puede restaurar nada",
+			"PASSWORD": "Contraseña"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambiar idioma",

@@ -41,7 +41,7 @@ export const Input: Component<InputProps> = ({
         {...props}
         onInput={handleInput}
         value={value()}
-        class={`w-full appearance-none bg-transparent text-sm focus:outline-none focus:ring-0 dark:text-white ${props.class}`}
+        class={`w-full appearance-none bg-transparent text-sm focus:outline-hidden focus:ring-0 dark:text-white ${props.class}`}
       />
     </div>
   );

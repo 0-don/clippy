@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Şifreyi Onayla",
 			"DECRYPT": "Tüm panoları şifresini çöz",
 			"ENCRYPT": "Tüm panoları şifrele",
 			"ENCRYPT_DECRYPT": "Şifrele / Şifresini çöz",
-			"INFO": "Tüm panolar şifrelenmiştir, şifre kaybolduğunda hiçbir şey geri yüklenemez"
+			"INFO": "Tüm panolar şifrelenmiştir, şifre kaybolduğunda hiçbir şey geri yüklenemez",
+			"PASSWORD": "Şifre"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Dili değiştir",

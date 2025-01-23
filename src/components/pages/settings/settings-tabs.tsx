@@ -18,7 +18,7 @@ export const Tabs: Component<TabsProps> = ({}) => {
                 current
                   ? "border-zinc-600 text-zinc-600 dark:border-white dark:text-white"
                   : "border-transparent hover:border-zinc-600 hover:text-zinc-600 dark:text-gray-500 dark:hover:border-white dark:hover:text-white"
-              } group inline-flex items-center border-b-2 px-2 py-4 text-sm font-medium`}
+              } group inline-flex items-center border-b-2 px-2 py-4 text-sm font-medium cursor-pointer`}
               onClick={() => SettingsStore.setCurrentTab(name)}
               title={t(name)}
             >

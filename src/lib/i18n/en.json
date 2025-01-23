@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Confirm Password",
 			"DECRYPT": "Decrypt all clipboards",
 			"ENCRYPT": "Encrypt all clipboards",
 			"ENCRYPT_DECRYPT": "Encrypt / Decrypt",
-			"INFO": "All clipboards are encrypted, if password is lost nothing can be restored"
+			"INFO": "All clipboards are encrypted, if password is lost nothing can be restored",
+			"PASSWORD": "Password"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Change language",

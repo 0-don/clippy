@@ -28,7 +28,7 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
                   currentHotkey?.event && HotkeyStore.getHotkey(currentHotkey?.event) && HotkeyStore.globalHotkeyEvent()
                 }
               >
-                <div class="absolute -top-0.5 left-1 rounded-sm bg-zinc-800 px-1 py-1 text-xs font-semibold text-white dark:bg-zinc-600">
+                <div class="absolute -top-0.5 left-1 rounded-xs bg-zinc-800 px-1 py-1 text-xs font-semibold text-white dark:bg-zinc-600">
                   {currentHotkey!.key}
                 </div>
               </Show>

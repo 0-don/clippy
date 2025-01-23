@@ -104,10 +104,12 @@
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
 		},
 		"ENCRYPT": {
+			"CONFIRM_PASSWORD": "Confirmez le mot de passe",
 			"DECRYPT": "Décrypter tous les presse-papiers",
 			"ENCRYPT": "Crypter tous les presse-papiers",
 			"ENCRYPT_DECRYPT": "Crypter / Décrypter",
-			"INFO": "Tous les presse-papiers sont cryptés, si le mot de passe est perdu, rien ne peut être restauré"
+			"INFO": "Tous les presse-papiers sont cryptés, si le mot de passe est perdu, rien ne peut être restauré",
+			"PASSWORD": "Mot de passe"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Changer de langue",
