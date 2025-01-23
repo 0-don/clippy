@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "应该同步多少个剪贴板？",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "解密所有剪贴板",
+			"ENCRYPT": "加密所有剪贴板",
+			"ENCRYPT_DECRYPT": "加密/解密",
+			"INFO": "所有剪贴板都已加密，如果密码丢失则无法恢复"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "改变语言",
 			"CHANGE_WINDOW_POSITION": "更改窗口位置",
@@ -139,6 +145,7 @@
 		"SETTINGS": "设置",
 		"TAB": {
 			"BACKUP": "备份",
+			"ENCRYPTION": "加密",
 			"GENERAL": "一般的",
 			"HISTORY": "历史",
 			"HOTKEYS": "热键",

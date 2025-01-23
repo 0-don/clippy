@@ -1,19 +1,33 @@
-use super::encrypt::looks_like_encrypted_data;
-use common::types::crypto::{EncryptionError, ENCRYPTION_KEY};
+use super::{clipboard::load_clipboards_with_relations, encrypt::looks_like_encrypted_data};
+use common::types::{
+    crypto::{EncryptionError, ENCRYPTION_KEY},
+    types::CommandError,
+};
+use entity::{clipboard, clipboard_text};
 use ring::aead;
+use sea_orm::EntityTrait;
+use tao::connection::db;
 
-pub async fn decrypt_all_clipboards() -> Result<(), EncryptionError> {
-    // let db = db().await?;
+pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
+    let db = db().await?;
 
-    // let clipboards =
-    //     load_clipboards_with_relations(clipboard::Entity::find().all(&db).await?).await;
+    let clipboards =
+        load_clipboards_with_relations(clipboard::Entity::find().all(&db).await?).await;
 
-    // for clipboard in clipboards {
-    //     let decrypted_data = decrypt_data(&clipboard.data)?;
-    //     let clipboard = clipboard::Entity::update(clipboard.reset_data(decrypted_data))
-    //         .exec(&db)
-    //         .await?;
-    // }
+    for clipboard in clipboards {
+        if let Some(mut text) = clipboard.text {
+            if looks_like_encrypted_data(text.data.as_bytes()) {
+                text.data =
+                    String::from_utf8(decrypt_data(text.data.as_bytes())?).unwrap_or_default();
+
+                let clipboard_text: clipboard_text::ActiveModel = text.into();
+
+                clipboard_text::Entity::update(clipboard_text)
+                    .exec(&db)
+                    .await?;
+            }
+        }
+    }
 
     Ok(())
 }

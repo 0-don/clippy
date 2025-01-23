@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "How many clipboards should be synced?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Decrypt all clipboards",
+			"ENCRYPT": "Encrypt all clipboards",
+			"ENCRYPT_DECRYPT": "Encrypt / Decrypt",
+			"INFO": "All clipboards are encrypted, if password is lost nothing can be restored"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Change language",
 			"CHANGE_WINDOW_POSITION": "Change window position",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Settings",
 		"TAB": {
 			"BACKUP": "Backup",
+			"ENCRYPTION": "Encryption",
 			"GENERAL": "General",
 			"HISTORY": "History",
 			"HOTKEYS": "Hotkeys",

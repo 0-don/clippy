@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "いくつのクリップボードを同期する必要がありますか?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "クリップボード履歴を同期する"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "すべてのクリップボードを復号化する",
+			"ENCRYPT": "すべてのクリップボードを暗号化",
+			"ENCRYPT_DECRYPT": "暗号化/復号化",
+			"INFO": "すべてのクリップボードは暗号化されており、パスワードを紛失した場合は何も復元できません。"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "言語を変えてください",
 			"CHANGE_WINDOW_POSITION": "ウィンドウの位置を変更する",
@@ -139,6 +145,7 @@
 		"SETTINGS": "設定",
 		"TAB": {
 			"BACKUP": "バックアップ",
+			"ENCRYPTION": "暗号化",
 			"GENERAL": "一般的な",
 			"HISTORY": "歴史",
 			"HOTKEYS": "ホットキー",

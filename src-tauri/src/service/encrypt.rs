@@ -1,7 +1,8 @@
 use super::clipboard::load_clipboards_with_relations;
 use common::types::crypto::{EncryptionError, ENCRYPTION_KEY};
+use common::types::orm_query::FullClipboardDto;
 use common::types::types::CommandError;
-use entity::clipboard;
+use entity::{clipboard, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text};
 use ring::rand::SecureRandom;
 use ring::{aead, rand};
 use sea_orm::EntityTrait;
@@ -14,10 +15,58 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
         load_clipboards_with_relations(clipboard::Entity::find().all(&db).await?).await;
 
     for clipboard in clipboards {
-        // let encrypted_data = encrypt_data(&clipboard.data)?;
-        // let clipboard = clipboard::Entity::update(clipboard.reset_data(encrypted_data))
-        //     .exec(&db)
-        //     .await?;
+        encrypt_clipboard(clipboard).await?;
+    }
+
+    Ok(())
+}
+
+pub async fn encrypt_clipboard(clipboard: FullClipboardDto) -> Result<(), CommandError> {
+    let db = db().await?;
+
+    if let Some(mut text) = clipboard.text {
+        if !looks_like_encrypted_data(text.data.as_bytes()) {
+            text.data = String::from_utf8(encrypt_data(text.data.as_bytes())?).unwrap_or_default();
+
+            let clipboard_text: clipboard_text::ActiveModel = text.into();
+
+            clipboard_text::Entity::update(clipboard_text)
+                .exec(&db)
+                .await?;
+        }
+    }
+
+    if let Some(mut html) = clipboard.html {
+        if !looks_like_encrypted_data(html.data.as_bytes()) {
+            html.data = String::from_utf8(encrypt_data(html.data.as_bytes())?).unwrap_or_default();
+
+            let clipboard_html: clipboard_html::ActiveModel = html.into();
+
+            clipboard_html::Entity::update(clipboard_html)
+                .exec(&db)
+                .await?;
+        }
+    }
+
+    if let Some(mut rtf) = clipboard.rtf {
+        if !looks_like_encrypted_data(rtf.data.as_bytes()) {
+            rtf.data = String::from_utf8(encrypt_data(rtf.data.as_bytes())?).unwrap_or_default();
+
+            let clipboard_rtf: clipboard_rtf::ActiveModel = rtf.into();
+
+            clipboard_rtf::Entity::update(clipboard_rtf)
+                .exec(&db)
+                .await?;
+        }
+    }
+
+    if let Some(mut image) = clipboard.image {
+        if !looks_like_encrypted_data(image.data.as_slice()) {
+            image.data = encrypt_data(image.data.as_slice())?;
+
+            let image: clipboard_image::ActiveModel = image.into();
+            clipboard_image::Entity::update(image).exec(&db).await?;
+        }
     }
 
     Ok(())

@@ -103,6 +103,12 @@
 			"SYNC_LIMIT": "Quantas áreas de transferência devem ser sincronizadas?",
 			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
 		},
+		"ENCRYPT": {
+			"DECRYPT": "Descriptografar todas as áreas de transferência",
+			"ENCRYPT": "Criptografar todas as áreas de transferência",
+			"ENCRYPT_DECRYPT": "Criptografar / Descriptografar",
+			"INFO": "Todas as áreas de transferência são criptografadas, se a senha for perdida, nada pode ser restaurado"
+		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Alterar idioma",
 			"CHANGE_WINDOW_POSITION": "Alterar a posição da janela",
@@ -139,6 +145,7 @@
 		"SETTINGS": "Configurações",
 		"TAB": {
 			"BACKUP": "Backup",
+			"ENCRYPTION": "Criptografia",
 			"GENERAL": "Em geral",
 			"HISTORY": "História",
 			"HOTKEYS": "Teclas de atalho",
