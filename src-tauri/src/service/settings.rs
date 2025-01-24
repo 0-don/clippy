@@ -17,7 +17,7 @@ use tauri_plugin_autostart::AutoLaunchManager;
 
 pub fn autostart() {
     tauri::async_runtime::spawn(async {
-        let settings = get_settings_db().await.expect("Failed to get settings");
+        let settings = get_global_settings();
         let manager: tauri::State<'_, AutoLaunchManager> = get_app().state::<AutoLaunchManager>();
 
         // Use the manager as needed
@@ -65,7 +65,7 @@ pub async fn update_settings_db(
 pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Model, DbErr> {
     let db: DatabaseConnection = db().await?;
 
-    let mut settings = get_settings_db().await?;
+    let mut settings = get_global_settings();
 
     settings.sync = sync;
 
@@ -92,7 +92,7 @@ pub fn init_settings() {
                 return;
             }
 
-            let mut settings = get_settings_db().await.expect("Failed to get settings");
+            let mut settings = get_global_settings();
 
             settings.display_scale = get_monitor_scale_factor();
             settings.language = get_system_language().to_string();
@@ -112,7 +112,7 @@ pub async fn update_settings_from_sync(
     }
 
     let db: DatabaseConnection = db().await?;
-    let current_settings = get_settings_db().await?;
+    let current_settings = get_global_settings();
 
     // Convert current settings to Value to get the schema structure
     let current_value = serde_json::to_value(&current_settings)?;

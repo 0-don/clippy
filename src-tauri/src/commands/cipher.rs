@@ -1,6 +1,7 @@
 use crate::service::{
     decrypt::{decrypt_all_clipboards, verify_password},
     encrypt::{encrypt_all_clipboards, is_key_set, set_encryption_key},
+    settings::{get_global_settings, update_settings_db},
 };
 use common::types::{crypto::ENCRYPTION_KEY, types::CommandError};
 
@@ -21,6 +22,10 @@ pub async fn enable_encryption(
 
     encrypt_all_clipboards().await?;
 
+    let mut settings = get_global_settings();
+    settings.encryption = true;
+    update_settings_db(settings).await?;
+
     Ok(())
 }
 
@@ -38,6 +43,10 @@ pub async fn disable_encryption(password: String) -> Result<(), CommandError> {
     }
 
     decrypt_all_clipboards().await?;
+
+    let mut settings = get_global_settings();
+    settings.encryption = false;
+    update_settings_db(settings).await?;
 
     *ENCRYPTION_KEY
         .lock()

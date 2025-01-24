@@ -6,6 +6,12 @@ pub struct Config {
     pub db: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Progress {
+    pub total: u64,
+    pub current: u64,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DataPath {
     pub config_path: String,

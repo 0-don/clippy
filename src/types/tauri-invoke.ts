@@ -2,9 +2,6 @@ import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings } fro
 import { ClipboardType, FolderLocation, WebWindow } from "./enums";
 
 export enum InvokeCommand {
-  //Auth
-  AuthGoogleDrive = "auth_google_drive",
-
   // Clipboard commands
   GetClipboards = "get_clipboards",
   DeleteClipboard = "delete_clipboard",
@@ -35,6 +32,10 @@ export enum InvokeCommand {
   SyncAuthenticateToggle = "sync_authenticate_toggle",
   SyncLimitChange = "sync_limit_change",
 
+  // Cipher commands
+  EnableEncryption = "enable_encryption",
+  DisableEncryption = "disable_encryption",
+
   // App info commands
   GetAppVersion = "get_app_version",
   GetDbInfo = "get_db_info",
@@ -43,12 +44,6 @@ export enum InvokeCommand {
 }
 
 export interface TauriInvokeCommands {
-  //Auth
-  [InvokeCommand.AuthGoogleDrive]: {
-    args: undefined;
-    return: string;
-  };
-
   // Clipboard commands
   [InvokeCommand.GetClipboards]: {
     args: ClipboardWhere;
@@ -137,6 +132,16 @@ export interface TauriInvokeCommands {
   [InvokeCommand.SyncLimitChange]: {
     args: { syncLimit: number };
     return: Settings;
+  };
+
+  // Cipher commands
+  [InvokeCommand.EnableEncryption]: {
+    args: { password: string; confirmPassword: string };
+    return: void;
+  };
+  [InvokeCommand.DisableEncryption]: {
+    args: { password: string };
+    return: void;
   };
 
   // App info commands

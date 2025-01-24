@@ -1,4 +1,4 @@
-use super::settings::{get_settings_db, update_settings_synchronize_db};
+use super::settings::{get_global_settings,  update_settings_synchronize_db};
 use crate::{
     prelude::*,
     utils::{providers::google_drive::GoogleDriveProviderImpl, sync_manager::SyncManager},
@@ -30,12 +30,7 @@ pub async fn get_sync_provider() -> State<'static, Arc<dyn SyncProvider>> {
         return sync_state;
     }
 
-    let provider = match get_settings_db()
-        .await
-        .expect("settings failed")
-        .sync_provider
-        .as_str()
-    {
+    let provider = match get_global_settings().sync_provider.as_str() {
         s if s == SyncProviderType::GoogleDrive.to_string() => Arc::new(
             GoogleDriveProviderImpl::new()
                 .await
@@ -61,16 +56,14 @@ pub fn get_sync_manager() -> State<'static, Mutex<SyncManager>> {
 
 pub fn init_sync_interval() {
     tauri::async_runtime::spawn(async {
-        if let Ok(settings) = get_settings_db().await {
-            if settings.sync {
-                get_sync_manager().lock().await.start().await;
-            }
+        if get_global_settings().sync {
+            get_sync_manager().lock().await.start().await;
         }
     });
 }
 
 pub async fn sync_toggle() -> Result<bool, CommandError> {
-    let new_sync_state = !get_settings_db().await?.sync;
+    let new_sync_state = !get_global_settings().sync;
 
     if new_sync_state {
         // Trying to enable sync

@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Favoriete ster"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Wachtwoord komt niet overeen"
+		},
 		"HOTKEY": {
 			"ABOUT": "Over",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Wijzig de locatie van de klembord-DB",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Bevestig wachtwoord",
 			"DECRYPT": "Alle klemborden decoderen",
+			"DECRYPTION_PROGRESS": "{{current}} van {{total}} klemborden worden gedecodeerd",
 			"ENCRYPT": "Versleutel alle klemborden",
 			"ENCRYPT_DECRYPT": "Versleutelen / Ontsleutelen",
+			"ENCRYPTION_PROGRESS": "{{current}} van {{total}} klemborden zijn gecodeerd",
 			"INFO": "Alle klemborden zijn gecodeerd, als het wachtwoord verloren gaat, kan er niets worden hersteld",
 			"PASSWORD": "Wachtwoord"
 		},

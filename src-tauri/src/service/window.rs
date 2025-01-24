@@ -97,12 +97,12 @@ pub fn update_main_window_position() {
         s if s == ClippyPosition::LeftCenter.to_string() => Position::LeftCenter,
         s if s == ClippyPosition::RightCenter.to_string() => Position::RightCenter,
         s if s == ClippyPosition::Center.to_string() => Position::Center,
-        s if s == ClippyPosition::TrayLeft.to_string() => Position::TrayLeft,
-        s if s == ClippyPosition::TrayBottomLeft.to_string() => Position::TrayBottomLeft,
-        s if s == ClippyPosition::TrayRight.to_string() => Position::TrayRight,
-        s if s == ClippyPosition::TrayBottomRight.to_string() => Position::TrayBottomRight,
-        s if s == ClippyPosition::TrayCenter.to_string() => Position::TrayCenter,
-        s if s == ClippyPosition::TrayBottomCenter.to_string() => Position::TrayBottomCenter,
+        // s if s == ClippyPosition::TrayLeft.to_string() => Position::TrayLeft,
+        // s if s == ClippyPosition::TrayBottomLeft.to_string() => Position::TrayBottomLeft,
+        // s if s == ClippyPosition::TrayRight.to_string() => Position::TrayRight,
+        // s if s == ClippyPosition::TrayBottomRight.to_string() => Position::TrayBottomRight,
+        // s if s == ClippyPosition::TrayCenter.to_string() => Position::TrayCenter,
+        // s if s == ClippyPosition::TrayBottomCenter.to_string() => Position::TrayBottomCenter,
         _ => Position::BottomRight, // default fallback
     };
 

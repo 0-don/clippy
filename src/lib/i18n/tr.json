@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Yıldız favorisi"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Şifre eşleşmiyor"
+		},
 		"HOTKEY": {
 			"ABOUT": "Hakkında",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Pano Db konumunu değiştir",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Şifreyi Onayla",
 			"DECRYPT": "Tüm panoları şifresini çöz",
+			"DECRYPTION_PROGRESS": "{{current}} panodan {{total}} şifresi çözüldü",
 			"ENCRYPT": "Tüm panoları şifrele",
 			"ENCRYPT_DECRYPT": "Şifrele / Şifresini çöz",
+			"ENCRYPTION_PROGRESS": "{{current}} panodan {{total}} şifrelendi",
 			"INFO": "Tüm panolar şifrelenmiştir, şifre kaybolduğunda hiçbir şey geri yüklenemez",
 			"PASSWORD": "Şifre"
 		},

@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "النجم المفضل"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "كلمة المرور لا تتطابق"
+		},
 		"HOTKEY": {
 			"ABOUT": "عن",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "تغيير موقع قاعدة بيانات الحافظة",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "تأكيد كلمة المرور",
 			"DECRYPT": "فك تشفير جميع الحافظات",
+			"DECRYPTION_PROGRESS": "تم فك تشفير{{current}} من {{total}} من الحافظات",
 			"ENCRYPT": "تشفير كافة الحافظات",
 			"ENCRYPT_DECRYPT": "تشفير / فك التشفير",
+			"ENCRYPTION_PROGRESS": "تم تشفير{{current}} من {{total}} من الحافظات",
 			"INFO": "يتم تشفير جميع الحافظات، وفي حالة فقدان كلمة المرور، لا يمكن استعادة أي شيء",
 			"PASSWORD": "كلمة المرور"
 		},

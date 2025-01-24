@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "ดาวโปรด"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "รหัสผ่านไม่ตรงกัน"
+		},
 		"HOTKEY": {
 			"ABOUT": "เกี่ยวกับ",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "เปลี่ยนตำแหน่งฐานข้อมูลคลิปบอร์ด",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "ยืนยันรหัสผ่าน",
 			"DECRYPT": "ถอดรหัสคลิปบอร์ดทั้งหมด",
+			"DECRYPTION_PROGRESS": "{{current}} จากคลิปบอร์ด {{total}} ถูกถอดรหัสแล้ว",
 			"ENCRYPT": "เข้ารหัสคลิปบอร์ดทั้งหมด",
 			"ENCRYPT_DECRYPT": "เข้ารหัส / ถอดรหัส",
+			"ENCRYPTION_PROGRESS": "{{current}} จากคลิปบอร์ด {{total}} ถูกเข้ารหัส",
 			"INFO": "คลิปบอร์ดทั้งหมดได้รับการเข้ารหัส หากลืมรหัสผ่าน จะไม่สามารถเรียกคืนอะไรได้",
 			"PASSWORD": "รหัสผ่าน"
 		},

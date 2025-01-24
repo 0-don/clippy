@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "اسٹار پسندیدہ"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "پاس ورڈ مماثل نہیں ہے۔"
+		},
 		"HOTKEY": {
 			"ABOUT": "کے بارے میں",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "کلپ بورڈ Db مقام تبدیل کریں۔",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "پاس ورڈ کی تصدیق کریں۔",
 			"DECRYPT": "تمام کلپ بورڈز کو ڈکرپٹ کریں۔",
+			"DECRYPTION_PROGRESS": "{{current}} سے {{total}} کلپ بورڈز کو ڈکرپٹ کیا گیا ہے۔",
 			"ENCRYPT": "تمام کلپ بورڈز کو خفیہ کریں۔",
 			"ENCRYPT_DECRYPT": "خفیہ کرنا / خفیہ کرنا",
+			"ENCRYPTION_PROGRESS": "{{current}} سے {{total}} کلپ بورڈز مرموز ہیں۔",
 			"INFO": "تمام کلپ بورڈز انکرپٹڈ ہیں، اگر پاس ورڈ کھو جائے تو کچھ بھی بحال نہیں کیا جا سکتا",
 			"PASSWORD": "پاس ورڈ"
 		},

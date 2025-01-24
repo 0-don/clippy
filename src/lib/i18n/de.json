@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Star-Favorit"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Das Passwort stimmt nicht überein"
+		},
 		"HOTKEY": {
 			"ABOUT": "Über",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Zwischenablage-Datenbankspeicherort ändern",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Bestätige das Passwort",
 			"DECRYPT": "Alle Zwischenablagen entschlüsseln",
+			"DECRYPTION_PROGRESS": "{{current}} aus {{total}} Zwischenablagen werden entschlüsselt",
 			"ENCRYPT": "Alle Zwischenablagen verschlüsseln",
 			"ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
+			"ENCRYPTION_PROGRESS": "{{current}} aus {{total}} Zwischenablagen sind verschlüsselt",
 			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden",
 			"PASSWORD": "Passwort"
 		},

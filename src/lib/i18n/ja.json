@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "スターのお気に入り"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "パスワードが一致しません"
+		},
 		"HOTKEY": {
 			"ABOUT": "について",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "クリップボードのDBの場所を変更する",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "パスワードを認証する",
 			"DECRYPT": "すべてのクリップボードを復号化する",
+			"DECRYPTION_PROGRESS": " {{total}} 個のクリップボードから{{current}} 個が復号化されました",
 			"ENCRYPT": "すべてのクリップボードを暗号化",
 			"ENCRYPT_DECRYPT": "暗号化/復号化",
+			"ENCRYPTION_PROGRESS": " {{total}} 個のクリップボードの{{current}} が暗号化されています",
 			"INFO": "すべてのクリップボードは暗号化されており、パスワードを紛失した場合は何も復元できません。",
 			"PASSWORD": "パスワード"
 		},

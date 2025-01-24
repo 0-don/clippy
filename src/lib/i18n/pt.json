@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Favorito das estrelas"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "A senha não corresponde"
+		},
 		"HOTKEY": {
 			"ABOUT": "Sobre",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Alterar localização do banco de dados da área de transferência",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Confirme a sua senha",
 			"DECRYPT": "Descriptografar todas as áreas de transferência",
+			"DECRYPTION_PROGRESS": "{{current}} de {{total}} áreas de transferência são descriptografadas",
 			"ENCRYPT": "Criptografar todas as áreas de transferência",
 			"ENCRYPT_DECRYPT": "Criptografar / Descriptografar",
+			"ENCRYPTION_PROGRESS": "{{current}} de {{total}} áreas de transferência são criptografadas",
 			"INFO": "Todas as áreas de transferência são criptografadas, se a senha for perdida, nada pode ser restaurado",
 			"PASSWORD": "Senha"
 		},

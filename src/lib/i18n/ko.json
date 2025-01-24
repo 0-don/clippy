@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "스타가 좋아하는 것"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "비밀번호가 일치하지 않습니다"
+		},
 		"HOTKEY": {
 			"ABOUT": "에 대한",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "클립보드 Db 위치 변경",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "비밀번호 확인",
 			"DECRYPT": "모든 클립보드를 해독합니다",
+			"DECRYPTION_PROGRESS": " {{total}} 개 클립보드 중{{current}} 개가 해독되었습니다.",
 			"ENCRYPT": "모든 클립보드 암호화",
 			"ENCRYPT_DECRYPT": "암호화 / 복호화",
+			"ENCRYPTION_PROGRESS": " {{total}} 개 클립보드 중{{current}} 개가 암호화되었습니다.",
 			"INFO": "모든 클립보드는 암호화되어 있으므로 비밀번호를 분실하면 아무것도 복구할 수 없습니다.",
 			"PASSWORD": "비밀번호"
 		},

@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Segna come preferito"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "La password non corrisponde"
+		},
 		"HOTKEY": {
 			"ABOUT": "Info",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Cambia posizione del database degli appunti",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Conferma password",
 			"DECRYPT": "Decripta tutti gli appunti",
+			"DECRYPTION_PROGRESS": "{{current}} da {{total}} appunti sono decifrati",
 			"ENCRYPT": "Cripta tutti gli appunti",
 			"ENCRYPT_DECRYPT": "Cripta/decripta",
+			"ENCRYPTION_PROGRESS": "{{current}} da {{total}} appunti sono crittografati",
 			"INFO": "Tutti gli appunti sono criptati, se la password viene persa non è possibile ripristinarli",
 			"PASSWORD": "Password"
 		},
