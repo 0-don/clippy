@@ -28,7 +28,7 @@
 			"DIGIT_8": "Cifra 8",
 			"DIGIT_9": "Cifra 9",
 			"EXIT": "Esci",
-			"HISTORY": "Crologia",
+			"HISTORY": "Cronologia",
 			"NUM_1": "Numero 1",
 			"NUM_2": "Numero 2",
 			"NUM_3": "Numero 3",
@@ -84,7 +84,7 @@
 			"TOP_CENTER": "In alto al centro",
 			"TOP_LEFT": "In alto a sinistra",
 			"TOP_RIGHT": "In alto a destra",
-			"TRAY_BOTTOM_CENTER": "Icon sistema in basso al centro",
+			"TRAY_BOTTOM_CENTER": "Icona sistema in basso al centro",
 			"TRAY_BOTTOM_LEFT": "Icona sistema in basso a sinistra",
 			"TRAY_BOTTOM_RIGHT": "Icona sistema in basso a destra",
 			"TRAY_CENTER": "Icona sistema al centro",
@@ -105,11 +105,11 @@
 		},
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Conferma password",
-			"DECRYPT": "Decifrare tutti gli appunti",
-			"ENCRYPT": "Crittografa tutti gli appunti",
-			"ENCRYPT_DECRYPT": "Crittografare/Decifrare",
-			"INFO": "Tutti gli appunti sono crittografati, se la password viene persa non è possibile ripristinarla",
-			"PASSWORD": "Parola d'ordine"
+			"DECRYPT": "Decripta tutti gli appunti",
+			"ENCRYPT": "Cripta tutti gli appunti",
+			"ENCRYPT_DECRYPT": "Cripta/decripta",
+			"INFO": "Tutti gli appunti sono criptati, se la password viene persa non è possibile ripristinarli",
+			"PASSWORD": "Password"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambia lingua UI",
@@ -147,7 +147,7 @@
 		"SETTINGS": "Impostazioni",
 		"TAB": {
 			"BACKUP": "Backup",
-			"ENCRYPTION": "Crittografia",
+			"ENCRYPTION": "Criptazione",
 			"GENERAL": "Generale",
 			"HISTORY": "Cronologia",
 			"HOTKEYS": "Tasti scelta rapida",
