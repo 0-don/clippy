@@ -26,18 +26,18 @@ pub enum ClippyPosition {
     RightCenter,
     #[iden = "center"]
     Center,
-    #[iden = "tray_left"]
-    TrayLeft,
-    #[iden = "tray_bottom_left"]
-    TrayBottomLeft,
-    #[iden = "tray_right"]
-    TrayRight,
-    #[iden = "tray_bottom_right"]
-    TrayBottomRight,
-    #[iden = "tray_center"]
-    TrayCenter,
-    #[iden = "tray_bottom_center"]
-    TrayBottomCenter,
+    // #[iden = "tray_left"]
+    // TrayLeft,
+    // #[iden = "tray_bottom_left"]
+    // TrayBottomLeft,
+    // #[iden = "tray_right"]
+    // TrayRight,
+    // #[iden = "tray_bottom_right"]
+    // TrayBottomRight,
+    // #[iden = "tray_center"]
+    // TrayCenter,
+    // #[iden = "tray_bottom_center"]
+    // TrayBottomCenter,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
@@ -116,6 +116,8 @@ pub enum ListenEvent {
     ScrollToTop,
     #[iden = "new_clipboard"]
     NewClipboard,
+    #[iden = "progress"]
+    Progress,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]

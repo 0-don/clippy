@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Star favorite"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Password doesn't match"
+		},
 		"HOTKEY": {
 			"ABOUT": "About",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Change clipboard Db location",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Confirm Password",
 			"DECRYPT": "Decrypt all clipboards",
+			"DECRYPTION_PROGRESS": "{{current}} from {{total}} clipboards are decrypted",
 			"ENCRYPT": "Encrypt all clipboards",
 			"ENCRYPT_DECRYPT": "Encrypt / Decrypt",
+			"ENCRYPTION_PROGRESS": "{{current}} from {{total}} clipboards are encrypted",
 			"INFO": "All clipboards are encrypted, if password is lost nothing can be restored",
 			"PASSWORD": "Password"
 		},

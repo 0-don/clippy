@@ -76,12 +76,12 @@ export const CLIPPY_POSITIONS = [
   "left_center",
   "right_center",
   "center",
-  "tray_left",
-  "tray_bottom_left",
-  "tray_right",
-  "tray_bottom_right",
-  "tray_center",
-  "tray_bottom_center",
+  // "tray_left",
+  // "tray_bottom_left",
+  // "tray_right",
+  // "tray_bottom_right",
+  // "tray_center",
+  // "tray_bottom_center",
 ] as const;
 
 export const GLOBAL_SHORTCUT_KEYS = [

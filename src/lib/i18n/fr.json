@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Favori des étoiles"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Le mot de passe ne correspond pas"
+		},
 		"HOTKEY": {
 			"ABOUT": "À propos",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Changer l'emplacement de la base de données du presse-papiers",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Confirmez le mot de passe",
 			"DECRYPT": "Décrypter tous les presse-papiers",
+			"DECRYPTION_PROGRESS": "{{current}} des presse-papiers {{total}} sont décryptés",
 			"ENCRYPT": "Crypter tous les presse-papiers",
 			"ENCRYPT_DECRYPT": "Crypter / Décrypter",
+			"ENCRYPTION_PROGRESS": "{{current}} des presse-papiers {{total}} sont cryptés",
 			"INFO": "Tous les presse-papiers sont cryptés, si le mot de passe est perdu, rien ne peut être restauré",
 			"PASSWORD": "Mot de passe"
 		},

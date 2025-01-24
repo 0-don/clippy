@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Ulubieniec gwiazd"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Hasło nie pasuje"
+		},
 		"HOTKEY": {
 			"ABOUT": "O",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Zmień lokalizację schowka w bazie danych",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Potwierdź hasło",
 			"DECRYPT": "Odszyfruj wszystkie schowki",
+			"DECRYPTION_PROGRESS": "{{current}} z {{total}} schowków zostało odszyfrowanych",
 			"ENCRYPT": "Zaszyfruj wszystkie schowki",
 			"ENCRYPT_DECRYPT": "Szyfruj / Odszyfruj",
+			"ENCRYPTION_PROGRESS": "{{current}} z {{total}} schowków jest zaszyfrowanych",
 			"INFO": "Wszystkie schowki są szyfrowane, jeśli hasło zostanie utracone, nie będzie można go odzyskać",
 			"PASSWORD": "Hasło"
 		},

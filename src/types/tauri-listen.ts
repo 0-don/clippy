@@ -1,4 +1,4 @@
-import { ClipboardWithRelations } from ".";
+import { ClipboardWithRelations, Progress } from ".";
 import { Tab } from "../utils/constants";
 
 export enum ListenEvent {
@@ -9,6 +9,7 @@ export enum ListenEvent {
   ChangeTab = "change_tab",
   ScrollToTop = "scroll_to_top",
   NewClipboard = "new_clipboard",
+  Progress = "progress",
 }
 
 export interface TauriListenEvents {
@@ -19,4 +20,5 @@ export interface TauriListenEvents {
   [ListenEvent.ChangeTab]: Tab;
   [ListenEvent.ScrollToTop]: void;
   [ListenEvent.NewClipboard]: ClipboardWithRelations;
+  [ListenEvent.Progress]: Progress;
 }

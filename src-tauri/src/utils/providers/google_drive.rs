@@ -1,6 +1,6 @@
 use super::parse_clipboard_info;
 use crate::{
-    service::settings::{get_settings_db, update_settings_synchronize_db},
+    service::settings::{get_global_settings, update_settings_synchronize_db},
     utils::providers::create_clipboard_filename,
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
@@ -285,14 +285,11 @@ impl SyncProvider for GoogleDriveProviderImpl {
         &self,
         remote_clipboards: &Vec<Clippy>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let settings = get_settings_db().await?;
-        let sync_limit = settings.sync_limit as usize;
+        let sync_limit = get_global_settings().sync_limit as usize;
 
         // Get all non-starred clipboards
-        let mut all_clipboards: Vec<_> = remote_clipboards
-            .iter()
-            .filter(|clip| !clip.star)
-            .collect();
+        let mut all_clipboards: Vec<_> =
+            remote_clipboards.iter().filter(|clip| !clip.star).collect();
 
         // Sort by creation date
         all_clipboards.sort_by_key(|info| info.created_at);

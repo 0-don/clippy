@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Звездный фаворит"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "Пароль не совпадает"
+		},
 		"HOTKEY": {
 			"ABOUT": "О",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Изменить расположение базы данных буфера обмена",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Подтвердите пароль",
 			"DECRYPT": "Расшифровать все буферы обмена",
+			"DECRYPTION_PROGRESS": "Расшифровано{{current}} из {{total}} буферов обмена",
 			"ENCRYPT": "Зашифровать все буферы обмена",
 			"ENCRYPT_DECRYPT": "Шифровать/Расшифровывать",
+			"ENCRYPTION_PROGRESS": "{{current}} из {{total}} буферов обмена зашифрованы",
 			"INFO": "Все буферы обмена зашифрованы, если пароль утерян, восстановить ничего нельзя.",
 			"PASSWORD": "Пароль"
 		},

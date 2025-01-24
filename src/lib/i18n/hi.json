@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "स्टार पसंदीदा"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "पासवर्ड मेल नहीं खाता"
+		},
 		"HOTKEY": {
 			"ABOUT": "के बारे में",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "क्लिपबोर्ड Db स्थान बदलें",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "पासवर्ड की पुष्टि कीजिये",
 			"DECRYPT": "सभी क्लिपबोर्ड को डिक्रिप्ट करें",
+			"DECRYPTION_PROGRESS": " {{total}} क्लिपबोर्ड में से{{current}} को डिक्रिप्ट किया गया है",
 			"ENCRYPT": "सभी क्लिपबोर्ड एन्क्रिप्ट करें",
 			"ENCRYPT_DECRYPT": "एन्क्रिप्ट / डिक्रिप्ट",
+			"ENCRYPTION_PROGRESS": " {{total}} क्लिपबोर्ड में से{{current}} एन्क्रिप्टेड हैं",
 			"INFO": "सभी क्लिपबोर्ड एन्क्रिप्टेड हैं, यदि पासवर्ड खो जाए तो कुछ भी पुनर्स्थापित नहीं किया जा सकता",
 			"PASSWORD": "पासवर्ड"
 		},

@@ -15,6 +15,9 @@
 		"STAR_FAVORITE": "Favorito estrella"
 	},
 	"MAIN": {
+		"ERROR": {
+			"PASSWORD_NOT_MATCH": "La contraseña no coincide"
+		},
 		"HOTKEY": {
 			"ABOUT": "Acerca de",
 			"CHANGE_CLIPBOARD_DB_LOCATION": "Cambiar la ubicación de la base de datos del portapapeles",
@@ -106,8 +109,10 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Confirmar Contraseña",
 			"DECRYPT": "Descifrar todos los portapapeles",
+			"DECRYPTION_PROGRESS": "{{current}} de {{total}} portapapeles están descifrados",
 			"ENCRYPT": "Cifrar todos los portapapeles",
 			"ENCRYPT_DECRYPT": "Encriptar / Descifrar",
+			"ENCRYPTION_PROGRESS": "{{current}} de {{total}} portapapeles están encriptados",
 			"INFO": "Todos los portapapeles están encriptados, si se pierde la contraseña no se puede restaurar nada",
 			"PASSWORD": "Contraseña"
 		},

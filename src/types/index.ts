@@ -8,6 +8,11 @@ export type DatabaseInfo = {
   size: number;
 };
 
+export interface Progress {
+  total: number;
+  current: number;
+}
+
 export type Tabs = {
   name: TabName;
   Icon: IconTypes;
@@ -85,6 +90,8 @@ export interface ClipboardWithRelations {
   rtf?: ClipboardRtfModel;
   files?: ClipboardFileModel[];
 }
+
+
 export interface ClipboardResponse {
   clipboards: ClipboardWithRelations[];
   total: number;

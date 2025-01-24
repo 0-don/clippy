@@ -1,7 +1,14 @@
 import { AiFillLock, AiFillUnlock } from "solid-icons/ai";
 import { BsFileEarmarkLock2Fill } from "solid-icons/bs";
+import { ImSpinner } from "solid-icons/im";
 import { Component, createSignal, Show } from "solid-js";
+import { DictionaryKey } from "../../../lib/i18n";
+import { invokeCommand, listenEvent } from "../../../lib/tauri";
+import { cn } from "../../../lib/utils";
 import { SettingsStore } from "../../../store/settings-store";
+import { Progress } from "../../../types";
+import { InvokeCommand } from "../../../types/tauri-invoke";
+import { ListenEvent } from "../../../types/tauri-listen";
 import { Button } from "../../elements/button";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
@@ -32,11 +39,37 @@ export const SettingsEncryption: Component<SettingsEncryptionProps> = ({}) => {
 const Encrypt: Component = ({}) => {
   const { t } = useLanguage();
 
+  const [loading, setLoading] = createSignal(false);
+  const [error, setError] = createSignal("");
+  const [encryptionProgress, setEncryptionProgress] = createSignal<Progress>();
   const [password, setPassword] = createSignal("");
   const [confirmPassword, setConfirmPassword] = createSignal("");
 
+  const onSubmit = async (e: SubmitEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (password() !== confirmPassword()) {
+      setError(t("MAIN.ERROR.PASSWORD_NOT_MATCH"));
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await invokeCommand(InvokeCommand.EnableEncryption, { password: password(), confirmPassword: confirmPassword() });
+      await SettingsStore.init();
+    } catch (error) {
+      setError(JSON.stringify(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  listenEvent(ListenEvent.Progress, setEncryptionProgress);
+
   return (
-    <form class="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()}>
+    <form class="flex flex-col gap-2" onSubmit={onSubmit}>
       <div>
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
         <Input value={password()} debounce={0} onInput={(e) => setPassword(e.target.value)} />
@@ -46,7 +79,24 @@ const Encrypt: Component = ({}) => {
         <Input value={confirmPassword()} debounce={0} onInput={(e) => setConfirmPassword(e.target.value)} />
       </div>
 
-      <Button className="mt-1" disabled Icon={AiFillLock} label={"SETTINGS.ENCRYPT.ENCRYPT"} />
+      <Show when={error()}>
+        <p class="text-red-500">{error()}</p>
+      </Show>
+
+      <Button
+        type="submit"
+        className="mt-1"
+        Icon={loading() ? ImSpinner : AiFillLock}
+        iconClassName={cn(loading() && "animate-spin")}
+        label={
+          loading()
+            ? "SETTINGS.ENCRYPT.ENCRYPT"
+            : (t("SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS", {
+                current: encryptionProgress()?.current || 0,
+                total: encryptionProgress()?.total || 0,
+              }) as DictionaryKey)
+        }
+      />
     </form>
   );
 };
@@ -54,16 +104,53 @@ const Encrypt: Component = ({}) => {
 const Decrypt: Component = ({}) => {
   const { t } = useLanguage();
 
+  const [loading, setLoading] = createSignal(false);
+  const [error, setError] = createSignal("");
+  const [encryptionProgress, setEncryptionProgress] = createSignal<Progress>();
   const [password, setPassword] = createSignal("");
 
+  const onSubmit = async (e: SubmitEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await invokeCommand(InvokeCommand.DisableEncryption, { password: password() });
+      await SettingsStore.init();
+    } catch (error) {
+      setError(JSON.stringify(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  listenEvent(ListenEvent.Progress, setEncryptionProgress);
+
   return (
-    <form class="flex flex-col gap-1">
+    <form class="flex flex-col gap-1" onSubmit={onSubmit}>
       <div>
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
         <Input value={password()} debounce={0} onInput={(e) => setPassword(e.target.value)} />
       </div>
 
-      <Button Icon={AiFillUnlock} label={"SETTINGS.ENCRYPT.DECRYPT"} />
+      <Show when={error()}>
+        <p class="text-red-500">{error()}</p>
+      </Show>
+
+      <Button
+        type="submit"
+        className="mt-1"
+        Icon={loading() ? ImSpinner : AiFillUnlock}
+        iconClassName={cn(loading() && "animate-spin")}
+        label={
+          loading()
+            ? "SETTINGS.ENCRYPT.DECRYPT"
+            : (t("SETTINGS.ENCRYPT.DECRYPTION_PROGRESS", {
+                current: encryptionProgress()?.current || 0,
+                total: encryptionProgress()?.total || 0,
+              }) as DictionaryKey)
+        }
+      />
     </form>
   );
 };

@@ -1,7 +1,6 @@
 use super::settings::get_global_settings;
 use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
-use crate::service::settings::get_settings_db;
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
 use common::io::clipboard::trim_clipboard_data;
@@ -356,7 +355,7 @@ pub async fn get_clipboards_db(
 
 pub async fn get_latest_syncable_cliboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
     let db = db().await?;
-    let settings = get_settings_db().await?;
+    let settings = get_global_settings();
 
     let latest_syncable_clipboards = clipboard::Entity::find()
         .limit(settings.sync_limit as u64)
@@ -475,7 +474,7 @@ pub async fn delete_clipboards_db(
 
 pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), DbErr> {
     let db = db().await?;
-    let settings = get_settings_db().await?;
+    let settings = get_global_settings();
     let mut remote_clipboards_to_delete = Vec::new();
 
     match r#type {

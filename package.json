@@ -27,7 +27,6 @@
     "@tailwindcss/vite": "^4.0.0",
     "@tauri-apps/cli": "2.2.5",
     "cross-env": "7.0.3",
-    "postcss": "8.5.1",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.0",
