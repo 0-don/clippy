@@ -2,6 +2,8 @@ use super::clipboard::load_clipboards_with_relations;
 use super::sync::get_sync_provider;
 use crate::prelude::*;
 use crate::service::settings::get_global_settings;
+use crate::tao::connection::db;
+use crate::tao::global::get_app;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use common::types::crypto::{EncryptionError, ENCRYPTION_KEY};
 use common::types::enums::ListenEvent;
@@ -12,17 +14,20 @@ use entity::{
 };
 use ring::rand::SecureRandom;
 use ring::{aead, rand};
-use sea_orm::EntityTrait;
-use tao::connection::db;
-use tao::global::get_app;
+use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter};
 use tauri::{Emitter, EventTarget};
 
 pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
     let settings = get_global_settings();
     let db = db().await?;
 
-    let clipboards =
-        load_clipboards_with_relations(clipboard::Entity::find().all(&db).await?).await;
+    let clipboards = load_clipboards_with_relations(
+        clipboard::Entity::find()
+            .filter(clipboard::Column::Encrypted.eq(false))
+            .all(&db)
+            .await?,
+    )
+    .await;
 
     let (provider, remote_clipboards) = if settings.sync {
         let provider = get_sync_provider().await;
@@ -53,7 +58,7 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
             }
         }
 
-        let progress: Progress = Progress {
+        let progress = Progress {
             total: total_clipboards as u64,
             current: (index + 1) as u64,
         };
@@ -75,84 +80,102 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
 pub async fn encrypt_clipboard(
     mut clipboard: FullClipboardDto,
 ) -> Result<FullClipboardDto, CommandError> {
-    let db = db().await?;
+    let db = db().await.expect("Database connection failed");
 
     if let Some(text) = &mut clipboard.text {
-        if !looks_like_encrypted_data(text.data.as_bytes()) {
-            text.data = String::from_utf8(encrypt_data(text.data.as_bytes())?).unwrap_or_default();
+        if !STANDARD.decode(text.data.clone()).is_ok() {
+            text.data = STANDARD
+                .encode(encrypt_data(text.data.as_bytes()).expect("Text encryption failed"));
 
             let clipboard_text: clipboard_text::ActiveModel = text.clone().into();
-            clipboard_text::Entity::update(clipboard_text)
+            printlog!("Encrypting text {:?}", clipboard_text);
+            clipboard_text::Entity::update(clipboard_text.reset_all())
                 .exec(&db)
-                .await?;
+                .await
+                .expect("Failed to update encrypted text in database");
         }
     }
 
     if let Some(html) = &mut clipboard.html {
-        if !looks_like_encrypted_data(html.data.as_bytes()) {
-            html.data = String::from_utf8(encrypt_data(html.data.as_bytes())?).unwrap_or_default();
+        if !STANDARD.decode(html.data.clone()).is_ok() {
+            html.data = STANDARD
+                .encode(encrypt_data(html.data.as_bytes()).expect("HTML encryption failed"));
 
             let clipboard_html: clipboard_html::ActiveModel = html.clone().into();
-            clipboard_html::Entity::update(clipboard_html)
+            clipboard_html::Entity::update(clipboard_html.reset_all())
                 .exec(&db)
-                .await?;
+                .await
+                .expect("Failed to update encrypted HTML in database");
         }
     }
 
     if let Some(rtf) = &mut clipboard.rtf {
-        if !looks_like_encrypted_data(rtf.data.as_bytes()) {
-            rtf.data = String::from_utf8(encrypt_data(rtf.data.as_bytes())?).unwrap_or_default();
+        if !STANDARD.decode(rtf.data.clone()).is_ok() {
+            rtf.data =
+                STANDARD.encode(encrypt_data(rtf.data.as_bytes()).expect("RTF encryption failed"));
 
             let clipboard_rtf: clipboard_rtf::ActiveModel = rtf.clone().into();
-            clipboard_rtf::Entity::update(clipboard_rtf)
+            clipboard_rtf::Entity::update(clipboard_rtf.reset_all())
                 .exec(&db)
-                .await?;
+                .await
+                .expect("Failed to update encrypted RTF in database");
         }
     }
 
     if let Some(image) = &mut clipboard.image {
-        if !looks_like_encrypted_data(image.data.as_slice()) {
-            image.data = encrypt_data(image.data.as_slice())?;
-            if let Ok(thumbnail_bytes) = STANDARD.decode(image.thumbnail.clone()) {
-                let encrypted_thumbnail = encrypt_data(&thumbnail_bytes)?;
-                image.thumbnail = STANDARD.encode(&encrypted_thumbnail);
-            }
-            let image: clipboard_image::ActiveModel = image.clone().into();
-            clipboard_image::Entity::update(image).exec(&db).await?;
+        image.data = encrypt_data(image.data.as_slice()).expect("Image encryption failed");
+        if let Ok(thumbnail_bytes) = STANDARD.decode(image.thumbnail.clone()) {
+            let encrypted_thumbnail =
+                encrypt_data(&thumbnail_bytes).expect("Thumbnail encryption failed");
+            image.thumbnail = STANDARD.encode(&encrypted_thumbnail);
         }
+        let image: clipboard_image::ActiveModel = image.clone().into();
+        clipboard_image::Entity::update(image.reset_all())
+            .exec(&db)
+            .await
+            .expect("Failed to update encrypted image in database");
     }
 
     if !clipboard.files.is_empty() {
         for file in &mut clipboard.files {
-            if !looks_like_encrypted_data(file.data.as_slice()) {
-                file.data = encrypt_data(file.data.as_slice())?;
+            if !STANDARD.decode(file.name.clone()).is_ok() {
+                file.data =
+                    encrypt_data(file.data.as_slice()).expect("File data encryption failed");
 
-                if let Some(name) = &file.name {
-                    file.name =
-                        Some(String::from_utf8(encrypt_data(name.as_bytes())?).unwrap_or_default());
-                }
+                file.name = STANDARD.encode(
+                    encrypt_data(file.name.as_bytes()).expect("Filename encryption failed"),
+                );
 
                 if let Some(extension) = &file.extension {
                     file.extension = Some(
-                        String::from_utf8(encrypt_data(extension.as_bytes())?).unwrap_or_default(),
+                        STANDARD.encode(
+                            encrypt_data(extension.as_bytes())
+                                .expect("File extension encryption failed"),
+                        ),
                     );
                 }
 
                 if let Some(mime_type) = &file.mime_type {
-                    file.mime_type = Some(
-                        String::from_utf8(encrypt_data(mime_type.as_bytes())?).unwrap_or_default(),
-                    );
+                    file.mime_type = Some(STANDARD.encode(
+                        encrypt_data(mime_type.as_bytes()).expect("MIME type encryption failed"),
+                    ));
                 }
 
                 let file: clipboard_file::ActiveModel = file.clone().into();
-                clipboard_file::Entity::update(file).exec(&db).await?;
+                clipboard_file::Entity::update(file.reset_all())
+                    .exec(&db)
+                    .await
+                    .expect("Failed to update encrypted file in database");
             }
         }
     }
 
     clipboard.clipboard.encrypted = true;
     let entity: clipboard::ActiveModel = clipboard.clipboard.clone().into();
-    clipboard::Entity::update(entity).exec(&db).await?;
+    clipboard::Entity::update(entity.reset_all())
+        .exec(&db)
+        .await
+        .expect("Failed to update clipboard encryption status");
 
     Ok(clipboard)
 }
@@ -168,8 +191,6 @@ pub fn set_encryption_key(password: &str) -> Result<(), EncryptionError> {
     *ENCRYPTION_KEY
         .lock()
         .map_err(|_| EncryptionError::KeyLockFailed)? = Some(key_bytes);
-
-    printlog!("Setting encryption key {:?}", password);
 
     Ok(())
 }

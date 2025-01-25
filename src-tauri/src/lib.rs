@@ -4,6 +4,7 @@ mod events;
 mod prelude;
 mod service;
 mod utils;
+mod tao;
 
 use commands::{cipher, clipboard, hotkey, settings, sync, window};
 use config::setup;

@@ -1,6 +1,8 @@
 use super::settings::get_global_settings;
 use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
+use crate::tao::connection::db;
+use crate::tao::global::{get_app, get_app_window, get_main_window};
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
 use common::io::clipboard::trim_clipboard_data;
@@ -19,8 +21,6 @@ use sea_orm::{
 };
 use std::collections::HashMap;
 use std::sync::Mutex;
-use tao::connection::db;
-use tao::global::{get_app, get_app_window, get_main_window};
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 use tokio::try_join;
@@ -456,7 +456,7 @@ pub async fn delete_clipboards_db(
                     .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
                     .expect("Failed to emit event");
             }
-            
+
             for clippy in clipboards {
                 printlog!(
                     "deleting remote clipboard: {:?} command: {:?}",
@@ -668,7 +668,7 @@ pub async fn copy_clipboard_from_id(
                 .filter_map(|f| {
                     let path = std::env::temp_dir().join(format!(
                         "{}.{}",
-                        f.name.as_ref().expect("Failed to get file name"),
+                        &f.name,
                         f.extension.as_ref().expect("Failed to get file extension")
                     ));
                     std::fs::write(&path, &f.data).ok()?;

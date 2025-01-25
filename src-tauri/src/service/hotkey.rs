@@ -1,8 +1,7 @@
-use crate::prelude::*;
+use crate::{prelude::*, tao::{connection::db, global::get_app}};
 use common::types::enums::ListenEvent;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
-use tao::{connection::db, global::get_app};
 use tauri::{Emitter, EventTarget};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {

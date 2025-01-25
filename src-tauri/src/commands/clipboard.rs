@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::tao::global::{get_app, get_main_window};
 use crate::{
     service::clipboard::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboards_db, get_clipboard_count_db,
@@ -17,7 +18,6 @@ use common::{
 };
 use sea_orm::prelude::Uuid;
 use std::fs::File;
-use tao::global::{get_app, get_main_window};
 use tauri::{Emitter, Manager};
 
 #[tauri::command]

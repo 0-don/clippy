@@ -4,6 +4,7 @@ use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
+use crate::tao::global::{get_app, get_app_window};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
@@ -14,7 +15,6 @@ use sea_orm::prelude::Uuid;
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
-use tao::global::{get_app, get_app_window};
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
@@ -49,6 +49,16 @@ impl ClipboardManagerExt for FullClipboardDbo {
     async fn upsert_clipboard() {
         let clipboard = get_app().state::<Clipboard>();
         let mut manager = Self::new();
+
+        printlog!(
+            "clipboard model: {:?} size: {:?}",
+            clipboard.read_files().ok().map_or_else(|| vec![], |f| f),
+            clipboard
+                .read_files()
+                .ok()
+                .map_or_else(|| vec![], |f| f)
+                .len()
+        );
 
         manager.parse_model(
             clipboard.read_text().ok(),
@@ -331,12 +341,16 @@ impl ClipboardManagerExt for FullClipboardDbo {
 
                 if let Ok(file_bytes) = fs::read(path) {
                     let file_model = entity::clipboard_file::ActiveModel {
-                        name: Set(Some(file_name)),
+                        name: Set(file_name),
                         extension: Set(file_ext),
-                        size: Set(Some(metadata.len() as i32)),
+                        size: Set(metadata.len() as i32),
                         mime_type: Set(mime_type),
-                        created_date: Set(created),
-                        modified_date: Set(modified),
+                        created_date: Set(
+                            created.unwrap_or_else(|| chrono::Local::now().naive_utc())
+                        ),
+                        modified_date: Set(
+                            modified.unwrap_or_else(|| chrono::Local::now().naive_utc())
+                        ),
                         data: Set(file_bytes),
                         ..Default::default()
                     };

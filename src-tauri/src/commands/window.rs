@@ -1,11 +1,10 @@
-use crate::service::{
+use crate::{service::{
     clipboard::count_clipboards_db, window::open_window,
-};
+}, tao::config::get_data_path};
 use common::types::{
     enums::{FolderLocation, WebWindow},
     types::{CommandError, Config, DatabaseInfo},
 };
-use tao::config::get_data_path;
 use std::{
     fs::{self, read_to_string},
     path::PathBuf,

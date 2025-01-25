@@ -1,4 +1,4 @@
-use crate::global::get_app;
+use crate::tao::global::get_app;
 use common::{
     constants::{CONFIG_NAME, DB_NAME},
     printlog,

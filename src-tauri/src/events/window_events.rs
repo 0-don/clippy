@@ -1,7 +1,7 @@
-use crate::prelude::*;
+use crate::tao::global::{get_hotkey_running, get_window_stop_tx};
+use crate::{prelude::*, tao::global::get_main_window};
 use crate::utils::hotkey_manager::unregister_hotkeys;
 use common::types::enums::ListenEvent;
-use tao::global::{get_hotkey_running, get_main_window, get_window_stop_tx};
 use tauri::{Emitter, WindowEvent};
 use tokio::sync::oneshot;
 

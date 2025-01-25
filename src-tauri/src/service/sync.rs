@@ -1,12 +1,10 @@
 use super::settings::{get_global_settings,  update_settings_synchronize_db};
 use crate::{
-    prelude::*,
-    utils::{providers::google_drive::GoogleDriveProviderImpl, sync_manager::SyncManager},
+    prelude::*, tao::global::get_app, utils::{providers::google_drive::GoogleDriveProviderImpl, sync_manager::SyncManager}
 };
 use common::types::{enums::SyncProviderType, sync::SyncProvider, types::CommandError};
 use entity::settings;
 use std::{collections::HashMap, sync::Arc};
-use tao::global::get_app;
 use tauri::{Manager, State};
 use tokio::sync::Mutex;
 

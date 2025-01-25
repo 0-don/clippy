@@ -1,5 +1,4 @@
-use crate::service::window::toggle_main_window;
-use tao::global::get_app;
+use crate::{service::window::toggle_main_window, tao::global::get_app};
 use tauri::{
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,

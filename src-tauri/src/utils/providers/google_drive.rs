@@ -1,7 +1,6 @@
 use super::parse_clipboard_info;
 use crate::{
-    service::settings::{get_global_settings, update_settings_synchronize_db},
-    utils::providers::create_clipboard_filename,
+    service::settings::{get_global_settings, update_settings_synchronize_db}, tao::{config::get_data_path, global::get_app}, utils::providers::create_clipboard_filename
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
@@ -24,7 +23,6 @@ use migration::async_trait;
 use sea_orm::prelude::Uuid;
 use serde_json::Value;
 use std::{collections::HashMap, future::Future, io::Cursor, pin::Pin};
-use tao::{config::get_data_path, global::get_app};
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_opener::OpenerExt;
