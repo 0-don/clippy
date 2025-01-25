@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "তথ্য এনক্রিপ্ট করা হয় না",
+			"ENCRYPTION_FAILED": "এনক্রিপশন ব্যর্থ হয়েছে৷",
+			"ENCRYPTION_KEY_ALREADY_SET": "এনক্রিপশন কী ইতিমধ্যে সেট করা আছে",
+			"INCORRECT_PASSWORD": "ভুল পাসওয়ার্ড",
+			"INVALID_ENCRYPTION_KEY": "অবৈধ এনক্রিপশন কী",
+			"NO_ENCRYPTION_KEY_SET": "কোনো এনক্রিপশন কী সেট নেই",
 			"PASSWORD_NOT_MATCH": "পাসওয়ার্ড মেলে না"
 		},
 		"HOTKEY": {

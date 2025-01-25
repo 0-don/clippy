@@ -13,6 +13,10 @@ export interface Progress {
   current: number;
 }
 
+export interface TauriError {
+  Error: DictionaryKey;
+}
+
 export type Tabs = {
   name: TabName;
   Icon: IconTypes;
@@ -90,7 +94,6 @@ export interface ClipboardWithRelations {
   rtf?: ClipboardRtfModel;
   files?: ClipboardFileModel[];
 }
-
 
 export interface ClipboardResponse {
   clipboards: ClipboardWithRelations[];

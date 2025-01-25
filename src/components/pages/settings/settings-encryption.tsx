@@ -6,7 +6,7 @@ import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { cn } from "../../../lib/utils";
 import { SettingsStore } from "../../../store/settings-store";
-import { Progress } from "../../../types";
+import { Progress, TauriError } from "../../../types";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { ListenEvent } from "../../../types/tauri-listen";
 import { Button } from "../../elements/button";
@@ -60,7 +60,8 @@ const Encrypt: Component = ({}) => {
       await invokeCommand(InvokeCommand.EnableEncryption, { password: password(), confirmPassword: confirmPassword() });
       await SettingsStore.init();
     } catch (error) {
-      setError(JSON.stringify(error));
+      const { Error } = error as TauriError;
+      setError(t(Error) || Error);
     } finally {
       setLoading(false);
     }
@@ -72,11 +73,17 @@ const Encrypt: Component = ({}) => {
     <form class="flex flex-col gap-2" onSubmit={onSubmit}>
       <div>
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
-        <Input value={password()} debounce={0} onInput={(e) => setPassword(e.target.value)} />
+        <Input required minLength={1} maxLength={128} value={password()} onInput={(e) => setPassword(e.target.value)} />
       </div>
       <div>
         <label>{t("SETTINGS.ENCRYPT.CONFIRM_PASSWORD")}</label>
-        <Input value={confirmPassword()} debounce={0} onInput={(e) => setConfirmPassword(e.target.value)} />
+        <Input
+          required
+          minLength={1}
+          maxLength={128}
+          value={confirmPassword()}
+          onInput={(e) => setConfirmPassword(e.target.value)}
+        />
       </div>
 
       <Show when={error()}>
@@ -89,7 +96,7 @@ const Encrypt: Component = ({}) => {
         Icon={loading() ? ImSpinner : AiFillLock}
         iconClassName={cn(loading() && "animate-spin")}
         label={
-          loading()
+          !loading()
             ? "SETTINGS.ENCRYPT.ENCRYPT"
             : (t("SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS", {
                 current: encryptionProgress()?.current || 0,
@@ -118,7 +125,8 @@ const Decrypt: Component = ({}) => {
       await invokeCommand(InvokeCommand.DisableEncryption, { password: password() });
       await SettingsStore.init();
     } catch (error) {
-      setError(JSON.stringify(error));
+      const { Error } = error as TauriError;
+      setError(Error);
     } finally {
       setLoading(false);
     }
@@ -130,7 +138,7 @@ const Decrypt: Component = ({}) => {
     <form class="flex flex-col gap-1" onSubmit={onSubmit}>
       <div>
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
-        <Input value={password()} debounce={0} onInput={(e) => setPassword(e.target.value)} />
+        <Input value={password()} onInput={(e) => setPassword(e.target.value)} />
       </div>
 
       <Show when={error()}>
@@ -143,7 +151,7 @@ const Decrypt: Component = ({}) => {
         Icon={loading() ? ImSpinner : AiFillUnlock}
         iconClassName={cn(loading() && "animate-spin")}
         label={
-          loading()
+          !loading()
             ? "SETTINGS.ENCRYPT.DECRYPT"
             : (t("SETTINGS.ENCRYPT.DECRYPTION_PROGRESS", {
                 current: encryptionProgress()?.current || 0,

@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "Les données ne sont pas cryptées",
+			"ENCRYPTION_FAILED": "Le cryptage a échoué",
+			"ENCRYPTION_KEY_ALREADY_SET": "Clé de chiffrement déjà définie",
+			"INCORRECT_PASSWORD": "Mot de passe incorrect",
+			"INVALID_ENCRYPTION_KEY": "Clé de cryptage invalide",
+			"NO_ENCRYPTION_KEY_SET": "Aucune clé de chiffrement définie",
 			"PASSWORD_NOT_MATCH": "Le mot de passe ne correspond pas"
 		},
 		"HOTKEY": {

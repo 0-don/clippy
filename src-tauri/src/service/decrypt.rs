@@ -40,19 +40,19 @@ pub fn decrypt_data(encrypted_data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
 
     let key_bytes = ENCRYPTION_KEY
         .lock()
-        .map_err(|e| EncryptionError::DecryptionFailed(e.to_string()))?
+        .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
     // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
-        .map_err(|_| EncryptionError::DecryptionFailed("Failed to create key".to_string()))?;
+        .map_err(|_| EncryptionError::DecryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 
     // Split nonce and encrypted data
     let nonce = aead::Nonce::assume_unique_for_key(
         encrypted_data[..12]
             .try_into()
-            .map_err(|_| EncryptionError::DecryptionFailed("Invalid nonce".to_string()))?,
+            .map_err(|_| EncryptionError::DecryptionFailed)?,
     );
 
     // Decrypt data
@@ -78,7 +78,7 @@ pub fn verify_password(password: String) -> Result<bool, EncryptionError> {
 
     let current_key = ENCRYPTION_KEY
         .lock()
-        .map_err(|e| EncryptionError::DecryptionFailed(e.to_string()))?
+        .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
     Ok(provided_key == current_key)

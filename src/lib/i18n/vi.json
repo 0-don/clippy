@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "Dữ liệu không được mã hóa",
+			"ENCRYPTION_FAILED": "Mã hóa không thành công",
+			"ENCRYPTION_KEY_ALREADY_SET": "Khóa mã hóa đã được thiết lập",
+			"INCORRECT_PASSWORD": "Mật khẩu không đúng",
+			"INVALID_ENCRYPTION_KEY": "Khóa mã hóa không hợp lệ",
+			"NO_ENCRYPTION_KEY_SET": "Không có khóa mã hóa được thiết lập",
 			"PASSWORD_NOT_MATCH": "Mật khẩu không khớp"
 		},
 		"HOTKEY": {

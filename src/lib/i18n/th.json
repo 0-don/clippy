@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "ข้อมูลไม่ได้ถูกเข้ารหัส",
+			"ENCRYPTION_FAILED": "การเข้ารหัสล้มเหลว",
+			"ENCRYPTION_KEY_ALREADY_SET": "คีย์การเข้ารหัสถูกตั้งค่าไว้แล้ว",
+			"INCORRECT_PASSWORD": "รหัสผ่านไม่ถูกต้อง",
+			"INVALID_ENCRYPTION_KEY": "คีย์การเข้ารหัสไม่ถูกต้อง",
+			"NO_ENCRYPTION_KEY_SET": "ไม่มีการตั้งค่าคีย์การเข้ารหัส",
 			"PASSWORD_NOT_MATCH": "รหัสผ่านไม่ตรงกัน"
 		},
 		"HOTKEY": {

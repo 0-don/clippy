@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "ڈیٹا کو خفیہ نہیں کیا گیا ہے۔",
+			"ENCRYPTION_FAILED": "خفیہ کاری ناکام ہوگئی",
+			"ENCRYPTION_KEY_ALREADY_SET": "خفیہ کاری کی کلید پہلے سے سیٹ ہے۔",
+			"INCORRECT_PASSWORD": "غلط پاس ورڈ",
+			"INVALID_ENCRYPTION_KEY": "غلط خفیہ کاری کلید",
+			"NO_ENCRYPTION_KEY_SET": "کوئی خفیہ کاری کلید سیٹ نہیں ہے۔",
 			"PASSWORD_NOT_MATCH": "پاس ورڈ مماثل نہیں ہے۔"
 		},
 		"HOTKEY": {

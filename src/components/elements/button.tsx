@@ -26,7 +26,7 @@ export const Button: Component<ButtonProps> = (props) => {
     >
       {props.Icon && <props.Icon class={`mr-1 text-lg ${props.iconClassName}`} />}
       {props.children}
-      <span>{t(props.label)}</span>
+      <span>{t(props.label) || props.label}</span>
     </button>
   );
 };

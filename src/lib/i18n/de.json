@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "Die Daten sind nicht verschlüsselt",
+			"ENCRYPTION_FAILED": "Verschlüsselung fehlgeschlagen",
+			"ENCRYPTION_KEY_ALREADY_SET": "Verschlüsselungsschlüssel bereits festgelegt",
+			"INCORRECT_PASSWORD": "Falsches Passwort",
+			"INVALID_ENCRYPTION_KEY": "Ungültiger Verschlüsselungsschlüssel",
+			"NO_ENCRYPTION_KEY_SET": "Kein Verschlüsselungsschlüssel festgelegt",
 			"PASSWORD_NOT_MATCH": "Das Passwort stimmt nicht überein"
 		},
 		"HOTKEY": {

@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "डेटा एन्क्रिप्टेड नहीं है",
+			"ENCRYPTION_FAILED": "एन्क्रिप्शन विफल",
+			"ENCRYPTION_KEY_ALREADY_SET": "एन्क्रिप्शन कुंजी पहले से सेट है",
+			"INCORRECT_PASSWORD": "ग़लत पासवर्ड",
+			"INVALID_ENCRYPTION_KEY": "अमान्य एन्क्रिप्शन कुंजी",
+			"NO_ENCRYPTION_KEY_SET": "कोई एन्क्रिप्शन कुंजी सेट नहीं है",
 			"PASSWORD_NOT_MATCH": "पासवर्ड मेल नहीं खाता"
 		},
 		"HOTKEY": {

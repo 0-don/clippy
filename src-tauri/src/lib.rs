@@ -55,6 +55,7 @@ pub fn run() {
             //
             cipher::enable_encryption,
             cipher::disable_encryption,
+            cipher::load_encryption_key,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -6,16 +6,27 @@ use crate::service::{
 use common::types::{crypto::ENCRYPTION_KEY, types::CommandError};
 
 #[tauri::command]
+pub async fn load_encryption_key(password: String) -> Result<(), CommandError> {
+    if is_key_set() {
+        return Err(CommandError::new("MAIN.ERROR.ENCRYPTION_KEY_ALREADY_SET"));
+    }
+
+    set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
+
+    Ok(())
+}
+
+#[tauri::command]
 pub async fn enable_encryption(
     password: String,
     confirm_password: String,
 ) -> Result<(), CommandError> {
     if is_key_set() {
-        return Err(CommandError::new("Encryption key already set"));
+        return Err(CommandError::new("MAIN.ERROR.ENCRYPTION_KEY_ALREADY_SET"));
     }
 
     if password != confirm_password {
-        return Err(CommandError::new("Passwords do not match"));
+        return Err(CommandError::new("MAIN.ERROR.PASSWORD_NOT_MATCH"));
     }
 
     set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
@@ -32,14 +43,14 @@ pub async fn enable_encryption(
 #[tauri::command]
 pub async fn disable_encryption(password: String) -> Result<(), CommandError> {
     if !is_key_set() {
-        return Err(CommandError::new("No encryption key set"));
+        return Err(CommandError::new("MAIN.ERROR.NO_ENCRYPTION_KEY_SET"));
     }
 
     let is_password_valid =
         verify_password(password).map_err(|e| CommandError::new(&e.to_string()))?;
 
     if !is_password_valid {
-        return Err(CommandError::new("Incorrect password"));
+        return Err(CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD"));
     }
 
     decrypt_all_clipboards().await?;

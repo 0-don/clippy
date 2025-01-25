@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "البيانات ليست مشفرة",
+			"ENCRYPTION_FAILED": "فشل التشفير",
+			"ENCRYPTION_KEY_ALREADY_SET": "تم تعيين مفتاح التشفير بالفعل",
+			"INCORRECT_PASSWORD": "كلمة سر خاطئة",
+			"INVALID_ENCRYPTION_KEY": "مفتاح تشفير غير صالح",
+			"NO_ENCRYPTION_KEY_SET": "لم يتم تعيين مفتاح التشفير",
 			"PASSWORD_NOT_MATCH": "كلمة المرور لا تتطابق"
 		},
 		"HOTKEY": {

@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "The data is not encrypted",
+			"ENCRYPTION_FAILED": "Encryption failed",
+			"ENCRYPTION_KEY_ALREADY_SET": "Encryption key already set",
+			"INCORRECT_PASSWORD": "Incorrect password",
+			"INVALID_ENCRYPTION_KEY": "Invalid encryption key",
+			"NO_ENCRYPTION_KEY_SET": "No encryption key set",
 			"PASSWORD_NOT_MATCH": "Password doesn't match"
 		},
 		"HOTKEY": {

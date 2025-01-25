@@ -92,7 +92,7 @@ pub fn init_settings() {
                 return;
             }
 
-            let mut settings = get_global_settings();
+            let mut settings = get_settings_db().await.expect("Failed to get settings");
 
             settings.display_scale = get_monitor_scale_factor();
             settings.language = get_system_language().to_string();
