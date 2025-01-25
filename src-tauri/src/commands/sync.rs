@@ -1,11 +1,10 @@
-use crate::service::{
+use crate::{service::{
     settings::{get_global_settings, init_settings_window, set_global_settings},
     sync::{get_sync_provider, sync_toggle, upsert_settings_sync},
-};
+}, tao::connection::db};
 use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, EntityTrait};
-use tao::connection::db;
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {

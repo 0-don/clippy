@@ -1,6 +1,7 @@
 use crate::commands::sync::sync_authenticate_toggle;
 use crate::prelude::*;
 use crate::service::window::open_window;
+use crate::tao::global::{get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window};
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
@@ -14,9 +15,6 @@ use common::types::types::Key;
 use core::time::Duration;
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState};
 use regex::Regex;
-use tao::global::{
-    get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
-};
 use tauri::Emitter;
 use tokio::sync::oneshot;
 

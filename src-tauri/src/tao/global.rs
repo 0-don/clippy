@@ -1,4 +1,4 @@
-use crate::tauri_constants::{
+use super::tao_constants::{
     APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
 };
 use common::types::{enums::WebWindow, hotkey::SafeHotKeyManager, types::Key};

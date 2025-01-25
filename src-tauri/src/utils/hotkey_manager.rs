@@ -1,10 +1,10 @@
-use crate::prelude::*;
 use crate::service::hotkey::get_all_hotkeys_db;
+#[cfg(any(target_os = "windows", target_os = "macos"))]
+use crate::tao::global::get_app;
+use crate::tao::global::get_hotkey_manager;
+use crate::{prelude::*, tao::global::get_hotkey_store};
 use common::{constants::GLOBAL_EVENTS, types::types::Key};
 use global_hotkey::hotkey::HotKey;
-#[cfg(any(target_os = "windows", target_os = "macos"))]
-use tao::global::get_app;
-use tao::global::{get_hotkey_manager, get_hotkey_store};
 
 pub fn register_hotkeys(all: bool) {
     #[cfg(any(target_os = "windows", target_os = "macos"))]

@@ -1,5 +1,6 @@
 use super::settings::get_global_settings;
 use crate::prelude::*;
+use crate::tao::global::{get_app, get_main_window, get_window_stop_tx};
 use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys};
 use common::constants::{
     ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
@@ -8,7 +9,6 @@ use common::constants::{
 use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
 use std::env;
 use std::process::Command;
-use tao::global::{get_app, get_main_window, get_window_stop_tx};
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
 use tauri::{PhysicalPosition, WebviewWindowBuilder};
 use tauri_plugin_positioner::{Position, WindowExt};

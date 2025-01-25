@@ -1,4 +1,4 @@
-use crate::config::{get_config, get_data_path};
+use super::config::{get_config, get_data_path};
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{Database, DbConn};

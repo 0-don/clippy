@@ -1,7 +1,6 @@
-use crate::service::settings::{autostart, get_settings_db, update_settings_db};
+use crate::{service::settings::{autostart, get_settings_db, update_settings_db}, tao::config::{change_clipboard_db_location_enable, reset_clipboard_db_location_disable}};
 use common::types::types::CommandError;
 use entity::settings::Model;
-use tao::config::{change_clipboard_db_location_enable, reset_clipboard_db_location_disable};
 
 #[tauri::command]
 pub async fn get_settings() -> Result<Model, CommandError> {
