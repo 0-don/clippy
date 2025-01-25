@@ -58,6 +58,8 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
             current: (index + 1) as u64,
         };
 
+        printlog!("Emitting progress event {:?}", progress);
+
         get_app()
             .emit_to(
                 EventTarget::any(),
@@ -165,7 +167,10 @@ pub fn set_encryption_key(password: &str) -> Result<(), EncryptionError> {
 
     *ENCRYPTION_KEY
         .lock()
-        .map_err(|e| EncryptionError::EncryptionFailed(e.to_string()))? = Some(key_bytes);
+        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(key_bytes);
+
+    printlog!("Setting encryption key {:?}", password);
+
     Ok(())
 }
 
@@ -178,25 +183,25 @@ pub fn is_key_set() -> bool {
 pub fn encrypt_data(data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
     let key_bytes = ENCRYPTION_KEY
         .lock()
-        .map_err(|e| EncryptionError::EncryptionFailed(e.to_string()))?
+        .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
     // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
-        .map_err(|_| EncryptionError::EncryptionFailed("Failed to create key".to_string()))?;
+        .map_err(|_| EncryptionError::EncryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 
     // Generate random nonce
     let rng = rand::SystemRandom::new();
     let mut nonce_bytes = [0u8; 12];
     rng.fill(&mut nonce_bytes)
-        .map_err(|_| EncryptionError::EncryptionFailed("Failed to generate nonce".to_string()))?;
+        .map_err(|_| EncryptionError::EncryptionFailed)?;
     let nonce = aead::Nonce::assume_unique_for_key(nonce_bytes);
 
     // Encrypt data
     let mut in_out = data.to_vec();
     key.seal_in_place_append_tag(nonce, aead::Aad::empty(), &mut in_out)
-        .map_err(|_| EncryptionError::EncryptionFailed("Encryption failed".to_string()))?;
+        .map_err(|_| EncryptionError::EncryptionFailed)?;
 
     // Combine nonce and encrypted data
     Ok([nonce_bytes.to_vec(), in_out].concat())

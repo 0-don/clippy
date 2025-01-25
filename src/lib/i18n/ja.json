@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "データは暗号化されていません",
+			"ENCRYPTION_FAILED": "暗号化に失敗しました",
+			"ENCRYPTION_KEY_ALREADY_SET": "暗号化キーはすでに設定されています",
+			"INCORRECT_PASSWORD": "パスワードが間違っています",
+			"INVALID_ENCRYPTION_KEY": "無効な暗号化キー",
+			"NO_ENCRYPTION_KEY_SET": "暗号化キーが設定されていません",
 			"PASSWORD_NOT_MATCH": "パスワードが一致しません"
 		},
 		"HOTKEY": {

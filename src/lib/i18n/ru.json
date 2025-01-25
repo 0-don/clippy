@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "Данные не зашифрованы.",
+			"ENCRYPTION_FAILED": "Шифрование не удалось",
+			"ENCRYPTION_KEY_ALREADY_SET": "Ключ шифрования уже установлен",
+			"INCORRECT_PASSWORD": "Неправильный пароль",
+			"INVALID_ENCRYPTION_KEY": "Неверный ключ шифрования",
+			"NO_ENCRYPTION_KEY_SET": "Ключ шифрования не установлен",
 			"PASSWORD_NOT_MATCH": "Пароль не совпадает"
 		},
 		"HOTKEY": {

@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "데이터는 암호화되지 않습니다",
+			"ENCRYPTION_FAILED": "암호화에 실패했습니다",
+			"ENCRYPTION_KEY_ALREADY_SET": "암호화 키가 이미 설정되었습니다",
+			"INCORRECT_PASSWORD": "잘못된 비밀번호",
+			"INVALID_ENCRYPTION_KEY": "잘못된 암호화 키입니다",
+			"NO_ENCRYPTION_KEY_SET": "암호화 키가 설정되지 않았습니다",
 			"PASSWORD_NOT_MATCH": "비밀번호가 일치하지 않습니다"
 		},
 		"HOTKEY": {

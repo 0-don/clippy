@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "数据未加密",
+			"ENCRYPTION_FAILED": "加密失败",
+			"ENCRYPTION_KEY_ALREADY_SET": "加密密钥已设置",
+			"INCORRECT_PASSWORD": "密码错误",
+			"INVALID_ENCRYPTION_KEY": "加密密钥无效",
+			"NO_ENCRYPTION_KEY_SET": "未设置加密密钥",
 			"PASSWORD_NOT_MATCH": "密码不匹配"
 		},
 		"HOTKEY": {

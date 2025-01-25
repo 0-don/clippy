@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "Dane nie są szyfrowane",
+			"ENCRYPTION_FAILED": "Szyfrowanie nie powiodło się",
+			"ENCRYPTION_KEY_ALREADY_SET": "Klucz szyfrowania jest już ustawiony",
+			"INCORRECT_PASSWORD": "Nieprawidłowe hasło",
+			"INVALID_ENCRYPTION_KEY": "Nieprawidłowy klucz szyfrowania",
+			"NO_ENCRYPTION_KEY_SET": "Brak zestawu kluczy szyfrujących",
 			"PASSWORD_NOT_MATCH": "Hasło nie pasuje"
 		},
 		"HOTKEY": {

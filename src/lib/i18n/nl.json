@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "De gegevens zijn niet gecodeerd",
+			"ENCRYPTION_FAILED": "Encryptie mislukt",
+			"ENCRYPTION_KEY_ALREADY_SET": "Encryptiesleutel al ingesteld",
+			"INCORRECT_PASSWORD": "Onjuist wachtwoord",
+			"INVALID_ENCRYPTION_KEY": "Ongeldige encryptiesleutel",
+			"NO_ENCRYPTION_KEY_SET": "Geen encryptiesleutel ingesteld",
 			"PASSWORD_NOT_MATCH": "Wachtwoord komt niet overeen"
 		},
 		"HOTKEY": {

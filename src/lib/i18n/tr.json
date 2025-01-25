@@ -16,6 +16,12 @@
 	},
 	"MAIN": {
 		"ERROR": {
+			"DATA_IS_NOT_ENCRYPTED": "Veriler şifrelenmemiş",
+			"ENCRYPTION_FAILED": "Şifreleme başarısız oldu",
+			"ENCRYPTION_KEY_ALREADY_SET": "Şifreleme anahtarı zaten ayarlandı",
+			"INCORRECT_PASSWORD": "Yanlış Şifre",
+			"INVALID_ENCRYPTION_KEY": "Geçersiz şifreleme anahtarı",
+			"NO_ENCRYPTION_KEY_SET": "Şifreleme anahtarı ayarlanmadı",
 			"PASSWORD_NOT_MATCH": "Şifre eşleşmiyor"
 		},
 		"HOTKEY": {
