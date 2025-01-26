@@ -28,6 +28,8 @@ const Index = () => {
 
   listenEvent(ListenEvent.NewClipboard, ClipboardStore.newClipboard);
 
+  listenEvent(ListenEvent.PasswordLock, () => AppStore.setPasswordLock(true));
+
   return <App />;
 };
 

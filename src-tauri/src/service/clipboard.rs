@@ -92,16 +92,6 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         _ => None,
     };
 
-    // Insert image if data exists
-    let image = match &model.clipboard_image_model.data {
-        sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
-            let mut image_model = model.clipboard_image_model;
-            image_model.id = Set(Uuid::new_v4());
-            image_model.clipboard_id = Set(clipboard.id);
-            Some(image_model.insert(&db).await?)
-        }
-        _ => None,
-    };
 
     // Insert rtf if data exists
     let rtf = match &model.clipboard_rtf_model.data {
@@ -114,6 +104,18 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         _ => None,
     };
 
+    // Insert image if data exists
+    let image = match &model.clipboard_image_model.data {
+        sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
+            let mut image_model = model.clipboard_image_model;
+            image_model.id = Set(Uuid::new_v4());
+            image_model.clipboard_id = Set(clipboard.id);
+            Some(image_model.insert(&db).await?)
+        }
+        _ => None,
+    };
+
+    // Insert files if they exist
     let files = if !model.clipboard_files_model.is_empty() {
         let mut files = Vec::new();
         for mut file_model in model.clipboard_files_model {
@@ -136,15 +138,20 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     })
 }
 
-pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> {
+pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> {
     let db = db().await?;
 
-    // Upsert clipboard - if id exists it will update, otherwise insert
+    // Delete existing clipboard and all related records through cascade
+    entity::clipboard::Entity::delete_by_id(model.clipboard.id)
+        .exec(&db)
+        .await?;
+
+    // Insert clipboard
     let clipboard = entity::clipboard::ActiveModel::from(model.clipboard)
         .insert(&db)
         .await?;
 
-    // Upsert text if data exists
+    // Insert text if data exists
     let text = match &model.text {
         Some(text) if !text.data.is_empty() => {
             let text_model: entity::clipboard_text::ActiveModel = text.clone().into();
@@ -153,7 +160,7 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
         _ => None,
     };
 
-    // Upsert html if data exists
+    // Insert html if data exists
     let html = match &model.html {
         Some(html) if !html.data.is_empty() => {
             let html_model: entity::clipboard_html::ActiveModel = html.clone().into();
@@ -162,7 +169,7 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
         _ => None,
     };
 
-    // Upsert image if data exists
+    // Insert image if data exists
     let image = match &model.image {
         Some(image) if !image.data.is_empty() => {
             let image_model: entity::clipboard_image::ActiveModel = image.clone().into();
@@ -171,7 +178,7 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
         _ => None,
     };
 
-    // Upsert rtf if data exists
+    // Insert rtf if data exists
     let rtf = match &model.rtf {
         Some(rtf) if !rtf.data.is_empty() => {
             let rtf_model: entity::clipboard_rtf::ActiveModel = rtf.clone().into();
@@ -180,7 +187,7 @@ pub async fn insert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
         _ => None,
     };
 
-    // Upsert files if they exist
+    // Insert files if they exist
     let files = if !model.files.is_empty() {
         let mut files = Vec::new();
         for file in model.files {
@@ -256,6 +263,7 @@ pub async fn get_clipboards_db(
     let settings = get_global_settings();
 
     let query = clipboard::Entity::find()
+        .distinct()
         .join(JoinType::LeftJoin, clipboard::Relation::ClipboardText.def())
         .join(JoinType::LeftJoin, clipboard::Relation::ClipboardHtml.def())
         .join(
