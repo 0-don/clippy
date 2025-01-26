@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "مركز الصينية",
 			"TRAY_LEFT": "صينية اليسار",
 			"TRAY_RIGHT": "صينية اليمين"
-		}
+		},
+		"UNLOCK_CLIPPY": "فتح القفل"
 	},
 	"SETTINGS": {
 		"BACKUP": {

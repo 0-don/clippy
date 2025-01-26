@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Центр подноса",
 			"TRAY_LEFT": "Лоток левый",
 			"TRAY_RIGHT": "Лоток правый"
-		}
+		},
+		"UNLOCK_CLIPPY": "Разблокировать клиппи"
 	},
 	"SETTINGS": {
 		"BACKUP": {

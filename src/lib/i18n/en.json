@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Tray center",
 			"TRAY_LEFT": "Tray left",
 			"TRAY_RIGHT": "Tray right"
-		}
+		},
+		"UNLOCK_CLIPPY": "Unlock clippy"
 	},
 	"SETTINGS": {
 		"BACKUP": {

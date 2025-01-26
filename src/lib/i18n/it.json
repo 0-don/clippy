@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Icona sistema al centro",
 			"TRAY_LEFT": "Icona sistema a sinistro",
 			"TRAY_RIGHT": "Icona sistema a destra"
-		}
+		},
+		"UNLOCK_CLIPPY": "Sblocca clippy"
 	},
 	"SETTINGS": {
 		"BACKUP": {

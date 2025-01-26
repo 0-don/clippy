@@ -1,10 +1,9 @@
 use super::tao_constants::{
     APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
 };
-use common::types::{enums::WebWindow, hotkey::SafeHotKeyManager, types::Key};
-use sea_orm::Iden;
+use common::types::{hotkey::SafeHotKeyManager, types::Key};
 use std::{collections::HashMap, sync::MutexGuard};
-use tauri::{AppHandle, Manager, WebviewWindow};
+use tauri::{AppHandle, WebviewWindow};
 use tokio::sync::oneshot;
 
 pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
@@ -57,10 +56,4 @@ pub fn get_hotkey_running() -> MutexGuard<'static, bool> {
 
 pub fn get_app() -> &'static AppHandle {
     APP.get().expect("Failed to get APP")
-}
-
-pub fn get_app_window(window: WebWindow) -> WebviewWindow {
-    get_app()
-        .get_webview_window(window.to_string().as_str())
-        .expect("Failed to get webview window")
 }

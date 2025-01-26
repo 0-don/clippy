@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "ถาดกลาง",
 			"TRAY_LEFT": "ถาดซ้าย",
 			"TRAY_RIGHT": "ถาดด้านขวา"
-		}
+		},
+		"UNLOCK_CLIPPY": "ปลดล็อคคลิปปี้"
 	},
 	"SETTINGS": {
 		"BACKUP": {

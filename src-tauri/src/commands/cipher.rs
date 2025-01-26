@@ -1,9 +1,15 @@
-use crate::service::{
-    decrypt::{decrypt_all_clipboards, verify_password},
-    encrypt::{encrypt_all_clipboards, is_key_set, set_encryption_key},
-    settings::{get_global_settings, update_settings_db},
+use crate::{
+    service::{
+        clipboard::{init_clipboards, load_clipboards_with_relations},
+        decrypt::{clear_encryption_key, decrypt_clipboard, remove_encryption},
+        encrypt::{encrypt_all_clipboards, is_key_set, set_encryption_key},
+        settings::{get_global_settings, update_settings_db},
+    },
+    tao::connection::db,
 };
-use common::types::{crypto::ENCRYPTION_KEY, types::CommandError};
+use common::types::{cipher::EncryptionError, types::CommandError};
+use entity::clipboard;
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 
 #[tauri::command]
 pub async fn password_unlock(password: String) -> Result<(), CommandError> {
@@ -12,6 +18,30 @@ pub async fn password_unlock(password: String) -> Result<(), CommandError> {
     }
 
     set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
+
+    let db = db().await?;
+    let encrypted_clipboard = clipboard::Entity::find()
+        .filter(clipboard::Column::Encrypted.eq(true))
+        .one(&db)
+        .await?;
+
+    if let Some(clipboard) = encrypted_clipboard {
+        let clipboards = load_clipboards_with_relations(vec![clipboard]).await;
+        decrypt_clipboard(clipboards[0].clone()).map_err(|e| {
+            clear_encryption_key();
+            match e {
+                EncryptionError::DecryptionFailed => {
+                    CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD")
+                }
+                _ => CommandError::new(&e.to_string()),
+            }
+        })?;
+
+        encrypt_all_clipboards().await?;
+        init_clipboards();
+    } else {
+        remove_encryption(password).await?;
+    }
 
     Ok(())
 }
@@ -42,26 +72,8 @@ pub async fn enable_encryption(
 
 #[tauri::command]
 pub async fn disable_encryption(password: String) -> Result<(), CommandError> {
-    if !is_key_set() {
-        return Err(CommandError::new("MAIN.ERROR.NO_ENCRYPTION_KEY_SET"));
+    match remove_encryption(password).await {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
     }
-
-    let is_password_valid =
-        verify_password(password).map_err(|e| CommandError::new(&e.to_string()))?;
-
-    if !is_password_valid {
-        return Err(CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD"));
-    }
-
-    decrypt_all_clipboards().await?;
-
-    let mut settings = get_global_settings();
-    settings.encryption = false;
-    update_settings_db(settings).await?;
-
-    *ENCRYPTION_KEY
-        .lock()
-        .map_err(|e| CommandError::new(&e.to_string()))? = None;
-
-    Ok(())
 }

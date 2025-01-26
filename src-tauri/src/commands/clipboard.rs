@@ -1,5 +1,8 @@
-use crate::prelude::*;
-use crate::tao::global::{get_app, get_main_window};
+use crate::service::clipboard::init_clipboards;
+use crate::service::decrypt::decrypt_clipboard;
+use crate::service::encrypt::is_key_set;
+use crate::service::settings::get_global_settings;
+use crate::tao::global::get_app;
 use crate::{
     service::clipboard::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboards_db, get_clipboard_count_db,
@@ -10,15 +13,11 @@ use crate::{
 use common::io::clipboard::trim_clipboard_data;
 use common::{
     printlog,
-    types::{
-        enums::{ClipboardType, ListenEvent},
-        orm_query::ClipboardsResponse,
-        types::CommandError,
-    },
+    types::{enums::ClipboardType, orm_query::ClipboardsResponse, types::CommandError},
 };
 use sea_orm::prelude::Uuid;
 use std::fs::File;
-use tauri::{Emitter, Manager};
+use tauri::Manager;
 
 #[tauri::command]
 pub async fn get_clipboards(
@@ -27,15 +26,23 @@ pub async fn get_clipboards(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<ClipboardsResponse, CommandError> {
-    let clipboards = get_clipboards_db(cursor, search, star, img)
-        .await
-        .expect("Error getting clipboards");
-
+    let mut clipboards = get_clipboards_db(cursor, search, star, img).await?;
     let total = get_clipboard_count_db().await?;
-
-    // Calculate if there are more items
     let current_position = cursor.unwrap_or(0) + clipboards.len() as u64;
     let has_more = current_position < total;
+
+    if get_global_settings().encryption && is_key_set() {
+        clipboards = clipboards
+            .into_iter()
+            .map(|clipboard| {
+                if clipboard.clipboard.encrypted {
+                    decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard")
+                } else {
+                    clipboard
+                }
+            })
+            .collect();
+    }
 
     printlog!(
         "Total: {}, Current Position: {}, Has More: {}",
@@ -71,9 +78,7 @@ pub async fn delete_clipboard(id: Uuid) -> Result<(), CommandError> {
 #[tauri::command]
 pub async fn clear_clipboards(r#type: Option<ClipboardType>) -> Result<(), CommandError> {
     clear_clipboards_db(r#type).await?;
-    get_main_window()
-        .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
-        .expect("Failed to emit");
+    init_clipboards();
     Ok(())
 }
 

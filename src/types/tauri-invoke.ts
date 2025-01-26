@@ -35,6 +35,7 @@ export enum InvokeCommand {
   // Cipher commands
   EnableEncryption = "enable_encryption",
   DisableEncryption = "disable_encryption",
+  PasswordUnlock = "password_unlock",
 
   // App info commands
   GetAppVersion = "get_app_version",
@@ -140,6 +141,10 @@ export interface TauriInvokeCommands {
     return: void;
   };
   [InvokeCommand.DisableEncryption]: {
+    args: { password: string };
+    return: void;
+  };
+  [InvokeCommand.PasswordUnlock]: {
     args: { password: string };
     return: void;
   };

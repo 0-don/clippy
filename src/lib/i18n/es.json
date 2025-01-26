@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Centro de bandeja",
 			"TRAY_LEFT": "Bandeja izquierda",
 			"TRAY_RIGHT": "Bandeja derecha"
-		}
+		},
+		"UNLOCK_CLIPPY": "Desbloquear clippy"
 	},
 	"SETTINGS": {
 		"BACKUP": {

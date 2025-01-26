@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "ट्रे केंद्र",
 			"TRAY_LEFT": "ट्रे छोड़ दिया",
 			"TRAY_RIGHT": "ट्रे दायाँ"
-		}
+		},
+		"UNLOCK_CLIPPY": "क्लिप्पी अनलॉक करें"
 	},
 	"SETTINGS": {
 		"BACKUP": {

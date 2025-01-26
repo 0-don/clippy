@@ -1,15 +1,19 @@
 use super::{
-    clipboard::load_clipboards_with_relations, encrypt::looks_like_encrypted_data,
-    settings::get_global_settings, sync::get_sync_provider,
+    clipboard::load_clipboards_with_relations,
+    encrypt::{is_key_set, looks_like_encrypted_data},
+    settings::{get_global_settings, update_settings_db},
+    sync::get_sync_provider,
 };
 use crate::{
-    prelude::*, service::clipboard::upsert_clipboard_dto, tao::{connection::db, global::get_app}
+    prelude::*,
+    service::clipboard::upsert_clipboard_dto,
+    tao::{connection::db, global::get_app},
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use common::{
     printlog,
     types::{
-        crypto::{EncryptionError, ENCRYPTION_KEY},
+        cipher::{EncryptionError, ENCRYPTION_KEY},
         enums::ListenEvent,
         orm_query::FullClipboardDto,
         types::{CommandError, Progress},
@@ -47,7 +51,8 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
     let total_clipboards = clipboards.len() as u64;
     for (index, clipboard) in clipboards.into_iter().enumerate() {
-        let decrypted_clipboard = decrypt_clipboard(clipboard);
+        let decrypted_clipboard =
+            decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
 
         // Update clipboard in database
         upsert_clipboard_dto(decrypted_clipboard.clone()).await?;
@@ -69,8 +74,6 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
             current: (index + 1) as u64,
         };
 
-        printlog!("Emitting progress event {:?}", progress);
-
         get_app()
             .emit_to(
                 EventTarget::any(),
@@ -85,95 +88,82 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
 pub fn decrypt_clipboard(
     mut clipboard: FullClipboardDto,
-) -> FullClipboardDto {
+) -> Result<FullClipboardDto, EncryptionError> {
+    if !clipboard.clipboard.encrypted {
+        return Err(EncryptionError::NotEncrypted);
+    }
+
     if let Some(text) = &mut clipboard.text {
-        if let Ok(data) = STANDARD.decode(text.data.clone()) {
-            text.data =
-                String::from_utf8(decrypt_data(&data).expect("Failed to decrypt clipboard data"))
-                    .expect("Failed to convert decrypted data to string");
-        }
+        let decoded = STANDARD
+            .decode(&text.data)
+            .map_err(|_| EncryptionError::DecryptionFailed)?;
+        let decrypted = decrypt_data(&decoded)?;
+        text.data = String::from_utf8(decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
     }
 
     if let Some(html) = &mut clipboard.html {
-        if let Ok(data) = STANDARD.decode(html.data.clone()) {
-            html.data =
-                String::from_utf8(decrypt_data(&data).expect("Failed to decrypt clipboard data"))
-                    .expect("Failed to convert decrypted data to string");
-        }
+        let decoded = STANDARD
+            .decode(&html.data)
+            .map_err(|_| EncryptionError::DecryptionFailed)?;
+        let decrypted = decrypt_data(&decoded)?;
+        html.data = String::from_utf8(decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
     }
 
     if let Some(rtf) = &mut clipboard.rtf {
-        if let Ok(data) = STANDARD.decode(rtf.data.clone()) {
-            rtf.data =
-                String::from_utf8(decrypt_data(&data).expect("Failed to decrypt clipboard data"))
-                    .expect("Failed to convert decrypted data to string");
-        }
+        let decoded = STANDARD
+            .decode(&rtf.data)
+            .map_err(|_| EncryptionError::DecryptionFailed)?;
+        let decrypted = decrypt_data(&decoded)?;
+        rtf.data = String::from_utf8(decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
     }
 
     if let Some(image) = &mut clipboard.image {
-        image.data =
-            decrypt_data(&image.data.as_slice()).expect("Failed to decrypt clipboard data");
+        image.data = decrypt_data(&image.data)?;
 
-        if let Ok(thumbnail) = STANDARD.decode(image.thumbnail.clone()) {
-            image.thumbnail = STANDARD.encode(
-                decrypt_data(&thumbnail).expect("Failed to decrypt clipboard thumbnail data"),
-            );
-        }
+        let thumbnail_decoded = STANDARD
+            .decode(&image.thumbnail)
+            .map_err(|_| EncryptionError::DecryptionFailed)?;
+        let thumbnail_decrypted = decrypt_data(&thumbnail_decoded)?;
+        image.thumbnail = STANDARD.encode(thumbnail_decrypted);
     }
 
     if !clipboard.files.is_empty() {
         for file in &mut clipboard.files {
-            if STANDARD.decode(file.name.clone()).is_ok() {
-                file.data =
-                    decrypt_data(file.data.as_slice()).expect("File data encryption failed");
+            let name_decoded = STANDARD
+                .decode(&file.name)
+                .map_err(|_| EncryptionError::DecryptionFailed)?;
+            let name_decrypted = decrypt_data(&name_decoded)?;
+            file.name =
+                String::from_utf8(name_decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
 
-                file.name = String::from_utf8(
-                    decrypt_data(
-                        STANDARD
-                            .decode(file.name.clone())
-                            .expect("Filename encryption failed")
-                            .as_slice(),
-                    )
-                    .expect("Filename encryption failed"),
-                )
-                .expect("Failed to convert decrypted data to string");
+            file.data = decrypt_data(&file.data)?;
 
-                if let Some(extension) = &file.extension {
-                    file.extension = Some(
-                        String::from_utf8(
-                            decrypt_data(
-                                STANDARD
-                                    .decode(extension)
-                                    .expect("Filename encryption failed")
-                                    .as_slice(),
-                            )
-                            .expect("File extension encryption failed"),
-                        )
-                        .expect("Failed to convert decrypted data to string"),
-                    );
-                }
+            if let Some(extension) = &file.extension {
+                let ext_decoded = STANDARD
+                    .decode(extension)
+                    .map_err(|_| EncryptionError::DecryptionFailed)?;
+                let ext_decrypted = decrypt_data(&ext_decoded)?;
+                file.extension = Some(
+                    String::from_utf8(ext_decrypted)
+                        .map_err(|_| EncryptionError::DecryptionFailed)?,
+                );
+            }
 
-                if let Some(mime_type) = &file.mime_type {
-                    file.mime_type = Some(
-                        String::from_utf8(
-                            decrypt_data(
-                                STANDARD
-                                    .decode(mime_type)
-                                    .expect("Filename encryption failed")
-                                    .as_slice(),
-                            )
-                            .expect("MIME type encryption failed"),
-                        )
-                        .expect("Failed to convert decrypted data to string"),
-                    );
-                }
+            if let Some(mime_type) = &file.mime_type {
+                let mime_decoded = STANDARD
+                    .decode(mime_type)
+                    .map_err(|_| EncryptionError::DecryptionFailed)?;
+                let mime_decrypted = decrypt_data(&mime_decoded)?;
+                file.mime_type = Some(
+                    String::from_utf8(mime_decrypted)
+                        .map_err(|_| EncryptionError::DecryptionFailed)?,
+                );
             }
         }
     }
 
     clipboard.clipboard.encrypted = false;
-
-    clipboard
+    Ok(clipboard)
 }
 
 /// Decrypts data using AES-256-GCM
@@ -207,10 +197,41 @@ pub fn decrypt_data(encrypted_data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
             if looks_like_encrypted_data(encrypted_data) {
                 Err(EncryptionError::InvalidKey)
             } else {
+                printlog!("Data is not encrypted");
                 Err(EncryptionError::NotEncrypted)
             }
         }
     }
+}
+
+pub async fn remove_encryption(password: String) -> Result<(), CommandError> {
+    if !is_key_set() {
+        return Err(CommandError::new("MAIN.ERROR.NO_ENCRYPTION_KEY_SET"));
+    }
+
+    let is_password_valid =
+        verify_password(password).map_err(|e| CommandError::new(&e.to_string()))?;
+
+    if !is_password_valid {
+        return Err(CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD"));
+    }
+
+    decrypt_all_clipboards().await?;
+
+    let mut settings = get_global_settings();
+    settings.encryption = false;
+    update_settings_db(settings).await?;
+
+    clear_encryption_key();
+
+    Ok(())
+}
+
+pub fn clear_encryption_key() {
+    *ENCRYPTION_KEY
+        .lock()
+        .map_err(|e| CommandError::new(&e.to_string()))
+        .unwrap() = None;
 }
 
 pub fn verify_password(password: String) -> Result<bool, EncryptionError> {
@@ -229,6 +250,7 @@ pub fn verify_password(password: String) -> Result<bool, EncryptionError> {
 }
 
 pub fn init_password_lock() {
+    printlog!("Emitting password lock event");
     get_app()
         .emit_to(
             EventTarget::any(),

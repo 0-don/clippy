@@ -1,13 +1,15 @@
 use crate::prelude::*;
+use crate::service::clipboard::{new_clipboard_event, upsert_clipboard_dto};
+use crate::service::encrypt::{encrypt_clipboard, is_key_set};
 use crate::service::settings::get_global_settings;
 use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
-use crate::tao::global::{get_app, get_app_window};
+use crate::tao::global::get_app;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
-use common::types::enums::{ClipboardTextType, ClipboardType, ListenEvent, WebWindow};
+use common::types::enums::{ClipboardTextType, ClipboardType};
 use common::types::orm_query::FullClipboardDbo;
 use image::imageops;
 use regex::Regex;
@@ -15,7 +17,7 @@ use sea_orm::prelude::Uuid;
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
-use tauri::{Emitter, Manager};
+use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use urlencoding::decode;
 
@@ -48,6 +50,13 @@ impl ClipboardManagerExt for FullClipboardDbo {
     }
 
     async fn upsert_clipboard() {
+        let settings = get_global_settings();
+
+        // If clipboards are encypted but not saved before unlocking, return
+        if settings.encryption && !settings.enryption_save_before_unlock && !is_key_set() {
+            return;
+        }
+
         let clipboard = get_app().state::<Clipboard>();
         let mut manager = Self::new();
 
@@ -69,12 +78,19 @@ impl ClipboardManagerExt for FullClipboardDbo {
         }
 
         if !manager.check_if_last_is_same().await && manager.clipboard_model.types.is_set() {
+            // insert default not encrypted clipboard
             let clipboard = insert_clipboard_dbo(manager)
                 .await
                 .expect("Failed to insert");
-            get_app_window(WebWindow::Main)
-                .emit(ListenEvent::NewClipboard.to_string().as_str(), clipboard)
-                .expect("Failed to emit");
+
+            // If encryption is enabled and key is set, encrypt clipboard before upsert
+            if settings.encryption && is_key_set() {
+                upsert_clipboard_dto(encrypt_clipboard(clipboard.clone()))
+                    .await
+                    .expect("Failed to upsert");
+            }
+
+            new_clipboard_event(clipboard);
         }
     }
 
