@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Plateau central",
 			"TRAY_LEFT": "Plateau à gauche",
 			"TRAY_RIGHT": "Plateau à droite"
-		}
+		},
+		"UNLOCK_CLIPPY": "Déverrouiller le clippy"
 	},
 	"SETTINGS": {
 		"BACKUP": {

@@ -20,7 +20,7 @@ impl fmt::Display for EncryptionError {
         match self {
             EncryptionError::NoKey => write!(f, "NO_ENCRYPTION_KEY_SET"),
             EncryptionError::KeyLockFailed => write!(f, "MAIN.ERROR.ENCRYPTION_KEY_LOCK_FAILED"),
-            EncryptionError::InvalidKey => write!(f, "MAIN.ERROR.INVALID_ENCRYPTION_KEY"),
+            EncryptionError::InvalidKey => write!(f, "MAIN.ERROR.INCORRECT_PASSWORD"),
             EncryptionError::NotEncrypted => write!(f, "MAIN.ERROR.DATA_IS_NOT_ENCRYPTED"),
             EncryptionError::EncryptionFailed => write!(f, "MAIN.ERROR.ENCRYPTION_FAILED"),
             EncryptionError::DecryptionFailed => write!(f, "MAIN.ERROR.DECRYPTION_FAILED"),

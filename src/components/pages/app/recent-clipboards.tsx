@@ -8,6 +8,7 @@ export const RecentClipboards: Component<RecentClipboardsProps> = ({}) => {
   onMount(async () => {
     ClipboardStore.resetWhere();
     const clipboards = await ClipboardStore.getClipboards();
+    console.log(clipboards);
     ClipboardStore.setClipboards(clipboards);
   });
 

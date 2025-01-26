@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Khay trung tâm",
 			"TRAY_LEFT": "Khay bên trái",
 			"TRAY_RIGHT": "Khay bên phải"
-		}
+		},
+		"UNLOCK_CLIPPY": "Mở khóa clippy"
 	},
 	"SETTINGS": {
 		"BACKUP": {

@@ -1,8 +1,17 @@
-use crate::{prelude::*, tao::{connection::db, global::get_app}};
+use crate::{
+    prelude::*,
+    tao::{
+        connection::db,
+        global::{get_app, get_main_window},
+    },
+    utils::hotkey_manager::register_hotkeys,
+};
 use common::types::enums::ListenEvent;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use tauri::{Emitter, EventTarget};
+
+use super::{encrypt::is_key_set, settings::get_global_settings};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
     let db: DatabaseConnection = db().await?;
@@ -32,4 +41,19 @@ pub fn init_hotkey_window() {
             (),
         )
         .expect("Failed to emit download progress event");
+}
+
+pub fn init_hotkey_event() {
+    // If encryption is enabled and key is not set, do not register hotkeys
+    if !is_key_set() && get_global_settings().encryption {
+        return;
+    }
+
+    register_hotkeys(true);
+    get_main_window()
+        .emit(
+            ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(),
+            true,
+        )
+        .expect("Failed to emit set global hotkey event");
 }

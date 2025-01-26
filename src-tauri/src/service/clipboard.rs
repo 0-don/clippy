@@ -1,12 +1,14 @@
+use super::decrypt::decrypt_clipboard;
+use super::encrypt::is_key_set;
 use super::settings::get_global_settings;
 use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
 use crate::tao::connection::db;
-use crate::tao::global::{get_app, get_app_window, get_main_window};
+use crate::tao::global::{get_app, get_main_window};
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
 use common::io::clipboard::trim_clipboard_data;
-use common::types::enums::{ClipboardTextType, ClipboardType, Language, ListenEvent, WebWindow};
+use common::types::enums::{ClipboardTextType, ClipboardType, Language, ListenEvent};
 use common::types::orm_query::{FullClipboardDbo, FullClipboardDto};
 use common::types::types::CommandError;
 use entity::clipboard::{self, Model};
@@ -92,7 +94,6 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         _ => None,
     };
 
-
     // Insert rtf if data exists
     let rtf = match &model.clipboard_rtf_model.data {
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
@@ -147,12 +148,12 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
         .await?;
 
     // Insert clipboard
-    let clipboard = entity::clipboard::ActiveModel::from(model.clipboard)
+    entity::clipboard::ActiveModel::from(model.clipboard)
         .insert(&db)
         .await?;
 
     // Insert text if data exists
-    let text = match &model.text {
+    match &model.text {
         Some(text) if !text.data.is_empty() => {
             let text_model: entity::clipboard_text::ActiveModel = text.clone().into();
             Some(text_model.insert(&db).await?)
@@ -161,7 +162,7 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     };
 
     // Insert html if data exists
-    let html = match &model.html {
+    match &model.html {
         Some(html) if !html.data.is_empty() => {
             let html_model: entity::clipboard_html::ActiveModel = html.clone().into();
             Some(html_model.insert(&db).await?)
@@ -170,7 +171,7 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     };
 
     // Insert image if data exists
-    let image = match &model.image {
+    match &model.image {
         Some(image) if !image.data.is_empty() => {
             let image_model: entity::clipboard_image::ActiveModel = image.clone().into();
             Some(image_model.insert(&db).await?)
@@ -179,7 +180,7 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     };
 
     // Insert rtf if data exists
-    let rtf = match &model.rtf {
+    match &model.rtf {
         Some(rtf) if !rtf.data.is_empty() => {
             let rtf_model: entity::clipboard_rtf::ActiveModel = rtf.clone().into();
             Some(rtf_model.insert(&db).await?)
@@ -188,32 +189,13 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     };
 
     // Insert files if they exist
-    let files = if !model.files.is_empty() {
+    if !model.files.is_empty() {
         let mut files = Vec::new();
         for file in model.files {
             let file_model: entity::clipboard_file::ActiveModel = file.clone().into();
             files.push(file_model.insert(&db).await?);
         }
-        files
-    } else {
-        Vec::new()
-    };
-
-    let clipboard = FullClipboardDto {
-        clipboard,
-        text,
-        html,
-        image,
-        rtf,
-        files,
-    };
-
-    get_app_window(WebWindow::Main)
-        .emit(
-            ListenEvent::NewClipboard.to_string().as_str(),
-            trim_clipboard_data(vec![clipboard]).get(0),
-        )
-        .expect("Failed to emit");
+    }
 
     Ok(())
 }
@@ -231,24 +213,23 @@ pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
 }
 
 pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
-    let db = db().await?;
+    let clipboard = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::CreatedAt)
+        .one(&db().await?)
+        .await?
+        .ok_or_else(|| DbErr::RecordNotFound("last clipboard not found".to_string()))?;
 
-    let last_clipboard = clipboard::Entity::find()
-        .order_by_desc(clipboard::Column::Id)
-        .one(&db)
-        .await?;
+    let mut dto = load_clipboards_with_relations(vec![clipboard])
+        .await
+        .remove(0);
 
-    if last_clipboard.is_none() {
-        return Err(DbErr::RecordNotFound(
-            "last clipboard not found".to_string(),
-        ));
+    if dto.clipboard.encrypted && is_key_set() {
+        if let Ok(decrypted) = decrypt_clipboard(dto.clone()) {
+            dto = decrypted;
+        }
     }
 
-    Ok(
-        load_clipboards_with_relations(vec![last_clipboard.expect("Failed to load clipboard")])
-            .await
-            .remove(0),
-    )
+    Ok(dto)
 }
 
 pub async fn get_clipboards_db(
@@ -460,9 +441,7 @@ pub async fn delete_clipboards_db(
                 .collect::<Vec<_>>();
 
             if command.is_none() && !clipboards.is_empty() {
-                get_main_window()
-                    .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
-                    .expect("Failed to emit event");
+                init_clipboards();
             }
 
             for clippy in clipboards {
@@ -632,7 +611,7 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
     let db = db().await?;
 
     let model = clipboard::Entity::find()
-        .order_by_desc(clipboard::Column::Id)
+        .order_by_desc(clipboard::Column::CreatedAt)
         .offset(Some(i))
         .limit(1)
         .one(&db)
@@ -698,4 +677,23 @@ pub async fn copy_clipboard_from_id(
     }
 
     Ok(success)
+}
+
+pub fn init_clipboards() {
+    get_main_window()
+        .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
+        .expect("Failed to emit event");
+}
+
+pub fn new_clipboard_event(mut clipboard: FullClipboardDto) {
+    if clipboard.clipboard.encrypted && is_key_set() {
+        clipboard = decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
+    }
+
+    get_main_window()
+        .emit(
+            ListenEvent::NewClipboard.to_string().as_str(),
+            trim_clipboard_data(vec![clipboard]).get(0),
+        )
+        .expect("Failed to emit event");
 }

@@ -3,4 +3,4 @@ pub mod hotkey;
 pub mod orm_query;
 pub mod types;
 pub mod sync;
-pub mod crypto;
+pub mod cipher;

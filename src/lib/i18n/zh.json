@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "托盘中心",
 			"TRAY_LEFT": "托盘左侧",
 			"TRAY_RIGHT": "托盘右侧"
-		}
+		},
+		"UNLOCK_CLIPPY": "解锁 clippy"
 	},
 	"SETTINGS": {
 		"BACKUP": {

@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "ট্রে কেন্দ্র",
 			"TRAY_LEFT": "ট্রে বাম",
 			"TRAY_RIGHT": "ট্রে ডান"
-		}
+		},
+		"UNLOCK_CLIPPY": "ক্লিপি আনলক করুন"
 	},
 	"SETTINGS": {
 		"BACKUP": {

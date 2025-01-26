@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use crate::service::clipboard::delete_clipboards_db;
+use crate::service::clipboard::{delete_clipboards_db, new_clipboard_event};
 use crate::service::settings::update_settings_from_sync;
 use crate::service::{
     clipboard::{get_clipboard_uuids_db, get_latest_syncable_cliboards_db, upsert_clipboard_dto},
@@ -47,7 +47,8 @@ impl SyncManager {
                 .await?;
 
             for clipboard in new_clipboards {
-                upsert_clipboard_dto(clipboard).await?;
+                upsert_clipboard_dto(clipboard.clone()).await?;
+                new_clipboard_event(clipboard);
             }
 
             let new_local_clipboards = get_latest_syncable_cliboards_db().await?;

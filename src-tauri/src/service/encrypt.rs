@@ -7,7 +7,7 @@ use crate::service::settings::get_global_settings;
 use crate::tao::connection::db;
 use crate::tao::global::get_app;
 use base64::{engine::general_purpose::STANDARD, Engine};
-use common::types::crypto::{EncryptionError, ENCRYPTION_KEY};
+use common::types::cipher::{EncryptionError, ENCRYPTION_KEY};
 use common::types::enums::ListenEvent;
 use common::types::orm_query::FullClipboardDto;
 use common::types::types::{CommandError, Progress};
@@ -65,8 +65,6 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
             total: total_clipboards as u64,
             current: (index + 1) as u64,
         };
-
-        printlog!("Emitting progress event {:?}", progress);
 
         get_app()
             .emit_to(
@@ -144,12 +142,16 @@ pub fn encrypt_clipboard(mut clipboard: FullClipboardDto) -> FullClipboardDto {
     clipboard
 }
 
-pub fn setup_encryption() {
+pub fn init_encryption() {
     let settings = get_global_settings();
     if !is_key_set() && settings.encryption {
         init_password_lock();
     } else {
-        printlog!("Encryption key is set or encryption is disabled");
+        printlog!(
+            "is_key_set: {:?}, settings.encryption: {:?}",
+            is_key_set(),
+            settings.encryption
+        );
     }
 }
 
@@ -204,14 +206,5 @@ pub fn encrypt_data(data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
 /// Checks if data appears to be encrypted based on its structure
 pub fn looks_like_encrypted_data(data: &[u8]) -> bool {
     // Check minimum size (nonce + tag)
-    if data.len() < 12 + 16 {
-        return false;
-    }
-
-    // Check AES block alignment
-    if (data.len() - 12) % 16 != 0 {
-        return false;
-    }
-
-    true
+    data.len() >= 12 + 16
 }

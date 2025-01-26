@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "トレイ中央",
 			"TRAY_LEFT": "トレイ左",
 			"TRAY_RIGHT": "トレイ右"
-		}
+		},
+		"UNLOCK_CLIPPY": "クリッピーのロックを解除"
 	},
 	"SETTINGS": {
 		"BACKUP": {

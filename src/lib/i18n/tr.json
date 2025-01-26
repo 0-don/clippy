@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Tepsi merkezi",
 			"TRAY_LEFT": "Tepsi sol",
 			"TRAY_RIGHT": "Tepsi sağ"
-		}
+		},
+		"UNLOCK_CLIPPY": "Clippy'nin kilidini aç"
 	},
 	"SETTINGS": {
 		"BACKUP": {

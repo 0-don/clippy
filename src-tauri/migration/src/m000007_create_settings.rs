@@ -32,6 +32,7 @@ enum Settings {
     Position,
     //
     Encryption,
+    EnryptionSaveBeforeUnlock,
     //
     MaxFileSize,
     MaxImageSize,
@@ -121,6 +122,7 @@ impl MigrationTrait for Migration {
                             ),
                     )
                     .col(boolean(Settings::Encryption).default(false))
+                    .col(boolean(Settings::EnryptionSaveBeforeUnlock).default(true))
                     // 10MB default, 0 min, 100MB max
                     .col(
                         integer(Settings::MaxFileSize).default(MAX_FILE_SIZE).check(

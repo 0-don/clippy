@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "ٹرے سینٹر",
 			"TRAY_LEFT": "ٹرے بائیں",
 			"TRAY_RIGHT": "ٹرے دائیں"
-		}
+		},
+		"UNLOCK_CLIPPY": "کلپی کو غیر مقفل کریں۔"
 	},
 	"SETTINGS": {
 		"BACKUP": {

@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Tablettmitte",
 			"TRAY_LEFT": "Ablage links",
 			"TRAY_RIGHT": "Ablage rechts"
-		}
+		},
+		"UNLOCK_CLIPPY": "Clippy freischalten"
 	},
 	"SETTINGS": {
 		"BACKUP": {

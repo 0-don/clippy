@@ -9,6 +9,7 @@ import { SettingsStore } from "../../../store/settings-store";
 import { Progress, TauriError } from "../../../types";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { ListenEvent } from "../../../types/tauri-listen";
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "../../../utils/constants";
 import { Button } from "../../elements/button";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
@@ -79,8 +80,8 @@ const Encrypt: Component = ({}) => {
         <label>{t("SETTINGS.ENCRYPT.CONFIRM_PASSWORD")}</label>
         <Input
           required
-          minLength={1}
-          maxLength={128}
+          minLength={MIN_PASSWORD_LENGTH}
+          maxLength={MAX_PASSWORD_LENGTH}
           value={confirmPassword()}
           onInput={(e) => setConfirmPassword(e.target.value)}
         />
@@ -138,7 +139,12 @@ const Decrypt: Component = ({}) => {
     <form class="flex flex-col gap-1" onSubmit={onSubmit}>
       <div>
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
-        <Input value={password()} onInput={(e) => setPassword(e.target.value)} />
+        <Input
+          minLength={MIN_PASSWORD_LENGTH}
+          maxLength={MAX_PASSWORD_LENGTH}
+          value={password()}
+          onInput={(e) => setPassword(e.target.value)}
+        />
       </div>
 
       <Show when={error()}>

@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Lade midden",
 			"TRAY_LEFT": "Lade links",
 			"TRAY_RIGHT": "Lade rechts"
-		}
+		},
+		"UNLOCK_CLIPPY": "Clippy ontgrendelen"
 	},
 	"SETTINGS": {
 		"BACKUP": {

@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "트레이 중앙",
 			"TRAY_LEFT": "트레이 왼쪽",
 			"TRAY_RIGHT": "트레이 오른쪽"
-		}
+		},
+		"UNLOCK_CLIPPY": "클리피 잠금 해제"
 	},
 	"SETTINGS": {
 		"BACKUP": {

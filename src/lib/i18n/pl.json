@@ -99,7 +99,8 @@
 			"TRAY_CENTER": "Środek tacy",
 			"TRAY_LEFT": "Taca lewa",
 			"TRAY_RIGHT": "Taca prawa"
-		}
+		},
+		"UNLOCK_CLIPPY": "Odblokuj klips"
 	},
 	"SETTINGS": {
 		"BACKUP": {

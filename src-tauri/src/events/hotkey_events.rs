@@ -1,5 +1,6 @@
 use crate::commands::sync::sync_authenticate_toggle;
 use crate::prelude::*;
+use crate::service::clipboard::init_clipboards;
 use crate::service::window::open_window;
 use crate::tao::global::{
     get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
@@ -74,9 +75,7 @@ pub async fn parse_hotkey_event(key: &Key) {
             get_main_window()
                 .emit(ListenEvent::ScrollToTop.to_string().as_str(), ())
                 .expect("Failed to emit event");
-            get_main_window()
-                .emit(ListenEvent::InitClipboards.to_string().as_str(), ())
-                .expect("Failed to emit event");
+            init_clipboards();
         }
         Some(HotkeyEvent::TypeClipboard) => {
             if cfg!(target_os = "linux") {

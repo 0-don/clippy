@@ -1,7 +1,9 @@
 use super::settings::get_global_settings;
 use crate::prelude::*;
+use crate::service::encrypt::init_encryption;
+use crate::service::hotkey::init_hotkey_event;
 use crate::tao::global::{get_app, get_main_window, get_window_stop_tx};
-use crate::utils::hotkey_manager::{register_hotkeys, unregister_hotkeys};
+use crate::utils::hotkey_manager::unregister_hotkeys;
 use common::constants::{
     ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
     SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
@@ -63,17 +65,14 @@ pub fn toggle_main_window() {
             )
             .expect("Failed to emit change tab event");
         get_main_window().show().expect("Failed to show window");
-        register_hotkeys(true);
-        get_main_window()
-            .emit(
-                ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(),
-                true,
-            )
-            .expect("Failed to emit set global hotkey event");
+
+        init_hotkey_event();
 
         get_app()
             .run_on_main_thread(|| get_main_window().set_focus().expect("Failed to set focus"))
             .expect("Failed to run on main thread");
+
+        init_encryption();
 
         printlog!("displaying window");
     }
