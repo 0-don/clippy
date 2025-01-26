@@ -11,6 +11,7 @@ import { LANGUAGES, LANGUAGE_KEY, TAB_NAMES, Tab } from "../utils/constants";
 import { SettingsStore } from "./settings-store";
 
 function createAppStore() {
+  const [passwordLock, setPasswordLock] = createSignal(false);
   const detectedLocale = localStorage.getItem(LANGUAGE_KEY) || Object.values(LANGUAGES)[0];
 
   const [locale, setLocale] = createResource(
@@ -55,6 +56,8 @@ function createAppStore() {
   return {
     locale,
     setLocale,
+    passwordLock,
+    setPasswordLock,
     tabs,
     setTabs,
     changeTab,

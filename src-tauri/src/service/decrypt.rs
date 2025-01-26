@@ -3,8 +3,7 @@ use super::{
     settings::get_global_settings, sync::get_sync_provider,
 };
 use crate::{
-    prelude::*,
-    tao::{connection::db, global::get_app},
+    prelude::*, service::clipboard::upsert_clipboard_dto, tao::{connection::db, global::get_app}
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use common::{
@@ -16,11 +15,9 @@ use common::{
         types::{CommandError, Progress},
     },
 };
-use entity::{
-    clipboard, clipboard_file, clipboard_html, clipboard_image, clipboard_rtf, clipboard_text,
-};
+use entity::clipboard;
 use ring::aead;
-use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter};
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use tauri::{Emitter, EventTarget};
 
 pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
@@ -50,15 +47,18 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
     let total_clipboards = clipboards.len() as u64;
     for (index, clipboard) in clipboards.into_iter().enumerate() {
-        let encrypted_clipboard = decrypt_clipboard(clipboard).await?;
+        let decrypted_clipboard = decrypt_clipboard(clipboard);
+
+        // Update clipboard in database
+        upsert_clipboard_dto(decrypted_clipboard.clone()).await?;
 
         if let Some(provider) = &provider {
             if let Some(remote_clipboards) = &remote_clipboards
                 .iter()
-                .find(|c| c.id == encrypted_clipboard.clipboard.id)
+                .find(|c| c.id == decrypted_clipboard.clipboard.id)
             {
                 provider
-                    .update_clipboard(&encrypted_clipboard, &remote_clipboards)
+                    .update_clipboard(&decrypted_clipboard, &remote_clipboards)
                     .await
                     .expect("Failed to upsert clipboard");
             }
@@ -83,22 +83,14 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
     Ok(())
 }
 
-pub async fn decrypt_clipboard(
+pub fn decrypt_clipboard(
     mut clipboard: FullClipboardDto,
-) -> Result<FullClipboardDto, CommandError> {
-    let db = db().await.expect("Database connection failed");
-
+) -> FullClipboardDto {
     if let Some(text) = &mut clipboard.text {
         if let Ok(data) = STANDARD.decode(text.data.clone()) {
             text.data =
                 String::from_utf8(decrypt_data(&data).expect("Failed to decrypt clipboard data"))
                     .expect("Failed to convert decrypted data to string");
-
-            let clipboard_text: clipboard_text::ActiveModel = text.clone().into();
-            clipboard_text::Entity::update(clipboard_text.reset_all())
-                .exec(&db)
-                .await
-                .expect("Failed to update encrypted text in database");
         }
     }
 
@@ -107,12 +99,6 @@ pub async fn decrypt_clipboard(
             html.data =
                 String::from_utf8(decrypt_data(&data).expect("Failed to decrypt clipboard data"))
                     .expect("Failed to convert decrypted data to string");
-
-            let clipboard_html: clipboard_html::ActiveModel = html.clone().into();
-            clipboard_html::Entity::update(clipboard_html.reset_all())
-                .exec(&db)
-                .await
-                .expect("Failed to update encrypted HTML in database");
         }
     }
 
@@ -121,13 +107,6 @@ pub async fn decrypt_clipboard(
             rtf.data =
                 String::from_utf8(decrypt_data(&data).expect("Failed to decrypt clipboard data"))
                     .expect("Failed to convert decrypted data to string");
-
-            let clipboard_rtf: clipboard_rtf::ActiveModel = rtf.clone().into();
-
-            clipboard_rtf::Entity::update(clipboard_rtf.reset_all())
-                .exec(&db)
-                .await
-                .expect("Failed to update encrypted RTF in database");
         }
     }
 
@@ -140,12 +119,6 @@ pub async fn decrypt_clipboard(
                 decrypt_data(&thumbnail).expect("Failed to decrypt clipboard thumbnail data"),
             );
         }
-
-        let image: clipboard_image::ActiveModel = image.clone().into();
-        clipboard_image::Entity::update(image.reset_all())
-            .exec(&db)
-            .await
-            .expect("Failed to update encrypted image in database");
     }
 
     if !clipboard.files.is_empty() {
@@ -194,24 +167,13 @@ pub async fn decrypt_clipboard(
                         .expect("Failed to convert decrypted data to string"),
                     );
                 }
-
-                let file: clipboard_file::ActiveModel = file.clone().into();
-                clipboard_file::Entity::update(file.reset_all())
-                    .exec(&db)
-                    .await
-                    .expect("Failed to update encrypted file in database");
             }
         }
     }
 
     clipboard.clipboard.encrypted = false;
-    let entity: clipboard::ActiveModel = clipboard.clipboard.clone().into();
-    clipboard::Entity::update(entity.reset_all())
-        .exec(&db)
-        .await
-        .expect("Failed to update clipboard encryption status");
 
-    Ok(clipboard)
+    clipboard
 }
 
 /// Decrypts data using AES-256-GCM

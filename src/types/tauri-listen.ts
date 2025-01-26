@@ -9,6 +9,7 @@ export enum ListenEvent {
   ChangeTab = "change_tab",
   ScrollToTop = "scroll_to_top",
   NewClipboard = "new_clipboard",
+  PasswordLock = "password_lock",
   Progress = "progress",
 }
 
@@ -21,4 +22,5 @@ export interface TauriListenEvents {
   [ListenEvent.ScrollToTop]: void;
   [ListenEvent.NewClipboard]: ClipboardWithRelations;
   [ListenEvent.Progress]: Progress;
+  [ListenEvent.PasswordLock]: void;
 }

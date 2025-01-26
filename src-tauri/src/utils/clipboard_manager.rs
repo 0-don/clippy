@@ -51,16 +51,6 @@ impl ClipboardManagerExt for FullClipboardDbo {
         let clipboard = get_app().state::<Clipboard>();
         let mut manager = Self::new();
 
-        printlog!(
-            "clipboard file: {:?} size: {:?}",
-            clipboard.read_files().ok().map_or_else(|| vec![], |f| f),
-            clipboard
-                .read_files()
-                .ok()
-                .map_or_else(|| vec![], |f| f)
-                .len()
-        );
-
         manager.parse_model(
             clipboard.read_text().ok(),
             clipboard.read_html().ok(),
@@ -115,15 +105,6 @@ impl ClipboardManagerExt for FullClipboardDbo {
                                     }
                                 }
                             }
-                            ClipboardType::Image => {
-                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
-                                    (&last.image, &self.clipboard_image_model.data)
-                                {
-                                    if curr != &last.data {
-                                        return false;
-                                    }
-                                }
-                            }
                             ClipboardType::Rtf => {
                                 if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
                                     (&last.rtf, &self.clipboard_rtf_model.data)
@@ -131,6 +112,19 @@ impl ClipboardManagerExt for FullClipboardDbo {
                                     if curr != &last.data {
                                         return false;
                                     }
+                                }
+                            }
+                            ClipboardType::Image => {
+                                if let (Some(last_img), sea_orm::ActiveValue::Set(curr_data)) =
+                                    (&last.image, &self.clipboard_image_model.data)
+                                {
+                                    // Compare the data field from last_img with curr_data
+                                    if curr_data != &last_img.data {
+                                        return false;
+                                    }
+                                } else {
+                                    // If either is None/NotSet, they're different
+                                    return false;
                                 }
                             }
                             ClipboardType::File => {
@@ -144,6 +138,9 @@ impl ClipboardManagerExt for FullClipboardDbo {
                                         if curr_data != &last_file.data {
                                             return false;
                                         }
+                                    } else {
+                                        // If either is None/NotSet, they're different
+                                        return false;
                                     }
                                 }
                             }
@@ -240,7 +237,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 .collect();
 
             if !valid_files.is_empty() {
-                types.clear();
+                types.clear(); // Clear all types if image is present
                 types.push(ClipboardType::File);
                 let _ = self.parse_file_models(valid_files);
             }

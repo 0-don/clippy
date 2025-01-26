@@ -26,7 +26,11 @@ function createClipboardStore() {
 
   const newClipboard = (clipboard: ClipboardWithRelations) => {
     setClipboards((prev) => {
-      const newClipboards = [clipboard, ...prev];
+      // Remove any existing clipboard with the same ID
+      const filteredClipboards = prev.filter((item) => item.clipboard.id !== clipboard.clipboard.id);
+
+      // Add new clipboard and sort
+      const newClipboards = [clipboard, ...filteredClipboards];
       return newClipboards.sort((a, b) => {
         const dateA = new Date(a.clipboard.created_at).getTime();
         const dateB = new Date(b.clipboard.created_at).getTime();

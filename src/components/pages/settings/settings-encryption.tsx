@@ -61,7 +61,7 @@ const Encrypt: Component = ({}) => {
       await SettingsStore.init();
     } catch (error) {
       const { Error } = error as TauriError;
-      setError(t(Error) || Error);
+      setError(Error);
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ const Encrypt: Component = ({}) => {
       </div>
 
       <Show when={error()}>
-        <p class="text-red-500">{error()}</p>
+        <p class="text-red-500">{t(error() as DictionaryKey) || error()}</p>
       </Show>
 
       <Button
@@ -142,7 +142,7 @@ const Decrypt: Component = ({}) => {
       </div>
 
       <Show when={error()}>
-        <p class="text-red-500">{error()}</p>
+        <p class="text-red-500">{t(error() as DictionaryKey) || error()}</p>
       </Show>
 
       <Button

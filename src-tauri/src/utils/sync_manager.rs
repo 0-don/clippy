@@ -2,7 +2,7 @@ use crate::prelude::*;
 use crate::service::clipboard::delete_clipboards_db;
 use crate::service::settings::update_settings_from_sync;
 use crate::service::{
-    clipboard::{get_clipboard_uuids_db, get_latest_syncable_cliboards_db, insert_clipboard_dto},
+    clipboard::{get_clipboard_uuids_db, get_latest_syncable_cliboards_db, upsert_clipboard_dto},
     sync::get_sync_provider,
 };
 use sea_orm::prelude::Uuid;
@@ -47,7 +47,7 @@ impl SyncManager {
                 .await?;
 
             for clipboard in new_clipboards {
-                insert_clipboard_dto(clipboard).await?;
+                upsert_clipboard_dto(clipboard).await?;
             }
 
             let new_local_clipboards = get_latest_syncable_cliboards_db().await?;

@@ -7,7 +7,8 @@ interface RecentClipboardsProps {}
 export const RecentClipboards: Component<RecentClipboardsProps> = ({}) => {
   onMount(async () => {
     ClipboardStore.resetWhere();
-    ClipboardStore.setClipboards(await ClipboardStore.getClipboards());
+    const clipboards = await ClipboardStore.getClipboards();
+    ClipboardStore.setClipboards(clipboards);
   });
 
   return <Clipboards />;
