@@ -14,7 +14,7 @@ use tauri::{PhysicalPosition, WebviewWindowBuilder};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 /// App
-pub fn init_window() {
+pub fn setup_window() {
     #[cfg(any(windows, target_os = "macos"))]
     {
         get_main_window()

@@ -16,19 +16,17 @@ const Index = () => {
     HotkeyStore.init();
   });
 
-  onMount(() => {
-    listenEvent(ListenEvent.InitClipboards, ClipboardStore.init);
+  listenEvent(ListenEvent.InitClipboards, ClipboardStore.init);
 
-    listenEvent(ListenEvent.InitSettings, SettingsStore.init);
+  listenEvent(ListenEvent.InitSettings, SettingsStore.init);
 
-    listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
+  listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
 
-    listenEvent(ListenEvent.EnableGlobalHotkeyEvent, HotkeyStore.enableGlobalHotkeyEvent);
+  listenEvent(ListenEvent.EnableGlobalHotkeyEvent, HotkeyStore.enableGlobalHotkeyEvent);
 
-    listenEvent(ListenEvent.ChangeTab, AppStore.changeTab);
+  listenEvent(ListenEvent.ChangeTab, AppStore.changeTab);
 
-    listenEvent(ListenEvent.NewClipboard, ClipboardStore.newClipboard);
-  });
+  listenEvent(ListenEvent.NewClipboard, ClipboardStore.newClipboard);
 
   return <App />;
 };

@@ -17,7 +17,7 @@ pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 
-pub fn init_globals(app: &mut tauri::App) {
+pub fn setup_globals(app: &mut tauri::App) {
     APP.set(app.handle().clone())
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
     HOTKEY_MANAGER

@@ -3,7 +3,7 @@ use common::types::orm_query::FullClipboardDbo;
 use tauri::{Listener, Manager};
 use tauri_plugin_clipboard::Clipboard;
 
-pub fn init_clipboard_listener() {
+pub fn setup_clipboard_listener() {
     let clipboard = get_app().state::<Clipboard>();
 
     clipboard

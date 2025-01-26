@@ -11,7 +11,7 @@ use std::{
 use tauri::Manager;
 use tauri_plugin_dialog::DialogExt;
 
-pub fn create_config() {
+pub fn setup_config() {
     let data_path = get_data_path();
 
     if Path::new(&data_path.config_file_path).exists() {

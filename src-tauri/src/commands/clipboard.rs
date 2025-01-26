@@ -84,7 +84,7 @@ pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
     let extension = clipboard
         .image
         .as_ref()
-        .and_then(|img| img.extension.clone())
+        .map(|img| img.extension.clone())
         .unwrap_or_else(|| "png".to_string());
 
     let image = image::load_from_memory(

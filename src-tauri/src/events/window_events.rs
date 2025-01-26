@@ -1,11 +1,11 @@
 use crate::tao::global::{get_hotkey_running, get_window_stop_tx};
-use crate::{prelude::*, tao::global::get_main_window};
 use crate::utils::hotkey_manager::unregister_hotkeys;
+use crate::{prelude::*, tao::global::get_main_window};
 use common::types::enums::ListenEvent;
 use tauri::{Emitter, WindowEvent};
 use tokio::sync::oneshot;
 
-pub fn init_window_event_listener() {
+pub fn setup_window_event_listener() {
     get_main_window().on_window_event(|event| {
         if !get_main_window().is_visible().unwrap_or(false) {
             return;

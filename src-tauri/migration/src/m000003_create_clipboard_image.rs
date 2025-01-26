@@ -1,7 +1,7 @@
 use crate::m000001_create_clipboard::Clipboard;
 use sea_orm_migration::{
     prelude::*,
-    schema::{blob, integer_null, string_null, text, uuid},
+    schema::{blob, integer, string, text, uuid},
 };
 
 #[derive(Iden)]
@@ -32,10 +32,10 @@ impl MigrationTrait for Migration {
                     .col(uuid(ClipboardImage::ClipboardId).unique_key())
                     .col(blob(ClipboardImage::Data))
                     .col(text(ClipboardImage::Thumbnail))
-                    .col(string_null(ClipboardImage::Extension))
-                    .col(integer_null(ClipboardImage::Width))
-                    .col(integer_null(ClipboardImage::Height))
-                    .col(string_null(ClipboardImage::Size))
+                    .col(integer(ClipboardImage::Size))
+                    .col(string(ClipboardImage::Extension))
+                    .col(integer(ClipboardImage::Width))
+                    .col(integer(ClipboardImage::Height))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk-clipboard-image")
