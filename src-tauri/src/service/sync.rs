@@ -1,6 +1,8 @@
-use super::settings::{get_global_settings,  update_settings_synchronize_db};
+use super::settings::{get_global_settings, update_settings_synchronize_db};
 use crate::{
-    prelude::*, tao::global::get_app, utils::{providers::google_drive::GoogleDriveProviderImpl, sync_manager::SyncManager}
+    prelude::*,
+    tao::global::get_app,
+    utils::{providers::google_drive::GoogleDriveProviderImpl, sync_manager::SyncManager},
 };
 use common::types::{enums::SyncProviderType, sync::SyncProvider, types::CommandError};
 use entity::settings;
@@ -52,7 +54,7 @@ pub fn get_sync_manager() -> State<'static, Mutex<SyncManager>> {
     }
 }
 
-pub fn init_sync_interval() {
+pub fn setup_sync_interval() {
     tauri::async_runtime::spawn(async {
         if get_global_settings().sync {
             get_sync_manager().lock().await.start().await;

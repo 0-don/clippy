@@ -1,7 +1,9 @@
 use crate::commands::sync::sync_authenticate_toggle;
 use crate::prelude::*;
 use crate::service::window::open_window;
-use crate::tao::global::{get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window};
+use crate::tao::global::{
+    get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
+};
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
@@ -18,7 +20,7 @@ use regex::Regex;
 use tauri::Emitter;
 use tokio::sync::oneshot;
 
-pub fn init_hotkey_listener() {
+pub fn setup_hotkey_listener() {
     let receiver = GlobalHotKeyEvent::receiver();
 
     unregister_hotkeys(true);

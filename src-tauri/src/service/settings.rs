@@ -82,7 +82,7 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
     Ok(settings)
 }
 
-pub fn init_settings() {
+pub fn setup_settings() {
     get_app().manage(Mutex::new(settings::Model::default()));
 
     tokio::task::block_in_place(|| {

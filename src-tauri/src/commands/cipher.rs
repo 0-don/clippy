@@ -6,7 +6,7 @@ use crate::service::{
 use common::types::{crypto::ENCRYPTION_KEY, types::CommandError};
 
 #[tauri::command]
-pub async fn load_encryption_key(password: String) -> Result<(), CommandError> {
+pub async fn password_unlock(password: String) -> Result<(), CommandError> {
     if is_key_set() {
         return Err(CommandError::new("MAIN.ERROR.ENCRYPTION_KEY_ALREADY_SET"));
     }

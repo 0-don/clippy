@@ -4,7 +4,7 @@ use tauri::{
     tray::TrayIconBuilder,
 };
 
-pub fn init_system_tray() -> Result<(), Box<dyn std::error::Error>> {
+pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
     // Create menu items
     let quit = MenuItem::with_id(get_app(), "quit", "Quit", true, None::<&str>)?;
     let open = MenuItem::with_id(get_app(), "open", "Open", true, None::<&str>)?;

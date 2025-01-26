@@ -59,6 +59,7 @@ base64 = "0"
 infer = "0"
 mime_guess = "2"
 tree_magic_mini = "3"
+urlencoding = "2"
 
 # clipboard sync
 google-drive3 = "6"

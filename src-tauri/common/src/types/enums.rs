@@ -118,6 +118,8 @@ pub enum ListenEvent {
     NewClipboard,
     #[iden = "progress"]
     Progress,
+    #[iden = "password_lock"]
+    PasswordLock,
 }
 
 #[derive(Iden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]

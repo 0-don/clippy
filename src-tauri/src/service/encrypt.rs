@@ -1,4 +1,5 @@
 use super::clipboard::load_clipboards_with_relations;
+use super::decrypt::init_password_lock;
 use super::sync::get_sync_provider;
 use crate::prelude::*;
 use crate::service::settings::get_global_settings;
@@ -178,6 +179,15 @@ pub async fn encrypt_clipboard(
         .expect("Failed to update clipboard encryption status");
 
     Ok(clipboard)
+}
+
+pub fn setup_encryption() {
+    let settings = get_global_settings();
+    if !is_key_set() && settings.encryption {
+        init_password_lock();
+    } else {
+        printlog!("Encryption key is set or encryption is disabled");
+    }
 }
 
 /// Sets the encryption key derived from a password

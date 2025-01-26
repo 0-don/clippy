@@ -164,7 +164,7 @@ pub async fn decrypt_clipboard(
                     .expect("Filename encryption failed"),
                 )
                 .expect("Failed to convert decrypted data to string");
-  
+
                 if let Some(extension) = &file.extension {
                     file.extension = Some(
                         String::from_utf8(
@@ -264,4 +264,14 @@ pub fn verify_password(password: String) -> Result<bool, EncryptionError> {
         .ok_or(EncryptionError::NoKey)?;
 
     Ok(provided_key == current_key)
+}
+
+pub fn init_password_lock() {
+    get_app()
+        .emit_to(
+            EventTarget::any(),
+            ListenEvent::PasswordLock.to_string().as_str(),
+            (),
+        )
+        .expect("Failed to emit download progress event");
 }

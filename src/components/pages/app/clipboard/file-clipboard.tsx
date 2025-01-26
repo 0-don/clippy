@@ -60,17 +60,16 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
     <button type="button" onClick={handleClick} class="clipboard">
       <ClipboardHeader {...props} Icon={VsFileBinary} />
 
-      <div class="min-w-0 flex-1">
-        <div class="flex flex-wrap gap-2" title={getFileListTitle()}>
-          {Object.entries(groupedFiles).map(([type, data]) => (
-            <span class="flex items-center gap-1">
-              <span class="text-sm">
-                {data.count} {type}
-              </span>
-              <span class="text-xs text-zinc-500">{formatBytes(data.size)}</span>
+      <div class="min-w-0 flex-1" title={getFileListTitle()}>
+        {Object.entries(groupedFiles).map(([type, data]) => (
+          <span class="flex items-center gap-1">
+            <span class="text-sm truncate">
+              {data.count} {type}
             </span>
-          ))}
-        </div>
+            <span class="text-xs text-zinc-500">{formatBytes(data.size)}</span>
+          </span>
+        ))}
+
         <div
           class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
           title={dayjs.utc(props.data.clipboard.created_at).format()}

@@ -17,6 +17,7 @@ use std::io::Cursor;
 use std::path::Path;
 use tauri::{Emitter, Manager};
 use tauri_plugin_clipboard::Clipboard;
+use urlencoding::decode;
 
 pub trait ClipboardManagerExt {
     fn new() -> FullClipboardDbo;
@@ -51,7 +52,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
         let mut manager = Self::new();
 
         printlog!(
-            "clipboard model: {:?} size: {:?}",
+            "clipboard file: {:?} size: {:?}",
             clipboard.read_files().ok().map_or_else(|| vec![], |f| f),
             clipboard
                 .read_files()
@@ -222,15 +223,24 @@ impl ClipboardManagerExt for FullClipboardDbo {
         if let Some(paths) = files.filter(|f| !f.is_empty()) {
             let valid_files: Vec<_> = paths
                 .into_iter()
-                .filter(|p| {
-                    fs::metadata(p)
-                        .map(|m| m.len() as i32 <= settings.max_file_size)
-                        .unwrap_or(false)
+                .filter_map(|p| {
+                    decode(&p)
+                        .map(|path| path.into_owned())
+                        .ok()
+                        .and_then(|decoded_path| {
+                            fs::metadata(&decoded_path).ok().and_then(|m| {
+                                if m.len() as i32 <= settings.max_file_size {
+                                    Some(decoded_path)
+                                } else {
+                                    None
+                                }
+                            })
+                        })
                 })
                 .collect();
 
             if !valid_files.is_empty() {
-                types.clear(); // Clear all types if files are present
+                types.clear();
                 types.push(ClipboardType::File);
                 let _ = self.parse_file_models(valid_files);
             }
@@ -253,7 +263,8 @@ impl ClipboardManagerExt for FullClipboardDbo {
             let extension = image::guess_format(&img_bytes)
                 .ok()
                 .map(|format| format.extensions_str()[0].to_string())
-                .or_else(|| infer::get(&img_bytes).map(|kind| kind.extension().to_string()));
+                .or_else(|| infer::get(&img_bytes).map(|kind| kind.extension().to_string()))
+                .unwrap_or_else(|| "png".to_string());
 
             let (new_width, new_height) = calculate_thumbnail_dimensions(width, height);
 
@@ -271,12 +282,12 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 let base64_thumbnail = STANDARD.encode(&thumbnail_bytes);
 
                 self.clipboard_image_model = entity::clipboard_image::ActiveModel {
-                    size: Set(Some(img_bytes.len().to_string())),
+                    size: Set(img_bytes.len() as i32),
                     data: Set(img_bytes),
                     thumbnail: Set(base64_thumbnail),
                     extension: Set(extension),
-                    width: Set(Some(width as i32)),
-                    height: Set(Some(height as i32)),
+                    width: Set(width as i32),
+                    height: Set(height as i32),
                     ..Default::default()
                 };
             }
@@ -299,45 +310,47 @@ impl ClipboardManagerExt for FullClipboardDbo {
                     .and_then(|e| e.to_str())
                     .map(|s| s.to_string());
 
-                // Get MIME type using tree_magic_mini
-                let mime_type = Some(
-                    if let Some(content_type) = tree_magic_mini::from_filepath(path) {
-                        content_type.to_string()
-                    } else {
-                        // We only get here if tree_magic_mini returned None
+                let mime_type = tree_magic_mini::from_filepath(path)
+                    .map(|ct| ct.to_string())
+                    .or_else(|| {
                         infer::get_from_path(path)
                             .ok()
                             .flatten()
                             .map(|k| k.mime_type().to_string())
-                            .unwrap_or_else(|| {
-                                mime_guess::from_path(path)
-                                    .first_or_octet_stream()
-                                    .to_string()
+                            .or_else(|| {
+                                Some(
+                                    mime_guess::from_path(path)
+                                        .first_or_octet_stream()
+                                        .to_string(),
+                                )
                             })
-                    },
-                );
-                // Use std::fs::Metadata for timestamps
-                let created = metadata.created().ok().map(|t| {
-                    let timestamp = t
-                        .duration_since(std::time::UNIX_EPOCH)
-                        .unwrap_or_default()
-                        .as_secs() as i64;
+                    });
 
-                    DateTime::from_timestamp(timestamp, 0)
-                        .unwrap_or_default()
-                        .naive_utc()
-                });
+                let created = metadata
+                    .created()
+                    .ok()
+                    .and_then(|t| {
+                        DateTime::from_timestamp(
+                            t.duration_since(std::time::UNIX_EPOCH)
+                                .unwrap_or_default()
+                                .as_secs() as i64,
+                            0,
+                        )
+                    })
+                    .map(|dt| dt.naive_utc());
 
-                let modified = metadata.modified().ok().map(|t| {
-                    let timestamp = t
-                        .duration_since(std::time::UNIX_EPOCH)
-                        .unwrap_or_default()
-                        .as_secs() as i64;
-
-                    DateTime::from_timestamp(timestamp, 0)
-                        .unwrap_or_default()
-                        .naive_utc()
-                });
+                let modified = metadata
+                    .modified()
+                    .ok()
+                    .and_then(|t| {
+                        DateTime::from_timestamp(
+                            t.duration_since(std::time::UNIX_EPOCH)
+                                .unwrap_or_default()
+                                .as_secs() as i64,
+                            0,
+                        )
+                    })
+                    .map(|dt| dt.naive_utc());
 
                 if let Ok(file_bytes) = fs::read(path) {
                     let file_model = entity::clipboard_file::ActiveModel {
