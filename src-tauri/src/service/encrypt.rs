@@ -21,7 +21,8 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
     let settings = get_global_settings();
     let db = db().await?;
 
-    let clipboards = load_clipboards_with_relations(
+    // Get all local unencrypted clipboards
+    let mut clipboards = load_clipboards_with_relations(
         clipboard::Entity::find()
             .filter(clipboard::Column::Encrypted.eq(false))
             .all(&db)
@@ -29,50 +30,52 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
     )
     .await;
 
+    // Get remote clipboards if sync enabled
     let (provider, remote_clipboards) = if settings.sync {
         let provider = get_sync_provider().await;
-        (
-            Some(provider.clone()),
-            provider
-                .fetch_all_clipboards()
-                .await
-                .expect("Failed to fetch remote clipboards"),
-        )
+        let remote_clipboards = provider
+            .fetch_all_clipboards()
+            .await
+            .expect("Failed to fetch remote clipboards");
+
+        // Add any remote clipboards not in local database
+        for remote in &remote_clipboards {
+            if !clipboards.iter().any(|c| c.clipboard.id == remote.id) && !remote.encrypted {
+                if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
+                    clipboards.push(clipboard);
+                }
+            }
+        }
+        (Some(provider), remote_clipboards)
     } else {
         (None, Vec::new())
     };
 
-    let total_clipboards = clipboards.len() as u64;
+    let total = clipboards.len();
     for (index, clipboard) in clipboards.into_iter().enumerate() {
-        let encrypted_clipboard = encrypt_clipboard(clipboard);
-
-        // Update clipboard in database
-        upsert_clipboard_dto(encrypted_clipboard.clone()).await?;
+        let encrypted = encrypt_clipboard(clipboard);
+        upsert_clipboard_dto(encrypted.clone()).await?;
 
         if let Some(provider) = &provider {
-            if let Some(remote_clipboards) = &remote_clipboards
+            if let Some(remote) = remote_clipboards
                 .iter()
-                .find(|c| c.id == encrypted_clipboard.clipboard.id)
+                .find(|r| r.id == encrypted.clipboard.id)
             {
                 provider
-                    .update_clipboard(&encrypted_clipboard, &remote_clipboards)
+                    .update_clipboard(&encrypted, remote)
                     .await
-                    .expect("Failed to upsert clipboard");
+                    .expect("Failed to update remote clipboard");
             }
         }
 
-        let progress = Progress {
-            total: total_clipboards as u64,
-            current: (index + 1) as u64,
-        };
-
-        get_app()
-            .emit_to(
-                EventTarget::any(),
-                ListenEvent::Progress.to_string().as_str(),
-                progress,
-            )
-            .expect("Failed to emit download progress event");
+        get_app().emit_to(
+            EventTarget::any(),
+            ListenEvent::Progress.to_string().as_str(),
+            Progress {
+                total,
+                current: index + 1,
+            },
+        )?;
     }
 
     Ok(())
@@ -146,12 +149,6 @@ pub fn init_encryption() {
     let settings = get_global_settings();
     if !is_key_set() && settings.encryption {
         init_password_lock();
-    } else {
-        printlog!(
-            "is_key_set: {:?}, settings.encryption: {:?}",
-            is_key_set(),
-            settings.encryption
-        );
     }
 }
 

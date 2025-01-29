@@ -38,7 +38,6 @@ pub fn toggle_main_window() {
         .is_visible()
         .expect("Failed to check if window is visible")
     {
-        printlog!("hiding window");
         if let Some(tx) = get_window_stop_tx().take() {
             tx.send(()).unwrap_or(())
         }
@@ -73,8 +72,6 @@ pub fn toggle_main_window() {
             .expect("Failed to run on main thread");
 
         init_encryption();
-
-        printlog!("displaying window");
     }
 }
 

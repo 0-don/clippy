@@ -1,6 +1,8 @@
 use super::parse_clipboard_info;
 use crate::{
-    service::settings::{get_global_settings, update_settings_synchronize_db}, tao::{config::get_data_path, global::get_app}, utils::providers::create_clipboard_filename
+    service::settings::{get_global_settings, update_settings_synchronize_db},
+    tao::{config::get_data_path, global::get_app},
+    utils::providers::create_clipboard_filename,
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
@@ -186,10 +188,11 @@ impl SyncProvider for GoogleDriveProviderImpl {
             }
 
             printlog!(
-                "downloading clipboard: {} from {} star: {}",
+                "downloading clipboard: {} from {} star: {} encrypted: {}",
                 file.id,
                 file.created_at,
-                file.star
+                file.star,
+                file.encrypted
             );
 
             new_clipboards.push(self.download_by_id(&file.provider_id).await?);
@@ -351,10 +354,11 @@ impl SyncProvider for GoogleDriveProviderImpl {
         );
 
         printlog!(
-            "uploading clipboard: {} from {} starred: {}",
+            "uploading clipboard: {} from {} star: {} encrypted: {}",
             clipboard.clipboard.id,
             clipboard.clipboard.created_at,
             clipboard.clipboard.star,
+            clipboard.clipboard.encrypted
         );
 
         let file = File {
@@ -386,30 +390,44 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
     async fn update_clipboard(
         &self,
-        _local_clipboard: &FullClipboardDto,
+        local_clipboard: &FullClipboardDto,
         remote_clipboard: &Clippy,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        // Create new filename based on clipboard properties
         let new_name = create_clipboard_filename(
             &remote_clipboard.id,
-            &remote_clipboard.star,
-            &remote_clipboard.encrypted,
+            &local_clipboard.clipboard.star, // Use local star status
+            &local_clipboard.clipboard.encrypted,
             &remote_clipboard.created_at,
             None,
         );
 
+        printlog!(
+            "updating clipboard: {} from {} star: {} encrypted: {}",
+            remote_clipboard.id,
+            remote_clipboard.created_at,
+            local_clipboard.clipboard.star,
+            local_clipboard.clipboard.encrypted
+        );
+
+        // Create metadata update
         let file = google_drive3::api::File {
             name: Some(new_name),
+            mime_type: Some("application/json".into()),
             ..Default::default()
         };
 
+        // Update the file metadata and content
         self.0
             .hub
             .files()
             .update(file, &remote_clipboard.provider_id)
             .add_scope(Scope::Appdata.as_ref())
-            .doit_without_upload()
-            .await
-            .expect("Failed to rename file");
+            .upload(
+                Cursor::new(serde_json::to_string(&local_clipboard)?),
+                "application/json".parse()?,
+            )
+            .await?;
 
         Ok(())
     }

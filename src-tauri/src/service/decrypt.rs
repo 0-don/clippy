@@ -10,14 +10,11 @@ use crate::{
     tao::{connection::db, global::get_app},
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use common::{
-    printlog,
-    types::{
-        cipher::{EncryptionError, ENCRYPTION_KEY},
-        enums::ListenEvent,
-        orm_query::FullClipboardDto,
-        types::{CommandError, Progress},
-    },
+use common::types::{
+    cipher::{EncryptionError, ENCRYPTION_KEY},
+    enums::ListenEvent,
+    orm_query::FullClipboardDto,
+    types::{CommandError, Progress},
 };
 use entity::clipboard;
 use ring::aead;
@@ -28,7 +25,8 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
     let settings = get_global_settings();
     let db = db().await?;
 
-    let clipboards = load_clipboards_with_relations(
+    // Get all local encrypted clipboards
+    let mut clipboards = load_clipboards_with_relations(
         clipboard::Entity::find()
             .filter(clipboard::Column::Encrypted.eq(true))
             .all(&db)
@@ -36,51 +34,52 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
     )
     .await;
 
-    let (remote_clipboards, provider) = if settings.sync {
+    // Get remote clipboards if sync enabled
+    let (provider, remote_clipboards) = if settings.sync {
         let provider = get_sync_provider().await;
-        (
-            provider
-                .fetch_all_clipboards()
-                .await
-                .expect("Failed to fetch remote clipboards"),
-            Some(provider),
-        )
+        let remote_clipboards = provider
+            .fetch_all_clipboards()
+            .await
+            .expect("Failed to fetch remote clipboards");
+
+        // Add any remote clipboards not in local database
+        for remote in &remote_clipboards {
+            if !clipboards.iter().any(|c| c.clipboard.id == remote.id) && remote.encrypted {
+                if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
+                    clipboards.push(clipboard);
+                }
+            }
+        }
+        (Some(provider), remote_clipboards)
     } else {
-        (Vec::new(), None)
+        (None, Vec::new())
     };
 
-    let total_clipboards = clipboards.len() as u64;
+    let total = clipboards.len();
     for (index, clipboard) in clipboards.into_iter().enumerate() {
-        let decrypted_clipboard =
-            decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
-
-        // Update clipboard in database
-        upsert_clipboard_dto(decrypted_clipboard.clone()).await?;
+        let decrypted = decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
+        upsert_clipboard_dto(decrypted.clone()).await?;
 
         if let Some(provider) = &provider {
-            if let Some(remote_clipboards) = &remote_clipboards
+            if let Some(remote) = remote_clipboards
                 .iter()
-                .find(|c| c.id == decrypted_clipboard.clipboard.id)
+                .find(|r| r.id == decrypted.clipboard.id)
             {
                 provider
-                    .update_clipboard(&decrypted_clipboard, &remote_clipboards)
+                    .update_clipboard(&decrypted, remote)
                     .await
-                    .expect("Failed to upsert clipboard");
+                    .expect("Failed to update remote clipboard");
             }
         }
 
-        let progress = Progress {
-            total: total_clipboards as u64,
-            current: (index + 1) as u64,
-        };
-
-        get_app()
-            .emit_to(
-                EventTarget::any(),
-                ListenEvent::Progress.to_string().as_str(),
-                progress,
-            )
-            .expect("Failed to emit download progress event");
+        get_app().emit_to(
+            EventTarget::any(),
+            ListenEvent::Progress.to_string().as_str(),
+            Progress {
+                total,
+                current: index + 1,
+            },
+        )?;
     }
 
     Ok(())
@@ -197,7 +196,6 @@ pub fn decrypt_data(encrypted_data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
             if looks_like_encrypted_data(encrypted_data) {
                 Err(EncryptionError::InvalidKey)
             } else {
-                printlog!("Data is not encrypted");
                 Err(EncryptionError::NotEncrypted)
             }
         }
@@ -250,7 +248,6 @@ pub fn verify_password(password: String) -> Result<bool, EncryptionError> {
 }
 
 pub fn init_password_lock() {
-    printlog!("Emitting password lock event");
     get_app()
         .emit_to(
             EventTarget::any(),
