@@ -13,7 +13,6 @@ pub fn setup_window_event_listener() {
 
         match event {
             WindowEvent::Focused(true) => {
-                printlog!("window focus");
                 let (tx, rx) = oneshot::channel();
                 *get_window_stop_tx() = Some(tx);
 
@@ -34,7 +33,6 @@ pub fn setup_window_event_listener() {
                 });
             }
             WindowEvent::Focused(false) => {
-                printlog!("window lost focus");
                 tauri::async_runtime::spawn(async {
                     if cfg!(target_os = "linux") {
                         std::thread::sleep(std::time::Duration::from_millis(100));

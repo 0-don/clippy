@@ -27,16 +27,6 @@ pub fn setup_config() {
         serde_json::to_string(&config).expect("Failed to serialize config"),
     )
     .expect("Failed to write config");
-
-    printlog!(
-        "config path {}",
-        get_app()
-            .path()
-            .app_data_dir()
-            .expect("Failed to get app data dir")
-            .to_string_lossy()
-            .to_string()
-    );
 }
 
 pub fn get_data_path() -> DataPath {

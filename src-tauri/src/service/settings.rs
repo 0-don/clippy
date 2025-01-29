@@ -123,11 +123,12 @@ pub async fn update_settings_from_sync(
     let merged_value = match current_value {
         serde_json::Value::Object(mut map) => {
             for (key, value) in settings {
-                // Skip display_scale as it is calculated
+                // Skip display_scale as it is calculated on first time setup
                 if key == "display_scale" {
                     continue;
                 }
 
+                // Skip startup as it users choice
                 if key == "startup" {
                     continue;
                 }

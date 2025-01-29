@@ -8,8 +8,8 @@ pub struct Config {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Progress {
-    pub total: u64,
-    pub current: u64,
+    pub total: usize,
+    pub current: usize,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

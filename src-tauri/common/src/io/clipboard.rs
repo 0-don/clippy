@@ -3,17 +3,14 @@ use tl::{parse, ParserOptions};
 
 pub fn trim_clipboard_data(mut clipboards: Vec<FullClipboardDto>) -> Vec<FullClipboardDto> {
     for clipboard in &mut clipboards {
-        // Trim text content
         if let Some(text) = &mut clipboard.text {
             text.data = truncate_text(&text.data, MAX_TEXT_PREVIEW);
         }
 
-        // Trim HTML content
         if let Some(html) = &mut clipboard.html {
             html.data = extract_and_truncate_html_body(&html.data, MAX_TEXT_PREVIEW);
         }
 
-        // Trim RTF content
         if let Some(rtf) = &mut clipboard.rtf {
             rtf.data = truncate_text(&rtf.data, MAX_TEXT_PREVIEW);
         }
@@ -50,6 +47,6 @@ fn truncate_text(text: &str, max_length: usize) -> String {
     if text.len() <= max_length {
         text.to_string()
     } else {
-        format!("{}...", &text[..max_length])
+        format!("{}", &text[..max_length])
     }
 }

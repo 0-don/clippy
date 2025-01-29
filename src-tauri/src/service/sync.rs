@@ -1,4 +1,4 @@
-use super::settings::{get_global_settings, update_settings_synchronize_db};
+use super::settings::{get_global_settings, get_settings_db, update_settings_synchronize_db};
 use crate::{
     prelude::*,
     tao::global::get_app,
@@ -56,7 +56,10 @@ pub fn get_sync_manager() -> State<'static, Mutex<SyncManager>> {
 
 pub fn setup_sync_interval() {
     tauri::async_runtime::spawn(async {
-        if get_global_settings().sync {
+        // needs to be real db call because of setup race condition in `fn setup_settings()`
+        let settings = get_settings_db().await.expect("Failed to get settings");
+
+        if settings.sync {
             get_sync_manager().lock().await.start().await;
         }
     });

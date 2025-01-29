@@ -153,38 +153,42 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
         .await?;
 
     // Insert text if data exists
-    match &model.text {
-        Some(text) if !text.data.is_empty() => {
-            let text_model: entity::clipboard_text::ActiveModel = text.clone().into();
-            Some(text_model.insert(&db).await?)
-        }
+    match model.text {
+        Some(text) if !text.data.is_empty() => Some(
+            entity::clipboard_text::ActiveModel::from(text)
+                .insert(&db)
+                .await?,
+        ),
         _ => None,
     };
 
     // Insert html if data exists
-    match &model.html {
-        Some(html) if !html.data.is_empty() => {
-            let html_model: entity::clipboard_html::ActiveModel = html.clone().into();
-            Some(html_model.insert(&db).await?)
-        }
+    match model.html {
+        Some(html) if !html.data.is_empty() => Some(
+            entity::clipboard_html::ActiveModel::from(html)
+                .insert(&db)
+                .await?,
+        ),
         _ => None,
     };
 
     // Insert image if data exists
-    match &model.image {
-        Some(image) if !image.data.is_empty() => {
-            let image_model: entity::clipboard_image::ActiveModel = image.clone().into();
-            Some(image_model.insert(&db).await?)
-        }
+    match model.image {
+        Some(image) if !image.data.is_empty() => Some(
+            entity::clipboard_image::ActiveModel::from(image)
+                .insert(&db)
+                .await?,
+        ),
         _ => None,
     };
 
     // Insert rtf if data exists
-    match &model.rtf {
-        Some(rtf) if !rtf.data.is_empty() => {
-            let rtf_model: entity::clipboard_rtf::ActiveModel = rtf.clone().into();
-            Some(rtf_model.insert(&db).await?)
-        }
+    match model.rtf {
+        Some(rtf) if !rtf.data.is_empty() => Some(
+            entity::clipboard_rtf::ActiveModel::from(rtf)
+                .insert(&db)
+                .await?,
+        ),
         _ => None,
     };
 
@@ -192,8 +196,11 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     if !model.files.is_empty() {
         let mut files = Vec::new();
         for file in model.files {
-            let file_model: entity::clipboard_file::ActiveModel = file.clone().into();
-            files.push(file_model.insert(&db).await?);
+            files.push(
+                entity::clipboard_file::ActiveModel::from(file)
+                    .insert(&db)
+                    .await?,
+            );
         }
     }
 
@@ -338,7 +345,7 @@ pub async fn get_clipboards_db(
         .order_by_desc(clipboard::Column::CreatedAt);
 
     let clipboards = query.all(&db).await?;
-    // printlog!("clipboards: {:?}", clipboards);
+
     Ok(load_clipboards_with_relations(clipboards).await)
 }
 
@@ -693,7 +700,7 @@ pub fn new_clipboard_event(mut clipboard: FullClipboardDto) {
     get_main_window()
         .emit(
             ListenEvent::NewClipboard.to_string().as_str(),
-            trim_clipboard_data(vec![clipboard]).get(0),
+            trim_clipboard_data(vec![clipboard]).remove(0),
         )
         .expect("Failed to emit event");
 }
