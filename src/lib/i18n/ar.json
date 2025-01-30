@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "تأكيد كلمة المرور",
 			"DECRYPT": "فك تشفير جميع الحافظات",
-			"DECRYPTION_PROGRESS": "تم فك تشفير{{current}} من {{total}} من الحافظات",
+			"DECRYPTION_PROGRESS_LOCAL": "تم فك تشفير{{current}} من {{total}} حافظة محليًا",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} من {{total}} تنزيل الحافظات عن بعد",
 			"ENCRYPT": "تشفير كافة الحافظات",
 			"ENCRYPT_DECRYPT": "تشفير / فك التشفير",
-			"ENCRYPTION_PROGRESS": "تم تشفير{{current}} من {{total}} من الحافظات",
+			"ENCRYPTION_PROGRESS_LOCAL": "يتم تشفير{{current}} من {{total}} حافظة محليًا",
 			"INFO": "يتم تشفير جميع الحافظات، وفي حالة فقدان كلمة المرور، لا يمكن استعادة أي شيء",
 			"PASSWORD": "كلمة المرور"
 		},

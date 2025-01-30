@@ -11,7 +11,7 @@ import { useLanguage } from "../provider/language-provider";
 import { Button } from "./button";
 import { Input } from "./input";
 
-const PasswordLock: Component = () => {
+export const PasswordLock: Component = () => {
   const { t } = useLanguage();
   const [loading, setLoading] = createSignal(false);
   const [error, setError] = createSignal("");
@@ -62,5 +62,3 @@ const PasswordLock: Component = () => {
     </div>
   );
 };
-
-export default PasswordLock;

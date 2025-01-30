@@ -1,6 +1,6 @@
-use super::clipboard::load_clipboards_with_relations;
+use super::clipboard::{init_clipboards, load_clipboards_with_relations};
 use super::decrypt::init_password_lock;
-use super::sync::get_sync_provider;
+use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
 use crate::service::clipboard::upsert_clipboard_dto;
 use crate::service::settings::get_global_settings;
@@ -17,7 +17,22 @@ use ring::{aead, rand};
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use tauri::{Emitter, EventTarget};
 
-pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
+pub async fn encrypt_all_clipboards(full: bool) -> Result<(), CommandError> {
+    if full {
+        encrypt_all_clipboards_internal().await
+    } else {
+        // Spawn a new task to run in a separate thread if `full` is false
+        tauri::async_runtime::spawn(async {
+            if let Err(e) = encrypt_all_clipboards_internal().await {
+                eprintln!("Error encrypting clipboards: {:?}", e);
+            }
+        });
+
+        Ok(())
+    }
+}
+
+async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
     let settings = get_global_settings();
     let db = db().await?;
 
@@ -32,18 +47,34 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
 
     // Get remote clipboards if sync enabled
     let (provider, remote_clipboards) = if settings.sync {
+        // Stop the sync manager before making changes
+        get_sync_manager().lock().await.stop().await;
+
         let provider = get_sync_provider().await;
         let remote_clipboards = provider
             .fetch_all_clipboards()
             .await
             .expect("Failed to fetch remote clipboards");
 
-        // Add any remote clipboards not in local database
-        for remote in &remote_clipboards {
-            if !clipboards.iter().any(|c| c.clipboard.id == remote.id) && !remote.encrypted {
-                if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
-                    clipboards.push(clipboard);
-                }
+        // Download all remote clipboards with progress logging
+        let download_total = remote_clipboards.len();
+        for (index, remote) in remote_clipboards.iter().enumerate() {
+            if remote.encrypted {
+                continue;
+            }
+
+            if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
+                clipboards.push(clipboard);
+
+                get_app().emit_to(
+                    EventTarget::any(),
+                    ListenEvent::Progress.to_string().as_str(),
+                    Progress {
+                        label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
+                        total: download_total,
+                        current: index + 1,
+                    },
+                )?;
             }
         }
         (Some(provider), remote_clipboards)
@@ -72,11 +103,18 @@ pub async fn encrypt_all_clipboards() -> Result<(), CommandError> {
             EventTarget::any(),
             ListenEvent::Progress.to_string().as_str(),
             Progress {
+                label: "SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS_LOCAL".to_string(),
                 total,
                 current: index + 1,
             },
         )?;
     }
+
+    if settings.sync && provider.is_some() {
+        get_sync_manager().lock().await.start().await;
+    }
+
+    init_clipboards();
 
     Ok(())
 }

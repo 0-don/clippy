@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "パスワードを認証する",
 			"DECRYPT": "すべてのクリップボードを復号化する",
-			"DECRYPTION_PROGRESS": " {{total}} 個のクリップボードから{{current}} 個が復号化されました",
+			"DECRYPTION_PROGRESS_LOCAL": " {{total}} 個のクリップボードの{{current}} がローカルで復号化されました",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": " {{total}} の{{current}} がリモート クリップボードをダウンロードしています",
 			"ENCRYPT": "すべてのクリップボードを暗号化",
 			"ENCRYPT_DECRYPT": "暗号化/復号化",
-			"ENCRYPTION_PROGRESS": " {{total}} 個のクリップボードの{{current}} が暗号化されています",
+			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} 個のクリップボードの{{current}} はローカルで暗号化されています",
 			"INFO": "すべてのクリップボードは暗号化されており、パスワードを紛失した場合は何も復元できません。",
 			"PASSWORD": "パスワード"
 		},

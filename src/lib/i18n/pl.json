@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Potwierdź hasło",
 			"DECRYPT": "Odszyfruj wszystkie schowki",
-			"DECRYPTION_PROGRESS": "{{current}} z {{total}} schowków zostało odszyfrowanych",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} z {{total}} schowków jest odszyfrowywanych lokalnie",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} z {{total}} pobieranie zdalnych schowków",
 			"ENCRYPT": "Zaszyfruj wszystkie schowki",
 			"ENCRYPT_DECRYPT": "Szyfruj / Odszyfruj",
-			"ENCRYPTION_PROGRESS": "{{current}} z {{total}} schowków jest zaszyfrowanych",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} z {{total}} schowków jest szyfrowanych lokalnie",
 			"INFO": "Wszystkie schowki są szyfrowane, jeśli hasło zostanie utracone, nie będzie można go odzyskać",
 			"PASSWORD": "Hasło"
 		},

@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Şifreyi Onayla",
 			"DECRYPT": "Tüm panoları şifresini çöz",
-			"DECRYPTION_PROGRESS": "{{current}} panodan {{total}} şifresi çözüldü",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}}  {{total}} panodan yerel olarak şifresi çözülüyor",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}}  {{total}} 'den uzak panoları indiriyor",
 			"ENCRYPT": "Tüm panoları şifrele",
 			"ENCRYPT_DECRYPT": "Şifrele / Şifresini çöz",
-			"ENCRYPTION_PROGRESS": "{{current}} panodan {{total}} şifrelendi",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}}  {{total}} panodan yerel olarak şifrelenir",
 			"INFO": "Tüm panolar şifrelenmiştir, şifre kaybolduğunda hiçbir şey geri yüklenemez",
 			"PASSWORD": "Şifre"
 		},

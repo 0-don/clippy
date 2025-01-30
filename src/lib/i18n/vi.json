@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Xác nhận mật khẩu",
 			"DECRYPT": "Giải mã tất cả các clipboard",
-			"DECRYPTION_PROGRESS": "{{current}} từ {{total}} clipboard được giải mã",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} từ {{total}} clipboard được giải mã cục bộ",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} từ {{total}} tải xuống bảng tạm từ xa",
 			"ENCRYPT": "Mã hóa tất cả các clipboard",
 			"ENCRYPT_DECRYPT": "Mã hóa / Giải mã",
-			"ENCRYPTION_PROGRESS": "{{current}} từ {{total}} clipboard được mã hóa",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} từ {{total}} clipboard được mã hóa cục bộ",
 			"INFO": "Tất cả các bảng tạm đều được mã hóa, nếu mất mật khẩu thì không thể khôi phục lại được",
 			"PASSWORD": "Mật khẩu"
 		},

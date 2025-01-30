@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "确认密码",
 			"DECRYPT": "解密所有剪贴板",
-			"DECRYPTION_PROGRESS": "来自 {{total}} 个剪贴板的{{current}} 已解密",
+			"DECRYPTION_PROGRESS_LOCAL": "来自 {{total}} 个剪贴板的{{current}} 已在本地解密",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} （来自 {{total}} ）正在下载远程剪贴板",
 			"ENCRYPT": "加密所有剪贴板",
 			"ENCRYPT_DECRYPT": "加密/解密",
-			"ENCRYPTION_PROGRESS": "来自 {{total}} 个剪贴板的{{current}} 已加密",
+			"ENCRYPTION_PROGRESS_LOCAL": "来自 {{total}} 个剪贴板的{{current}} 已在本地加密",
 			"INFO": "所有剪贴板都已加密，如果密码丢失则无法恢复",
 			"PASSWORD": "密码"
 		},

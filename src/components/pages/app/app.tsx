@@ -3,13 +3,13 @@ import { FiGlobe } from "solid-icons/fi";
 import { Show } from "solid-js";
 import { AppStore } from "../../../store/app-store";
 import { SettingsStore } from "../../../store/settings-store";
-import PasswordLock from "../../elements/password-lock";
 import { AppSidebar } from "../../navigation/app-sidebar";
 import { useLanguage } from "../../provider/language-provider";
 import { ClipboardHistory } from "./clipboard-history";
 import { RecentClipboards } from "./recent-clipboards";
 import { StarredClipboards } from "./starred-clipboards";
 import { ViewMore } from "./view-more";
+import { PasswordLock } from "../../elements/password-lock";
 
 function App() {
   const { t } = useLanguage();

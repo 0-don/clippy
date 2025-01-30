@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "পাসওয়ার্ড নিশ্চিত করুন",
 			"DECRYPT": "সমস্ত ক্লিপবোর্ড ডিক্রিপ্ট করুন",
-			"DECRYPTION_PROGRESS": " {{total}} থেকে{{current}} ক্লিপবোর্ডগুলি ডিক্রিপ্ট করা হয়েছে৷",
+			"DECRYPTION_PROGRESS_LOCAL": " {{total}} থেকে{{current}} ক্লিপবোর্ডগুলি স্থানীয়ভাবে ডিক্রিপ্ট করা হয়েছে৷",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": " দূরবর্তী ক্লিপবোর্ড ডাউনলোড করা {{total}} থেকে{{current}} ",
 			"ENCRYPT": "সমস্ত ক্লিপবোর্ড এনক্রিপ্ট করুন",
 			"ENCRYPT_DECRYPT": "এনক্রিপ্ট/ডিক্রিপ্ট",
-			"ENCRYPTION_PROGRESS": " {{total}} থেকে{{current}} ক্লিপবোর্ডগুলি এনক্রিপ্ট করা হয়েছে৷",
+			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} থেকে{{current}} ক্লিপবোর্ডগুলি স্থানীয়ভাবে এনক্রিপ্ট করা হয়েছে৷",
 			"INFO": "সমস্ত ক্লিপবোর্ড এনক্রিপ্ট করা হয়েছে, পাসওয়ার্ড হারিয়ে গেলে কিছুই পুনরুদ্ধার করা যাবে না",
 			"PASSWORD": "পাসওয়ার্ড"
 		},

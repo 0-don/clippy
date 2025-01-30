@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "ยืนยันรหัสผ่าน",
 			"DECRYPT": "ถอดรหัสคลิปบอร์ดทั้งหมด",
-			"DECRYPTION_PROGRESS": "{{current}} จากคลิปบอร์ด {{total}} ถูกถอดรหัสแล้ว",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} จากคลิปบอร์ด {{total}} ถูกถอดรหัสแล้ว",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} จาก {{total}} กำลังดาวน์โหลดคลิปบอร์ดระยะไกล",
 			"ENCRYPT": "เข้ารหัสคลิปบอร์ดทั้งหมด",
 			"ENCRYPT_DECRYPT": "เข้ารหัส / ถอดรหัส",
-			"ENCRYPTION_PROGRESS": "{{current}} จากคลิปบอร์ด {{total}} ถูกเข้ารหัส",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} จากคลิปบอร์ด {{total}} ถูกเข้ารหัสภายในเครื่อง",
 			"INFO": "คลิปบอร์ดทั้งหมดได้รับการเข้ารหัส หากลืมรหัสผ่าน จะไม่สามารถเรียกคืนอะไรได้",
 			"PASSWORD": "รหัสผ่าน"
 		},

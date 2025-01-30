@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "پاس ورڈ کی تصدیق کریں۔",
 			"DECRYPT": "تمام کلپ بورڈز کو ڈکرپٹ کریں۔",
-			"DECRYPTION_PROGRESS": "{{current}} سے {{total}} کلپ بورڈز کو ڈکرپٹ کیا گیا ہے۔",
+			"DECRYPTION_PROGRESS_LOCAL": " {{total}} سے{{current}} کلپ بورڈز کو مقامی طور پر ڈکرپٹ کیا جاتا ہے۔",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": " ریموٹ کلپ بورڈز ڈاؤن لوڈ کرنے سے {{total}} سے{{current}} ",
 			"ENCRYPT": "تمام کلپ بورڈز کو خفیہ کریں۔",
 			"ENCRYPT_DECRYPT": "خفیہ کرنا / خفیہ کرنا",
-			"ENCRYPTION_PROGRESS": "{{current}} سے {{total}} کلپ بورڈز مرموز ہیں۔",
+			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} سے{{current}} کلپ بورڈز مقامی طور پر مرموز ہیں۔",
 			"INFO": "تمام کلپ بورڈز انکرپٹڈ ہیں، اگر پاس ورڈ کھو جائے تو کچھ بھی بحال نہیں کیا جا سکتا",
 			"PASSWORD": "پاس ورڈ"
 		},
