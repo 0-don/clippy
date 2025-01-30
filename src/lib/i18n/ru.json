@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Подтвердите пароль",
 			"DECRYPT": "Расшифровать все буферы обмена",
-			"DECRYPTION_PROGRESS": "Расшифровано{{current}} из {{total}} буферов обмена",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} из {{total}} буферов обмена расшифровываются локально",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} из {{total}} загружает удаленные буферы обмена",
 			"ENCRYPT": "Зашифровать все буферы обмена",
 			"ENCRYPT_DECRYPT": "Шифровать/Расшифровывать",
-			"ENCRYPTION_PROGRESS": "{{current}} из {{total}} буферов обмена зашифрованы",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} из {{total}} буферов обмена зашифрованы локально",
 			"INFO": "Все буферы обмена зашифрованы, если пароль утерян, восстановить ничего нельзя.",
 			"PASSWORD": "Пароль"
 		},

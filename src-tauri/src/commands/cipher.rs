@@ -1,6 +1,6 @@
 use crate::{
     service::{
-        clipboard::{init_clipboards, load_clipboards_with_relations},
+        clipboard::load_clipboards_with_relations,
         decrypt::{clear_encryption_key, decrypt_clipboard, remove_encryption},
         encrypt::{encrypt_all_clipboards, is_key_set, set_encryption_key},
         settings::{get_global_settings, update_settings_db},
@@ -37,8 +37,7 @@ pub async fn password_unlock(password: String) -> Result<(), CommandError> {
             }
         })?;
 
-        encrypt_all_clipboards().await?;
-        init_clipboards();
+        encrypt_all_clipboards(false).await?;
     } else {
         remove_encryption(password).await?;
     }
@@ -61,7 +60,7 @@ pub async fn enable_encryption(
 
     set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
 
-    encrypt_all_clipboards().await?;
+    encrypt_all_clipboards(true).await?;
 
     let mut settings = get_global_settings();
     settings.encryption = true;

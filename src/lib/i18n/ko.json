@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "비밀번호 확인",
 			"DECRYPT": "모든 클립보드를 해독합니다",
-			"DECRYPTION_PROGRESS": " {{total}} 개 클립보드 중{{current}} 개가 해독되었습니다.",
+			"DECRYPTION_PROGRESS_LOCAL": " {{total}} 개의 클립보드 중{{current}} 개가 로컬에서 복호화됩니다.",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": " {{total}} 에서{{current}} 원격 클립보드 다운로드 중",
 			"ENCRYPT": "모든 클립보드 암호화",
 			"ENCRYPT_DECRYPT": "암호화 / 복호화",
-			"ENCRYPTION_PROGRESS": " {{total}} 개 클립보드 중{{current}} 개가 암호화되었습니다.",
+			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} 개의 클립보드 중{{current}} 개가 로컬로 암호화됩니다.",
 			"INFO": "모든 클립보드는 암호화되어 있으므로 비밀번호를 분실하면 아무것도 복구할 수 없습니다.",
 			"PASSWORD": "비밀번호"
 		},

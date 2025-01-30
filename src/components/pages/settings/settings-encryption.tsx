@@ -1,7 +1,7 @@
 import { AiFillLock, AiFillUnlock } from "solid-icons/ai";
 import { BsFileEarmarkLock2Fill } from "solid-icons/bs";
 import { ImSpinner } from "solid-icons/im";
-import { Component, createSignal, Show } from "solid-js";
+import { Component, createEffect, createSignal, Show } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { cn } from "../../../lib/utils";
@@ -70,6 +70,9 @@ const Encrypt: Component = ({}) => {
 
   listenEvent(ListenEvent.Progress, setEncryptionProgress);
 
+  createEffect(() => {
+    console.log(encryptionProgress());
+  });
   return (
     <form class="flex flex-col gap-2" onSubmit={onSubmit}>
       <div>
@@ -99,10 +102,12 @@ const Encrypt: Component = ({}) => {
         label={
           !loading()
             ? "SETTINGS.ENCRYPT.ENCRYPT"
-            : (t("SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS", {
-                current: encryptionProgress()?.current || 0,
-                total: encryptionProgress()?.total || 0,
-              }) as DictionaryKey)
+            : encryptionProgress()
+              ? (t(encryptionProgress()!.label, {
+                  current: encryptionProgress()?.current || 0,
+                  total: encryptionProgress()?.total || 0,
+                }) as DictionaryKey)
+              : "SETTINGS.ENCRYPT.ENCRYPT"
         }
       />
     </form>
@@ -135,6 +140,10 @@ const Decrypt: Component = ({}) => {
 
   listenEvent(ListenEvent.Progress, setEncryptionProgress);
 
+  createEffect(() => {
+    console.log(encryptionProgress());
+  });
+
   return (
     <form class="flex flex-col gap-1" onSubmit={onSubmit}>
       <div>
@@ -159,10 +168,12 @@ const Decrypt: Component = ({}) => {
         label={
           !loading()
             ? "SETTINGS.ENCRYPT.DECRYPT"
-            : (t("SETTINGS.ENCRYPT.DECRYPTION_PROGRESS", {
-                current: encryptionProgress()?.current || 0,
-                total: encryptionProgress()?.total || 0,
-              }) as DictionaryKey)
+            : encryptionProgress()
+              ? (t(encryptionProgress()!.label, {
+                  current: encryptionProgress()?.current || 0,
+                  total: encryptionProgress()?.total || 0,
+                }) as DictionaryKey)
+              : "SETTINGS.ENCRYPT.DECRYPT"
         }
       />
     </form>

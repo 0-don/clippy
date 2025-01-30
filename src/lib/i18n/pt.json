@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Confirme a sua senha",
 			"DECRYPT": "Descriptografar todas as áreas de transferência",
-			"DECRYPTION_PROGRESS": "{{current}} de {{total}} áreas de transferência são descriptografadas",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} de {{total}} áreas de transferência são descriptografadas localmente",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} de {{total}} baixando áreas de transferência remotas",
 			"ENCRYPT": "Criptografar todas as áreas de transferência",
 			"ENCRYPT_DECRYPT": "Criptografar / Descriptografar",
-			"ENCRYPTION_PROGRESS": "{{current}} de {{total}} áreas de transferência são criptografadas",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} de {{total}} áreas de transferência são criptografadas localmente",
 			"INFO": "Todas as áreas de transferência são criptografadas, se a senha for perdida, nada pode ser restaurado",
 			"PASSWORD": "Senha"
 		},

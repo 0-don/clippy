@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Bestätige das Passwort",
 			"DECRYPT": "Alle Zwischenablagen entschlüsseln",
-			"DECRYPTION_PROGRESS": "{{current}} aus {{total}} Zwischenablagen werden entschlüsselt",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal entschlüsselt",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} von {{total}} lädt Remote-Zwischenablagen herunter",
 			"ENCRYPT": "Alle Zwischenablagen verschlüsseln",
 			"ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
-			"ENCRYPTION_PROGRESS": "{{current}} aus {{total}} Zwischenablagen sind verschlüsselt",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal verschlüsselt",
 			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden",
 			"PASSWORD": "Passwort"
 		},

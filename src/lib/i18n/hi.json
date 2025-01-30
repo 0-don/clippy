@@ -116,10 +116,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "पासवर्ड की पुष्टि कीजिये",
 			"DECRYPT": "सभी क्लिपबोर्ड को डिक्रिप्ट करें",
-			"DECRYPTION_PROGRESS": " {{total}} क्लिपबोर्ड में से{{current}} को डिक्रिप्ट किया गया है",
+			"DECRYPTION_PROGRESS_LOCAL": " {{total}} क्लिपबोर्ड में से{{current}} को स्थानीय रूप से डिक्रिप्ट किया जाता है",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} से {{total}} दूरस्थ क्लिपबोर्ड डाउनलोड करना",
 			"ENCRYPT": "सभी क्लिपबोर्ड एन्क्रिप्ट करें",
 			"ENCRYPT_DECRYPT": "एन्क्रिप्ट / डिक्रिप्ट",
-			"ENCRYPTION_PROGRESS": " {{total}} क्लिपबोर्ड में से{{current}} एन्क्रिप्टेड हैं",
+			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} क्लिपबोर्ड में से{{current}} स्थानीय रूप से एन्क्रिप्ट किए गए हैं",
 			"INFO": "सभी क्लिपबोर्ड एन्क्रिप्टेड हैं, यदि पासवर्ड खो जाए तो कुछ भी पुनर्स्थापित नहीं किया जा सकता",
 			"PASSWORD": "पासवर्ड"
 		},

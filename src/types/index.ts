@@ -9,6 +9,7 @@ export type DatabaseInfo = {
 };
 
 export interface Progress {
+  label: DictionaryKey;
   total: number;
   current: number;
 }

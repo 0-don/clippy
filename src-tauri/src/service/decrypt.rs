@@ -2,7 +2,7 @@ use super::{
     clipboard::load_clipboards_with_relations,
     encrypt::{is_key_set, looks_like_encrypted_data},
     settings::{get_global_settings, update_settings_db},
-    sync::get_sync_provider,
+    sync::{get_sync_manager, get_sync_provider},
 };
 use crate::{
     prelude::*,
@@ -36,18 +36,34 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
     // Get remote clipboards if sync enabled
     let (provider, remote_clipboards) = if settings.sync {
+        // Stop the sync manager before making changes
+        get_sync_manager().lock().await.stop().await;
+
         let provider = get_sync_provider().await;
         let remote_clipboards = provider
             .fetch_all_clipboards()
             .await
             .expect("Failed to fetch remote clipboards");
 
-        // Add any remote clipboards not in local database
-        for remote in &remote_clipboards {
-            if !clipboards.iter().any(|c| c.clipboard.id == remote.id) && remote.encrypted {
-                if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
-                    clipboards.push(clipboard);
-                }
+        // Download all remote clipboards with progress logging
+        let download_total = remote_clipboards.len();
+        for (index, remote) in remote_clipboards.iter().enumerate() {
+            if !remote.encrypted {
+                continue;
+            }
+
+            if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
+                clipboards.push(clipboard);
+
+                get_app().emit_to(
+                    EventTarget::any(),
+                    ListenEvent::Progress.to_string().as_str(),
+                    Progress {
+                        label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
+                        total: download_total,
+                        current: index + 1,
+                    },
+                )?;
             }
         }
         (Some(provider), remote_clipboards)
@@ -76,10 +92,15 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
             EventTarget::any(),
             ListenEvent::Progress.to_string().as_str(),
             Progress {
+                label: "SETTINGS.ENCRYPT.DECRYPTION_PROGRESS".to_string(),
                 total,
                 current: index + 1,
             },
         )?;
+    }
+
+    if settings.sync && provider.is_some() {
+        get_sync_manager().lock().await.start().await;
     }
 
     Ok(())
