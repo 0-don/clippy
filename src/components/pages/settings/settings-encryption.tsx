@@ -1,7 +1,7 @@
 import { AiFillLock, AiFillUnlock } from "solid-icons/ai";
 import { BsFileEarmarkLock2Fill } from "solid-icons/bs";
 import { ImSpinner } from "solid-icons/im";
-import { Component, createEffect, createSignal, Show } from "solid-js";
+import { Component, createSignal, Show } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { cn } from "../../../lib/utils";
@@ -70,9 +70,6 @@ const Encrypt: Component = ({}) => {
 
   listenEvent(ListenEvent.Progress, setEncryptionProgress);
 
-  createEffect(() => {
-    console.log(encryptionProgress());
-  });
   return (
     <form class="flex flex-col gap-2" onSubmit={onSubmit}>
       <div>
@@ -139,10 +136,6 @@ const Decrypt: Component = ({}) => {
   };
 
   listenEvent(ListenEvent.Progress, setEncryptionProgress);
-
-  createEffect(() => {
-    console.log(encryptionProgress());
-  });
 
   return (
     <form class="flex flex-col gap-1" onSubmit={onSubmit}>

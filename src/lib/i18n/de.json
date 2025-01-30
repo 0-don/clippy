@@ -82,6 +82,8 @@
 			"VI": "Vietnamesisch",
 			"ZH": "Mandarin"
 		},
+		"OFFLINE": "Offline",
+		"ONLINE": "Online",
 		"POSITION": {
 			"BOTTOM_CENTER": "Unten in der Mitte",
 			"BOTTOM_LEFT": "Unten links",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "Ablage links",
 			"TRAY_RIGHT": "Ablage rechts"
 		},
+		"SYNCING": "Synchronisieren",
 		"UNLOCK_CLIPPY": "Clippy freischalten"
 	},
 	"SETTINGS": {

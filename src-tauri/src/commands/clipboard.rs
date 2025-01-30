@@ -36,7 +36,14 @@ pub async fn get_clipboards(
             .into_iter()
             .map(|clipboard| {
                 if clipboard.clipboard.encrypted {
-                    decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard")
+                    match decrypt_clipboard(clipboard.clone()) {
+                        Ok(decrypted) => decrypted,
+                        Err(e) => {
+                            // Log the error but return the original encrypted clipboard
+                            printlog!("Failed to decrypt clipboard: {:?}", e);
+                            clipboard
+                        }
+                    }
                 } else {
                     clipboard
                 }

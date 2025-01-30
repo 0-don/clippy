@@ -1,3 +1,5 @@
+use std::thread::sleep;
+
 use super::{
     clipboard::load_clipboards_with_relations,
     encrypt::{is_key_set, looks_like_encrypted_data},
@@ -48,22 +50,22 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
         // Download all remote clipboards with progress logging
         let download_total = remote_clipboards.len();
         for (index, remote) in remote_clipboards.iter().enumerate() {
+            get_app().emit_to(
+                EventTarget::any(),
+                ListenEvent::Progress.to_string().as_str(),
+                Progress {
+                    label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
+                    total: download_total,
+                    current: index + 1,
+                },
+            )?;
+
             if !remote.encrypted {
                 continue;
             }
 
             if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
                 clipboards.push(clipboard);
-
-                get_app().emit_to(
-                    EventTarget::any(),
-                    ListenEvent::Progress.to_string().as_str(),
-                    Progress {
-                        label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
-                        total: download_total,
-                        current: index + 1,
-                    },
-                )?;
             }
         }
         (Some(provider), remote_clipboards)
@@ -73,21 +75,6 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
     let total = clipboards.len();
     for (index, clipboard) in clipboards.into_iter().enumerate() {
-        let decrypted = decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
-        upsert_clipboard_dto(decrypted.clone()).await?;
-
-        if let Some(provider) = &provider {
-            if let Some(remote) = remote_clipboards
-                .iter()
-                .find(|r| r.id == decrypted.clipboard.id)
-            {
-                provider
-                    .update_clipboard(&decrypted, remote)
-                    .await
-                    .expect("Failed to update remote clipboard");
-            }
-        }
-
         get_app().emit_to(
             EventTarget::any(),
             ListenEvent::Progress.to_string().as_str(),
@@ -97,10 +84,53 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
                 current: index + 1,
             },
         )?;
+        match decrypt_clipboard(clipboard.clone()) {
+            Ok(decrypted) => {
+                upsert_clipboard_dto(decrypted.clone()).await?;
+
+                if let Some(provider) = &provider {
+                    if let Some(remote) = remote_clipboards
+                        .iter()
+                        .find(|r| r.id == decrypted.clipboard.id)
+                    {
+                        provider
+                            .update_clipboard(&decrypted, remote)
+                            .await
+                            .expect("Failed to update remote clipboard");
+                    }
+                }
+            }
+            Err(e) => {
+                printlog!(
+                    "Failed to decrypt clipboard {}: {:?}",
+                    clipboard.clipboard.id,
+                    e
+                );
+
+                // Delete locally
+                clipboard::Entity::delete_by_id(clipboard.clipboard.id)
+                    .exec(&db)
+                    .await?;
+
+                // Mark for deletion remotely if sync is enabled
+                if let Some(provider) = &provider {
+                    if let Some(remote) = remote_clipboards
+                        .iter()
+                        .find(|r| r.id == clipboard.clipboard.id)
+                    {
+                        provider.mark_for_deletion(remote).await;
+                    }
+                }
+            }
+        }
     }
 
     if settings.sync && provider.is_some() {
-        get_sync_manager().lock().await.start().await;
+        // race condition with settings sync
+        tauri::async_runtime::spawn(async {
+            sleep(std::time::Duration::from_secs(5));
+            get_sync_manager().lock().await.start().await;
+        });
     }
 
     Ok(())
@@ -114,70 +144,251 @@ pub fn decrypt_clipboard(
     }
 
     if let Some(text) = &mut clipboard.text {
-        let decoded = STANDARD
-            .decode(&text.data)
-            .map_err(|_| EncryptionError::DecryptionFailed)?;
-        let decrypted = decrypt_data(&decoded)?;
-        text.data = String::from_utf8(decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
+        match STANDARD.decode(&text.data) {
+            Ok(decoded) => {
+                match decrypt_data(&decoded) {
+                    Ok(decrypted) => {
+                        match String::from_utf8(decrypted) {
+                            Ok(str_data) => text.data = str_data,
+                            Err(e) => {
+                                printlog!("Failed to convert decrypted text to UTF-8 for clipboard {}: {}", clipboard.clipboard.id, e);
+                                return Err(EncryptionError::DecryptionFailed);
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        printlog!(
+                            "Failed to decrypt text data for clipboard {}: {:?}",
+                            clipboard.clipboard.id,
+                            e
+                        );
+                        return Err(e);
+                    }
+                }
+            }
+            Err(e) => {
+                printlog!(
+                    "Failed to base64 decode text for clipboard {}: {}",
+                    clipboard.clipboard.id,
+                    e
+                );
+                return Err(EncryptionError::DecryptionFailed);
+            }
+        }
     }
 
     if let Some(html) = &mut clipboard.html {
-        let decoded = STANDARD
-            .decode(&html.data)
-            .map_err(|_| EncryptionError::DecryptionFailed)?;
-        let decrypted = decrypt_data(&decoded)?;
-        html.data = String::from_utf8(decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
+        match STANDARD.decode(&html.data) {
+            Ok(decoded) => {
+                match decrypt_data(&decoded) {
+                    Ok(decrypted) => {
+                        match String::from_utf8(decrypted) {
+                            Ok(str_data) => html.data = str_data,
+                            Err(e) => {
+                                printlog!("Failed to convert decrypted HTML to UTF-8 for clipboard {}: {}", clipboard.clipboard.id, e);
+                                return Err(EncryptionError::DecryptionFailed);
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        printlog!(
+                            "Failed to decrypt HTML data for clipboard {}: {:?}",
+                            clipboard.clipboard.id,
+                            e
+                        );
+                        return Err(e);
+                    }
+                }
+            }
+            Err(e) => {
+                printlog!(
+                    "Failed to base64 decode HTML for clipboard {}: {}",
+                    clipboard.clipboard.id,
+                    e
+                );
+                return Err(EncryptionError::DecryptionFailed);
+            }
+        }
     }
 
     if let Some(rtf) = &mut clipboard.rtf {
-        let decoded = STANDARD
-            .decode(&rtf.data)
-            .map_err(|_| EncryptionError::DecryptionFailed)?;
-        let decrypted = decrypt_data(&decoded)?;
-        rtf.data = String::from_utf8(decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
+        match STANDARD.decode(&rtf.data) {
+            Ok(decoded) => match decrypt_data(&decoded) {
+                Ok(decrypted) => match String::from_utf8(decrypted) {
+                    Ok(str_data) => rtf.data = str_data,
+                    Err(e) => {
+                        printlog!(
+                            "Failed to convert decrypted RTF to UTF-8 for clipboard {}: {}",
+                            clipboard.clipboard.id,
+                            e
+                        );
+                        return Err(EncryptionError::DecryptionFailed);
+                    }
+                },
+                Err(e) => {
+                    printlog!(
+                        "Failed to decrypt RTF data for clipboard {}: {:?}",
+                        clipboard.clipboard.id,
+                        e
+                    );
+                    return Err(e);
+                }
+            },
+            Err(e) => {
+                printlog!(
+                    "Failed to base64 decode RTF for clipboard {}: {}",
+                    clipboard.clipboard.id,
+                    e
+                );
+                return Err(EncryptionError::DecryptionFailed);
+            }
+        }
     }
 
     if let Some(image) = &mut clipboard.image {
-        image.data = decrypt_data(&image.data)?;
+        match decrypt_data(&image.data) {
+            Ok(decrypted) => image.data = decrypted,
+            Err(e) => {
+                printlog!(
+                    "Failed to decrypt image data for clipboard {}: {:?}",
+                    clipboard.clipboard.id,
+                    e
+                );
+                return Err(e);
+            }
+        }
 
-        let thumbnail_decoded = STANDARD
-            .decode(&image.thumbnail)
-            .map_err(|_| EncryptionError::DecryptionFailed)?;
-        let thumbnail_decrypted = decrypt_data(&thumbnail_decoded)?;
-        image.thumbnail = STANDARD.encode(thumbnail_decrypted);
+        match STANDARD.decode(&image.thumbnail) {
+            Ok(thumbnail_decoded) => match decrypt_data(&thumbnail_decoded) {
+                Ok(thumbnail_decrypted) => image.thumbnail = STANDARD.encode(thumbnail_decrypted),
+                Err(e) => {
+                    printlog!(
+                        "Failed to decrypt image thumbnail for clipboard {}: {:?}",
+                        clipboard.clipboard.id,
+                        e
+                    );
+                    return Err(e);
+                }
+            },
+            Err(e) => {
+                printlog!(
+                    "Failed to base64 decode image thumbnail for clipboard {}: {}",
+                    clipboard.clipboard.id,
+                    e
+                );
+                return Err(EncryptionError::DecryptionFailed);
+            }
+        }
     }
 
     if !clipboard.files.is_empty() {
-        for file in &mut clipboard.files {
-            let name_decoded = STANDARD
-                .decode(&file.name)
-                .map_err(|_| EncryptionError::DecryptionFailed)?;
-            let name_decrypted = decrypt_data(&name_decoded)?;
-            file.name =
-                String::from_utf8(name_decrypted).map_err(|_| EncryptionError::DecryptionFailed)?;
+        for (index, file) in clipboard.files.iter_mut().enumerate() {
+            match STANDARD.decode(&file.name) {
+                Ok(name_decoded) => match decrypt_data(&name_decoded) {
+                    Ok(name_decrypted) => match String::from_utf8(name_decrypted) {
+                        Ok(str_data) => file.name = str_data,
+                        Err(e) => {
+                            printlog!("Failed to convert decrypted filename to UTF-8 for clipboard {} file {}: {}", 
+                                        clipboard.clipboard.id, index, e);
+                            return Err(EncryptionError::DecryptionFailed);
+                        }
+                    },
+                    Err(e) => {
+                        printlog!(
+                            "Failed to decrypt filename for clipboard {} file {}: {:?}",
+                            clipboard.clipboard.id,
+                            index,
+                            e
+                        );
+                        return Err(e);
+                    }
+                },
+                Err(e) => {
+                    printlog!(
+                        "Failed to base64 decode filename for clipboard {} file {}: {}",
+                        clipboard.clipboard.id,
+                        index,
+                        e
+                    );
+                    return Err(EncryptionError::DecryptionFailed);
+                }
+            }
 
-            file.data = decrypt_data(&file.data)?;
+            match decrypt_data(&file.data) {
+                Ok(decrypted) => file.data = decrypted,
+                Err(e) => {
+                    printlog!(
+                        "Failed to decrypt file data for clipboard {} file {}: {:?}",
+                        clipboard.clipboard.id,
+                        index,
+                        e
+                    );
+                    return Err(e);
+                }
+            }
 
             if let Some(extension) = &file.extension {
-                let ext_decoded = STANDARD
-                    .decode(extension)
-                    .map_err(|_| EncryptionError::DecryptionFailed)?;
-                let ext_decrypted = decrypt_data(&ext_decoded)?;
-                file.extension = Some(
-                    String::from_utf8(ext_decrypted)
-                        .map_err(|_| EncryptionError::DecryptionFailed)?,
-                );
+                match STANDARD.decode(extension) {
+                    Ok(ext_decoded) => {
+                        match decrypt_data(&ext_decoded) {
+                            Ok(ext_decrypted) => match String::from_utf8(ext_decrypted) {
+                                Ok(str_data) => file.extension = Some(str_data),
+                                Err(e) => {
+                                    printlog!("Failed to convert decrypted file extension to UTF-8 for clipboard {} file {}: {}", 
+                                            clipboard.clipboard.id, index, e);
+                                    return Err(EncryptionError::DecryptionFailed);
+                                }
+                            },
+                            Err(e) => {
+                                printlog!("Failed to decrypt file extension for clipboard {} file {}: {:?}", 
+                                    clipboard.clipboard.id, index, e);
+                                return Err(e);
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        printlog!(
+                            "Failed to base64 decode file extension for clipboard {} file {}: {}",
+                            clipboard.clipboard.id,
+                            index,
+                            e
+                        );
+                        return Err(EncryptionError::DecryptionFailed);
+                    }
+                }
             }
 
             if let Some(mime_type) = &file.mime_type {
-                let mime_decoded = STANDARD
-                    .decode(mime_type)
-                    .map_err(|_| EncryptionError::DecryptionFailed)?;
-                let mime_decrypted = decrypt_data(&mime_decoded)?;
-                file.mime_type = Some(
-                    String::from_utf8(mime_decrypted)
-                        .map_err(|_| EncryptionError::DecryptionFailed)?,
-                );
+                match STANDARD.decode(mime_type) {
+                    Ok(mime_decoded) => match decrypt_data(&mime_decoded) {
+                        Ok(mime_decrypted) => match String::from_utf8(mime_decrypted) {
+                            Ok(str_data) => file.mime_type = Some(str_data),
+                            Err(e) => {
+                                printlog!("Failed to convert decrypted mime type to UTF-8 for clipboard {} file {}: {}", 
+                                            clipboard.clipboard.id, index, e);
+                                return Err(EncryptionError::DecryptionFailed);
+                            }
+                        },
+                        Err(e) => {
+                            printlog!(
+                                "Failed to decrypt mime type for clipboard {} file {}: {:?}",
+                                clipboard.clipboard.id,
+                                index,
+                                e
+                            );
+                            return Err(e);
+                        }
+                    },
+                    Err(e) => {
+                        printlog!(
+                            "Failed to base64 decode mime type for clipboard {} file {}: {}",
+                            clipboard.clipboard.id,
+                            index,
+                            e
+                        );
+                        return Err(EncryptionError::DecryptionFailed);
+                    }
+                }
             }
         }
     }

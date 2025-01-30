@@ -82,6 +82,8 @@
 			"VI": "ベトナム語",
 			"ZH": "中国語"
 		},
+		"OFFLINE": "オフライン",
+		"ONLINE": "オンライン",
 		"POSITION": {
 			"BOTTOM_CENTER": "下中央",
 			"BOTTOM_LEFT": "左下",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "トレイ左",
 			"TRAY_RIGHT": "トレイ右"
 		},
+		"SYNCING": "同期中",
 		"UNLOCK_CLIPPY": "クリッピーのロックを解除"
 	},
 	"SETTINGS": {

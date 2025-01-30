@@ -82,6 +82,8 @@
 			"VI": "베트남 사람",
 			"ZH": "만다린 오렌지"
 		},
+		"OFFLINE": "오프라인",
+		"ONLINE": "온라인",
 		"POSITION": {
 			"BOTTOM_CENTER": "하단 중앙",
 			"BOTTOM_LEFT": "왼쪽 하단",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "트레이 왼쪽",
 			"TRAY_RIGHT": "트레이 오른쪽"
 		},
+		"SYNCING": "동기화 중",
 		"UNLOCK_CLIPPY": "클리피 잠금 해제"
 	},
 	"SETTINGS": {

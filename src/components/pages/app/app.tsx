@@ -1,18 +1,36 @@
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
-import { Show } from "solid-js";
+import { ImSpinner } from "solid-icons/im";
+import { createEffect, onCleanup, Show } from "solid-js";
+import { listenEvent } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
+import { ClipboardStore } from "../../../store/clipboard-store";
 import { SettingsStore } from "../../../store/settings-store";
+import { ListenEvent } from "../../../types/tauri-listen";
+import { PasswordLock } from "../../elements/password-lock";
 import { AppSidebar } from "../../navigation/app-sidebar";
 import { useLanguage } from "../../provider/language-provider";
 import { ClipboardHistory } from "./clipboard-history";
 import { RecentClipboards } from "./recent-clipboards";
 import { StarredClipboards } from "./starred-clipboards";
 import { ViewMore } from "./view-more";
-import { PasswordLock } from "../../elements/password-lock";
 
 function App() {
   const { t } = useLanguage();
+
+  listenEvent(ListenEvent.Progress, ClipboardStore.setClipboardSyncProgress);
+
+  createEffect(() => {
+    const progress = ClipboardStore.clipboardSyncProgress();
+
+    if (progress) {
+      const timeout = setTimeout(() => {
+        ClipboardStore.setClipboardSyncProgress(undefined);
+      }, 5000);
+
+      onCleanup(() => clearTimeout(timeout));
+    }
+  });
 
   return (
     <>
@@ -28,8 +46,10 @@ function App() {
             <p class="text-xs font-semibold text-gray-500 uppercase select-none dark:text-white">
               {t(AppStore.getCurrentTab().name)}
             </p>
-            <Show when={SettingsStore.settings()?.sync} fallback={<BsHddFill title="offline" />}>
-              <FiGlobe title="online" />
+            <Show when={SettingsStore.settings()?.sync} fallback={<BsHddFill title={t("MAIN.OFFLINE")} />}>
+              <Show when={ClipboardStore.clipboardSyncProgress()} fallback={<FiGlobe title={t("MAIN.ONLINE")} />}>
+                <ImSpinner class="animate-spin" title={t("MAIN.SYNCING")} />
+              </Show>
             </Show>
           </div>
 
