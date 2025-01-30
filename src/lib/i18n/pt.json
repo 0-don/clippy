@@ -82,6 +82,8 @@
 			"VI": "Vietnamita",
 			"ZH": "Mandarim"
 		},
+		"OFFLINE": "Off-line",
+		"ONLINE": "On-line",
 		"POSITION": {
 			"BOTTOM_CENTER": "Centro inferior",
 			"BOTTOM_LEFT": "Canto inferior esquerdo",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "Bandeja esquerda",
 			"TRAY_RIGHT": "Bandeja direita"
 		},
+		"SYNCING": "Sincronizando",
 		"UNLOCK_CLIPPY": "Desbloquear clippy"
 	},
 	"SETTINGS": {

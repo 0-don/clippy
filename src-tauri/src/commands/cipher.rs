@@ -27,6 +27,7 @@ pub async fn password_unlock(password: String) -> Result<(), CommandError> {
 
     if let Some(clipboard) = encrypted_clipboard {
         let clipboards = load_clipboards_with_relations(vec![clipboard]).await;
+
         decrypt_clipboard(clipboards[0].clone()).map_err(|e| {
             clear_encryption_key();
             match e {
@@ -65,6 +66,7 @@ pub async fn enable_encryption(
     let mut settings = get_global_settings();
     settings.encryption = true;
     update_settings_db(settings).await?;
+    
 
     Ok(())
 }

@@ -82,6 +82,8 @@
 			"VI": "เวียดนาม",
 			"ZH": "ภาษาจีนกลาง"
 		},
+		"OFFLINE": "ออฟไลน์",
+		"ONLINE": "ออนไลน์",
 		"POSITION": {
 			"BOTTOM_CENTER": "กลางล่าง",
 			"BOTTOM_LEFT": "ล่างซ้าย",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "ถาดซ้าย",
 			"TRAY_RIGHT": "ถาดด้านขวา"
 		},
+		"SYNCING": "การซิงค์",
 		"UNLOCK_CLIPPY": "ปลดล็อคคลิปปี้"
 	},
 	"SETTINGS": {

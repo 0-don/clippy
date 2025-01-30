@@ -82,6 +82,8 @@
 			"VI": "越南语",
 			"ZH": "普通话"
 		},
+		"OFFLINE": "离线",
+		"ONLINE": "在线的",
 		"POSITION": {
 			"BOTTOM_CENTER": "底部中心",
 			"BOTTOM_LEFT": "左下方",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "托盘左侧",
 			"TRAY_RIGHT": "托盘右侧"
 		},
+		"SYNCING": "同步",
 		"UNLOCK_CLIPPY": "解锁 clippy"
 	},
 	"SETTINGS": {

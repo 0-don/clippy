@@ -21,7 +21,7 @@ pub trait SyncProvider: Send + Sync {
 
     async fn compare_and_fetch_new_clipboards(
         &self,
-        local_clipboards: &HashMap<Uuid, NaiveDateTime>,
+        local_clipboards: &HashMap<Uuid, (bool, NaiveDateTime)>,
         remote_clipboards: &Vec<Clippy>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>>;
 

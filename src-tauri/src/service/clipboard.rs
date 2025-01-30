@@ -600,18 +600,25 @@ pub async fn count_clipboards_db() -> Result<u64, DbErr> {
     Ok(count)
 }
 
-pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, NaiveDateTime>, DbErr> {
+pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, (bool, NaiveDateTime)>, DbErr> {
     let db = db().await?;
 
     let clipboards = clipboard::Entity::find()
         .select_only()
-        .columns([clipboard::Column::Id, clipboard::Column::CreatedAt])
+        .columns([
+            clipboard::Column::Id,
+            clipboard::Column::Star,
+            clipboard::Column::CreatedAt,
+        ])
         .order_by_desc(clipboard::Column::CreatedAt)
         .into_tuple()
         .all(&db)
         .await?;
 
-    Ok(clipboards.into_iter().collect::<HashMap<_, _>>())
+    Ok(clipboards
+        .into_iter()
+        .map(|(id, star, created_at)| (id, (star, created_at)))
+        .collect())
 }
 
 pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {

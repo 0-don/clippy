@@ -170,7 +170,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
     async fn compare_and_fetch_new_clipboards(
         &self,
-        local_clipboards: &HashMap<Uuid, NaiveDateTime>,
+        local_clipboards: &HashMap<Uuid, (bool, NaiveDateTime)>,
         remote_clipboards: &Vec<Clippy>,
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
@@ -181,8 +181,9 @@ impl SyncProvider for GoogleDriveProviderImpl {
                 continue;
             }
 
-            if let Some(existing_timestamp) = local_clipboards.get(&file.id) {
-                if existing_timestamp >= &file.created_at {
+            if let Some((local_star, local_timestamp)) = local_clipboards.get(&file.id) {
+                // Download if either timestamp is newer or star status is different
+                if local_timestamp >= &file.created_at && local_star == &file.star {
                     continue;
                 }
             }

@@ -1,6 +1,6 @@
 import { createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
-import { ClipboardWhere, ClipboardWithRelations } from "../types";
+import { ClipboardWhere, ClipboardWithRelations, Progress } from "../types";
 import { InvokeCommand } from "../types/tauri-invoke";
 
 export const initialWhere: ClipboardWhere = {
@@ -11,6 +11,7 @@ export const initialWhere: ClipboardWhere = {
 };
 
 function createClipboardStore() {
+  const [clipboardSyncProgress, setClipboardSyncProgress] = createSignal<Progress>();
   const [clipboardRef, setClipboardRef] = createSignal<HTMLDivElement | undefined>();
   const [clipboards, setClipboards] = createSignal<ClipboardWithRelations[]>([]);
   const [where, setWhere] = createSignal<ClipboardWhere>(initialWhere);
@@ -116,6 +117,8 @@ function createClipboardStore() {
     handleKeyDown,
     selectedIndex,
     setSelectedIndex,
+    clipboardSyncProgress,
+    setClipboardSyncProgress,
   };
 }
 

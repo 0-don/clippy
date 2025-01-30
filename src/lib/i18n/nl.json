@@ -82,6 +82,8 @@
 			"VI": "Vietnamees",
 			"ZH": "Mandarijn"
 		},
+		"OFFLINE": "Offline",
+		"ONLINE": "Online",
 		"POSITION": {
 			"BOTTOM_CENTER": "Middenonder",
 			"BOTTOM_LEFT": "Linksonder",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "Lade links",
 			"TRAY_RIGHT": "Lade rechts"
 		},
+		"SYNCING": "Synchroniseren",
 		"UNLOCK_CLIPPY": "Clippy ontgrendelen"
 	},
 	"SETTINGS": {

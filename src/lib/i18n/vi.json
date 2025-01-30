@@ -82,6 +82,8 @@
 			"VI": "Tiếng Việt",
 			"ZH": "Tiếng Quan Thoại"
 		},
+		"OFFLINE": "Ngoại tuyến",
+		"ONLINE": "Trực tuyến",
 		"POSITION": {
 			"BOTTOM_CENTER": "Trung tâm trên",
 			"BOTTOM_LEFT": "Dưới cùng bên trái",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "Khay bên trái",
 			"TRAY_RIGHT": "Khay bên phải"
 		},
+		"SYNCING": "Đồng bộ hóa",
 		"UNLOCK_CLIPPY": "Mở khóa clippy"
 	},
 	"SETTINGS": {

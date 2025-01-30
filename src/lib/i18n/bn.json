@@ -82,6 +82,8 @@
 			"VI": "ভিয়েতনামী",
 			"ZH": "ম্যান্ডারিন"
 		},
+		"OFFLINE": "অফলাইন",
+		"ONLINE": "অনলাইন",
 		"POSITION": {
 			"BOTTOM_CENTER": "নীচে কেন্দ্র",
 			"BOTTOM_LEFT": "নীচে বাম",
@@ -100,6 +102,7 @@
 			"TRAY_LEFT": "ট্রে বাম",
 			"TRAY_RIGHT": "ট্রে ডান"
 		},
+		"SYNCING": "সিঙ্ক হচ্ছে",
 		"UNLOCK_CLIPPY": "ক্লিপি আনলক করুন"
 	},
 	"SETTINGS": {

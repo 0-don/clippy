@@ -1,3 +1,5 @@
+use std::thread::sleep;
+
 use super::clipboard::{init_clipboards, load_clipboards_with_relations};
 use super::decrypt::init_password_lock;
 use super::sync::{get_sync_manager, get_sync_provider};
@@ -87,6 +89,16 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
         let encrypted = encrypt_clipboard(clipboard);
         upsert_clipboard_dto(encrypted.clone()).await?;
 
+        get_app().emit_to(
+            EventTarget::any(),
+            ListenEvent::Progress.to_string().as_str(),
+            Progress {
+                label: "SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS_LOCAL".to_string(),
+                total,
+                current: index + 1,
+            },
+        )?;
+
         if let Some(provider) = &provider {
             if let Some(remote) = remote_clipboards
                 .iter()
@@ -98,20 +110,14 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
                     .expect("Failed to update remote clipboard");
             }
         }
-
-        get_app().emit_to(
-            EventTarget::any(),
-            ListenEvent::Progress.to_string().as_str(),
-            Progress {
-                label: "SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS_LOCAL".to_string(),
-                total,
-                current: index + 1,
-            },
-        )?;
     }
 
     if settings.sync && provider.is_some() {
-        get_sync_manager().lock().await.start().await;
+        // race condition with settings sync
+        tauri::async_runtime::spawn(async {
+            sleep(std::time::Duration::from_secs(5));
+            get_sync_manager().lock().await.start().await;
+        });
     }
 
     init_clipboards();
