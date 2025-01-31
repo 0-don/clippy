@@ -23,8 +23,8 @@ export const PasswordLock: Component = () => {
     setLoading(true);
 
     try {
-      await invokeCommand(InvokeCommand.PasswordUnlock, { password: password() });
-      AppStore.setPasswordLock(false);
+      await invokeCommand(InvokeCommand.PasswordUnlock, { password: password(), action: AppStore.passwordLock()! });
+      AppStore.setPasswordLock(undefined);
     } catch (error) {
       const { Error } = error as TauriError;
       setError(Error);

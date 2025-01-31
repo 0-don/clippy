@@ -1,6 +1,6 @@
+use super::cipher::init_encryption_password_lock;
 use super::settings::get_global_settings;
 use crate::prelude::*;
-use crate::service::encrypt::init_encryption;
 use crate::service::hotkey::init_hotkey_event;
 use crate::tao::global::{get_app, get_main_window, get_window_stop_tx};
 use crate::utils::hotkey_manager::unregister_hotkeys;
@@ -71,7 +71,7 @@ pub fn toggle_main_window() {
             .run_on_main_thread(|| get_main_window().set_focus().expect("Failed to set focus"))
             .expect("Failed to run on main thread");
 
-        init_encryption();
+        init_encryption_password_lock();
     }
 }
 

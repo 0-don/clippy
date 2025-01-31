@@ -5,7 +5,7 @@ use crate::{
         window_events::setup_window_event_listener,
     },
     service::{
-        encrypt::init_encryption, settings::setup_settings, sync::setup_sync_interval,
+        cipher::init_encryption_password_lock, settings::setup_settings, sync::setup_sync_interval,
         window::setup_window,
     },
     tao::{config::setup_config, tao_constants::setup_globals},
@@ -24,7 +24,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 's
     setup_window_event_listener();
     setup_sync_interval();
 
-    init_encryption();
+    init_encryption_password_lock();
 
     Ok(())
 }

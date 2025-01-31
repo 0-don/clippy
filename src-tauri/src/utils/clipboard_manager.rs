@@ -1,6 +1,7 @@
 use crate::prelude::*;
+use crate::service::cipher::is_encryption_key_set;
 use crate::service::clipboard::{new_clipboard_event, upsert_clipboard_dto};
-use crate::service::encrypt::{encrypt_clipboard, is_key_set};
+use crate::service::encrypt::encrypt_clipboard;
 use crate::service::settings::get_global_settings;
 use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
@@ -53,7 +54,8 @@ impl ClipboardManagerExt for FullClipboardDbo {
         let settings = get_global_settings();
 
         // If clipboards are encypted but not saved before unlocking, return
-        if settings.encryption && !settings.enryption_save_before_unlock && !is_key_set() {
+        if settings.encryption && !settings.enryption_save_before_unlock && !is_encryption_key_set()
+        {
             return;
         }
 
@@ -84,7 +86,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 .expect("Failed to insert");
 
             // If encryption is enabled and key is set, encrypt clipboard before upsert
-            if settings.encryption && is_key_set() {
+            if settings.encryption && is_encryption_key_set() {
                 upsert_clipboard_dto(encrypt_clipboard(clipboard.clone()))
                     .await
                     .expect("Failed to upsert");

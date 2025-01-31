@@ -1,4 +1,6 @@
-use super::settings::{get_global_settings, get_settings_db, update_settings_synchronize_db};
+use super::settings::{
+    get_global_settings, get_settings_db, update_settings_from_sync, update_settings_synchronize_db,
+};
 use crate::{
     prelude::*,
     tao::global::get_app,
@@ -10,17 +12,28 @@ use std::{collections::HashMap, sync::Arc};
 use tauri::{Manager, State};
 use tokio::sync::Mutex;
 
-pub fn upsert_settings_sync(settings: &settings::Model) -> Result<(), CommandError> {
+pub async fn upsert_settings_sync(
+    settings: &settings::Model,
+    block_main_thread: bool,
+) -> Result<(), CommandError> {
     if settings.sync {
         let settings_map: HashMap<String, serde_json::Value> =
             serde_json::from_value(serde_json::to_value(settings.clone())?)?;
-        tauri::async_runtime::spawn(async move {
+        if block_main_thread {
             get_sync_provider()
                 .await
                 .upsert_settings(&settings_map)
                 .await
                 .expect("Failed to upsert settings");
-        });
+        } else {
+            tauri::async_runtime::spawn(async move {
+                get_sync_provider()
+                    .await
+                    .upsert_settings(&settings_map)
+                    .await
+                    .expect("Failed to upsert settings");
+            });
+        }
     }
     Ok(())
 }
@@ -76,13 +89,25 @@ pub async fn sync_toggle() -> Result<bool, CommandError> {
             return Err(CommandError::Error("Authentication failed".to_string()));
         }
 
+        let remote_settings = provider
+            .get_settings()
+            .await
+            .expect("Failed to get settings");
+        update_settings_from_sync(remote_settings)
+            .await
+            .expect("Failed to update settings");
+
+        let settings = update_settings_synchronize_db(true).await?;
+
+        upsert_settings_sync(&settings, false).await?;
+
         // Don't stop existing sync if enabling - just start a new one
         get_sync_manager().lock().await.start().await;
-        update_settings_synchronize_db(true).await?;
     } else {
         // Trying to disable sync
         get_sync_manager().lock().await.stop().await;
-        update_settings_synchronize_db(false).await?;
+        let settings = update_settings_synchronize_db(false).await?;
+        upsert_settings_sync(&settings, false).await?;
     }
 
     Ok(new_sync_state)

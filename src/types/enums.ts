@@ -55,3 +55,9 @@ export enum ClipboardType {
   Rtf = "rtf",
   File = "file",
 }
+
+
+export enum PasswordAction {
+  Encrypt = "encrypt",
+  Decrypt = "decrypt",
+}

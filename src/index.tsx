@@ -28,7 +28,7 @@ const Index = () => {
 
   listenEvent(ListenEvent.NewClipboard, ClipboardStore.newClipboard);
 
-  listenEvent(ListenEvent.PasswordLock, () => AppStore.setPasswordLock(true));
+  listenEvent(ListenEvent.PasswordLock, AppStore.setPasswordLock);
 
   return <App />;
 };

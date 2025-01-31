@@ -14,6 +14,7 @@ import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { useLanguage } from "../../provider/language-provider";
+import { MAX_SYNC_LIMIT } from "../../../utils/constants";
 
 interface SettingsBackupProps {}
 
@@ -47,7 +48,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <Input
               type="number"
               min={0}
-              max={1000}
+              max={MAX_SYNC_LIMIT}
               value={SettingsStore.settings()!.sync_limit}
               debounce={1000}
               onInput={async (e) => {
