@@ -119,11 +119,11 @@
 		"ENCRYPT": {
 			"CONFIRM_PASSWORD": "Conferma password",
 			"DECRYPT": "Decripta tutti gli appunti",
-			"DECRYPTION_PROGRESS_LOCAL": "{{current}} da {{total}} appunti vengono decifrati localmente",
-			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} da {{total}} scaricamento appunti remoti",
+			"DECRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti vengono decifrati localmente",
+			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} / {{total}} download appunti remoti",
 			"ENCRYPT": "Cripta tutti gli appunti",
 			"ENCRYPT_DECRYPT": "Cripta/decripta",
-			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} da {{total}} appunti sono crittografati localmente",
+			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti sono criptati localmente",
 			"INFO": "Tutti gli appunti sono criptati, se la password viene persa non è possibile ripristinarli",
 			"PASSWORD": "Password"
 		},
