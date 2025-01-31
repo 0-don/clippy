@@ -1,7 +1,10 @@
-use crate::{service::{
-    settings::{get_global_settings, init_settings_window, set_global_settings},
-    sync::{get_sync_provider, sync_toggle, upsert_settings_sync},
-}, tao::connection::db};
+use crate::{
+    service::{
+        settings::{get_global_settings, init_settings_window, set_global_settings},
+        sync::{get_sync_provider, sync_toggle, upsert_settings_sync},
+    },
+    tao::connection::db,
+};
 use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, EntityTrait};
@@ -37,7 +40,9 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
                 .await
                 .expect("Failed to cleanup old clipboards");
 
-            upsert_settings_sync(&remote_settings).expect("Failed to upsert settings");
+            upsert_settings_sync(&remote_settings, false)
+                .await
+                .expect("Failed to upsert settings");
         });
     }
 

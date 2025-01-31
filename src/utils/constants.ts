@@ -8,6 +8,8 @@ export const DEFAULT_SIZE = 10_485_760;
 export const MIN_PASSWORD_LENGTH = 1;
 export const MAX_PASSWORD_LENGTH = 128;
 
+export const MAX_SYNC_LIMIT = 250;
+
 export const SETTINGS_TAB = [
   "SETTINGS.TAB.GENERAL",
   "SETTINGS.TAB.BACKUP",

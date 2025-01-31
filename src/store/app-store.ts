@@ -5,13 +5,13 @@ import { VsHistory } from "solid-icons/vs";
 import { createResource, createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
 import { Tabs } from "../types";
-import { HotkeyEvent } from "../types/enums";
+import { HotkeyEvent, PasswordAction } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { LANGUAGES, LANGUAGE_KEY, TAB_NAMES, Tab } from "../utils/constants";
 import { SettingsStore } from "./settings-store";
 
 function createAppStore() {
-  const [passwordLock, setPasswordLock] = createSignal(false);
+  const [passwordLock, setPasswordLock] = createSignal<PasswordAction>();
   const detectedLocale = localStorage.getItem(LANGUAGE_KEY) || Object.values(LANGUAGES)[0];
 
   const [locale, setLocale] = createResource(

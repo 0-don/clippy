@@ -1,3 +1,4 @@
+use super::{cipher::is_encryption_key_set, settings::get_global_settings};
 use crate::{
     prelude::*,
     tao::{
@@ -10,8 +11,6 @@ use common::types::enums::ListenEvent;
 use entity::hotkey::{self, ActiveModel, Model};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use tauri::{Emitter, EventTarget};
-
-use super::{encrypt::is_key_set, settings::get_global_settings};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
     let db: DatabaseConnection = db().await?;
@@ -45,7 +44,7 @@ pub fn init_hotkey_window() {
 
 pub fn init_hotkey_event() {
     // If encryption is enabled and key is not set, do not register hotkeys
-    if !is_key_set() && get_global_settings().encryption {
+    if !is_encryption_key_set() && get_global_settings().encryption {
         return;
     }
 

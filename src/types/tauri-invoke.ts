@@ -1,5 +1,5 @@
 import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings } from ".";
-import { ClipboardType, FolderLocation, WebWindow } from "./enums";
+import { ClipboardType, FolderLocation, PasswordAction, WebWindow } from "./enums";
 
 export enum InvokeCommand {
   // Clipboard commands
@@ -145,7 +145,7 @@ export interface TauriInvokeCommands {
     return: void;
   };
   [InvokeCommand.PasswordUnlock]: {
-    args: { password: string };
+    args: { password: string, action: PasswordAction };
     return: void;
   };
 

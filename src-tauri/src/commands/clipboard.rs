@@ -1,6 +1,6 @@
+use crate::service::cipher::is_encryption_key_set;
 use crate::service::clipboard::init_clipboards;
 use crate::service::decrypt::decrypt_clipboard;
-use crate::service::encrypt::is_key_set;
 use crate::service::settings::get_global_settings;
 use crate::tao::global::get_app;
 use crate::{
@@ -31,7 +31,7 @@ pub async fn get_clipboards(
     let current_position = cursor.unwrap_or(0) + clipboards.len() as u64;
     let has_more = current_position < total;
 
-    if get_global_settings().encryption && is_key_set() {
+    if get_global_settings().encryption && is_encryption_key_set() {
         clipboards = clipboards
             .into_iter()
             .map(|clipboard| {

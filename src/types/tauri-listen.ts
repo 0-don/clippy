@@ -1,5 +1,6 @@
 import { ClipboardWithRelations, Progress } from ".";
 import { Tab } from "../utils/constants";
+import { PasswordAction } from "./enums";
 
 export enum ListenEvent {
   InitClipboards = "init_clipboards",
@@ -22,5 +23,5 @@ export interface TauriListenEvents {
   [ListenEvent.ScrollToTop]: void;
   [ListenEvent.NewClipboard]: ClipboardWithRelations;
   [ListenEvent.Progress]: Progress;
-  [ListenEvent.PasswordLock]: void;
+  [ListenEvent.PasswordLock]: PasswordAction;
 }

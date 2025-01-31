@@ -1,7 +1,4 @@
-use std::thread::sleep;
-
 use super::clipboard::{init_clipboards, load_clipboards_with_relations};
-use super::decrypt::init_password_lock;
 use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
 use crate::service::clipboard::upsert_clipboard_dto;
@@ -17,6 +14,7 @@ use entity::clipboard;
 use ring::rand::SecureRandom;
 use ring::{aead, rand};
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+use std::thread::sleep;
 use tauri::{Emitter, EventTarget};
 
 pub async fn encrypt_all_clipboards(full: bool) -> Result<(), CommandError> {
@@ -65,6 +63,14 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
                 continue;
             }
 
+            if remote.deleted_at.is_some() {
+                continue;
+            }
+
+            if clipboards.iter().any(|c| c.clipboard.id == remote.id) {
+                continue;
+            }
+
             if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
                 clipboards.push(clipboard);
 
@@ -85,6 +91,7 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
     };
 
     let total = clipboards.len();
+
     for (index, clipboard) in clipboards.into_iter().enumerate() {
         let encrypted = encrypt_clipboard(clipboard);
         upsert_clipboard_dto(encrypted.clone()).await?;
@@ -187,33 +194,6 @@ pub fn encrypt_clipboard(mut clipboard: FullClipboardDto) -> FullClipboardDto {
     clipboard.clipboard.encrypted = true;
 
     clipboard
-}
-
-pub fn init_encryption() {
-    let settings = get_global_settings();
-    if !is_key_set() && settings.encryption {
-        init_password_lock();
-    }
-}
-
-/// Sets the encryption key derived from a password
-pub fn set_encryption_key(password: &str) -> Result<(), EncryptionError> {
-    let mut hasher = ring::digest::Context::new(&ring::digest::SHA256);
-    hasher.update(password.as_bytes());
-    let key = hasher.finish();
-    let mut key_bytes = [0u8; 32];
-    key_bytes.copy_from_slice(key.as_ref());
-
-    *ENCRYPTION_KEY
-        .lock()
-        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(key_bytes);
-
-    Ok(())
-}
-
-/// Checks if encryption key is set
-pub fn is_key_set() -> bool {
-    ENCRYPTION_KEY.lock().map(|k| k.is_some()).unwrap_or(false)
 }
 
 /// Encrypts data using AES-256-GCM

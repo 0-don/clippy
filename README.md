@@ -75,3 +75,5 @@ Before you begin, ensure you have met the following requirements:
 
 <!-- ENDEVOUROS KDE X11 -->
 <!-- sudo pacman -U clippy-bin-1.3.0-1-x86_64.pkg.tar.zst -->
+
+<!-- git reset --hard origin/master -->

@@ -1,11 +1,13 @@
+use super::cipher::{init_password_lock_event, is_encryption_key_set};
 use super::clipboard::get_last_clipboard_db;
+use super::decrypt::decrypt_all_clipboards;
 use super::sync::upsert_settings_sync;
 use crate::prelude::*;
 use crate::service::window::get_monitor_scale_factor;
 use crate::tao::connection::db;
 use crate::tao::global::get_app;
 use common::io::language::get_system_language;
-use common::types::enums::ListenEvent;
+use common::types::enums::{ListenEvent, PasswordAction};
 use common::types::types::CommandError;
 use entity::settings;
 use sea_orm::{ActiveModelTrait, EntityTrait};
@@ -18,7 +20,7 @@ use tauri_plugin_autostart::AutoLaunchManager;
 pub fn autostart() {
     tauri::async_runtime::spawn(async {
         let settings = get_global_settings();
-        let manager: tauri::State<'_, AutoLaunchManager> = get_app().state::<AutoLaunchManager>();
+        let manager = get_app().state::<AutoLaunchManager>();
 
         // Use the manager as needed
         if settings.startup && !manager.is_enabled().expect("Failed to check auto-launch") {
@@ -55,7 +57,7 @@ pub async fn update_settings_db(
 
     set_global_settings(settings.clone());
 
-    upsert_settings_sync(&settings).expect("Failed to upsert settings");
+    upsert_settings_sync(&settings, false).await?;
 
     init_settings_window();
 
@@ -105,14 +107,56 @@ pub fn setup_settings() {
 }
 
 pub async fn update_settings_from_sync(
-    settings: HashMap<String, serde_json::Value>,
+    remote_settings: HashMap<String, serde_json::Value>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    if settings.is_empty() {
+    // Return early if no settings to process
+    if remote_settings.is_empty() {
         return Ok(());
     }
 
     let db: DatabaseConnection = db().await?;
     let current_settings = get_global_settings();
+
+    // Handle encryption state changes
+    let remote_encryption = remote_settings
+        .get("encryption")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+
+    let mut remote_settings = remote_settings;
+
+    // Skip encryption as it is handled separately
+    remote_settings.remove("encryption");
+    // Skip display_scale as it is calculated on first time setup
+    remote_settings.remove("display_scale");
+    // Skip startup as it users choice
+    remote_settings.remove("startup");
+
+    let local_encryption = current_settings.encryption;
+
+    match (local_encryption, remote_encryption, is_encryption_key_set()) {
+        // Local unencrypted -> Remote encrypted
+        (false, true, false) => {
+            printlog!("Local unencrypted -> Remote encrypted");
+            init_password_lock_event(PasswordAction::Encrypt);
+        }
+        // Local encrypted -> Remote unencrypted, no key
+        (true, false, false) => {
+            printlog!("Local encrypted -> Remote unencrypted, no key");
+            init_password_lock_event(PasswordAction::SyncDecrypt);
+        }
+        // Local encrypted -> Remote unencrypted, has key
+        (true, false, true) => {
+            printlog!("Local encrypted -> Remote unencrypted, has key");
+
+            remote_settings.insert("encryption".to_string(), serde_json::Value::Bool(false));
+
+            decrypt_all_clipboards()
+                .await
+                .expect("Failed to decrypt clipboards");
+        }
+        _ => {}
+    }
 
     // Convert current settings to Value to get the schema structure
     let current_value = serde_json::to_value(&current_settings)?;
@@ -122,17 +166,7 @@ pub async fn update_settings_from_sync(
     // while only updating fields that exist in both
     let merged_value = match current_value {
         serde_json::Value::Object(mut map) => {
-            for (key, value) in settings {
-                // Skip display_scale as it is calculated on first time setup
-                if key == "display_scale" {
-                    continue;
-                }
-
-                // Skip startup as it users choice
-                if key == "startup" {
-                    continue;
-                }
-
+            for (key, value) in remote_settings {
                 if map.contains_key(&key) {
                     // Only update if types match or can be converted
                     if let Ok(converted) =
@@ -155,8 +189,10 @@ pub async fn update_settings_from_sync(
             .exec(&db)
             .await?;
 
+        // Update global settings
         set_global_settings(settings);
 
+        // Notify UI of settings change
         init_settings_window();
 
         printlog!("(remote) downloaded settings");

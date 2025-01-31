@@ -1,5 +1,5 @@
+use super::cipher::is_encryption_key_set;
 use super::decrypt::decrypt_clipboard;
-use super::encrypt::is_key_set;
 use super::settings::get_global_settings;
 use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
@@ -230,7 +230,7 @@ pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
         .await
         .remove(0);
 
-    if dto.clipboard.encrypted && is_key_set() {
+    if dto.clipboard.encrypted && is_encryption_key_set() {
         if let Ok(decrypted) = decrypt_clipboard(dto.clone()) {
             dto = decrypted;
         }
@@ -700,7 +700,7 @@ pub fn init_clipboards() {
 }
 
 pub fn new_clipboard_event(mut clipboard: FullClipboardDto) {
-    if clipboard.clipboard.encrypted && is_key_set() {
+    if clipboard.clipboard.encrypted && is_encryption_key_set() {
         clipboard = decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
     }
 

@@ -1,8 +1,7 @@
-use std::thread::sleep;
-
 use super::{
+    cipher::{clear_encryption_key, is_encryption_key_set, verify_encryption_password},
     clipboard::load_clipboards_with_relations,
-    encrypt::{is_key_set, looks_like_encrypted_data},
+    encrypt::looks_like_encrypted_data,
     settings::{get_global_settings, update_settings_db},
     sync::{get_sync_manager, get_sync_provider},
 };
@@ -21,6 +20,7 @@ use common::types::{
 use entity::clipboard;
 use ring::aead;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+use std::thread::sleep;
 use tauri::{Emitter, EventTarget};
 
 pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
@@ -38,9 +38,6 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
     // Get remote clipboards if sync enabled
     let (provider, remote_clipboards) = if settings.sync {
-        // Stop the sync manager before making changes
-        get_sync_manager().lock().await.stop().await;
-
         let provider = get_sync_provider().await;
         let remote_clipboards = provider
             .fetch_all_clipboards()
@@ -61,6 +58,14 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
             )?;
 
             if !remote.encrypted {
+                continue;
+            }
+
+            if remote.deleted_at.is_some() {
+                continue;
+            }
+
+            if clipboards.iter().any(|c| c.clipboard.id == remote.id) {
                 continue;
             }
 
@@ -123,14 +128,6 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
                 }
             }
         }
-    }
-
-    if settings.sync && provider.is_some() {
-        // race condition with settings sync
-        tauri::async_runtime::spawn(async {
-            sleep(std::time::Duration::from_secs(5));
-            get_sync_manager().lock().await.start().await;
-        });
     }
 
     Ok(())
@@ -435,18 +432,27 @@ pub fn decrypt_data(encrypted_data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
 }
 
 pub async fn remove_encryption(password: String) -> Result<(), CommandError> {
-    if !is_key_set() {
+    if !is_encryption_key_set() {
         return Err(CommandError::new("MAIN.ERROR.NO_ENCRYPTION_KEY_SET"));
     }
 
     let is_password_valid =
-        verify_password(password).map_err(|e| CommandError::new(&e.to_string()))?;
+        verify_encryption_password(password).map_err(|e| CommandError::new(&e.to_string()))?;
 
     if !is_password_valid {
         return Err(CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD"));
     }
-
+    // Stop the sync manager before making changes
+    get_sync_manager().lock().await.stop().await;
     decrypt_all_clipboards().await?;
+
+    if get_global_settings().sync {
+        // race condition with settings sync
+        tauri::async_runtime::spawn(async {
+            sleep(std::time::Duration::from_secs(5));
+            get_sync_manager().lock().await.start().await;
+        });
+    }
 
     let mut settings = get_global_settings();
     settings.encryption = false;
@@ -455,36 +461,4 @@ pub async fn remove_encryption(password: String) -> Result<(), CommandError> {
     clear_encryption_key();
 
     Ok(())
-}
-
-pub fn clear_encryption_key() {
-    *ENCRYPTION_KEY
-        .lock()
-        .map_err(|e| CommandError::new(&e.to_string()))
-        .unwrap() = None;
-}
-
-pub fn verify_password(password: String) -> Result<bool, EncryptionError> {
-    let mut hasher = ring::digest::Context::new(&ring::digest::SHA256);
-    hasher.update(password.as_bytes());
-    let key = hasher.finish();
-    let mut provided_key = [0u8; 32];
-    provided_key.copy_from_slice(key.as_ref());
-
-    let current_key = ENCRYPTION_KEY
-        .lock()
-        .map_err(|_| EncryptionError::KeyLockFailed)?
-        .ok_or(EncryptionError::NoKey)?;
-
-    Ok(provided_key == current_key)
-}
-
-pub fn init_password_lock() {
-    get_app()
-        .emit_to(
-            EventTarget::any(),
-            ListenEvent::PasswordLock.to_string().as_str(),
-            (),
-        )
-        .expect("Failed to emit download progress event");
 }

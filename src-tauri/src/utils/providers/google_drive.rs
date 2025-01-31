@@ -181,9 +181,9 @@ impl SyncProvider for GoogleDriveProviderImpl {
                 continue;
             }
 
-            if let Some((local_star, local_timestamp)) = local_clipboards.get(&file.id) {
+            if let Some((local_star, _local_timestamp)) = local_clipboards.get(&file.id) {
                 // Download if either timestamp is newer or star status is different
-                if local_timestamp >= &file.created_at && local_star == &file.star {
+                if local_star == &file.star {
                     continue;
                 }
             }
@@ -215,10 +215,8 @@ impl SyncProvider for GoogleDriveProviderImpl {
             .collect();
 
         for clipboard in new_local_clipboards {
-            if let Some(remote_created_at) = remote_map.get(&clipboard.clipboard.id) {
-                if remote_created_at >= &clipboard.clipboard.created_at {
-                    continue;
-                }
+            if let Some(_remote_created_at) = remote_map.get(&clipboard.clipboard.id) {
+                continue;
             }
 
             new_clipboards.push(self.upload_clipboard(clipboard).await?);

@@ -79,12 +79,13 @@ impl SyncManager {
 
         // Create a new sync task
         let handle = tokio::spawn(async move {
-            let mut interval = time::interval(interval);
             loop {
-                interval.tick().await;
+                // Run the sync job and wait for it to complete
                 if let Err(e) = Self::sync_job().await {
                     printlog!("sync job failed: {:?}", e);
                 }
+
+                time::sleep(interval).await;
             }
         });
 
