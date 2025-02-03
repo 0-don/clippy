@@ -39,6 +39,7 @@ tauri-plugin-autostart = "2"
 global-hotkey = "0" # tauri-plugin-global-hotkey
 
 sea-orm = "1"
+uuid = { version = "1", features = ["v7"] }
 tokio = { version = "1", features = ["full"] }
 async-trait = "0"
 serde = "1"

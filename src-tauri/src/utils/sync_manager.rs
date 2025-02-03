@@ -32,8 +32,7 @@ impl SyncManager {
             let mut remote_clipboards = provider.fetch_all_clipboards().await?;
 
             let deleted_clipboards: Vec<Uuid> = remote_clipboards
-                .clone()
-                .into_iter()
+                .iter()
                 .filter(|clipboard| clipboard.deleted_at.is_some())
                 .map(|clipboard| clipboard.id)
                 .collect();

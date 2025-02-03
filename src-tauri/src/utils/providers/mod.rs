@@ -1,11 +1,18 @@
-use chrono::NaiveDateTime;
+use chrono::{DateTime, NaiveDateTime};
 use common::{
     constants::{BACKDUP_DATE_FORMAT, BACKUP_FILE_PREFIX},
     types::sync::Clippy,
 };
 use sea_orm::prelude::Uuid;
-
 pub mod google_drive;
+
+pub fn uuid_to_datetime(uuid: &Uuid) -> NaiveDateTime {
+    let ts = uuid.get_timestamp().expect("Not a time-based UUID");
+    let (secs, nanos) = ts.to_unix();
+    DateTime::from_timestamp(secs as i64, nanos as u32)
+        .expect("Invalid timestamp")
+        .naive_utc()
+}
 
 pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clippy> {
     let [_, uuid, star, encrypted, created_at, deleted_at]: [&str; 6] = filename

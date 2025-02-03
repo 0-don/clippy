@@ -70,7 +70,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   return (
     <div class={`group relative ${props.isSelected ? "bg-zinc-100 dark:bg-neutral-600" : ""}`}>
       {/* Actions overlay */}
-      <div class="absolute bottom-0 right-0 top-0 z-10 my-1 mr-0.5 flex flex-col items-end justify-between">
+      <div class="absolute top-0 right-0 bottom-0 z-10 my-1 flex flex-col items-end justify-between">
         <VsStarFull
           onClick={(e) => {
             e.stopPropagation();
@@ -79,21 +79,21 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
           title={t("CLIPBOARD.STAR_FAVORITE")}
           class={`${
             props.data.clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
-          } cursor-pointer hover:text-yellow-400 group-hover:block dark:text-white dark:hover:text-yellow-300`}
+          } cursor-pointer group-hover:block hover:text-yellow-400 dark:text-white dark:hover:text-yellow-300`}
         />
         <div class="flex items-center gap-1">
           {props.data.rtf && (
             <BsJournalRichtext
               onClick={handleRtfCopy}
               title={t("CLIPBOARD.COPY_AS_RTF")}
-              class="hidden cursor-pointer text-zinc-700 hover:text-blue-600 group-hover:block dark:text-white dark:hover:text-blue-400"
+              class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
             />
           )}
           {props.data.html && (
             <TbSourceCode
               onClick={handleHtmlCopy}
               title={t("CLIPBOARD.COPY_AS_HTML")}
-              class="hidden cursor-pointer text-zinc-700 hover:text-green-600 group-hover:block dark:text-white dark:hover:text-green-400"
+              class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-green-600 dark:text-white dark:hover:text-green-400"
             />
           )}
         </div>
@@ -103,7 +103,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
             handleDelete(props.data.clipboard.id);
           }}
           title={t("CLIPBOARD.DELETE_CLIPBOARD")}
-          class="hidden cursor-pointer text-zinc-700 hover:text-red-600 group-hover:block dark:text-white dark:hover:text-red-600"
+          class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-red-600 dark:text-white dark:hover:text-red-600"
         />
       </div>
 

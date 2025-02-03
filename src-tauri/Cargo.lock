@@ -950,6 +950,7 @@ dependencies = [
  "tokio",
  "tree_magic_mini",
  "urlencoding",
+ "uuid",
 ]
 
 [[package]]
