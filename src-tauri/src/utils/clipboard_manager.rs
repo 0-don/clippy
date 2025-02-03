@@ -264,7 +264,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
         printlog!("clipboard types: {:?}", types);
 
         self.clipboard_model = entity::clipboard::ActiveModel {
-            id: Set(Uuid::new_v4()),
+            id: Set(Uuid::now_v7()),
             types: Set(ClipboardType::to_json_value(&types)),
             ..Default::default()
         };

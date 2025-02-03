@@ -47,7 +47,7 @@ export const Clipboards: Component = () => {
         </div>
       }
     >
-      <div ref={ClipboardStore.setClipboardRef} onScroll={onScroll} class="overflow-y-auto pb-5">
+      <div ref={ClipboardStore.setClipboardRef} onScroll={onScroll} class="overflow-y-auto overflow-x-hidden pb-5">
         <Show when={scrollToTop()}>
           <button
             type="button"

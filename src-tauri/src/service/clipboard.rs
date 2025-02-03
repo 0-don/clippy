@@ -5,6 +5,7 @@ use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
 use crate::tao::connection::db;
 use crate::tao::global::{get_app, get_main_window};
+use crate::utils::providers::uuid_to_datetime;
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
 use common::io::clipboard::trim_clipboard_data;
@@ -76,7 +77,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     let text = match &model.clipboard_text_model.data {
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut text_model = model.clipboard_text_model;
-            text_model.id = Set(Uuid::new_v4());
+            text_model.id = Set(Uuid::now_v7());
             text_model.clipboard_id = Set(clipboard.id);
             Some(text_model.insert(&db).await?)
         }
@@ -87,7 +88,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     let html = match &model.clipboard_html_model.data {
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut html_model = model.clipboard_html_model;
-            html_model.id = Set(Uuid::new_v4());
+            html_model.id = Set(Uuid::now_v7());
             html_model.clipboard_id = Set(clipboard.id);
             Some(html_model.insert(&db).await?)
         }
@@ -98,7 +99,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     let rtf = match &model.clipboard_rtf_model.data {
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut rtf_model = model.clipboard_rtf_model;
-            rtf_model.id = Set(Uuid::new_v4());
+            rtf_model.id = Set(Uuid::now_v7());
             rtf_model.clipboard_id = Set(clipboard.id);
             Some(rtf_model.insert(&db).await?)
         }
@@ -109,7 +110,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     let image = match &model.clipboard_image_model.data {
         sea_orm::ActiveValue::Set(data) if !data.is_empty() => {
             let mut image_model = model.clipboard_image_model;
-            image_model.id = Set(Uuid::new_v4());
+            image_model.id = Set(Uuid::now_v7());
             image_model.clipboard_id = Set(clipboard.id);
             Some(image_model.insert(&db).await?)
         }
@@ -120,7 +121,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
     let files = if !model.clipboard_files_model.is_empty() {
         let mut files = Vec::new();
         for mut file_model in model.clipboard_files_model {
-            file_model.id = Set(Uuid::new_v4());
+            file_model.id = Set(Uuid::now_v7());
             file_model.clipboard_id = Set(clipboard.id);
             files.push(file_model.insert(&db).await?);
         }
@@ -221,7 +222,7 @@ pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
 
 pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
     let clipboard = clipboard::Entity::find()
-        .order_by_desc(clipboard::Column::CreatedAt)
+        .order_by_desc(clipboard::Column::Id)
         .one(&db().await?)
         .await?
         .ok_or_else(|| DbErr::RecordNotFound("last clipboard not found".to_string()))?;
@@ -342,7 +343,7 @@ pub async fn get_clipboards_db(
         })
         .offset(cursor)
         .limit(25)
-        .order_by_desc(clipboard::Column::CreatedAt);
+        .order_by_desc(clipboard::Column::Id);
 
     let clipboards = query.all(&db).await?;
 
@@ -355,29 +356,46 @@ pub async fn get_latest_syncable_cliboards_db() -> Result<Vec<FullClipboardDto>,
 
     let latest_syncable_clipboards = clipboard::Entity::find()
         .limit(settings.sync_limit as u64)
-        .order_by_desc(clipboard::Column::CreatedAt)
+        .order_by_desc(clipboard::Column::Id)
         .all(&db)
         .await?;
 
     let sync_favorite_clipboards = clipboard::Entity::find()
         .filter(clipboard::Column::Star.eq(true))
-        .order_by_desc(clipboard::Column::CreatedAt)
+        .order_by_desc(clipboard::Column::Id)
         .all(&db)
         .await?;
 
-    printlog!(
-        "(local) clipboards: {:?} favorite: {:?}",
-        latest_syncable_clipboards.len(),
-        sync_favorite_clipboards.len()
-    );
+    let latest_syncable_clipboards_len = latest_syncable_clipboards.len();
+    let sync_favorite_clipboards_len = sync_favorite_clipboards.len();
 
-    let clipboards = latest_syncable_clipboards
+    let mut clipboards = latest_syncable_clipboards
         .into_iter()
         .chain(sync_favorite_clipboards)
         .map(|clipboard| (clipboard.id, clipboard))
         .collect::<HashMap<_, _>>() // Collects into HashMap using ID as key
         .into_values()
         .collect::<Vec<_>>();
+
+    clipboards.sort_by(|a, b| b.id.cmp(&a.id));
+
+    if !clipboards.is_empty() {
+        let newest = &clipboards[0];
+        let oldest = &clipboards[clipboards.len() - 1];
+        printlog!(
+            "(local) clipboards: {} favorite: {} from {} to {}",
+            latest_syncable_clipboards_len,
+            sync_favorite_clipboards_len,
+            uuid_to_datetime(&oldest.id),
+            uuid_to_datetime(&newest.id)
+        );
+    } else {
+        printlog!(
+            "(local) clipboards: {} favorite: {} (empty)",
+            latest_syncable_clipboards_len,
+            sync_favorite_clipboards_len
+        );
+    }
 
     Ok(load_clipboards_with_relations(clipboards).await)
 }
@@ -610,7 +628,7 @@ pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, (bool, NaiveDateTi
             clipboard::Column::Star,
             clipboard::Column::CreatedAt,
         ])
-        .order_by_desc(clipboard::Column::CreatedAt)
+        .order_by_desc(clipboard::Column::Id)
         .into_tuple()
         .all(&db)
         .await?;
@@ -625,7 +643,7 @@ pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
     let db = db().await?;
 
     let model = clipboard::Entity::find()
-        .order_by_desc(clipboard::Column::CreatedAt)
+        .order_by_desc(clipboard::Column::Id)
         .offset(Some(i))
         .limit(1)
         .one(&db)

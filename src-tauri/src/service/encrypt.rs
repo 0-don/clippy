@@ -114,7 +114,7 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
                 provider
                     .update_clipboard(&encrypted, remote)
                     .await
-                    .expect("Failed to update remote clipboard");
+                    .ok();
             }
         }
     }

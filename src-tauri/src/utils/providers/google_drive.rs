@@ -1,17 +1,19 @@
 use super::parse_clipboard_info;
+use crate::prelude::*;
 use crate::{
     service::settings::{get_global_settings, update_settings_synchronize_db},
     tao::{config::get_data_path, global::get_app},
-    utils::providers::create_clipboard_filename,
+    utils::providers::{create_clipboard_filename, uuid_to_datetime},
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
     constants::{BACKUP_FILE_PREFIX, BACKUP_SETTINGS_PREFIX, TOKEN_NAME},
     printlog,
     types::{
+        enums::ListenEvent,
         orm_query::FullClipboardDto,
         sync::{Clippy, GoogleDriveProvider, SyncProvider},
-        types::CommandError,
+        types::{CommandError, Progress},
     },
 };
 use google_drive3::{
@@ -25,7 +27,7 @@ use migration::async_trait;
 use sea_orm::prelude::Uuid;
 use serde_json::Value;
 use std::{collections::HashMap, future::Future, io::Cursor, pin::Pin};
-use tauri::Manager;
+use tauri::{Emitter, EventTarget, Manager};
 use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_opener::OpenerExt;
 
@@ -127,8 +129,6 @@ impl GoogleDriveProviderImpl {
             page_token = file_list.next_page_token;
         }
 
-        printlog!("(remote) found {} clipboards", all_files.len());
-
         Ok(all_files)
     }
 
@@ -153,17 +153,42 @@ impl SyncProvider for GoogleDriveProviderImpl {
     async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>> {
         let filelist = self.fetch_all_clipboard_files().await?;
         let mut clipboards = Vec::new();
+        let mut seen_ids = std::collections::HashSet::new();
 
         for file in filelist {
             if let Some(remote) =
                 parse_clipboard_info(&file.name.expect("No name"), &file.id.expect("No id"))
             {
-                clipboards.push(remote);
+                // Only add if we haven't seen this ID before
+                if seen_ids.insert(remote.id) {
+                    clipboards.push(remote);
+                } else {
+                    printlog!(
+                        "Found duplicate clipboard: {} from {}, deleting duplicate",
+                        remote.id,
+                        uuid_to_datetime(&remote.id)
+                    );
+                    // Delete the duplicate file
+                    self.delete_clipboard(&remote).await;
+                }
             }
         }
 
         // Sort by created_at
-        clipboards.sort_by_key(|info| info.created_at);
+        clipboards.sort_by(|a, b| b.id.cmp(&a.id));
+
+        if !clipboards.is_empty() {
+            let newest = &clipboards[0];
+            let oldest = &clipboards[clipboards.len() - 1];
+            printlog!(
+                "(remote) found {} clipboards from {} to {}",
+                clipboards.len(),
+                uuid_to_datetime(&oldest.id),
+                uuid_to_datetime(&newest.id)
+            );
+        } else {
+            printlog!("(remote) found no clipboards");
+        }
 
         Ok(clipboards)
     }
@@ -175,14 +200,15 @@ impl SyncProvider for GoogleDriveProviderImpl {
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
 
-        for file in remote_clipboards {
+        let total = remote_clipboards.len();
+        for (index, file) in remote_clipboards.iter().enumerate() {
             // Skip if the clipboard is marked for deletion
             if file.deleted_at.is_some() {
                 continue;
             }
 
             if let Some((local_star, _local_timestamp)) = local_clipboards.get(&file.id) {
-                // Download if either timestamp is newer or star status is different
+                // star status is different
                 if local_star == &file.star {
                     continue;
                 }
@@ -191,10 +217,20 @@ impl SyncProvider for GoogleDriveProviderImpl {
             printlog!(
                 "downloading clipboard: {} from {} star: {} encrypted: {}",
                 file.id,
-                file.created_at,
+                uuid_to_datetime(&file.id),
                 file.star,
                 file.encrypted
             );
+
+            get_app().emit_to(
+                EventTarget::any(),
+                ListenEvent::Progress.to_string().as_str(),
+                Progress {
+                    label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
+                    total,
+                    current: index + 1,
+                },
+            )?;
 
             new_clipboards.push(self.download_by_id(&file.provider_id).await?);
         }
@@ -209,16 +245,21 @@ impl SyncProvider for GoogleDriveProviderImpl {
     ) -> Result<Vec<Clippy>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
 
-        let remote_map: HashMap<Uuid, NaiveDateTime> = remote_clipboards
+        // Skip clipboards that were recently deleted
+        let recently_deleted: Vec<_> = remote_clipboards
             .iter()
-            .map(|clip| (clip.id, clip.created_at))
+            .filter(|c| c.deleted_at.is_some())
+            .map(|c| c.id)
             .collect();
 
         for clipboard in new_local_clipboards {
-            if let Some(_remote_created_at) = remote_map.get(&clipboard.clipboard.id) {
+            if remote_clipboards
+                .iter()
+                .any(|clip| clip.id == clipboard.clipboard.id)
+                || recently_deleted.contains(&clipboard.clipboard.id)
+            {
                 continue;
             }
-
             new_clipboards.push(self.upload_clipboard(clipboard).await?);
         }
 
@@ -292,7 +333,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
             remote_clipboards.iter().filter(|clip| !clip.star).collect();
 
         // Sort by creation date
-        all_clipboards.sort_by_key(|info| info.created_at);
+        all_clipboards.sort_by(|a, b| a.id.cmp(&b.id));
 
         // Find all marked-for-deletion indices
         let marked_indices: Vec<usize> = all_clipboards
@@ -309,8 +350,16 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
         if let Some(&last_marked_idx) = marked_indices.last() {
             // Calculate how many clipboards we need to delete
-            let total_to_delete = all_clipboards.len() - sync_limit;
 
+            let total_to_delete = all_clipboards.len() - sync_limit + marked_indices.len();
+
+            printlog!(
+                "total clipboards: {}, marked clipboards: {}, total to delete: {} (last marked: {})",
+                all_clipboards.len(),
+                marked_indices.len(),
+                total_to_delete,
+                last_marked_idx
+            );
             // Only delete if we can remove everything up to and including the last marked clipboard
             if total_to_delete > last_marked_idx {
                 // Delete oldest clipboards including the marked ones
@@ -318,7 +367,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
                     printlog!(
                         "deleting clipboard: {} from {} (marked: {})",
                         clippy.id,
-                        clippy.created_at,
+                        uuid_to_datetime(&clippy.id),
                         clippy.deleted_at.is_some()
                     );
                     self.delete_clipboard(clippy).await;
@@ -331,7 +380,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
                 printlog!(
                     "deleting clipboard: {} from {}",
                     clippy.id,
-                    clippy.created_at
+                    uuid_to_datetime(&clippy.id),
                 );
                 self.delete_clipboard(clippy).await;
             }
@@ -355,7 +404,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         printlog!(
             "uploading clipboard: {} from {} star: {} encrypted: {}",
             clipboard.clipboard.id,
-            clipboard.clipboard.created_at,
+            uuid_to_datetime(&clipboard.clipboard.id),
             clipboard.clipboard.star,
             clipboard.clipboard.encrypted
         );
@@ -404,7 +453,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         printlog!(
             "updating clipboard: {} from {} star: {} encrypted: {}",
             remote_clipboard.id,
-            remote_clipboard.created_at,
+            uuid_to_datetime(&remote_clipboard.id),
             local_clipboard.clipboard.star,
             local_clipboard.clipboard.encrypted
         );

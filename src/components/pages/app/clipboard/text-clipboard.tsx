@@ -93,7 +93,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
 
           <div class="min-w-0 flex-1">
             <p
-              class="w-[calc(100vw-6.576rem)] truncate text-left text-sm"
+              class="w-[calc(100vw-6.5rem)] truncate text-left text-sm"
               title={!props.data.html?.data && SettingsStore.settings()?.tooltip ? data : undefined}
             >
               {data}

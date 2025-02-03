@@ -98,10 +98,7 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
                         .iter()
                         .find(|r| r.id == decrypted.clipboard.id)
                     {
-                        provider
-                            .update_clipboard(&decrypted, remote)
-                            .await
-                            .expect("Failed to update remote clipboard");
+                        provider.update_clipboard(&decrypted, remote).await.ok();
                     }
                 }
             }

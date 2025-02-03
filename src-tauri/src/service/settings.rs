@@ -138,6 +138,7 @@ pub async fn update_settings_from_sync(
         // Local unencrypted -> Remote encrypted
         (false, true, false) => {
             printlog!("Local unencrypted -> Remote encrypted");
+            remote_settings.insert("encryption".to_string(), serde_json::Value::Bool(true));
             init_password_lock_event(PasswordAction::Encrypt);
         }
         // Local encrypted -> Remote unencrypted, no key
@@ -195,7 +196,7 @@ pub async fn update_settings_from_sync(
         // Notify UI of settings change
         init_settings_window();
 
-        printlog!("(remote) downloaded settings");
+        printlog!("(remote) applied settings");
     }
 
     Ok(())
