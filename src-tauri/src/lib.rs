@@ -12,7 +12,7 @@ use tauri_plugin_autostart::MacosLauncher;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_clipboard::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_positioner::init())
@@ -21,7 +21,14 @@ pub fn run() {
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
             None,
-        ))
+        ));
+
+    #[cfg(desktop)]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {}));
+    }
+
+    builder
         .setup(setup::setup)
         .invoke_handler(tauri::generate_handler![
             clipboard::get_clipboards,
