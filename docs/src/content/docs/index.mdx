@@ -13,6 +13,7 @@ hero:
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
+import "../../styles/global.css";
 
 ## Next steps
 
@@ -28,6 +29,7 @@ import { Card, CardGrid } from "@astrojs/starlight/components";
   </Card>
 </CardGrid>
 
-<div>
-  <p class="text-red-500">Test</p>
+<div class="flex justify-between">
+  <a href="/legal/privacy-policy">Privacy Policy</a>
+  <a href="/legal/terms-of-service">Terms of Service</a>
 </div>
