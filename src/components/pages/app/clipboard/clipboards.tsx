@@ -43,7 +43,7 @@ export const Clipboards: Component = () => {
       fallback={
         <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
           <img src={clippy} width="50%" alt="no clipboards" />
-          <h2 class="text-2xl font-medium opacity-50">{t("CLIPBOARD.NO_CLIPBOARDS_YET")}</h2>
+          <h2 class="text-2xl font-medium opacity-50 text-center">{t("CLIPBOARD.NO_CLIPBOARDS_YET")}</h2>
         </div>
       }
     >

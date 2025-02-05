@@ -66,5 +66,13 @@
         ]
       }
     }
+  },
+  "plugins": {
+    "oauth": {
+      "google": {
+        "clientId": "%TAURI_GOOGLE_CLIENT_ID%",
+        "clientSecret": "%TAURI_GOOGLE_CLIENT_SECRET%"
+      }
+    }
   }
 }

@@ -58,9 +58,39 @@ pub struct GoogleDriveProviderImpl(GoogleDriveProvider);
 
 impl GoogleDriveProviderImpl {
     pub async fn new() -> Result<Self, CommandError> {
+        let config = get_app().config();
+
+        let (client_id, client_secret) = match (
+            std::env::var("TAURI_GOOGLE_CLIENT_ID"),
+            std::env::var("TAURI_GOOGLE_CLIENT_SECRET"),
+        ) {
+            (Ok(id), Ok(secret)) => (id, secret),
+            _ => {
+                let plugins = config
+                    .plugins
+                    .0
+                    .get("oauth")
+                    .and_then(|o| o.get("google"))
+                    .ok_or_else(|| CommandError::new("Missing Google OAuth configuration"))?;
+
+                (
+                    plugins
+                        .get("clientId")
+                        .and_then(|v| v.as_str())
+                        .ok_or_else(|| CommandError::new("Missing Google client ID"))?
+                        .to_string(),
+                    plugins
+                        .get("clientSecret")
+                        .and_then(|v| v.as_str())
+                        .ok_or_else(|| CommandError::new("Missing Google client secret"))?
+                        .to_string(),
+                )
+            }
+        };
+
         let secret = yup_oauth2::ApplicationSecret {
-            client_id: std::env::var("GOOGLE_CLIENT_ID")?,
-            client_secret: std::env::var("GOOGLE_CLIENT_SECRET")?,
+            client_id,
+            client_secret,
             auth_uri: "https://accounts.google.com/o/oauth2/auth".into(),
             token_uri: "https://accounts.google.com/o/oauth2/token".into(),
             ..Default::default()

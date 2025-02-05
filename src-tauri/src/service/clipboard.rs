@@ -664,8 +664,14 @@ pub async fn copy_clipboard_from_id(
     requested_type: ClipboardType,
 ) -> Result<bool, DbErr> {
     printlog!("copy clipboard type: {:?} id:{:?}", requested_type, id);
-    let clipboard_data = get_clipboard_db(id).await?;
+    let mut clipboard_data = get_clipboard_db(id).await?;
     let clipboard = get_app().state::<Clipboard>();
+
+    // Decrypt the clipboard data if it's encrypted
+    if clipboard_data.clipboard.encrypted && is_encryption_key_set() {
+        clipboard_data = decrypt_clipboard(clipboard_data)
+            .map_err(|e| DbErr::Custom(format!("Failed to decrypt clipboard: {}", e)))?;
+    }
 
     let success = match requested_type {
         ClipboardType::Image => clipboard_data
