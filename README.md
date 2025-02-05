@@ -4,7 +4,7 @@
   </a>
   <p align="center">
     <br />
-    Clipboard Manager made with Tauri, Solid & Sea-Orm
+    clipboard manager with sync & encryption
     <br />
     <a href="https://github.com/0-don/clippy/releases/latest">Try it out</a>
     ·
@@ -18,20 +18,75 @@
   </p>
 </p>
 
-successor of [the electron clippy](https://github.com/0-don/clippy-ts)
+<div align="center">
+
+<a href="https://github.com/0-don/clippy/releases/download/v1.3.1/clippy_1.3.1_x64-setup.exe">
+  <img src="./public/windows.png"> Windows (x64)
+</a>
+•
+<a href="https://github.com/0-don/clippy/releases/download/v1.3.1/clippy_1.3.1_x64-setup.exe">
+  Windows (arm64)
+</a>
+<br>
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_amd64.deb">
+  <img src="./public/linux.png"> Linux (deb)
+</a>
+•
+<a href="https://github.com/0PandaDEV/Qopy/releases/download/v0.3.1/Qopy-0.3.1.rpm">
+  Linux (rpm)
+</a>
+•
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy-bin-1.4.0-1-x86_64.pkg.tar.zst">
+  Linux (zst)
+</a>
+•
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_amd64.AppImage">
+  Linux (AppImage)
+</a>
+<br>
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_aarch64.dmg">
+  <img src="./public/apple.png"> macOS (Silicon)
+</a>
+•
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_aarch64.dmg">
+  macOS (Intel)
+</a>
+<br>
+<br>
+
+</div>
 
 ### Features
 
-- display/hide **ctrl+y** or **ctrl+d** (change in settings)
-- type out clipboard **ctrl+b** (where pasting isn't allowed)
-- text, html, rtf, image, file support
-- keybinds for everything & custom keybinds
-- add favorite clipboards
-- smart search, for links, colors, images, hex, etc.
-- change/sync database location
-- dark mode / white mode
-- multilanguage support
-- display scale
+- **Multi-content support:**
+  - Text, HTML, RTF support
+  - Image support with thumbnails
+  - File support with metadata
+- **Smart clipboard features:**
+  - Type out clipboard content (where pasting isn't allowed) **ctrl+b**
+  - Smart search for links, colors, images, hex codes etc.
+  - Add favorite clipboards
+  - Clear history by type
+- **Security & Privacy:**
+  - End-to-end encryption support
+  - Password protection
+  - Configurable size limits for different content types
+- **Cloud sync:**
+  - Google Drive integration
+  - Sync favorites and history
+  - Configurable sync limits
+- **Customization:**
+  - Global hotkeys for all functions
+  - Custom keybinds
+  - Adjustable display scale
+  - Dark/Light mode
+  - Multiple languages support
+  - Configurable window positions
+  - Database location customization
+- **System Integration:**
+  - Autostart option
+  - System tray support
+  - Display toggle with **ctrl+y** or **ctrl+d**
 
 ### Prerequisites Development
 

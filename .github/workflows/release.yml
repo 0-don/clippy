@@ -3,7 +3,7 @@ name: "publish"
 on:
   workflow_dispatch:
   push:
-    branches: [mastera]
+    branches: [master]
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -63,6 +63,12 @@ jobs:
         with:
             node-version: lts/*
 
+      - name: Replace environment variables in config
+        env:
+          TAURI_GOOGLE_CLIENT_ID: ${{ secrets.TAURI_GOOGLE_CLIENT_ID }}
+          TAURI_GOOGLE_CLIENT_SECRET: ${{ secrets.TAURI_GOOGLE_CLIENT_SECRET }}
+        run: node ./.github/replace-config.js
+          
       - name: install rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -84,8 +90,6 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         with:
           tagName: ${{ needs.setup.outputs.tag_name }}
           releaseName:  ${{ needs.setup.outputs.tag_name  }}

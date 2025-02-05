@@ -3,7 +3,8 @@
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenvy::dotenv()?;
+    #[cfg(debug_assertions)]
+    dotenvy::dotenv().ok();
 
     #[cfg(target_os = "linux")]
     {

@@ -20,8 +20,8 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} > .env
-          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+          echo TAURI_GOOGLE_CLIENT_ID=${{ secrets.TAURI_GOOGLE_CLIENT_ID }} > .env
+          echo TAURI_GOOGLE_CLIENT_SECRET=${{ secrets.TAURI_GOOGLE_CLIENT_SECRET }} >> .env
           cat .env
 
       
