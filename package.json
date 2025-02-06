@@ -16,7 +16,7 @@
     "icon": "tauri icon"
   },
   "dependencies": {
-    "@corvu/tooltip": "0.2.1",
+    "@corvu/tooltip": "0.2.2",
     "@solid-primitives/i18n": "2.2.0",
     "@tauri-apps/api": "2.2.0",
     "dayjs": "1.11.13",
@@ -24,15 +24,15 @@
     "solid-js": "1.9.4"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0",
-    "@tauri-apps/cli": "2.2.5",
+    "@tailwindcss/vite": "^4.0.4",
+    "@tauri-apps/cli": "2.2.7",
     "cross-env": "7.0.3",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.0.0",
+    "tailwindcss": "^4.0.4",
     "typescript": "5.7.3",
-    "vite": "6.0.11",
+    "vite": "6.1.0",
     "vite-plugin-checker": "0.8.0",
-    "vite-plugin-solid": "2.11.0"
+    "vite-plugin-solid": "2.11.1"
   }
 }
