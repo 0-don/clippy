@@ -1,32 +1,33 @@
 import { IconTypes } from "solid-icons";
-import { Component, JSX } from "solid-js";
+import { Component, ComponentProps, splitProps } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
+import { cn } from "../../lib/utils";
 import { useLanguage } from "../provider/language-provider";
 
-interface ButtonProps {
+type ButtonProps = ComponentProps<"button"> & {
   label: DictionaryKey;
-  className?: string;
   iconClassName?: string;
-  type?: HTMLButtonElement["type"];
   Icon?: IconTypes;
-  onClick?: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent>;
-  children?: JSX.Element;
-  disabled?: boolean;
-}
+};
 
 export const Button: Component<ButtonProps> = (props) => {
+  const [local, buttonProps] = splitProps(props, ["label", "iconClassName", "Icon", "children", "class"]);
+
   const { t } = useLanguage();
 
   return (
     <button
-      type={props.type || "button"}
-      onClick={props.onClick}
-      class={`flex ${!props.disabled ? "cursor-pointer" : "cursor-not-allowed"} items-center justify-center rounded-sm bg-zinc-600 px-1 py-1 text-xs font-bold text-white hover:bg-zinc-700 disabled:bg-neutral-500 ${props.className}`}
-      disabled={props.disabled}
+      type={buttonProps.type || "button"}
+      {...buttonProps}
+      class={cn(
+        "flex items-center justify-center rounded-sm bg-zinc-600 px-1 py-1 text-xs font-bold text-white hover:bg-zinc-700 disabled:bg-neutral-500",
+        !buttonProps.disabled ? "cursor-pointer" : "cursor-not-allowed",
+        local.class
+      )}
     >
-      {props.Icon && <props.Icon class={`mr-1 text-lg ${props.iconClassName}`} />}
-      {props.children}
-      <span>{t(props.label) || props.label}</span>
+      {local.Icon && <local.Icon class={cn("mr-1 text-lg", local.iconClassName)} />}
+      {local.children}
+      <span>{t(local.label) || local.label}</span>
     </button>
   );
 };

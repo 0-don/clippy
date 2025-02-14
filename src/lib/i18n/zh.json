@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "最大 Rtf 大小",
 			"MAX_TEXT_SIZE": "最大文本大小"
 		},
+		"PATTERNS": {
+			"ACTIONS": "操作",
+			"ADD": "添加",
+			"CHANGE_YOUR_TEXT_MATCHES": "更改文本匹配",
+			"ENABLED": "已启用",
+			"INFO": "从剪贴板中删除敏感数据，定义文本或正则表达式模式，它将被替换（留空）",
+			"MATCH_EXPRESSION": "匹配表达式",
+			"REMOVE": "消除",
+			"SUBSTITUTION": "替代"
+		},
 		"SETTINGS": "设置",
 		"TAB": {
 			"BACKUP": "备份",
@@ -167,7 +177,8 @@
 			"GENERAL": "一般的",
 			"HISTORY": "历史",
 			"HOTKEYS": "热键",
-			"LIMITS": "限制"
+			"LIMITS": "限制",
+			"PATTERNS": "模式"
 		}
 	}
 }

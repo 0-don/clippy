@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Maksymalny rozmiar RTF",
 			"MAX_TEXT_SIZE": "Maksymalny rozmiar tekstu"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Działania",
+			"ADD": "Dodać",
+			"CHANGE_YOUR_TEXT_MATCHES": "Zmień swoje dopasowania tekstowe",
+			"ENABLED": "Włączony",
+			"INFO": "Usuń poufne dane ze schowka, zdefiniuj tekst lub wzorzec wyrażenia regularnego, a zostanie on zastąpiony podstawieniem (pozostaw puste pole).",
+			"MATCH_EXPRESSION": "Dopasuj wyrażenie",
+			"REMOVE": "Usunąć",
+			"SUBSTITUTION": "Podstawienie"
+		},
 		"SETTINGS": "Ustawienia",
 		"TAB": {
 			"BACKUP": "Kopia zapasowa",
@@ -167,7 +177,8 @@
 			"GENERAL": "Ogólny",
 			"HISTORY": "Historia",
 			"HOTKEYS": "Klawisze skrótu",
-			"LIMITS": "Ograniczenia"
+			"LIMITS": "Ograniczenia",
+			"PATTERNS": "Wzory"
 		}
 	}
 }

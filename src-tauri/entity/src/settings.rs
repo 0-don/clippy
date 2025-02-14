@@ -18,6 +18,7 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i32,
     pub language: String,
+    pub text_matchers: Json,
     pub startup: bool,
     pub sync: bool,
     pub sync_limit: i32,
@@ -39,6 +40,7 @@ pub struct Model {
 pub enum Column {
     Id,
     Language,
+    TextMatchers,
     Startup,
     Sync,
     SyncLimit,
@@ -77,6 +79,7 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::Integer.def(),
             Self::Language => ColumnType::String(StringLen::N(2u32)).def(),
+            Self::TextMatchers => ColumnType::Json.def(),
             Self::Startup => ColumnType::Boolean.def(),
             Self::Sync => ColumnType::Boolean.def(),
             Self::SyncLimit => ColumnType::Integer.def(),

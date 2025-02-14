@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Kích thước Rtf tối đa",
 			"MAX_TEXT_SIZE": "Kích thước văn bản tối đa"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Hành động",
+			"ADD": "Thêm vào",
+			"CHANGE_YOUR_TEXT_MATCHES": "Thay đổi văn bản của bạn phù hợp",
+			"ENABLED": "Đã bật",
+			"INFO": "Xóa dữ liệu nhạy cảm khỏi bảng tạm, xác định văn bản hoặc mẫu biểu thức chính quy và nó sẽ được thay thế bằng phép thay thế (để trống từ trống)",
+			"MATCH_EXPRESSION": "Biểu thức phù hợp",
+			"REMOVE": "Di dời",
+			"SUBSTITUTION": "Sự thay thế"
+		},
 		"SETTINGS": "Cài đặt",
 		"TAB": {
 			"BACKUP": "Hỗ trợ",
@@ -167,7 +177,8 @@
 			"GENERAL": "Tổng quan",
 			"HISTORY": "Lịch sử",
 			"HOTKEYS": "Phím nóng",
-			"LIMITS": "Giới hạn"
+			"LIMITS": "Giới hạn",
+			"PATTERNS": "Các mẫu"
 		}
 	}
 }

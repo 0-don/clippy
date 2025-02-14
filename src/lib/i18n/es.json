@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Tamaño máximo de Rtf",
 			"MAX_TEXT_SIZE": "Tamaño máximo del texto"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Comportamiento",
+			"ADD": "Agregar",
+			"CHANGE_YOUR_TEXT_MATCHES": "Cambia las coincidencias de texto",
+			"ENABLED": "Activado",
+			"INFO": "Elimine los datos confidenciales de los portapapeles, defina un patrón de texto o expresión regular y se reemplazará con una sustitución (deje en blanco si está vacío)",
+			"MATCH_EXPRESSION": "Expresión de coincidencia",
+			"REMOVE": "Eliminar",
+			"SUBSTITUTION": ""
+		},
 		"SETTINGS": "Ajustes",
 		"TAB": {
 			"BACKUP": "Respaldo",
@@ -167,7 +177,8 @@
 			"GENERAL": "General",
 			"HISTORY": "Historia",
 			"HOTKEYS": "Teclas de acceso rápido",
-			"LIMITS": "Límites"
+			"LIMITS": "Límites",
+			"PATTERNS": "Patrones"
 		}
 	}
 }

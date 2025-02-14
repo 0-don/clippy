@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "最大 RTF サイズ",
 			"MAX_TEXT_SIZE": "最大テキストサイズ"
 		},
+		"PATTERNS": {
+			"ACTIONS": "行動",
+			"ADD": "追加",
+			"CHANGE_YOUR_TEXT_MATCHES": "テキストマッチを変更する",
+			"ENABLED": "有効",
+			"INFO": "クリップボードから機密データを削除し、テキストまたは正規表現パターンを定義すると、置換されます（空白のままにしておく）",
+			"MATCH_EXPRESSION": "一致表現",
+			"REMOVE": "取り除く",
+			"SUBSTITUTION": "代替"
+		},
 		"SETTINGS": "設定",
 		"TAB": {
 			"BACKUP": "バックアップ",
@@ -167,7 +177,8 @@
 			"GENERAL": "一般的な",
 			"HISTORY": "歴史",
 			"HOTKEYS": "ホットキー",
-			"LIMITS": "制限"
+			"LIMITS": "制限",
+			"PATTERNS": "パターン"
 		}
 	}
 }

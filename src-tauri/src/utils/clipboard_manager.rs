@@ -12,6 +12,7 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType};
 use common::types::orm_query::FullClipboardDbo;
+use common::types::types::TextMatcher;
 use image::imageops;
 use regex::Regex;
 use sea_orm::prelude::Uuid;
@@ -36,6 +37,7 @@ pub trait ClipboardManagerExt {
     ) -> ();
     fn parse_image_model(&mut self, img_bytes: Vec<u8>);
     fn parse_file_models(&mut self, file_paths: Vec<String>) -> std::io::Result<()>;
+    fn apply_text_matchers(&mut self) -> bool;
 }
 
 impl ClipboardManagerExt for FullClipboardDbo {
@@ -79,7 +81,22 @@ impl ClipboardManagerExt for FullClipboardDbo {
             }
         }
 
+        let content_changed = manager.apply_text_matchers();
+
         if !manager.check_if_last_is_same().await && manager.clipboard_model.types.is_set() {
+            if content_changed {
+                // Update system clipboard with modified content if pattern replacements were applied
+                if let sea_orm::ActiveValue::Set(text) = manager.clipboard_text_model.data {
+                    return clipboard.write_text(text).expect("Failed to write text");
+                }
+                if let sea_orm::ActiveValue::Set(html) = manager.clipboard_html_model.data {
+                    return clipboard.write_html(html).expect("Failed to write html");
+                }
+                if let sea_orm::ActiveValue::Set(rtf) = manager.clipboard_rtf_model.data {
+                    return clipboard.write_rtf(rtf).expect("Failed to write rtf");
+                }
+            }
+
             // insert default not encrypted clipboard
             let clipboard = insert_clipboard_dbo(manager)
                 .await
@@ -388,5 +405,58 @@ impl ClipboardManagerExt for FullClipboardDbo {
             }
         }
         Ok(())
+    }
+
+    fn apply_text_matchers(&mut self) -> bool {
+        let text_matchers = TextMatcher::from_json_value(&get_global_settings().text_matchers);
+        let mut content_changed = false;
+
+        // Handle text content
+        if let sea_orm::ActiveValue::Set(ref text) = self.clipboard_text_model.data {
+            let mut new_text = text.clone();
+            for pattern in &text_matchers {
+                if let Some(replaced) = pattern.replace_matches(&new_text) {
+                    new_text = replaced;
+                    content_changed = true;
+                }
+            }
+            if content_changed {
+                self.clipboard_text_model.data = Set(new_text);
+            }
+        }
+
+        // Handle HTML content
+        if let sea_orm::ActiveValue::Set(ref html) = self.clipboard_html_model.data {
+            let mut new_html = html.clone();
+            let mut html_changed = false;
+            for pattern in &text_matchers {
+                if let Some(replaced) = pattern.replace_matches(&new_html) {
+                    new_html = replaced;
+                    html_changed = true;
+                }
+            }
+            if html_changed {
+                self.clipboard_html_model.data = Set(new_html);
+                content_changed = true;
+            }
+        }
+
+        // Handle RTF content
+        if let sea_orm::ActiveValue::Set(ref rtf) = self.clipboard_rtf_model.data {
+            let mut new_rtf = rtf.clone();
+            let mut rtf_changed = false;
+            for pattern in &text_matchers {
+                if let Some(replaced) = pattern.replace_matches(&new_rtf) {
+                    new_rtf = replaced;
+                    rtf_changed = true;
+                }
+            }
+            if rtf_changed {
+                self.clipboard_rtf_model.data = Set(new_rtf);
+                content_changed = true;
+            }
+        }
+
+        content_changed
     }
 }

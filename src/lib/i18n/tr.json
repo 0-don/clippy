@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Maksimum Rtf boyutu",
 			"MAX_TEXT_SIZE": "Maksimum Metin boyutu"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Hareketler",
+			"ADD": "Eklemek",
+			"CHANGE_YOUR_TEXT_MATCHES": "Metin eşleşmelerinizi değiştirin",
+			"ENABLED": "Etkinleştirilmiş",
+			"INFO": "Panodan hassas verileri kaldırın, metin veya regex desenini tanımlayın ve yerine ikame veri girilecektir (boştan boş bırakın)",
+			"MATCH_EXPRESSION": "Maç ifadesi",
+			"REMOVE": "Kaldırmak",
+			"SUBSTITUTION": "İkame"
+		},
 		"SETTINGS": "Ayarlar",
 		"TAB": {
 			"BACKUP": "Yedekleme",
@@ -167,7 +177,8 @@
 			"GENERAL": "Genel",
 			"HISTORY": "Tarih",
 			"HOTKEYS": "Kısayollar",
-			"LIMITS": "Sınırlar"
+			"LIMITS": "Sınırlar",
+			"PATTERNS": "Desenler"
 		}
 	}
 }
