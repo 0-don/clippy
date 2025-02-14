@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Encriptar / Descifrar",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} de {{total}} portapapeles están encriptados localmente",
 			"INFO": "Todos los portapapeles están encriptados, si se pierde la contraseña no se puede restaurar nada",
-			"PASSWORD": "Contraseña"
+			"PASSWORD": "Contraseña",
+			"SAVE_BEFORE_UNLOCK": "¿Guardar portapapeles antes de ingresar el PIN al iniciar?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambiar idioma",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Tamaño máximo de Rtf",
 			"MAX_TEXT_SIZE": "Tamaño máximo del texto"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Comportamiento",
+			"ADD": "Agregar",
+			"CHANGE_YOUR_TEXT_MATCHES": "Cambia las coincidencias de texto",
+			"ENABLED": "Activado",
+			"INFO": "Elimine los datos confidenciales de los portapapeles, defina un patrón glob o regex y se reemplazará con una sustitución (déjelo en blanco para que quede vacío)",
+			"MATCH_EXPRESSION": "Expresión de coincidencia",
+			"REMOVE": "Eliminar",
+			"SUBSTITUTION": ""
+		},
 		"SETTINGS": "Ajustes",
 		"TAB": {
 			"BACKUP": "Respaldo",
@@ -167,7 +178,8 @@
 			"GENERAL": "General",
 			"HISTORY": "Historia",
 			"HOTKEYS": "Teclas de acceso rápido",
-			"LIMITS": "Límites"
+			"LIMITS": "Límites",
+			"PATTERNS": "Patrones"
 		}
 	}
 }

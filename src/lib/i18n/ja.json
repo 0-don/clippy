@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "暗号化/復号化",
 			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} 個のクリップボードの{{current}} はローカルで暗号化されています",
 			"INFO": "すべてのクリップボードは暗号化されており、パスワードを紛失した場合は何も復元できません。",
-			"PASSWORD": "パスワード"
+			"PASSWORD": "パスワード",
+			"SAVE_BEFORE_UNLOCK": "起動時に PIN が入力される前にクリップボードを保存しますか?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "言語を変えてください",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "最大 RTF サイズ",
 			"MAX_TEXT_SIZE": "最大テキストサイズ"
 		},
+		"PATTERNS": {
+			"ACTIONS": "行動",
+			"ADD": "追加",
+			"CHANGE_YOUR_TEXT_MATCHES": "テキストマッチを変更する",
+			"ENABLED": "有効",
+			"INFO": "クリップボードから機密データを削除し、glob または正規表現パターンを定義すると、置換で置き換えられます (空の場合は空白のままにします)",
+			"MATCH_EXPRESSION": "一致表現",
+			"REMOVE": "取り除く",
+			"SUBSTITUTION": "代替"
+		},
 		"SETTINGS": "設定",
 		"TAB": {
 			"BACKUP": "バックアップ",
@@ -167,7 +178,8 @@
 			"GENERAL": "一般的な",
 			"HISTORY": "歴史",
 			"HOTKEYS": "ホットキー",
-			"LIMITS": "制限"
+			"LIMITS": "制限",
+			"PATTERNS": "パターン"
 		}
 	}
 }

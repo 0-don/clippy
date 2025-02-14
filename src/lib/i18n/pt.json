@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Criptografar / Descriptografar",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} de {{total}} áreas de transferência são criptografadas localmente",
 			"INFO": "Todas as áreas de transferência são criptografadas, se a senha for perdida, nada pode ser restaurado",
-			"PASSWORD": "Senha"
+			"PASSWORD": "Senha",
+			"SAVE_BEFORE_UNLOCK": "Salvar áreas de transferência antes que o PIN seja inserido na inicialização?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Alterar idioma",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Tamanho máximo do Rtf",
 			"MAX_TEXT_SIZE": "Tamanho máximo do texto"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Ações",
+			"ADD": "Adicionar",
+			"CHANGE_YOUR_TEXT_MATCHES": "Altere suas correspondências de texto",
+			"ENABLED": "Habilitado",
+			"INFO": "Remova dados confidenciais das áreas de transferência, defina o padrão glob ou regex e ele será substituído pela substituição (deixe em branco para ficar vazio)",
+			"MATCH_EXPRESSION": "Expressão de correspondência",
+			"REMOVE": "Remover",
+			"SUBSTITUTION": "Substituição"
+		},
 		"SETTINGS": "Configurações",
 		"TAB": {
 			"BACKUP": "Backup",
@@ -167,7 +178,8 @@
 			"GENERAL": "Em geral",
 			"HISTORY": "História",
 			"HOTKEYS": "Teclas de atalho",
-			"LIMITS": "Limites"
+			"LIMITS": "Limites",
+			"PATTERNS": "Padrões"
 		}
 	}
 }

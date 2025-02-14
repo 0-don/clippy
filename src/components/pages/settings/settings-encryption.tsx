@@ -93,7 +93,7 @@ const Encrypt: Component = ({}) => {
 
       <Button
         type="submit"
-        className="mt-1"
+        class="mt-1"
         Icon={loading() ? ImSpinner : AiFillLock}
         iconClassName={cn(loading() && "animate-spin")}
         label={
@@ -138,37 +138,48 @@ const Decrypt: Component = ({}) => {
   listenEvent(ListenEvent.Progress, setEncryptionProgress);
 
   return (
-    <form class="flex flex-col gap-1" onSubmit={onSubmit}>
-      <div>
-        <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
-        <Input
-          minLength={MIN_PASSWORD_LENGTH}
-          maxLength={MAX_PASSWORD_LENGTH}
-          value={password()}
-          onInput={(e) => setPassword(e.target.value)}
+    <>
+      <div class="my-4 flex items-center gap-2">
+        <Toggle
+          checked={SettingsStore.settings()?.enryption_save_before_unlock}
+          onChange={async (enryption_save_before_unlock) =>
+            SettingsStore.updateSettings({ ...SettingsStore.settings()!, enryption_save_before_unlock })
+          }
         />
+        <label class="text-sm">{t("SETTINGS.ENCRYPT.SAVE_BEFORE_UNLOCK")}</label>
       </div>
+      <form class="flex flex-col gap-1" onSubmit={onSubmit}>
+        <div>
+          <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
+          <Input
+            minLength={MIN_PASSWORD_LENGTH}
+            maxLength={MAX_PASSWORD_LENGTH}
+            value={password()}
+            onInput={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-      <Show when={error()}>
-        <p class="text-red-500">{t(error() as DictionaryKey) || error()}</p>
-      </Show>
+        <Show when={error()}>
+          <p class="text-red-500">{t(error() as DictionaryKey) || error()}</p>
+        </Show>
 
-      <Button
-        type="submit"
-        className="mt-1"
-        Icon={loading() ? ImSpinner : AiFillUnlock}
-        iconClassName={cn(loading() && "animate-spin")}
-        label={
-          !loading()
-            ? "SETTINGS.ENCRYPT.DECRYPT"
-            : encryptionProgress()
-              ? (t(encryptionProgress()!.label, {
-                  current: encryptionProgress()?.current || 0,
-                  total: encryptionProgress()?.total || 0,
-                }) as DictionaryKey)
-              : "SETTINGS.ENCRYPT.DECRYPT"
-        }
-      />
-    </form>
+        <Button
+          type="submit"
+          class="mt-1"
+          Icon={loading() ? ImSpinner : AiFillUnlock}
+          iconClassName={cn(loading() && "animate-spin")}
+          label={
+            !loading()
+              ? "SETTINGS.ENCRYPT.DECRYPT"
+              : encryptionProgress()
+                ? (t(encryptionProgress()!.label, {
+                    current: encryptionProgress()?.current || 0,
+                    total: encryptionProgress()?.total || 0,
+                  }) as DictionaryKey)
+                : "SETTINGS.ENCRYPT.DECRYPT"
+          }
+        />
+      </form>
+    </>
   );
 };

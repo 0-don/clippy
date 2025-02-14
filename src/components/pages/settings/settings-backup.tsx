@@ -9,12 +9,12 @@ import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation, HotkeyEvent } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
+import { MAX_SYNC_LIMIT } from "../../../utils/constants";
 import { Button } from "../../elements/button";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { useLanguage } from "../../provider/language-provider";
-import { MAX_SYNC_LIMIT } from "../../../utils/constants";
 
 interface SettingsBackupProps {}
 
@@ -111,7 +111,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             </div>
             <Button
               label="SETTINGS.BACKUP.OPEN"
-              className="absolute inset-y-0 right-0"
+              class="absolute inset-y-0 right-0"
               onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Config })}
               Icon={AiTwotoneFolderOpen}
             />

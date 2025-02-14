@@ -44,6 +44,7 @@ pub fn run() {
             //
             settings::get_settings,
             settings::update_settings,
+            settings::change_settings_text_matchers,
             settings::toggle_autostart,
             settings::change_clipboard_db_location,
             settings::reset_clipboard_db_location,

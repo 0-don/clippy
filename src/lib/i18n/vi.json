@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Mã hóa / Giải mã",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} từ {{total}} clipboard được mã hóa cục bộ",
 			"INFO": "Tất cả các bảng tạm đều được mã hóa, nếu mất mật khẩu thì không thể khôi phục lại được",
-			"PASSWORD": "Mật khẩu"
+			"PASSWORD": "Mật khẩu",
+			"SAVE_BEFORE_UNLOCK": "Lưu bảng tạm trước khi nhập mã PIN khi khởi động?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Thay đổi ngôn ngữ",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Kích thước Rtf tối đa",
 			"MAX_TEXT_SIZE": "Kích thước văn bản tối đa"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Hành động",
+			"ADD": "Thêm vào",
+			"CHANGE_YOUR_TEXT_MATCHES": "Thay đổi văn bản của bạn phù hợp",
+			"ENABLED": "Đã bật",
+			"INFO": "Xóa dữ liệu nhạy cảm khỏi bảng tạm, xác định mẫu glob hoặc regex và nó sẽ được thay thế bằng lệnh thay thế (để trống nếu trống)",
+			"MATCH_EXPRESSION": "Biểu thức phù hợp",
+			"REMOVE": "Di dời",
+			"SUBSTITUTION": "Sự thay thế"
+		},
 		"SETTINGS": "Cài đặt",
 		"TAB": {
 			"BACKUP": "Hỗ trợ",
@@ -167,7 +178,8 @@
 			"GENERAL": "Tổng quan",
 			"HISTORY": "Lịch sử",
 			"HOTKEYS": "Phím nóng",
-			"LIMITS": "Giới hạn"
+			"LIMITS": "Giới hạn",
+			"PATTERNS": "Các mẫu"
 		}
 	}
 }

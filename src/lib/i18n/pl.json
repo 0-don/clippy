@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Szyfruj / Odszyfruj",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} z {{total}} schowków jest szyfrowanych lokalnie",
 			"INFO": "Wszystkie schowki są szyfrowane, jeśli hasło zostanie utracone, nie będzie można go odzyskać",
-			"PASSWORD": "Hasło"
+			"PASSWORD": "Hasło",
+			"SAVE_BEFORE_UNLOCK": "Czy zapisać zawartość schowka przed wprowadzeniem kodu PIN podczas uruchamiania?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Zmień język",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Maksymalny rozmiar RTF",
 			"MAX_TEXT_SIZE": "Maksymalny rozmiar tekstu"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Działania",
+			"ADD": "Dodać",
+			"CHANGE_YOUR_TEXT_MATCHES": "Zmień swoje dopasowania tekstowe",
+			"ENABLED": "Włączony",
+			"INFO": "Usuń poufne dane ze schowka, zdefiniuj wzorzec glob lub regex, a zostanie on zastąpiony podstawieniem (pozostaw puste pole).",
+			"MATCH_EXPRESSION": "Dopasuj wyrażenie",
+			"REMOVE": "Usunąć",
+			"SUBSTITUTION": "Podstawienie"
+		},
 		"SETTINGS": "Ustawienia",
 		"TAB": {
 			"BACKUP": "Kopia zapasowa",
@@ -167,7 +178,8 @@
 			"GENERAL": "Ogólny",
 			"HISTORY": "Historia",
 			"HOTKEYS": "Klawisze skrótu",
-			"LIMITS": "Ograniczenia"
+			"LIMITS": "Ograniczenia",
+			"PATTERNS": "Wzory"
 		}
 	}
 }
