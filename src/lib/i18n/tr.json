@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Şifrele / Şifresini çöz",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}}  {{total}} panodan yerel olarak şifrelenir",
 			"INFO": "Tüm panolar şifrelenmiştir, şifre kaybolduğunda hiçbir şey geri yüklenemez",
-			"PASSWORD": "Şifre"
+			"PASSWORD": "Şifre",
+			"SAVE_BEFORE_UNLOCK": "Başlangıçta PIN girilmeden önce panoya kaydedilir mi?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Dili değiştir",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Maksimum Rtf boyutu",
 			"MAX_TEXT_SIZE": "Maksimum Metin boyutu"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Hareketler",
+			"ADD": "Eklemek",
+			"CHANGE_YOUR_TEXT_MATCHES": "Metin eşleşmelerinizi değiştirin",
+			"ENABLED": "Etkinleştirilmiş",
+			"INFO": "Hassas verileri panodan kaldırın, glob veya regex desenini tanımlayın ve yerine ikame veri konulsun (boş bırakmak için boş bırakın)",
+			"MATCH_EXPRESSION": "Maç ifadesi",
+			"REMOVE": "Kaldırmak",
+			"SUBSTITUTION": "İkame"
+		},
 		"SETTINGS": "Ayarlar",
 		"TAB": {
 			"BACKUP": "Yedekleme",
@@ -167,7 +178,8 @@
 			"GENERAL": "Genel",
 			"HISTORY": "Tarih",
 			"HOTKEYS": "Kısayollar",
-			"LIMITS": "Sınırlar"
+			"LIMITS": "Sınırlar",
+			"PATTERNS": "Desenler"
 		}
 	}
 }

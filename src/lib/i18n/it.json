@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Cripta/decripta",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti sono criptati localmente",
 			"INFO": "Tutti gli appunti sono criptati, se la password viene persa non è possibile ripristinarli",
-			"PASSWORD": "Password"
+			"PASSWORD": "Password",
+			"SAVE_BEFORE_UNLOCK": "Salvare gli appunti prima che venga inserito il PIN all'avvio?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Cambia lingua UI",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Dimensione massima RTF",
 			"MAX_TEXT_SIZE": "Dimensione massima testo"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Azioni",
+			"ADD": "Aggiungere",
+			"CHANGE_YOUR_TEXT_MATCHES": "Cambia le corrispondenze del testo",
+			"ENABLED": "Abilitato",
+			"INFO": "Rimuovi i dati sensibili dagli appunti, definisci il modello glob o regex e verranno sostituiti con la sostituzione (lascia vuoto per vuoto)",
+			"MATCH_EXPRESSION": "Espressione di corrispondenza",
+			"REMOVE": "Rimuovere",
+			"SUBSTITUTION": "Sostituzione"
+		},
 		"SETTINGS": "Impostazioni",
 		"TAB": {
 			"BACKUP": "Backup",
@@ -167,7 +178,8 @@
 			"GENERAL": "Generale",
 			"HISTORY": "Cronologia",
 			"HOTKEYS": "Tasti scelta rapida",
-			"LIMITS": "Limiti"
+			"LIMITS": "Limiti",
+			"PATTERNS": "Modelli"
 		}
 	}
 }

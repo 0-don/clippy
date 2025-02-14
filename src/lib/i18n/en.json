@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Encrypt / Decrypt",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} from {{total}} clipboards are encrypted locally",
 			"INFO": "All clipboards are encrypted, if password is lost nothing can be restored",
-			"PASSWORD": "Password"
+			"PASSWORD": "Password",
+			"SAVE_BEFORE_UNLOCK": "Save clipboards before the PIN has been entered on startup?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Change language",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Max Rtf size",
 			"MAX_TEXT_SIZE": "Max Text size"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Actions",
+			"ADD": "Add",
+			"CHANGE_YOUR_TEXT_MATCHES": "Change your text matches",
+			"ENABLED": "Enabled",
+			"INFO": "Remove sensitive data from clipboards, define glob or regex pattern and it will be replaced with substitution (leave blank for empty)",
+			"MATCH_EXPRESSION": "Match expression",
+			"REMOVE": "Remove",
+			"SUBSTITUTION": "Substitution"
+		},
 		"SETTINGS": "Settings",
 		"TAB": {
 			"BACKUP": "Backup",
@@ -167,7 +178,8 @@
 			"GENERAL": "General",
 			"HISTORY": "History",
 			"HOTKEYS": "Hotkeys",
-			"LIMITS": "Limits"
+			"LIMITS": "Limits",
+			"PATTERNS": "Patterns"
 		}
 	}
 }

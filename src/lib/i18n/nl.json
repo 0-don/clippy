@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Versleutelen / Ontsleutelen",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} van {{total}} klemborden worden lokaal gecodeerd",
 			"INFO": "Alle klemborden zijn gecodeerd, als het wachtwoord verloren gaat, kan er niets worden hersteld",
-			"PASSWORD": "Wachtwoord"
+			"PASSWORD": "Wachtwoord",
+			"SAVE_BEFORE_UNLOCK": "Klemborden opslaan voordat de pincode bij het opstarten is ingevoerd?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Taal wijzigen",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Maximale RTF-grootte",
 			"MAX_TEXT_SIZE": "Maximale tekstgrootte"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Acties",
+			"ADD": "Toevoegen",
+			"CHANGE_YOUR_TEXT_MATCHES": "Wijzig uw tekstovereenkomsten",
+			"ENABLED": "Ingeschakeld",
+			"INFO": "Verwijder gevoelige gegevens uit klemborden, definieer een glob- of regex-patroon en deze worden vervangen door substitutie (laat leeg voor leeg)",
+			"MATCH_EXPRESSION": "Match-expressie",
+			"REMOVE": "Verwijderen",
+			"SUBSTITUTION": "Vervanging"
+		},
 		"SETTINGS": "Instellingen",
 		"TAB": {
 			"BACKUP": "Back-up",
@@ -167,7 +178,8 @@
 			"GENERAL": "Algemeen",
 			"HISTORY": "Geschiedenis",
 			"HOTKEYS": "Sneltoetsen",
-			"LIMITS": "Limieten"
+			"LIMITS": "Limieten",
+			"PATTERNS": "Patronen"
 		}
 	}
 }

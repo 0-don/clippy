@@ -1,4 +1,4 @@
-import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings } from ".";
+import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings, TextMatcher } from ".";
 import { ClipboardType, FolderLocation, PasswordAction, WebWindow } from "./enums";
 
 export enum InvokeCommand {
@@ -18,6 +18,7 @@ export enum InvokeCommand {
   // Settings commands
   GetSettings = "get_settings",
   UpdateSettings = "update_settings",
+  ChangeSettingsTextMatchers = "change_settings_text_matchers",
   ToggleAutostart = "toggle_autostart",
   ChangeClipboardDbLocation = "change_clipboard_db_location",
   ResetClipboardDbLocation = "reset_clipboard_db_location",
@@ -94,6 +95,10 @@ export interface TauriInvokeCommands {
     args: { settings: Settings };
     return: void;
   };
+  [InvokeCommand.ChangeSettingsTextMatchers]: {
+    args: { textMatchers: TextMatcher[] };
+    return: TextMatcher[];
+  };
   [InvokeCommand.ToggleAutostart]: {
     args: undefined;
     return: void;
@@ -145,7 +150,7 @@ export interface TauriInvokeCommands {
     return: void;
   };
   [InvokeCommand.PasswordUnlock]: {
-    args: { password: string, action: PasswordAction };
+    args: { password: string; action: PasswordAction };
     return: void;
   };
 

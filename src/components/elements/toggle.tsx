@@ -5,7 +5,7 @@ import { cn } from "../../lib/utils";
 
 type ToggleProps = {
   checked?: boolean;
-  onChange?: (val: boolean) => Promise<void> | undefined;
+  onChange?: (val: boolean) => void;
   disabled?: boolean;
 };
 

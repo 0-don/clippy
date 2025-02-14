@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.4.0"
+version = "1.4.1"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -48,7 +48,10 @@ serde_json = "1"
 
 dotenvy = "0"
 chrono = "0"
+
+# pattern replace
 regex = "1"
+globset = "0"
 
 # keyboard input
 enigo = "0"

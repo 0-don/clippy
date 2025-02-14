@@ -1,47 +1,47 @@
-import { Component, JSX, createSignal } from "solid-js";
+import { Component, ComponentProps, JSX, splitProps } from "solid-js";
+import { cn } from "../../lib/utils";
 
-type InputProps = JSX.InputHTMLAttributes<HTMLInputElement> & {
+type InputProps = ComponentProps<"input"> & {
   debounce?: number;
-  className?: string;
 };
 
-export const Input: Component<InputProps> = ({
-  className,
-  debounce = 0,
-  onInput,
-  value: initialValue = "",
-  ...props
-}) => {
+export const Input: Component<InputProps> = (props) => {
+  const [local, inputProps] = splitProps(props, ["debounce", "onInput", "class"]);
   let timeoutId: number;
-  const [value, setValue] = createSignal(initialValue as string);
 
-  const handleInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-    const target = e.currentTarget;
-    setValue(target.value);
+  const onInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
+    if (!local.onInput) return;
 
-    if (debounce > 0) {
+    const handler = typeof local.onInput === "function" ? local.onInput : local.onInput[0];
+
+    if (local.debounce) {
       clearTimeout(timeoutId);
+      const value = e.currentTarget.value;
+      const input = e.currentTarget;
       timeoutId = setTimeout(() => {
-        // @ts-ignore
-        onInput?.(e);
-      }, debounce);
+        input.value = value;
+        handler({
+          ...e,
+          currentTarget: input,
+          target: input,
+        });
+      }, local.debounce);
     } else {
-      // @ts-ignore
-      onInput?.(e);
+      handler(e);
     }
   };
 
   return (
     <div
-      class={`${
-        className ? className : ""
-      } group flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus-within:border-indigo-500 dark:border-dark-light dark:bg-dark-light`}
+      class={`group dark:border-dark-light dark:bg-dark-light flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus-within:border-indigo-500 ${local.class || ""}`}
     >
       <input
-        {...props}
-        onInput={handleInput}
-        value={value()}
-        class={`w-full appearance-none bg-transparent text-sm focus:outline-hidden focus:ring-0 dark:text-white ${props.class}`}
+        {...inputProps}
+        onInput={onInput}
+        class={cn(
+          "w-full appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden dark:text-white",
+          local.class
+        )}
       />
     </div>
   );

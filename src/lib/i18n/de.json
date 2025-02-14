@@ -125,7 +125,8 @@
 			"ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
 			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal verschlüsselt",
 			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden",
-			"PASSWORD": "Passwort"
+			"PASSWORD": "Passwort",
+			"SAVE_BEFORE_UNLOCK": "Zwischenablagen speichern bevor die PIN beim Start eingegeben wurde?"
 		},
 		"GENERAL": {
 			"CHANGE_LANGUAGE": "Sprache ändern",
@@ -160,6 +161,16 @@
 			"MAX_RTF_SIZE": "Maximale RTF-Größe",
 			"MAX_TEXT_SIZE": "Maximale Textgröße"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Aktionen",
+			"ADD": "Hinzufügen",
+			"CHANGE_YOUR_TEXT_MATCHES": "Ändern Sie Ihre Textübereinstimmungen",
+			"ENABLED": "Ermöglicht",
+			"INFO": "Entfernen Sie vertrauliche Daten aus der Zwischenablage, definieren Sie ein Glob- oder Regex-Muster und es wird durch eine Substitution ersetzt (leer lassen, wenn nichts vorhanden ist)",
+			"MATCH_EXPRESSION": "Übereinstimmungsausdruck",
+			"REMOVE": "Entfernen",
+			"SUBSTITUTION": "Auswechslung"
+		},
 		"SETTINGS": "Einstellungen",
 		"TAB": {
 			"BACKUP": "Sicherung",
@@ -167,7 +178,8 @@
 			"GENERAL": "Allgemein",
 			"HISTORY": "Geschichte",
 			"HOTKEYS": "Tastenkombinationen",
-			"LIMITS": "Grenzen"
+			"LIMITS": "Grenzen",
+			"PATTERNS": "Muster"
 		}
 	}
 }

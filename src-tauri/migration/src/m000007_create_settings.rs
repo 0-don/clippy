@@ -12,7 +12,7 @@ use common::{
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::*,
-    schema::{boolean, float, integer, pk_auto, string},
+    schema::{boolean, float, integer, json, pk_auto, string},
 };
 
 #[derive(Iden)]
@@ -20,6 +20,7 @@ enum Settings {
     Table,
     Id,
     Language,
+    TextMatchers,
     //
     Startup,
     Sync,
@@ -71,6 +72,7 @@ impl MigrationTrait for Migration {
                                 ),
                             ),
                     )
+                    .col(json(Settings::TextMatchers).default(Expr::value("[]"))) // TextMachters
                     .col(boolean(Settings::Startup).default(true))
                     .col(boolean(Settings::Sync).default(false))
                     .col(
