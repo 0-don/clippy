@@ -23,17 +23,17 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
         <CheckBox
           checked={props.hotkey.ctrl}
           onChange={(ctrl) => HotkeyStore.updateHotkey({ ...props.hotkey, ctrl })}
-          text={t("MAIN.KEYS.CTRL")}
+          label={t("MAIN.KEYS.CTRL")}
         />
         <CheckBox
           checked={props.hotkey.alt}
           onChange={(alt) => HotkeyStore.updateHotkey({ ...props.hotkey, alt })}
-          text={t("MAIN.KEYS.ALT")}
+          label={t("MAIN.KEYS.ALT")}
         />
         <CheckBox
           checked={props.hotkey.shift}
           onChange={(shift) => HotkeyStore.updateHotkey({ ...props.hotkey, shift })}
-          text={t("MAIN.KEYS.SHIFT")}
+          label={t("MAIN.KEYS.SHIFT")}
         />
       </Show>
       <Dropdown

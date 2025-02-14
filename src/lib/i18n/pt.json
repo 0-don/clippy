@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Tamanho máximo do Rtf",
 			"MAX_TEXT_SIZE": "Tamanho máximo do texto"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Ações",
+			"ADD": "Adicionar",
+			"CHANGE_YOUR_TEXT_MATCHES": "Altere suas correspondências de texto",
+			"ENABLED": "Habilitado",
+			"INFO": "Remova dados confidenciais das áreas de transferência, defina texto ou padrão regex e eles serão substituídos por substituição (deixe em branco em vez de vazio)",
+			"MATCH_EXPRESSION": "Expressão de correspondência",
+			"REMOVE": "Remover",
+			"SUBSTITUTION": "Substituição"
+		},
 		"SETTINGS": "Configurações",
 		"TAB": {
 			"BACKUP": "Backup",
@@ -167,7 +177,8 @@
 			"GENERAL": "Em geral",
 			"HISTORY": "História",
 			"HOTKEYS": "Teclas de atalho",
-			"LIMITS": "Limites"
+			"LIMITS": "Limites",
+			"PATTERNS": "Padrões"
 		}
 	}
 }

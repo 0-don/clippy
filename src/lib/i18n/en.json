@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Max Rtf size",
 			"MAX_TEXT_SIZE": "Max Text size"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Actions",
+			"ADD": "Add",
+			"CHANGE_YOUR_TEXT_MATCHES": "Change your text matches",
+			"ENABLED": "Enabled",
+			"INFO": "Remove sensitive data from clipboards, define text or regex pattern and it will be replaced with substitution (leave blank from empty)",
+			"MATCH_EXPRESSION": "Match expression",
+			"REMOVE": "Remove",
+			"SUBSTITUTION": "Substitution"
+		},
 		"SETTINGS": "Settings",
 		"TAB": {
 			"BACKUP": "Backup",
@@ -167,7 +177,8 @@
 			"GENERAL": "General",
 			"HISTORY": "History",
 			"HOTKEYS": "Hotkeys",
-			"LIMITS": "Limits"
+			"LIMITS": "Limits",
+			"PATTERNS": "Patterns"
 		}
 	}
 }

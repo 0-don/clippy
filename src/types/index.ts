@@ -119,6 +119,7 @@ export type Hotkey = {
 export type Settings = {
   id: number;
   language: Language;
+  text_matchers: TextMatcher[];
   startup: boolean;
   sync: boolean;
   sync_limit: number;
@@ -133,4 +134,10 @@ export type Settings = {
   max_text_size: number;
   max_rtf_size: number;
   max_html_size: number;
+};
+
+export type TextMatcher = {
+  match_expression: string;
+  substitution: string;
+  enabled: boolean;
 };

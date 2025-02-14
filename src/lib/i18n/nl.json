@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Maximale RTF-grootte",
 			"MAX_TEXT_SIZE": "Maximale tekstgrootte"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Acties",
+			"ADD": "Toevoegen",
+			"CHANGE_YOUR_TEXT_MATCHES": "Wijzig uw tekstovereenkomsten",
+			"ENABLED": "Ingeschakeld",
+			"INFO": "Verwijder gevoelige gegevens uit klemborden, definieer tekst of een regex-patroon en het wordt vervangen door substitutie (laat leeg van leeg)",
+			"MATCH_EXPRESSION": "Match-expressie",
+			"REMOVE": "Verwijderen",
+			"SUBSTITUTION": "Vervanging"
+		},
 		"SETTINGS": "Instellingen",
 		"TAB": {
 			"BACKUP": "Back-up",
@@ -167,7 +177,8 @@
 			"GENERAL": "Algemeen",
 			"HISTORY": "Geschiedenis",
 			"HOTKEYS": "Sneltoetsen",
-			"LIMITS": "Limieten"
+			"LIMITS": "Limieten",
+			"PATTERNS": "Patronen"
 		}
 	}
 }

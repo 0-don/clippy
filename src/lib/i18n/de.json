@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Maximale RTF-Größe",
 			"MAX_TEXT_SIZE": "Maximale Textgröße"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Aktionen",
+			"ADD": "Hinzufügen",
+			"CHANGE_YOUR_TEXT_MATCHES": "Ändern Sie Ihre Textübereinstimmungen",
+			"ENABLED": "Ermöglicht",
+			"INFO": "Entfernen Sie vertrauliche Daten aus der Zwischenablage, definieren Sie Text oder Regex-Muster und diese werden durch Substitutionen ersetzt (lassen Sie das Feld leer).",
+			"MATCH_EXPRESSION": "Übereinstimmungsausdruck",
+			"REMOVE": "Entfernen",
+			"SUBSTITUTION": "Auswechslung"
+		},
 		"SETTINGS": "Einstellungen",
 		"TAB": {
 			"BACKUP": "Sicherung",
@@ -167,7 +177,8 @@
 			"GENERAL": "Allgemein",
 			"HISTORY": "Geschichte",
 			"HOTKEYS": "Tastenkombinationen",
-			"LIMITS": "Grenzen"
+			"LIMITS": "Grenzen",
+			"PATTERNS": "Muster"
 		}
 	}
 }

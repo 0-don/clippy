@@ -6,6 +6,7 @@ import { SettingsGeneral } from "./components/pages/settings/settings-general";
 import { SettingsHistory } from "./components/pages/settings/settings-history";
 import { SettingsHotkeys } from "./components/pages/settings/settings-hotkeys";
 import { SettingsLimits } from "./components/pages/settings/settings-limits";
+import { SettingsPatterns } from "./components/pages/settings/settings-patterns";
 import { Tabs } from "./components/pages/settings/settings-tabs";
 import LanguageProvider from "./components/provider/language-provider";
 import { listenEvent } from "./lib/tauri";
@@ -25,7 +26,7 @@ const Settings = () => {
   });
 
   return (
-    <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:bg-dark dark:text-white">
+    <div class="dark:bg-dark absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:text-white">
       <Tabs />
       <div class="px-5 pt-5 dark:text-white">
         <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.GENERAL"}>
@@ -46,6 +47,10 @@ const Settings = () => {
 
         <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.HOTKEYS"}>
           <SettingsHotkeys />
+        </Show>
+
+        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.PATTERNS"}>
+          <SettingsPatterns />
         </Show>
 
         <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.LIMITS"}>

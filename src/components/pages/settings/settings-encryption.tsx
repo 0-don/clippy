@@ -93,7 +93,7 @@ const Encrypt: Component = ({}) => {
 
       <Button
         type="submit"
-        className="mt-1"
+        class="mt-1"
         Icon={loading() ? ImSpinner : AiFillLock}
         iconClassName={cn(loading() && "animate-spin")}
         label={
@@ -155,7 +155,7 @@ const Decrypt: Component = ({}) => {
 
       <Button
         type="submit"
-        className="mt-1"
+        class="mt-1"
         Icon={loading() ? ImSpinner : AiFillUnlock}
         iconClassName={cn(loading() && "animate-spin")}
         label={

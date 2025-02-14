@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "Taille maximale du fichier RTF",
 			"MAX_TEXT_SIZE": "Taille maximale du texte"
 		},
+		"PATTERNS": {
+			"ACTIONS": "Actions",
+			"ADD": "Ajouter",
+			"CHANGE_YOUR_TEXT_MATCHES": "Modifiez vos correspondances de texte",
+			"ENABLED": "Activé",
+			"INFO": "Supprimez les données sensibles des presse-papiers, définissez un texte ou un modèle d'expression régulière et il sera remplacé par une substitution (laissez vide à partir de vide)",
+			"MATCH_EXPRESSION": "Expression de correspondance",
+			"REMOVE": "Retirer",
+			"SUBSTITUTION": "Substitution"
+		},
 		"SETTINGS": "Paramètres",
 		"TAB": {
 			"BACKUP": "Sauvegarde",
@@ -167,7 +177,8 @@
 			"GENERAL": "Général",
 			"HISTORY": "Histoire",
 			"HOTKEYS": "Raccourcis clavier",
-			"LIMITS": "Limites"
+			"LIMITS": "Limites",
+			"PATTERNS": "Motifs"
 		}
 	}
 }

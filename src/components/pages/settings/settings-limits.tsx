@@ -34,7 +34,7 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
             step="1"
             min={0}
             max={MAX_SIZE}
-            className="w-36"
+            class="w-36"
             value={SettingsStore.settings()?.max_text_size || DEFAULT_SIZE}
             debounce={1000}
             onInput={async (e) => {
@@ -58,7 +58,7 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
             step="1"
             min={0}
             max={MAX_SIZE}
-            className="w-36"
+            class="w-36"
             value={SettingsStore.settings()?.max_html_size || DEFAULT_SIZE}
             debounce={1000}
             onInput={async (e) => {
@@ -82,7 +82,7 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
             step="1"
             min={0}
             max={MAX_SIZE}
-            className="w-36"
+            class="w-36"
             value={SettingsStore.settings()?.max_rtf_size || DEFAULT_SIZE}
             debounce={1000}
             onInput={async (e) => {
@@ -107,7 +107,7 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
             step="1"
             min={0}
             max={MAX_SIZE}
-            className="w-36"
+            class="w-36"
             value={SettingsStore.settings()?.max_file_size || DEFAULT_SIZE}
             debounce={1000}
             onInput={async (e) => {
@@ -132,7 +132,7 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
             step="1"
             min={0}
             max={MAX_SIZE}
-            className="w-36"
+            class="w-36"
             value={SettingsStore.settings()?.max_image_size || DEFAULT_SIZE}
             debounce={1000}
             onInput={async (e) => {

@@ -8,9 +8,10 @@ use crate::tao::connection::db;
 use crate::tao::global::get_app;
 use common::io::language::get_system_language;
 use common::types::enums::{ListenEvent, PasswordAction};
-use common::types::types::CommandError;
+use common::types::types::{CommandError, TextMatcher};
 use entity::settings;
 use sea_orm::{ActiveModelTrait, EntityTrait};
+use serde_json::json;
 use std::collections::HashMap;
 use std::sync::Mutex;
 use tauri::Manager;
@@ -104,6 +105,26 @@ pub fn setup_settings() {
                 .expect("Failed to update settings");
         })
     });
+}
+
+pub async fn update_settings_text_matchers(
+    text_matchers: Vec<TextMatcher>,
+) -> Result<Vec<TextMatcher>, CommandError> {
+    let mut settings = get_global_settings();
+
+    settings.text_matchers = json!(text_matchers);
+
+    let active_model: settings::ActiveModel = settings.into();
+
+    let settings = settings::Entity::update(active_model.reset_all())
+        .exec(&db().await?)
+        .await?;
+
+    set_global_settings(settings.clone());
+
+    init_settings_window();
+
+    Ok(text_matchers)
 }
 
 pub async fn update_settings_from_sync(

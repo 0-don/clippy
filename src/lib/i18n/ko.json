@@ -160,6 +160,16 @@
 			"MAX_RTF_SIZE": "최대 Rtf 크기",
 			"MAX_TEXT_SIZE": "최대 텍스트 크기"
 		},
+		"PATTERNS": {
+			"ACTIONS": "행위",
+			"ADD": "추가하다",
+			"CHANGE_YOUR_TEXT_MATCHES": "텍스트 일치 항목을 변경하세요",
+			"ENABLED": "활성화됨",
+			"INFO": "클립보드에서 민감한 데이터를 제거하고 텍스트나 정규식 패턴을 정의하면 대체로 대체됩니다(비어 있음 또는 공백으로 두기)",
+			"MATCH_EXPRESSION": "표현 일치",
+			"REMOVE": "제거하다",
+			"SUBSTITUTION": "치환"
+		},
 		"SETTINGS": "설정",
 		"TAB": {
 			"BACKUP": "지원",
@@ -167,7 +177,8 @@
 			"GENERAL": "일반적인",
 			"HISTORY": "역사",
 			"HOTKEYS": "단축키",
-			"LIMITS": "제한"
+			"LIMITS": "제한",
+			"PATTERNS": "패턴"
 		}
 	}
 }

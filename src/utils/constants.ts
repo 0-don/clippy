@@ -7,6 +7,10 @@ export const DEFAULT_SIZE = 10_485_760;
 
 export const MIN_PASSWORD_LENGTH = 1;
 export const MAX_PASSWORD_LENGTH = 128;
+export const MIN_PATTERN_LENGTH = 1;
+export const MAX_PATTERN_LENGTH = 128;
+export const MIN_DESCRIPTION_LENGTH = 1;
+export const MAX_DESCRIPTION_LENGTH = 128;
 
 export const MAX_SYNC_LIMIT = 250;
 
@@ -16,6 +20,7 @@ export const SETTINGS_TAB = [
   "SETTINGS.TAB.ENCRYPTION",
   "SETTINGS.TAB.HISTORY",
   "SETTINGS.TAB.HOTKEYS",
+  "SETTINGS.TAB.PATTERNS",
   "SETTINGS.TAB.LIMITS",
 ] as const satisfies readonly DictionaryKey[];
 
