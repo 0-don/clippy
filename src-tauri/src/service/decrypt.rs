@@ -393,38 +393,27 @@ pub fn decrypt_clipboard(
 
 /// Decrypts data using AES-256-GCM
 pub fn decrypt_data(encrypted_data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
-    if encrypted_data.len() < 12 {
+    if !looks_like_encrypted_data(encrypted_data) {
         return Err(EncryptionError::NotEncrypted);
     }
 
-    let key_bytes = ENCRYPTION_KEY
-        .lock()
+    let key_bytes = ENCRYPTION_KEY.lock()
         .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
-    // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
         .map_err(|_| EncryptionError::DecryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 
-    // Split nonce and encrypted data
     let nonce = aead::Nonce::assume_unique_for_key(
-        encrypted_data[..12]
-            .try_into()
-            .map_err(|_| EncryptionError::DecryptionFailed)?,
+        encrypted_data[..12].try_into()
+            .map_err(|_| EncryptionError::DecryptionFailed)?
     );
 
-    // Decrypt data
     let mut in_out = encrypted_data[12..].to_vec();
     match key.open_in_place(nonce, aead::Aad::empty(), &mut in_out) {
         Ok(decrypted) => Ok(decrypted.to_vec()),
-        Err(_) => {
-            if looks_like_encrypted_data(encrypted_data) {
-                Err(EncryptionError::InvalidKey)
-            } else {
-                Err(EncryptionError::NotEncrypted)
-            }
-        }
+        Err(_) => Err(EncryptionError::InvalidKey)
     }
 }
 
