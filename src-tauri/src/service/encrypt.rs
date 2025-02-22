@@ -111,10 +111,7 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
                 .iter()
                 .find(|r| r.id == encrypted.clipboard.id)
             {
-                provider
-                    .update_clipboard(&encrypted, remote)
-                    .await
-                    .ok();
+                provider.update_clipboard(&encrypted, remote).await.ok();
             }
         }
     }
@@ -203,29 +200,38 @@ pub fn encrypt_data(data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
         .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
-    // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 
-    // Generate random nonce
     let rng = rand::SystemRandom::new();
     let mut nonce_bytes = [0u8; 12];
     rng.fill(&mut nonce_bytes)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
     let nonce = aead::Nonce::assume_unique_for_key(nonce_bytes);
 
-    // Encrypt data
+    // Create buffer with just the data first
     let mut in_out = data.to_vec();
+
+    // Encrypt in place and append tag
     key.seal_in_place_append_tag(nonce, aead::Aad::empty(), &mut in_out)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
 
-    // Combine nonce and encrypted data
-    Ok([nonce_bytes.to_vec(), in_out].concat())
+    // Create final output with nonce prepended
+    let mut output = Vec::with_capacity(12 + in_out.len());
+    output.extend_from_slice(&nonce_bytes);
+    output.extend_from_slice(&in_out);
+
+    Ok(output)
 }
 
 /// Checks if data appears to be encrypted based on its structure
 pub fn looks_like_encrypted_data(data: &[u8]) -> bool {
-    // Check minimum size (nonce + tag)
-    data.len() >= 12 + 16
+    // Check minimum size: nonce + at least 1 byte data + tag
+    if data.len() < (12 + 1 + 16) {
+        return false;
+    }
+
+    // Check nonce isn't all zeros
+    !data[..12].iter().all(|&x| x == 0)
 }
