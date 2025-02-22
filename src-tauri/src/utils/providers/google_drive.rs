@@ -471,12 +471,12 @@ impl SyncProvider for GoogleDriveProviderImpl {
         local_clipboard: &FullClipboardDto,
         remote_clipboard: &Clippy,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        // Create new filename based on clipboard properties
+        // Create new filename
         let new_name = create_clipboard_filename(
             &remote_clipboard.id,
             &local_clipboard.clipboard.star, // Use local star status
             &local_clipboard.clipboard.encrypted,
-            &remote_clipboard.created_at,
+            &local_clipboard.clipboard.created_at,
             None,
         );
 
@@ -514,38 +514,28 @@ impl SyncProvider for GoogleDriveProviderImpl {
         let clipboards = self
             .fetch_all_clipboards()
             .await
-            .expect("Failed to fetch clipboards");
+            .expect("Failed to star fetch clipboards");
 
         let remote_clipboards = clipboards
             .iter()
             .find(|clip| clip.id == clippy.clipboard.id);
 
         if let Some(remote_clipboard) = remote_clipboards {
-            let new_name = create_clipboard_filename(
-                &remote_clipboard.id,
-                &remote_clipboard.star,
-                &remote_clipboard.encrypted,
-                &remote_clipboard.created_at,
-                None,
+            printlog!(
+                "starring clipboard: {} from {} star: {} encrypted: {}",
+                remote_clipboard.id,
+                uuid_to_datetime(&remote_clipboard.id),
+                clippy.clipboard.star,
+                clippy.clipboard.encrypted
             );
 
-            let file = google_drive3::api::File {
-                name: Some(new_name),
-                ..Default::default()
-            };
-
-            self.0
-                .hub
-                .files()
-                .update(file, &remote_clipboard.provider_id)
-                .add_scope(Scope::Appdata.as_ref())
-                .doit_without_upload()
+            self.update_clipboard(clippy, remote_clipboard)
                 .await
-                .expect("Failed to rename file");
+                .expect("Failed to star update clipboard");
         } else {
             self.upload_clipboard(clippy)
                 .await
-                .expect("Failed to upload clipboard");
+                .expect("Failed to star upload clipboard");
         }
     }
 
