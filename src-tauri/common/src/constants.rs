@@ -12,6 +12,7 @@ pub static GLOBAL_EVENTS: LazyLock<Vec<String>> = LazyLock::new(|| {
 pub static DB_NAME: &str = "clippy.sqlite";
 pub static CONFIG_NAME: &str = "config.json";
 pub static TOKEN_NAME: &str = "token.json";
+pub static CACHE_KEY: &str = "clipboards";
 
 pub static BACKUP_SETTINGS_PREFIX: &str = "settings";
 pub static BACKUP_FILE_PREFIX: &str = "clippy";

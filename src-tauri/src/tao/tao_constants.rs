@@ -1,5 +1,8 @@
-use common::types::{enums::WebWindow, hotkey::SafeHotKeyManager, types::Key};
+use common::types::{
+    enums::WebWindow, hotkey::SafeHotKeyManager, orm_query::FullClipboardDto, types::Key,
+};
 use global_hotkey::GlobalHotKeyManager;
+use moka::sync::Cache;
 use sea_orm::Iden;
 use std::{
     collections::HashMap,
@@ -16,6 +19,7 @@ pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
 pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
+pub static CLIPBOARD_CACHE: OnceLock<Cache<String, Vec<FullClipboardDto>>> = OnceLock::new();
 
 pub fn setup_globals(app: &mut tauri::App) {
     APP.set(app.handle().clone())

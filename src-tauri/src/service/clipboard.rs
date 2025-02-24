@@ -240,6 +240,13 @@ pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
     Ok(dto)
 }
 
+pub async fn get_all_clipboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
+    let db = db().await?;
+    let clipboards = clipboard::Entity::find().all(&db).await?;
+
+    Ok(load_clipboards_with_relations(clipboards).await)
+}
+
 pub async fn get_clipboards_db(
     cursor: Option<u64>,
     search: Option<String>,
@@ -715,6 +722,116 @@ pub async fn copy_clipboard_from_id(
     }
 
     Ok(success)
+}
+
+// Helper function to filter clipboards in memory
+pub fn filter_clipboards(
+    clipboards: &[FullClipboardDto],
+    search: Option<&String>,
+    star: Option<bool>,
+    img: Option<bool>,
+    settings: &settings::Model,
+) -> Vec<FullClipboardDto> {
+    use common::builder::keyword::KeywordBuilder;
+
+    let (clipboard_keywords, text_keywords) = KeywordBuilder::build_default();
+
+    clipboards
+        .iter()
+        .filter(|clipboard| {
+            // Apply star filter
+            if let Some(star_filter) = star {
+                if clipboard.clipboard.star != star_filter {
+                    return false;
+                }
+            }
+
+            // Apply image filter
+            if let Some(true) = img {
+                if let Some(types) = ClipboardType::from_json_value(&clipboard.clipboard.types) {
+                    if !types.contains(&ClipboardType::Image) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+            // Apply search filter
+            if let Some(search_text) = search {
+                let search_lower = search_text.to_lowercase();
+
+                // Try to match clipboard type from search
+                if let Some(clip_type) = KeywordBuilder::find_clipboard_type(
+                    &search_lower,
+                    &Language::from_iso_code(&settings.language),
+                    &clipboard_keywords,
+                ) {
+                    match clip_type {
+                        ClipboardType::Text => {
+                            if let Some(text) = &clipboard.text {
+                                if let Some(text_type) = KeywordBuilder::find_text_type(
+                                    &search_lower,
+                                    &Language::from_iso_code(&settings.language),
+                                    &text_keywords,
+                                ) {
+                                    return text.r#type == text_type.to_string();
+                                } else {
+                                    return text.r#type == ClipboardTextType::Text.to_string();
+                                }
+                            }
+                            return false;
+                        }
+                        _ => {
+                            if let Some(types) =
+                                ClipboardType::from_json_value(&clipboard.clipboard.types)
+                            {
+                                return types.contains(&clip_type);
+                            }
+                            return false;
+                        }
+                    }
+                }
+
+                // Fallback to full-text search
+                let contains_search = clipboard
+                    .text
+                    .as_ref()
+                    .map_or(false, |t| t.data.to_lowercase().contains(&search_lower))
+                    || clipboard
+                        .html
+                        .as_ref()
+                        .map_or(false, |h| h.data.to_lowercase().contains(&search_lower))
+                    || clipboard
+                        .rtf
+                        .as_ref()
+                        .map_or(false, |r| r.data.to_lowercase().contains(&search_lower))
+                    || clipboard.files.iter().any(|f| {
+                        f.name.to_lowercase().contains(&search_lower)
+                            || f.extension
+                                .as_ref()
+                                .map_or(false, |e| e.to_lowercase().contains(&search_lower))
+                            || f.mime_type
+                                .as_ref()
+                                .map_or(false, |m| m.to_lowercase().contains(&search_lower))
+                    })
+                    || clipboard.image.as_ref().map_or(false, |i| {
+                        i.extension.to_lowercase().contains(&search_lower)
+                    })
+                    || clipboard
+                        .text
+                        .as_ref()
+                        .map_or(false, |t| t.r#type.to_lowercase().contains(&search_lower));
+
+                if !contains_search {
+                    return false;
+                }
+            }
+
+            true
+        })
+        .cloned()
+        .collect()
 }
 
 pub fn init_clipboards() {

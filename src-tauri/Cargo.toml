@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.4.1"
+version = "1.4.2"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -72,6 +72,9 @@ http-body-util = "0"
 
 # cipher
 ring = "0"
+
+# caching
+moka = { version = "0", features = ["sync"] }
 
 [profile.release]
 # panic = "abort"
