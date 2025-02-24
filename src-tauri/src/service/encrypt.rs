@@ -6,6 +6,7 @@ use crate::service::settings::get_global_settings;
 use crate::tao::connection::db;
 use crate::tao::global::get_app;
 use base64::{engine::general_purpose::STANDARD, Engine};
+use common::constants::ENCRYPTION_MAGIC_STRING;
 use common::types::cipher::{EncryptionError, ENCRYPTION_KEY};
 use common::types::enums::ListenEvent;
 use common::types::orm_query::FullClipboardDto;
@@ -131,38 +132,43 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
 
 pub fn encrypt_clipboard(mut clipboard: FullClipboardDto) -> FullClipboardDto {
     if let Some(text) = &mut clipboard.text {
-        if !STANDARD.decode(text.data.clone()).is_ok() {
+        if !looks_like_encrypted_data(text.data.as_bytes()) {
             text.data = STANDARD
                 .encode(encrypt_data(text.data.as_bytes()).expect("Text encryption failed"));
         }
     }
 
     if let Some(html) = &mut clipboard.html {
-        if !STANDARD.decode(html.data.clone()).is_ok() {
+        if !looks_like_encrypted_data(html.data.as_bytes()) {
             html.data = STANDARD
                 .encode(encrypt_data(html.data.as_bytes()).expect("HTML encryption failed"));
         }
     }
 
     if let Some(rtf) = &mut clipboard.rtf {
-        if !STANDARD.decode(rtf.data.clone()).is_ok() {
+        if !looks_like_encrypted_data(rtf.data.as_bytes()) {
             rtf.data =
                 STANDARD.encode(encrypt_data(rtf.data.as_bytes()).expect("RTF encryption failed"));
         }
     }
 
     if let Some(image) = &mut clipboard.image {
-        image.data = encrypt_data(image.data.as_slice()).expect("Image encryption failed");
-        if let Ok(thumbnail_bytes) = STANDARD.decode(image.thumbnail.clone()) {
-            let encrypted_thumbnail =
-                encrypt_data(&thumbnail_bytes).expect("Thumbnail encryption failed");
-            image.thumbnail = STANDARD.encode(&encrypted_thumbnail);
+        if !looks_like_encrypted_data(&image.data) {
+            image.data = encrypt_data(image.data.as_slice()).expect("Image encryption failed");
+        }
+
+        if let Ok(thumbnail_bytes) = STANDARD.decode(&image.thumbnail) {
+            if !looks_like_encrypted_data(&thumbnail_bytes) {
+                let encrypted_thumbnail =
+                    encrypt_data(&thumbnail_bytes).expect("Thumbnail encryption failed");
+                image.thumbnail = STANDARD.encode(&encrypted_thumbnail);
+            }
         }
     }
 
     if !clipboard.files.is_empty() {
         for file in &mut clipboard.files {
-            if !STANDARD.decode(file.name.clone()).is_ok() {
+            if !looks_like_encrypted_data(file.name.as_bytes()) {
                 file.data =
                     encrypt_data(file.data.as_slice()).expect("File data encryption failed");
 
@@ -189,7 +195,6 @@ pub fn encrypt_clipboard(mut clipboard: FullClipboardDto) -> FullClipboardDto {
     }
 
     clipboard.clipboard.encrypted = true;
-
     clipboard
 }
 
@@ -200,38 +205,36 @@ pub fn encrypt_data(data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
         .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
+    // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 
+    // Generate random nonce
     let rng = rand::SystemRandom::new();
     let mut nonce_bytes = [0u8; 12];
     rng.fill(&mut nonce_bytes)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
     let nonce = aead::Nonce::assume_unique_for_key(nonce_bytes);
 
-    // Create buffer with just the data first
+    // Encrypt data
     let mut in_out = data.to_vec();
-
-    // Encrypt in place and append tag
     key.seal_in_place_append_tag(nonce, aead::Aad::empty(), &mut in_out)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
 
-    // Create final output with nonce prepended
-    let mut output = Vec::with_capacity(12 + in_out.len());
-    output.extend_from_slice(&nonce_bytes);
-    output.extend_from_slice(&in_out);
-
-    Ok(output)
+    // Combine magic string bytes, nonce, and encrypted data
+    Ok([
+        ENCRYPTION_MAGIC_STRING.as_bytes().to_vec(),
+        nonce_bytes.to_vec(),
+        in_out,
+    ]
+    .concat())
 }
 
 /// Checks if data appears to be encrypted based on its structure
 pub fn looks_like_encrypted_data(data: &[u8]) -> bool {
-    // Check minimum size: nonce + at least 1 byte data + tag
-    if data.len() < (12 + 1 + 16) {
-        return false;
-    }
+    let magic_bytes = ENCRYPTION_MAGIC_STRING.as_bytes();
 
-    // Check nonce isn't all zeros
-    !data[..12].iter().all(|&x| x == 0)
+    // Check minimum length and magic bytes
+    data.len() >= magic_bytes.len() && data[..magic_bytes.len()] == *magic_bytes
 }

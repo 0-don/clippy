@@ -7,7 +7,7 @@ use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
-use crate::tao::global::get_app;
+use crate::tao::global::{get_app, get_cache};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::types::enums::{ClipboardTextType, ClipboardType};
@@ -108,6 +108,9 @@ impl ClipboardManagerExt for FullClipboardDbo {
                     .await
                     .expect("Failed to upsert");
             }
+
+            // Clear cache for encrypted clipboards search
+            get_cache().invalidate_all();
 
             new_clipboard_event(clipboard);
         }
