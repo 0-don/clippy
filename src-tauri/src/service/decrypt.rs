@@ -1,7 +1,6 @@
 use super::{
     cipher::{clear_encryption_key, is_encryption_key_set, verify_encryption_password},
     clipboard::load_clipboards_with_relations,
-    encrypt::looks_like_encrypted_data,
     settings::{get_global_settings, update_settings_db},
     sync::{get_sync_manager, get_sync_provider},
 };
@@ -11,12 +10,12 @@ use crate::{
     tao::{connection::db, global::get_app},
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use common::types::{
+use common::{constants::ENCRYPTION_MAGIC_STRING, types::{
     cipher::{EncryptionError, ENCRYPTION_KEY},
     enums::ListenEvent,
     orm_query::FullClipboardDto,
     types::{CommandError, Progress},
-};
+}};
 use entity::clipboard;
 use ring::aead;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
@@ -393,27 +392,44 @@ pub fn decrypt_clipboard(
 
 /// Decrypts data using AES-256-GCM
 pub fn decrypt_data(encrypted_data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
-    if !looks_like_encrypted_data(encrypted_data) {
+    let magic_bytes = ENCRYPTION_MAGIC_STRING.as_bytes();
+
+    // Validate input has minimum required length
+    let min_length = magic_bytes.len() + 12 + 16; // magic bytes + nonce + minimum tag size
+    if encrypted_data.len() < min_length {
         return Err(EncryptionError::NotEncrypted);
     }
 
-    let key_bytes = ENCRYPTION_KEY.lock()
+    // Verify magic bytes
+    if &encrypted_data[..magic_bytes.len()] != magic_bytes {
+        return Err(EncryptionError::NotEncrypted);
+    }
+
+    let key_bytes = ENCRYPTION_KEY
+        .lock()
         .map_err(|_| EncryptionError::KeyLockFailed)?
         .ok_or(EncryptionError::NoKey)?;
 
+    // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
         .map_err(|_| EncryptionError::DecryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 
+    // Extract nonce (after magic bytes)
+    let magic_bytes_len = magic_bytes.len();
     let nonce = aead::Nonce::assume_unique_for_key(
-        encrypted_data[..12].try_into()
-            .map_err(|_| EncryptionError::DecryptionFailed)?
+        encrypted_data[magic_bytes_len..magic_bytes_len + 12]
+            .try_into()
+            .map_err(|_| EncryptionError::DecryptionFailed)?,
     );
 
-    let mut in_out = encrypted_data[12..].to_vec();
+    // Get encrypted data (after magic bytes and nonce)
+    let mut in_out = encrypted_data[magic_bytes_len + 12..].to_vec();
+
+    // Decrypt in place
     match key.open_in_place(nonce, aead::Aad::empty(), &mut in_out) {
         Ok(decrypted) => Ok(decrypted.to_vec()),
-        Err(_) => Err(EncryptionError::InvalidKey)
+        Err(_) => Err(EncryptionError::InvalidKey),
     }
 }
 
