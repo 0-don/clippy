@@ -1,8 +1,8 @@
 use crate::service::cipher::is_encryption_key_set;
-use crate::service::clipboard::init_clipboards;
+use crate::service::clipboard::{filter_clipboards, get_all_clipboards_db, init_clipboards};
 use crate::service::decrypt::decrypt_clipboard;
 use crate::service::settings::get_global_settings;
-use crate::tao::global::get_app;
+use crate::tao::global::{get_app, get_cache};
 use crate::{
     service::clipboard::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboards_db, get_clipboard_count_db,
@@ -10,7 +10,9 @@ use crate::{
     },
     utils::hotkey_manager::unregister_hotkeys,
 };
+use common::constants::CACHE_KEY;
 use common::io::clipboard::trim_clipboard_data;
+use common::types::orm_query::FullClipboardDto;
 use common::{
     printlog,
     types::{enums::ClipboardType, orm_query::ClipboardsResponse, types::CommandError},
@@ -26,30 +28,92 @@ pub async fn get_clipboards(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<ClipboardsResponse, CommandError> {
-    let mut clipboards = get_clipboards_db(cursor, search, star, img).await?;
+    printlog!(
+        "Getting clipboards with cursor: {:?}, search: {:?}, star: {:?}, img: {:?}",
+        cursor,
+        search,
+        star,
+        img
+    );
+
+    let settings = get_global_settings();
+    let is_encrypted = settings.encryption && is_encryption_key_set();
     let total = get_clipboard_count_db().await?;
+
+    // Only use cache for encrypted clipboards WITH a search term
+    let clipboards = if is_encrypted && search.is_some() && !search.as_ref().unwrap().is_empty() {
+        // Get or populate the cache
+        let all_decrypted = if let Some(cached) = get_cache().get(CACHE_KEY) {
+            cached
+        } else {
+            // No cache hit, load and decrypt all clipboards
+            let all_clipboards = get_all_clipboards_db().await?;
+
+            // Decrypt all clipboards
+            let decrypted_clipboards: Vec<FullClipboardDto> = all_clipboards
+                .into_iter()
+                .map(|clipboard| {
+                    if clipboard.clipboard.encrypted {
+                        match decrypt_clipboard(clipboard.clone()) {
+                            Ok(decrypted) => decrypted,
+                            Err(e) => {
+                                printlog!("Failed to decrypt clipboard: {:?}", e);
+                                clipboard
+                            }
+                        }
+                    } else {
+                        clipboard
+                    }
+                })
+                .collect();
+
+            // Cache all decrypted clipboards
+            get_cache().insert(CACHE_KEY.to_string(), decrypted_clipboards.clone());
+            decrypted_clipboards
+        };
+
+        // Apply filters in memory
+        let filtered = filter_clipboards(&all_decrypted, search.as_ref(), star, img, &settings);
+
+        // Apply pagination
+        let start = cursor.unwrap_or(0) as usize;
+        let end = (start + 25).min(filtered.len());
+
+        if start < filtered.len() {
+            filtered[start..end].to_vec()
+        } else {
+            Vec::new()
+        }
+    } else {
+        // For regular search (non-encrypted OR encrypted without search string)
+        // we use the standard database query
+        let clipboards_from_db = get_clipboards_db(cursor, search, star, img).await?;
+
+        // If encrypted, we still need to decrypt the results
+        if is_encrypted {
+            clipboards_from_db
+                .into_iter()
+                .map(|clipboard| {
+                    if clipboard.clipboard.encrypted {
+                        match decrypt_clipboard(clipboard.clone()) {
+                            Ok(decrypted) => decrypted,
+                            Err(e) => {
+                                printlog!("Failed to decrypt clipboard: {:?}", e);
+                                clipboard
+                            }
+                        }
+                    } else {
+                        clipboard
+                    }
+                })
+                .collect()
+        } else {
+            clipboards_from_db
+        }
+    };
+
     let current_position = cursor.unwrap_or(0) + clipboards.len() as u64;
     let has_more = current_position < total;
-
-    if get_global_settings().encryption && is_encryption_key_set() {
-        clipboards = clipboards
-            .into_iter()
-            .map(|clipboard| {
-                if clipboard.clipboard.encrypted {
-                    match decrypt_clipboard(clipboard.clone()) {
-                        Ok(decrypted) => decrypted,
-                        Err(e) => {
-                            // Log the error but return the original encrypted clipboard
-                            printlog!("Failed to decrypt clipboard: {:?}", e);
-                            clipboard
-                        }
-                    }
-                } else {
-                    clipboard
-                }
-            })
-            .collect();
-    }
 
     printlog!(
         "Total: {}, Current Position: {}, Has More: {}",
@@ -58,6 +122,7 @@ pub async fn get_clipboards(
         has_more
     );
 
+    // Note: The database search results are already trimmed in trim_clipboard_data
     Ok(ClipboardsResponse {
         clipboards: trim_clipboard_data(clipboards),
         total,

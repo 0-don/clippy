@@ -1,8 +1,10 @@
 use super::tao_constants::{
-    APP, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW, WINDOW_STOP_TX,
+    APP, CLIPBOARD_CACHE, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW,
+    WINDOW_STOP_TX,
 };
-use common::types::{hotkey::SafeHotKeyManager, types::Key};
-use std::{collections::HashMap, sync::MutexGuard};
+use common::types::{hotkey::SafeHotKeyManager, orm_query::FullClipboardDto, types::Key};
+use moka::sync::Cache;
+use std::{collections::HashMap, sync::MutexGuard, time::Duration};
 use tauri::{AppHandle, WebviewWindow};
 use tokio::sync::oneshot;
 
@@ -56,4 +58,12 @@ pub fn get_hotkey_running() -> MutexGuard<'static, bool> {
 
 pub fn get_app() -> &'static AppHandle {
     APP.get().expect("Failed to get APP")
+}
+
+pub fn get_cache() -> &'static Cache<String, Vec<FullClipboardDto>> {
+    CLIPBOARD_CACHE.get_or_init(|| {
+        Cache::builder()
+            .time_to_live(Duration::from_secs(300)) // 5 minutes TTL
+            .build()
+    })
 }
