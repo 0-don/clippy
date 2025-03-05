@@ -4,7 +4,7 @@
   </a>
   <p align="center">
     <br />
-    clipboard manager with sync & encryption
+    privacy focused clipboard manager with sync & encryption
     <br />
     <a href="https://github.com/0-don/clippy/releases/latest">Try it out</a>
     ·
@@ -70,6 +70,7 @@
 - **Security & Privacy:**
   - End-to-end encryption support
   - Password protection
+  - Replace patterns
   - Configurable size limits for different content types
 - **Cloud sync:**
   - Google Drive integration
