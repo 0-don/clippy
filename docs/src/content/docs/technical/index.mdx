@@ -1,0 +1,169 @@
+---
+title: Technical Documentation
+description: Technical details and development information for Clippy
+---
+
+# Technical Documentation
+
+## Architecture Overview
+
+### Technology Stack
+
+- **Frontend**: React + TypeScript
+- **Backend**: Rust + Tauri
+- **Database**: SQLite
+- **Build System**: Vite
+
+### Project Structure
+
+```
+clippy-rs/
+├── src/                    # Frontend source code
+│   ├── components/        # React components
+│   │   ├── lib/              # Utility libraries
+│   │   ├── store/            # State management
+│   │   ├── types/            # TypeScript type definitions
+│   │   └── utils/            # Helper functions
+│   ├── src-tauri/            # Rust backend
+│   │   ├── src/
+│   │   │   ├── commands/     # Tauri commands
+│   │   │   ├── config/       # Configuration management
+│   │   │   ├── events/       # Event handling
+│   │   │   ├── service/      # Core services
+│   │   │   └── utils/        # Utility functions
+│   │   └── Cargo.toml        # Rust dependencies
+│   └── docs/                 # Documentation
+```
+
+## Development Setup
+
+### Prerequisites
+
+1. Rust toolchain
+2. Node.js
+3. Tauri CLI
+4. Platform-specific dependencies:
+   - Linux: `pkg-config`, `libglib2.0-dev`, `libwebkit2gtk-4.1-dev`, `libgtk-3-dev`, `libxdo-dev`, `libayatana-appindicator3-dev`, `librsvg2-dev`
+   - Windows: Visual Studio Build Tools
+   - macOS: Xcode Command Line Tools
+
+### Installation
+
+1. Clone the repository
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+3. Install backend dependencies:
+   ```bash
+   cd src-tauri
+   cargo build
+   ```
+
+### Development Commands
+
+- `npm run d`: Start development server with hot reload
+- `npm run build`: Build the application
+- `npm run tauri dev`: Run Tauri development server
+
+## Core Components
+
+### Frontend Architecture
+
+- **Components**: React components organized by feature
+- **State Management**: Local state with React hooks
+- **Styling**: CSS modules with responsive design
+- **Type Safety**: TypeScript for type checking
+
+### Backend Architecture
+
+- **Commands**: Tauri commands for IPC
+- **Services**: Core business logic
+- **Events**: System event handling
+- **Configuration**: App settings management
+
+### Database Schema
+
+- **Clipboards**: Stores clipboard history
+- **Settings**: User preferences
+- **Hotkeys**: Keyboard shortcuts
+- **Sync**: Cloud sync configuration
+
+## Security Implementation
+
+### Encryption
+
+- End-to-end encryption for sensitive data
+- Password-based protection
+- Secure key storage
+
+### Privacy
+
+- Local-first architecture
+- Configurable data retention
+- Secure cloud sync
+
+## Platform-Specific Notes
+
+### Linux
+
+- X11 support required
+- KDE Plasma: Disable Focus Stealing Prevention
+- GNOME: Wayland may need to be disabled
+
+### Windows
+
+- Standard Windows API integration
+- System tray support
+- Autostart capabilities
+
+### macOS
+
+- Hotkey configuration may need adjustment
+- Apple Silicon support
+- Intel Mac support
+
+## Build and Deployment
+
+### Build Process
+
+1. Frontend build with Vite
+2. Rust compilation
+3. Tauri bundling
+4. Platform-specific packaging
+
+### Distribution
+
+- Windows: `.exe` installer
+- Linux: `.deb`, `.rpm`, `.AppImage`
+- macOS: `.dmg` package
+
+## Contributing
+
+### Development Guidelines
+
+1. Follow TypeScript best practices
+2. Use Rust idioms and patterns
+3. Maintain test coverage
+4. Document new features
+
+### Code Style
+
+- Frontend: Prettier + ESLint
+- Backend: rustfmt
+- Documentation: Markdown
+
+## Troubleshooting
+
+### Common Issues
+
+1. Hotkey conflicts
+2. Database corruption
+3. Sync issues
+4. Platform-specific quirks
+
+### Debug Mode
+
+- Enable debug logging
+- Check system logs
+- Verify permissions
