@@ -1,35 +1,85 @@
 ---
 title: Welcome to Clippy
-description: Get started with Clippy, modern clipboard mana
+description: Modern clipboard management made simple
 template: splash
 hero:
-  tagline: Well done! Your Clippy project is up and running!
+  tagline: Your ultimate clipboard manager for seamless productivity!
   image:
     file: ../../assets/app-icon.png
   actions:
     - text: Quick Start
       link: /guides/installation/
       icon: right-arrow
+    - text: Download Now
+      link: https://github.com/0-don/clippy/releases
+      icon: download
+      variant: primary
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 import "../../styles/global.css";
 
-## Next steps
+<>
+  <div class="flex flex-wrap justify-center gap-8">
+    <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+      <img
+        src="src/assets/logos--tauri.svg"
+        alt="Tauri Logo"
+        class="aspect-square h-12 w-12 object-contain object-center"
+      />
+      <span class="text-center text-sm">Built with Tauri</span>
+    </div>
+    <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+      <img
+        src="src/assets/logos--google-drive.svg"
+        alt="Google Drive Logo"
+        class="aspect-square h-12 w-12 object-contain object-center"
+      />
+      <span class="text-center text-sm">Google Drive Sync</span>
+    </div>
+    <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+      <img
+        src="src/assets/logos--solidjs.svg"
+        alt="Solidjs Logo"
+        class="aspect-square h-12 w-12 object-contain object-center"
+      />
+      <span class="text-center text-sm">Powered by Solidjs</span>
+    </div>
+  </div>
 
-<CardGrid stagger>
-  <Card title="Update content" icon="pencil">
-    Edit `src/content/docs/index.mdx` to see this page change.
+## Features
+
+<CardGrid>
+  <Card title="Cross-Platform" icon="laptop">
+    Use Clippy on Windows, macOS, and Linux with the same seamless experience.
   </Card>
-  <Card title="Add new content" icon="add-document">
-    Add Markdown or MDX files to `src/content/docs` to create new pages.
+  <Card title="Cloud Sync" icon="seti:salesforce">
+    Sync your clipboard history across all your devices with Google Drive integration.
   </Card>
-  <Card title="Configure your site" icon="setting">
-    Edit your `sidebar` and other config in `astro.config.mjs`.
+  <Card title="Secure" icon="seti:lock">
+    Built with Rust and Tauri for maximum security and performance.
+  </Card>
+  <Card title="Customizable" icon="setting">
+    Tailor Clippy to your workflow with extensive configuration options.
   </Card>
 </CardGrid>
 
-<div class="flex justify-between">
-  <a href="/legal/privacy-policy">Privacy Policy</a>
-  <a href="/legal/terms-of-service">Terms of Service</a>
+## Showcase
+
+<div class="flex flex-col items-center justify-center">
+  <p>
+    Here you can see a screenshot of the Clippy app in action. The image showcases the user interface and some of the
+    key features, giving you a first impression of what Clippy offers.
+  </p>
+  <img src="src/assets/clippy-showcase.webp" alt="Clippy App Screenshot" class="rounded-xl shadow-lg" />
 </div>
+
+<div class="!mt-16 flex justify-between border-t border-slate-200 pt-6 dark:border-slate-700">
+  <a href="/legal/privacy-policy" class="text-slate-500 transition-colors hover:text-blue-500 hover:underline">
+    Privacy Policy
+  </a>
+  <a href="/legal/terms-of-service" class="text-slate-500 transition-colors hover:text-blue-500 hover:underline">
+    Terms of Service
+  </a>
+</div>
+</>

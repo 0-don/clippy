@@ -27,87 +27,66 @@ hero:
 
   </div>
 
-{" "}
-
 <h1>Installation Guide</h1>
 <p>
   Welcome to your <strong>Installation Guide</strong>! This is where you'll find the essential steps to set up and
   configure Clippy successfully.
 </p>
+</body>
+</html>
 
-{" "}
+---
 
-<h2>Prerequisites</h2>
-<p>Before you begin, ensure you have the following installed:</p>
-<ul>
-  <li>
-    <a href="https://www.rust-lang.org/tools/install">Rust</a>
-  </li>
-  <li>
-    <a href="https://nodejs.org/en/download/">Node.js</a>
-  </li>
-  <li>
-    <a href="https://tauri.app/v1/guides/getting-started/prerequisites/">Tauri</a>
-  </li>
-</ul>
-<blockquote>
-  <p>
-    <strong>Note:</strong> Replace these prerequisites with your project's specific requirements if necessary.
-  </p>
-</blockquote>
+## Prerequisites
 
-{" "}
+Before you begin, ensure you have the following installed:
 
-<hr />
+- [Rust](https://www.rust-lang.org/tools/install) (latest stable version)
+- [Node.js](https://nodejs.org/en/download/) (v16+ recommended)
+- [Tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites/)
 
-{" "}
+> **Note:** Make sure the `cargo` and `rustup` commands are available in your shell. You can verify with `cargo --version`.
 
-<h2>Installation Overview</h2>
-<ul>
-  <li>
-    <a href="#download-clone">Download / Clone</a>
-  </li>
-  <li>
-    <a href="#install-dependencies">Install Dependencies</a>
-  </li>
-  <li>
-    <a href="#run-the-application">Run the Application</a>
-  </li>
-  <li>
-    <a href="#tested-platforms">Tested Platforms</a>
-  </li>
-</ul>
+---
 
-{" "}
-
-<hr />
-
-{" "}
-
-<h2 id="download-clone">Download / Clone</h2>
-<p>
-  You can download the project from <a href="https://github.com/0-don/clippy">GitHub</a> or clone it via:
-</p>
 ## Download / Clone
 
 You can download the project from [GitHub](https://github.com/0-don/clippy) or clone it via:
 
-{/* prettier-ignore */}
-  <div>
-    ```bash
-    git clone https://github.com/0-don/clippy.git
-    ```
-  </div>
-
-</body>
-</html>
----
-
-## Installation Overview
-
-- [Download / Clone](#download--clone)
-- [Install Dependencies](#install-dependencies)
-- [Run the Application](#run-the-application)
-- [Tested Platforms](#tested-platforms)
+```bash
+git clone https://github.com/0-don/clippy.git
+cd clippy
+```
 
 ---
+
+## Install Dependencies
+
+After cloning the repository, navigate to the project directory and install the dependencies:
+
+```bash
+cd clippy
+npm install
+```
+
+---
+
+## Run the Application
+
+Once the dependencies are installed, you can start the application with:
+
+```bash
+npm run d
+```
+
+---
+
+## Tested Platforms
+
+Clippy has been tested on the following platforms:
+
+<ul>
+  <li>Linux(x11) KDE Plasma (Disable Focus Stealing Prevention)</li>
+  <li>Windows</li>
+  <li>Mac (hotkeys needs to be changed in settings)</li>
+</ul>
