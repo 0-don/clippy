@@ -12,10 +12,10 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Clippy Docs",
-      social: {
-        github: "https://github.com/0-don/clippy",
-        discord: "https://discord.gg/coding",
-      },
+      social: [
+        { icon: "github", label: "GitHub", href: "https://github.com/0-don/clippy" },
+        { icon: "discord", label: "Discord", href: "https://discord.gg/coding" },
+      ],
       sidebar: [
         {
           label: "Quick Start",
@@ -33,10 +33,7 @@ export default defineConfig({
             },
           ],
         },
-        {
-          label: "Reference",
-          autogenerate: { directory: "reference" },
-        },
+        { label: "Reference", autogenerate: { directory: "reference" } },
         {
           label: "Legal",
           items: [
@@ -51,7 +48,5 @@ export default defineConfig({
 
   adapter: node({ mode: "standalone" }),
 
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  vite: { plugins: [tailwindcss()] },
 });
