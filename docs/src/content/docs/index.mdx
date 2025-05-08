@@ -1,35 +1,49 @@
 ---
 title: Welcome to Clippy
-description: Get started with Clippy, modern clipboard mana
+description: Modern clipboard management made simple
 template: splash
 hero:
-  tagline: Well done! Your Clippy project is up and running!
+  tagline: Your ultimate clipboard manager for seamless productivity!
   image:
     file: ../../assets/app-icon.png
   actions:
     - text: Quick Start
       link: /guides/installation/
       icon: right-arrow
+    - text: Download Now
+      link: https://github.com/0-don/clippy/releases
+      icon: download
+      variant: primary
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 import "../../styles/global.css";
 
-## Next steps
-
-<CardGrid stagger>
-  <Card title="Update content" icon="pencil">
-    Edit `src/content/docs/index.mdx` to see this page change.
-  </Card>
-  <Card title="Add new content" icon="add-document">
-    Add Markdown or MDX files to `src/content/docs` to create new pages.
-  </Card>
-  <Card title="Configure your site" icon="setting">
-    Edit your `sidebar` and other config in `astro.config.mjs`.
-  </Card>
-</CardGrid>
-
-<div class="flex justify-between">
-  <a href="/legal/privacy-policy">Privacy Policy</a>
-  <a href="/legal/terms-of-service">Terms of Service</a>
-</div>
+<>
+  <div class="flex flex-wrap justify-center gap-8">
+    <div class="flex w-32 flex-col items-center gap-2">
+      <img
+        src="src/assets/logos--tauri.svg"
+        alt="Tauri Logo"
+        class="aspect-square h-12 w-12 object-contain object-center"
+      />
+      <span class="text-center text-sm">Built with Tauri</span>
+    </div>
+    <div class="flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+      <img
+        src="src/assets/logos--google-drive.svg"
+        alt="Google Drive Logo"
+        class="aspect-square h-12 w-12 object-contain object-center"
+      />
+      <span class="text-center text-sm">Google Drive Sync</span>
+    </div>
+    <div class="flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+      <img
+        src="src/assets/logos--rust.svg"
+        alt="Rust Logo"
+        class="aspect-square h-12 w-12 object-contain object-center"
+      />
+      <span class="text-center text-sm">Powered by Rust</span>
+    </div>
+  </div>
+</>
