@@ -19,33 +19,32 @@ hero:
 import { Card, CardGrid } from "@astrojs/starlight/components";
 import "../../styles/global.css";
 
-<>
-  <div class="flex flex-wrap justify-center gap-8">
-    <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
-      <img
-        src="src/assets/logos--tauri.svg"
-        alt="Tauri Logo"
-        class="aspect-square h-12 w-12 object-contain object-center"
-      />
-      <span class="text-center text-sm">Built with Tauri</span>
-    </div>
-    <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
-      <img
-        src="src/assets/logos--google-drive.svg"
-        alt="Google Drive Logo"
-        class="aspect-square h-12 w-12 object-contain object-center"
-      />
-      <span class="text-center text-sm">Google Drive Sync</span>
-    </div>
-    <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
-      <img
-        src="src/assets/logos--solidjs.svg"
-        alt="Solidjs Logo"
-        class="aspect-square h-12 w-12 object-contain object-center"
-      />
-      <span class="text-center text-sm">Powered by Solidjs</span>
-    </div>
+<div class="flex flex-wrap justify-center gap-8">
+  <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+    <img
+      src="/logos--tauri.svg"
+      alt="Tauri Logo"
+      class="aspect-square h-12 w-12 object-contain object-center"
+    />
+    <span class="text-center text-sm">Built with Tauri</span>
   </div>
+  <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+    <img
+      src="/logos--google-drive.svg"
+      alt="Google Drive Logo"
+      class="aspect-square h-12 w-12 object-contain object-center"
+    />
+    <span class="text-center text-sm">Google Drive Sync</span>
+  </div>
+  <div class="!mt-0 flex w-32 flex-col items-center gap-2 transition-transform duration-200 hover:-translate-y-1">
+    <img
+      src="/logos--solidjs.svg"
+      alt="Solidjs Logo"
+      class="aspect-square h-12 w-12 object-contain object-center"
+    />
+    <span class="text-center text-sm">Powered by Solidjs</span>
+  </div>
+</div>
 
 ## Features
 
@@ -64,6 +63,7 @@ import "../../styles/global.css";
   </Card>
 </CardGrid>
 
+
 ## Showcase
 
 <div class="flex flex-col items-center justify-center">
@@ -71,7 +71,7 @@ import "../../styles/global.css";
     Here you can see a screenshot of the Clippy app in action. The image showcases the user interface and some of the
     key features, giving you a first impression of what Clippy offers.
   </p>
-  <img src="src/assets/clippy-showcase.webp" alt="Clippy App Screenshot" class="rounded-xl shadow-lg" />
+  <img src="/clippy-showcase.webp" alt="Clippy App Screenshot" class="rounded-xl shadow-lg" />
 </div>
 
 <div class="!mt-16 flex justify-between border-t border-slate-200 pt-6 dark:border-slate-700">
@@ -82,4 +82,4 @@ import "../../styles/global.css";
     Terms of Service
   </a>
 </div>
-</>
+
