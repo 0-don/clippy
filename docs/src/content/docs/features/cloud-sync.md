@@ -19,7 +19,7 @@ Clippy's **Cloud Sync** feature keeps your clipboard history and favorite entrie
 
 - **Clipboard History**: Your recent clipboard entries, filtered by type and age (configurable).
 - **Favorites**: Starred clips are always included in sync.
-- **Settings (optional)**: Hotkeys, UI preferences, and more can be optionally synchronized.
+- **Settings**: UI preferences, and more can be optionally synchronized.
 
 ---
 
