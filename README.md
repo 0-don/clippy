@@ -116,7 +116,10 @@ Before you begin, ensure you have met the following requirements:
 
 - Linux(x11) KDE Plasma (Disable Focus Stealing Prevention)
 - Windows
-- Mac (hotkeys needs to be changed in settings)
+- Mac (run command below to remove quarantine attribute)
+```bash
+xattr -r -d com.apple.quarantine /Applications/clippy.app
+```
 
 <!-- DEBIAN GNOME X11 -->
 <!-- su - -->

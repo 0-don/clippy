@@ -15,7 +15,7 @@ Clippy doesn't just manage text and images — it also supports clipboard entrie
 
 Files are shown in the clipboard history with icons and details for easy recognition. Here's how it might look:
 
-![File Thumbnail Preview](../../../assets/clippy-showcase.webp)
+![File Thumbnail Preview](/clippy-showcase.webp)
 
 ## File Handling Settings
 

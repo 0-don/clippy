@@ -23,6 +23,14 @@ export default defineConfig({
             // Each item here is one entry in the navigation menu.
             { label: "Installation Guide", slug: "guides/installation" },
             {
+              label: "Common Issues",
+              items: [
+                { label: "Linux", slug: "common-issues/linux" },
+                { label: "Windows", slug: "common-issues/windows" },
+                { label: "MacOS", slug: "common-issues/macos" },
+              ],
+            },
+            {
               label: "Features",
               items: [
                 { label: "Clipboard History", slug: "features/clipboard-history" },
