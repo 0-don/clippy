@@ -5,7 +5,7 @@ description: A quick guide to install Clippy.
 
 Clippy's **Clipboard History** is a powerful tool that captures and manages your clipboard activity, enabling you to retrieve past content quickly and efficiently. Whether you're working with text, images, or files, Clippy ensures your data is always within reach.
 
-![Clipboard History Overview](../../../assets/clippy-showcase.webp)
+![Clipboard History Overview](/clippy-showcase.webp)
 
 ## Key Features
 
