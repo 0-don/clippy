@@ -7,6 +7,8 @@ description: Common issues and solutions for MacOS users.
 
 ![Mac Quarantine](/common-issues/mac_quarantine_black.png)
 
+This is a common issue with MacOS. It happens when the app is downloaded from the internet and not from the App Store. To fix this, you need to remove the quarantine attribute from the app.
+
 ```bash
 xattr -r -d com.apple.quarantine /Applications/clippy.app
 ```
