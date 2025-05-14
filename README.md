@@ -20,35 +20,35 @@
 
 <div align="center">
 
-<a href="https://github.com/0-don/clippy/releases/download/v1.3.1/clippy_1.3.1_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy_1.4.2_x64-setup.exe">
   <img src="./public/windows.png"> Windows (x64)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.3.1/clippy_1.3.1_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy_1.4.2_x64-setup.exe">
   Windows (arm64)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_amd64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy_1.4.2_amd64.deb">
   <img src="./public/linux.png"> Linux (deb)
 </a>
 •
-<a href="https://github.com/0PandaDEV/Qopy/releases/download/v0.3.1/Qopy-0.3.1.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy-1.4.2-1.x86_64.rpm">
   Linux (rpm)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy-bin-1.4.0-1-x86_64.pkg.tar.zst">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy-bin-1.4.2-1-x86_64.pkg.tar.zst">
   Linux (zst)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_amd64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy_1.4.2_amd64.AppImage">
   Linux (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_aarch64.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy_1.4.2_aarch64.dmg">
   <img src="./public/apple.png"> macOS (Silicon)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.4.0/clippy_1.4.0_aarch64.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.4.2/clippy_1.4.2_aarch64.dmg">
   macOS (Intel)
 </a>
 <br>
@@ -117,6 +117,7 @@ Before you begin, ensure you have met the following requirements:
 - Linux(x11) KDE Plasma (Disable Focus Stealing Prevention)
 - Windows
 - Mac (run command below to remove quarantine attribute)
+
 ```bash
 xattr -r -d com.apple.quarantine /Applications/clippy.app
 ```
