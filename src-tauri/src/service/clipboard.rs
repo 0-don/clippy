@@ -242,7 +242,10 @@ pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
 
 pub async fn get_all_clipboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
     let db = db().await?;
-    let clipboards = clipboard::Entity::find().all(&db).await?;
+    let clipboards = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::Id)
+        .all(&db)
+        .await?;
 
     Ok(load_clipboards_with_relations(clipboards).await)
 }
@@ -271,44 +274,6 @@ pub async fn get_clipboards_db(
         .apply_if(star, |q, s| q.filter(clipboard::Column::Star.eq(s)))
         .apply_if(img, |q, _| {
             q.filter(clipboard::Column::Types.contains(ClipboardType::Image.to_string()))
-        })
-        .apply_if(search.as_ref().map(|s| s.to_lowercase()), |q, s| {
-            if let Some(clip_type) = KeywordBuilder::find_clipboard_type(
-                &s,
-                &Language::from_iso_code(&settings.language),
-                &clipboard_keywords,
-            ) {
-                match clip_type {
-                    ClipboardType::Text => {
-                        if let Some(text_type) = KeywordBuilder::find_text_type(
-                            &s,
-                            &Language::from_iso_code(&settings.language),
-                            &text_keywords,
-                        ) {
-                            q.filter(clipboard_text::Column::Type.eq(text_type.to_string()))
-                        } else {
-                            q.filter(
-                                clipboard_text::Column::Type
-                                    .eq(ClipboardTextType::Text.to_string()),
-                            )
-                        }
-                    }
-                    _ => q.filter(clipboard::Column::Types.contains(clip_type.to_string())),
-                }
-            } else {
-                // Fallback to full-text search
-                q.filter(
-                    clipboard_text::Column::Data
-                        .contains(&s)
-                        .or(clipboard_file::Column::Name.contains(&s))
-                        .or(clipboard_file::Column::Extension.contains(&s))
-                        .or(clipboard_file::Column::MimeType.contains(&s))
-                        .or(clipboard_image::Column::Extension.contains(&s))
-                        .or(clipboard_text::Column::Type.contains(&s))
-                        .or(clipboard_html::Column::Data.contains(&s))
-                        .or(clipboard_rtf::Column::Data.contains(&s)),
-                )
-            }
         })
         .apply_if(search.as_ref().map(|s| s.to_lowercase()), |q, s| {
             if let Some(clip_type) = KeywordBuilder::find_clipboard_type(
