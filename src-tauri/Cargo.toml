@@ -51,7 +51,6 @@ chrono = "0"
 
 # pattern replace
 regex = "1"
-globset = "0"
 
 # keyboard input
 enigo = "0"
