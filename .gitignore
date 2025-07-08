@@ -19,3 +19,4 @@ sea_orm_*.txt
 config.json
 token.json
 .env
+test.json

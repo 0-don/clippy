@@ -79,39 +79,20 @@ impl TextMatcher {
             return None;
         }
 
-        // Try as glob pattern first
-        if let Ok(glob) = globset::GlobBuilder::new(&self.match_expression)
+        match regex::RegexBuilder::new(&self.match_expression)
             .case_insensitive(true)
             .build()
         {
-            let words: Vec<&str> = text.split_whitespace().collect();
-            let mut result = text.to_string();
-            let mut changed = false;
-
-            for word in words {
-                if glob.compile_matcher().is_match(word) {
-                    result = result.replace(word, &self.substitution);
-                    changed = true;
+            Ok(regex) => {
+                let replaced = regex.replace_all(text, &self.substitution);
+                if replaced != text {
+                    Some(replaced.into_owned())
+                } else {
+                    None
                 }
             }
-
-            if changed {
-                return Some(result);
-            }
+            Err(_) => None,
         }
-
-        // Try as Regex if glob doesn't match
-        if let Ok(regex) = regex::RegexBuilder::new(&self.match_expression)
-            .case_insensitive(true)
-            .build()
-        {
-            let replaced = regex.replace_all(text, &self.substitution);
-            if replaced != text {
-                return Some(replaced.into_owned());
-            }
-        }
-
-        None
     }
 
     pub fn from_json_value(value: &JsonValue) -> Vec<Self> {

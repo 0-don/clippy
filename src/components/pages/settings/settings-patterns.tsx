@@ -1,6 +1,6 @@
 import { AiFillEye, AiFillEyeInvisible } from "solid-icons/ai";
 import { TbGridPattern, TbTrash } from "solid-icons/tb";
-import { Component, createSignal, For, Show } from "solid-js";
+import { Component, createSignal, Index, Show } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { SettingsStore } from "../../../store/settings-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
@@ -78,7 +78,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
       </div>
       {/* Existing patterns list */}
       <div class="h-72 overflow-auto px-5">
-        <For each={SettingsStore.settings()?.text_matchers || []}>
+        <Index each={SettingsStore.settings()?.text_matchers || []}>
           {(pattern, index) => (
             <div class="flex flex-col gap-2.5">
               <div class="mt-2.5 grid grid-cols-[1fr_1fr_auto_auto] gap-2.5">
@@ -87,13 +87,13 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                   type={passwordType() ? "password" : "text"}
                   minLength={MIN_PATTERN_LENGTH}
                   maxlength={MAX_DESCRIPTION_LENGTH}
-                  value={pattern.match_expression}
+                  value={pattern().match_expression}
                   debounce={1000}
                   onInput={(e) => {
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
                       textMatchers:
                         SettingsStore.settings()?.text_matchers.map((p, i) =>
-                          i === index() ? { ...p, match_expression: e.currentTarget.value || "" } : p
+                          i === index ? { ...p, match_expression: e.currentTarget.value || "" } : p
                         ) || [],
                     });
                   }}
@@ -103,7 +103,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                 <Input
                   placeholder={t("SETTINGS.PATTERNS.SUBSTITUTION")}
                   type={passwordType() ? "password" : "text"}
-                  value={pattern.substitution}
+                  value={pattern().substitution}
                   minLength={0}
                   maxlength={MAX_DESCRIPTION_LENGTH}
                   debounce={1000}
@@ -111,19 +111,19 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
                       textMatchers:
                         SettingsStore.settings()?.text_matchers.map((p, i) =>
-                          i === index() ? { ...p, substitution: e.currentTarget.value || "" } : p
+                          i === index ? { ...p, substitution: e.currentTarget.value || "" } : p
                         ) || [],
                     });
                   }}
                 />
                 <CheckBox
                   label={t("SETTINGS.PATTERNS.ENABLED")}
-                  checked={pattern.enabled}
+                  checked={pattern().enabled}
                   onChange={(enabled) =>
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
                       textMatchers:
                         SettingsStore.settings()?.text_matchers.map((p, i) =>
-                          i === index() ? { ...p, enabled: !!enabled } : p
+                          i === index ? { ...p, enabled: !!enabled } : p
                         ) || [],
                     })
                   }
@@ -134,7 +134,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                   class="w-24"
                   onClick={() =>
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
-                      textMatchers: SettingsStore.settings()?.text_matchers.filter((_, i) => i !== index()) || [],
+                      textMatchers: SettingsStore.settings()?.text_matchers.filter((_, i) => i !== index) || [],
                     })
                   }
                 />
@@ -142,7 +142,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
               <hr class="border-zinc-700" />
             </div>
           )}
-        </For>
+        </Index>
       </div>
     </TextBlock>
   );
