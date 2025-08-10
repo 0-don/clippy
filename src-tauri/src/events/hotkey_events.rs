@@ -5,6 +5,8 @@ use crate::service::window::open_window;
 use crate::tao::global::{
     get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
 };
+#[cfg(target_os = "linux")]
+use crate::utils::hotkey_manager::force_x11_cleanup;
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
@@ -43,6 +45,7 @@ pub fn setup_hotkey_listener() {
     *get_hotkey_stop_tx() = Some(new_stop_tx);
 
     tauri::async_runtime::spawn(async move {
+        let mut counter = 0;
         loop {
             if let Ok(event) = receiver.try_recv() {
                 if event.state == HotKeyState::Pressed {
@@ -53,7 +56,16 @@ pub fn setup_hotkey_listener() {
                 }
             }
 
+            counter += 1;
+            if counter >= 3000 {
+                #[cfg(target_os = "linux")]
+                force_x11_cleanup();
+                counter = 0;
+            }
+
             if stop_rx.try_recv().is_ok() {
+                #[cfg(target_os = "linux")]
+                force_x11_cleanup();
                 break;
             }
 
