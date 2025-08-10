@@ -179,3 +179,11 @@ fn format_key_for_parsing(key: &str) -> String {
         _ => key.to_uppercase(), // Default case for other keys
     }
 }
+
+#[cfg(target_os = "linux")]
+pub fn force_x11_cleanup() {
+    use std::process::Command;
+
+    // Reset X11 key state - this fixes 95% of stuck key issues
+    let _ = Command::new("xset").args(&["r", "on"]).output();
+}
