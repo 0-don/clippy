@@ -14,9 +14,13 @@ use tokio::sync::oneshot;
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<WebviewWindow>>> = OnceLock::new();
 
-pub static HOTKEY_MANAGER: OnceLock<Arc<Mutex<SafeHotKeyManager>>> = OnceLock::new();
+pub static GLOBAL_HOTKEY_MANAGER: OnceLock<Arc<Mutex<SafeHotKeyManager>>> = OnceLock::new();
+pub static WINDOW_HOTKEY_MANAGER: OnceLock<Mutex<Option<SafeHotKeyManager>>> = OnceLock::new();
+
 pub static HOTKEY_RUNNING: OnceLock<Arc<Mutex<bool>>> = OnceLock::new();
-pub static HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
+pub static GLOBAL_HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
+pub static WINDOW_HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::new();
+
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static CLIPBOARD_CACHE: OnceLock<Cache<String, Vec<FullClipboardDto>>> = OnceLock::new();
@@ -24,17 +28,23 @@ pub static CLIPBOARD_CACHE: OnceLock<Cache<String, Vec<FullClipboardDto>>> = Onc
 pub fn setup_globals(app: &mut tauri::App) {
     APP.set(app.handle().clone())
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
-    HOTKEY_MANAGER
+    GLOBAL_HOTKEY_MANAGER
         .set(Arc::new(Mutex::new(SafeHotKeyManager::new(
             GlobalHotKeyManager::new().expect("Failed to initialize GlobalHotKeyManager"),
         ))))
-        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_MANAGER"));
+        .unwrap_or_else(|_| panic!("Failed to initialize GLOBAL_HOTKEY_MANAGER"));
+    WINDOW_HOTKEY_MANAGER
+        .set(Mutex::new(None))
+        .unwrap_or_else(|_| panic!("Failed to initialize WINDOW_HOTKEY_MANAGER"));
     HOTKEY_RUNNING
         .set(Arc::new(Mutex::new(false)))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_RUNNING"));
-    HOTKEYS
+    GLOBAL_HOTKEYS
         .set(Arc::new(Mutex::new(HashMap::new())))
-        .unwrap_or_else(|_| panic!("Failed to initialize HOTKEYS"));
+        .unwrap_or_else(|_| panic!("Failed to initialize GLOBAL_HOTKEYS"));
+    WINDOW_HOTKEYS
+        .set(Arc::new(Mutex::new(HashMap::new())))
+        .unwrap_or_else(|_| panic!("Failed to initialize WINDOW_HOTKEYS"));
     HOTKEY_STOP_TX
         .set(Mutex::new(None))
         .unwrap_or_else(|_| panic!("Failed to initialize HOTKEY_STOP_TX"));

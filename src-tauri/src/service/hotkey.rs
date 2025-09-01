@@ -48,7 +48,7 @@ pub fn init_hotkey_event() {
         return;
     }
 
-    register_hotkeys(true);
+    register_hotkeys(false);
     get_main_window()
         .emit(
             ListenEvent::EnableGlobalHotkeyEvent.to_string().as_str(),

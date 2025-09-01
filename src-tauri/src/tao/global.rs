@@ -1,7 +1,8 @@
 use super::tao_constants::{
-    APP, CLIPBOARD_CACHE, HOTKEYS, HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX, MAIN_WINDOW,
-    WINDOW_STOP_TX,
+    APP, CLIPBOARD_CACHE, GLOBAL_HOTKEYS, GLOBAL_HOTKEY_MANAGER, HOTKEY_RUNNING, HOTKEY_STOP_TX,
+    MAIN_WINDOW, WINDOW_STOP_TX,
 };
+use crate::tao::tao_constants::{WINDOW_HOTKEYS, WINDOW_HOTKEY_MANAGER};
 use common::types::{hotkey::SafeHotKeyManager, orm_query::FullClipboardDto, types::Key};
 use moka::sync::Cache;
 use std::{collections::HashMap, sync::MutexGuard, time::Duration};
@@ -16,20 +17,36 @@ pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
         .expect("Failed to lock MAIN_WINDOW")
 }
 
-pub fn get_hotkey_manager() -> MutexGuard<'static, SafeHotKeyManager> {
-    HOTKEY_MANAGER
+pub fn get_global_hotkey_manager() -> MutexGuard<'static, SafeHotKeyManager> {
+    GLOBAL_HOTKEY_MANAGER
         .get()
-        .expect("Failed to get HOTKEY_MANAGER")
+        .expect("Failed to get GLOBAL_HOTKEY_MANAGER")
         .lock()
-        .expect("Failed to lock HOTKEY_MANAGER")
+        .expect("Failed to lock GLOBAL_HOTKEY_MANAGER")
 }
 
-pub fn get_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
-    HOTKEYS
+pub fn get_window_hotkey_manager() -> MutexGuard<'static, Option<SafeHotKeyManager>> {
+    WINDOW_HOTKEY_MANAGER
         .get()
-        .expect("Failed to get HOTKEYS")
+        .expect("Failed to get WINDOW_HOTKEY_MANAGER")
         .lock()
-        .expect("Failed to lock HOTKEYS")
+        .expect("Failed to lock WINDOW_HOTKEY_MANAGER")
+}
+
+pub fn get_global_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
+    GLOBAL_HOTKEYS
+        .get()
+        .expect("Failed to get GLOBAL_HOTKEYS")
+        .lock()
+        .expect("Failed to lock GLOBAL_HOTKEYS")
+}
+
+pub fn get_window_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
+    WINDOW_HOTKEYS
+        .get()
+        .expect("Failed to get WINDOW_HOTKEYS")
+        .lock()
+        .expect("Failed to lock WINDOW_HOTKEYS")
 }
 
 pub fn get_window_stop_tx() -> MutexGuard<'static, Option<oneshot::Sender<()>>> {
