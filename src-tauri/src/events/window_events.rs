@@ -38,19 +38,26 @@ pub fn setup_window_event_listener() {
                         std::thread::sleep(std::time::Duration::from_millis(100));
                     }
 
-                    if *get_hotkey_running() {
-                        return *get_hotkey_running() = false;
-                    }
+                    // STEP 1: Always unregister the hotkeys immediately.
+                    // This releases the keyboard grab and fixes the lock-up.
+                    unregister_hotkeys(false);
 
+                    // STEP 2: Complete the oneshot channel from the Focused(true) handler.
                     if let Some(tx) = get_window_stop_tx().take() {
                         tx.send(()).unwrap_or(());
                     }
 
+                    // STEP 3: Use the flag ONLY to decide whether to hide the window.
+                    // If a hotkey was just used, we don't hide the window, but we still reset the flag.
+                    if *get_hotkey_running() {
+                        *get_hotkey_running() = false;
+                        return; // Exit without hiding
+                    }
+
+                    // // STEP 4: If no hotkey was just used, hide the window.
                     if !cfg!(debug_assertions) {
                         get_main_window().hide().expect("failed to hide window");
                     }
-
-                    unregister_hotkeys(false);
                 });
             }
             _ => {}
