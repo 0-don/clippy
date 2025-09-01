@@ -3,10 +3,9 @@ use crate::prelude::*;
 use crate::service::clipboard::init_clipboards;
 use crate::service::window::open_window;
 use crate::tao::global::{
-    get_app, get_hotkey_running, get_hotkey_stop_tx, get_hotkey_store, get_main_window,
+    get_app, get_global_hotkey_store, get_hotkey_running, get_hotkey_stop_tx, get_main_window,
+    get_window_hotkey_store,
 };
-#[cfg(target_os = "linux")]
-use crate::utils::hotkey_manager::force_x11_cleanup;
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
@@ -26,7 +25,8 @@ use tokio::sync::oneshot;
 pub fn setup_hotkey_listener() {
     let receiver = GlobalHotKeyEvent::receiver();
 
-    unregister_hotkeys(true);
+    // Only unregister window hotkeys on setup
+    unregister_hotkeys(false);
     tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(async {
             upsert_hotkeys_in_store()
@@ -34,7 +34,8 @@ pub fn setup_hotkey_listener() {
                 .expect("Failed to upsert hotkeys in store");
         })
     });
-    register_hotkeys(false);
+    // Register both global
+    register_hotkeys(true);
 
     // If there's an existing sender, send a stop signal to the previous task
     if let Some(sender) = get_hotkey_stop_tx().take() {
@@ -45,27 +46,22 @@ pub fn setup_hotkey_listener() {
     *get_hotkey_stop_tx() = Some(new_stop_tx);
 
     tauri::async_runtime::spawn(async move {
-        let mut counter = 0;
         loop {
             if let Ok(event) = receiver.try_recv() {
                 if event.state == HotKeyState::Pressed {
-                    let hotkey: Option<Key> = get_hotkey_store().get(&event.id).cloned();
+                    // Check both global and window hotkey stores
+                    let hotkey: Option<Key> = get_global_hotkey_store()
+                        .get(&event.id)
+                        .cloned()
+                        .or_else(|| get_window_hotkey_store().get(&event.id).cloned());
+
                     if let Some(hotkey) = hotkey {
                         parse_hotkey_event(&hotkey).await;
                     }
                 }
             }
 
-            counter += 1;
-            if counter >= 3000 {
-                #[cfg(target_os = "linux")]
-                force_x11_cleanup();
-                counter = 0;
-            }
-
             if stop_rx.try_recv().is_ok() {
-                #[cfg(target_os = "linux")]
-                force_x11_cleanup();
                 break;
             }
 

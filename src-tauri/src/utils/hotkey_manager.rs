@@ -1,71 +1,131 @@
+use crate::prelude::*;
 use crate::service::hotkey::get_all_hotkeys_db;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::tao::global::get_app;
-use crate::tao::global::get_hotkey_manager;
-use crate::{prelude::*, tao::global::get_hotkey_store};
-use common::{constants::GLOBAL_EVENTS, types::types::Key};
-use global_hotkey::hotkey::HotKey;
+use crate::tao::global::{
+    get_global_hotkey_manager, get_global_hotkey_store, get_window_hotkey_manager,
+    get_window_hotkey_store,
+};
+use common::{
+    constants::GLOBAL_EVENTS,
+    types::{hotkey::SafeHotKeyManager, types::Key},
+};
+use global_hotkey::{hotkey::HotKey, GlobalHotKeyManager};
 
-pub fn register_hotkeys(all: bool) {
+pub fn register_hotkeys(global_only: bool) {
     #[cfg(any(target_os = "windows", target_os = "macos"))]
     {
         get_app()
             .run_on_main_thread(move || {
-                register_hotkeys_inner(all);
+                register_hotkeys_inner(global_only);
             })
             .expect("Failed to register hotkeys");
     }
     #[cfg(target_os = "linux")]
     {
-        register_hotkeys_inner(all);
+        register_hotkeys_inner(global_only);
     }
 }
 
-pub fn unregister_hotkeys(all: bool) {
+pub fn unregister_hotkeys(global_only: bool) {
     #[cfg(any(target_os = "windows", target_os = "macos"))]
     {
         get_app()
             .run_on_main_thread(move || {
-                unregister_hotkeys_inner(all);
+                unregister_hotkeys_inner(global_only);
             })
             .expect("Failed to unregister hotkeys");
     }
     #[cfg(target_os = "linux")]
     {
-        unregister_hotkeys_inner(all);
+        unregister_hotkeys_inner(global_only);
     }
 }
 
-fn register_hotkeys_inner(all: bool) {
-    let mut hotkeys_to_register = Vec::new();
-    for (_, hotkey) in get_hotkey_store().iter_mut() {
-        if !hotkey.state && (all || hotkey.is_global) {
-            hotkeys_to_register.push(hotkey.hotkey);
-            hotkey.state = true;
+fn register_hotkeys_inner(global_only: bool) {
+    // Always register global hotkeys
+    {
+        let mut global_hotkeys_to_register = Vec::new();
+        for (_, hotkey) in get_global_hotkey_store().iter_mut() {
+            if !hotkey.state {
+                global_hotkeys_to_register.push(hotkey.hotkey);
+                hotkey.state = true;
+            }
+        }
+
+        if !global_hotkeys_to_register.is_empty() {
+            if let Err(e) = get_global_hotkey_manager().register_all(&global_hotkeys_to_register) {
+                printlog!("register_global_hotkeys error: {:?}", e);
+            }
         }
     }
 
-    if let Err(e) = get_hotkey_manager().register_all(&hotkeys_to_register) {
-        printlog!("register_hotkeys error: {:?}", e);
-    }
-}
+    // Register window hotkeys only if not global_only
+    if !global_only {
+        let window_hotkeys_to_register: Vec<HotKey> = get_window_hotkey_store()
+            .values()
+            .map(|k| k.hotkey)
+            .collect();
 
-fn unregister_hotkeys_inner(all: bool) {
-    let mut hotkeys_to_unregister = Vec::new();
-    for (_, hotkey) in get_hotkey_store().iter_mut() {
-        if hotkey.state && (all || !hotkey.is_global) {
-            hotkeys_to_unregister.push(hotkey.hotkey);
-            hotkey.state = false;
+        if !window_hotkeys_to_register.is_empty() {
+            // Create new window manager instance
+            {
+                let mut manager = get_window_hotkey_manager();
+                *manager = Some(SafeHotKeyManager::new(
+                    GlobalHotKeyManager::new().expect("Failed to create window hotkey manager"),
+                ));
+            }
+
+            let manager = get_window_hotkey_manager();
+            if let Some(ref manager) = *manager {
+                if let Err(e) = manager.register_all(&window_hotkeys_to_register) {
+                    printlog!("register_window_hotkeys error: {:?}", e);
+                }
+            }
         }
     }
+}
 
-    if let Err(e) = get_hotkey_manager().unregister_all(&hotkeys_to_unregister) {
-        printlog!("unregister_hotkeys error: {:?}", e);
+fn unregister_hotkeys_inner(global_only: bool) {
+    // Unregister global hotkeys only if explicitly requested (app shutdown)
+    if global_only {
+        let mut global_hotkeys_to_unregister = Vec::new();
+        for (_, hotkey) in get_global_hotkey_store().iter_mut() {
+            if hotkey.state {
+                global_hotkeys_to_unregister.push(hotkey.hotkey);
+                hotkey.state = false;
+            }
+        }
+
+        if !global_hotkeys_to_unregister.is_empty() {
+            if let Err(e) =
+                get_global_hotkey_manager().unregister_all(&global_hotkeys_to_unregister)
+            {
+                printlog!("unregister_global_hotkeys error: {:?}", e);
+            }
+        }
+    } else {
+        // For window hotkeys, just drop the manager to force cleanup
+        {
+            let mut manager = get_window_hotkey_manager();
+            *manager = None; // This will drop the manager and auto-unregister all its hotkeys
+        }
     }
 }
 
-fn insert_hotkey_into_store(key: Key) {
-    let mut hotkeys_lock = get_hotkey_store();
+fn insert_global_hotkey_into_store(key: Key) {
+    let mut hotkeys_lock = get_global_hotkey_store();
+
+    if hotkeys_lock.get(&key.id).is_some() {
+        hotkeys_lock
+            .remove(&key.id)
+            .expect("Failed to remove hotkey");
+    }
+    hotkeys_lock.insert(key.id, key);
+}
+
+fn insert_window_hotkey_into_store(key: Key) {
+    let mut hotkeys_lock = get_window_hotkey_store();
 
     if hotkeys_lock.get(&key.id).is_some() {
         hotkeys_lock
@@ -76,10 +136,13 @@ fn insert_hotkey_into_store(key: Key) {
 }
 
 pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>> {
-    get_hotkey_store().clear();
+    // Clear both stores
+    get_global_hotkey_store().clear();
+    get_window_hotkey_store().clear();
 
     let hotkeys = get_all_hotkeys_db().await?;
 
+    // Process database hotkeys
     for hotkey in hotkeys {
         let hotkey_str = parse_shortcut(
             hotkey.ctrl,
@@ -94,7 +157,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             id: key.id(),
             state: false,
             is_global: GLOBAL_EVENTS.contains(&hotkey.event),
-            event: hotkey.event,
+            event: hotkey.event.clone(),
             key_str: hotkey_str,
             ctrl: hotkey.ctrl,
             alt: hotkey.alt,
@@ -103,9 +166,15 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             hotkey: key,
         };
 
-        insert_hotkey_into_store(key_struct);
+        // Insert into appropriate store based on whether it's a global event
+        if GLOBAL_EVENTS.contains(&hotkey.event) {
+            insert_global_hotkey_into_store(key_struct);
+        } else {
+            insert_window_hotkey_into_store(key_struct);
+        }
     }
 
+    // Add digit and numpad hotkeys (these are window-specific)
     for i in 1..=9 {
         let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
         let key_digit: HotKey = hotkey_digit.parse()?;
@@ -138,8 +207,9 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
                 hotkey: key_num,
             },
         ];
+
         for key_struct in key_structs {
-            insert_hotkey_into_store(key_struct);
+            insert_window_hotkey_into_store(key_struct);
         }
     }
 
@@ -178,12 +248,4 @@ fn format_key_for_parsing(key: &str) -> String {
         // ...
         _ => key.to_uppercase(), // Default case for other keys
     }
-}
-
-#[cfg(target_os = "linux")]
-pub fn force_x11_cleanup() {
-    use std::process::Command;
-
-    // Reset X11 key state - this fixes 95% of stuck key issues
-    let _ = Command::new("xset").args(&["r", "on"]).output();
 }
