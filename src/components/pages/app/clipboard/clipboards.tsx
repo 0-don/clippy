@@ -54,7 +54,7 @@ export const Clipboards: Component = () => {
       fallback={
         <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
           <img src={clippy} width="50%" alt="no clipboards" />
-          <h2 class="text-2xl font-medium opacity-50 text-center">
+          <h2 class="text-center text-2xl font-medium opacity-50">
             {t("CLIPBOARD.NO_CLIPBOARDS_YET")}
           </h2>
         </div>
@@ -63,18 +63,18 @@ export const Clipboards: Component = () => {
       <div
         ref={ClipboardStore.setClipboardRef}
         onScroll={onScroll}
-        class="overflow-y-auto overflow-x-hidden pb-5"
+        class="overflow-x-hidden overflow-y-auto pb-5"
       >
         <Show when={scrollToTop()}>
           <button
             type="button"
-            class="absolute bottom-5 right-4 z-10 rounded-full bg-neutral-600 px-2 py-1 hover:bg-gray-500"
+            class="absolute right-4 bottom-5 z-10 rounded-full bg-neutral-600 px-2 py-1 hover:bg-gray-500"
             onClick={ClipboardStore.init}
           >
             <div class="relative flex items-center justify-center py-1">
               <FiArrowUp class="text-xl text-white! dark:text-white!" />
               <Show when={HotkeyStore.globalHotkeyEvent()}>
-                <div class="absolute left-0 top-0 -ml-3 -mt-3 rounded-xs bg-zinc-600 px-1 text-[12px] font-semibold">
+                <div class="absolute top-0 left-0 -mt-3 -ml-3 rounded-xs bg-zinc-600 px-1 text-[12px] font-semibold">
                   {
                     HotkeyStore.hotkeys().find(
                       (key) => key.event === HotkeyEvent.ScrollToTop,

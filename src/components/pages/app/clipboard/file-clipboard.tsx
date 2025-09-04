@@ -71,7 +71,7 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
       <div class="min-w-0 flex-1" title={getFileListTitle()}>
         {Object.entries(groupedFiles).map(([type, data]) => (
           <span class="flex items-center gap-1">
-            <span class="text-sm truncate">
+            <span class="truncate text-sm">
               {data.count} {type}
             </span>
             <span class="text-xs text-zinc-500">{formatBytes(data.size)}</span>

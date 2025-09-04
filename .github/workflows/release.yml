@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'docs/**'
+      - "docs/**"
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
@@ -21,7 +21,7 @@ jobs:
       version: ${{ steps.get-package.outputs.version }}
       description: ${{ steps.get-package.outputs.description }}
       license: ${{ steps.get-package.outputs.license }}
-      deb_pkg_name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb 
+      deb_pkg_name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb
       deb_pkg_path: ./src-tauri/target/release/bundle/deb/
       deb_pkg_renamed: ${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-${{ env.ARCH }}.deb
       arch_pkg_name: ${{ steps.get-package.outputs.name }}-bin-${{ steps.get-package.outputs.version }}-1-${{ env.ARCH }}.pkg.tar.zst
@@ -31,7 +31,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-            node-version: lts/*
+          node-version: lts/*
       - name: get package info
         id: get-package
         run: |
@@ -47,15 +47,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          include:
-            - platform: "macos-latest"
-              args: "--target aarch64-apple-darwin"
-            - platform: "macos-latest"
-              args: "--target x86_64-apple-darwin"
-            - platform: "ubuntu-22.04"
-              args: ""
-            - platform: "windows-latest"
-              args: ""
+        include:
+          - platform: "macos-latest"
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-latest"
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-22.04"
+            args: ""
+          - platform: "windows-latest"
+            args: ""
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -63,14 +63,14 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-            node-version: lts/*
+          node-version: lts/*
 
       - name: Replace environment variables in config
         env:
           TAURI_GOOGLE_CLIENT_ID: ${{ secrets.TAURI_GOOGLE_CLIENT_ID }}
           TAURI_GOOGLE_CLIENT_SECRET: ${{ secrets.TAURI_GOOGLE_CLIENT_SECRET }}
         run: node ./.github/replace-config.js
-          
+
       - name: install rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -94,7 +94,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ needs.setup.outputs.tag_name }}
-          releaseName:  ${{ needs.setup.outputs.tag_name  }}
+          releaseName: ${{ needs.setup.outputs.tag_name  }}
           releaseDraft: false
           prerelease: false
 
