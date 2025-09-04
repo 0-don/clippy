@@ -60,6 +60,7 @@ export default defineConfig({
           ],
         },
       ],
+      customCss: ["./src/styles/global.css"],
     }),
     sitemap(),
   ],
