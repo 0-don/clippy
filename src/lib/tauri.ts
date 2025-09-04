@@ -5,7 +5,7 @@ import { TauriListenEvents } from "../types/tauri-listen";
 
 export function listenEvent<EventName extends keyof TauriListenEvents>(
   event: EventName,
-  handler: (payload: TauriListenEvents[EventName]) => void
+  handler: (payload: TauriListenEvents[EventName]) => void,
 ) {
   return listen(event, (event) => {
     handler(event.payload as TauriListenEvents[EventName]);
@@ -14,7 +14,9 @@ export function listenEvent<EventName extends keyof TauriListenEvents>(
 
 export function invokeCommand<Command extends keyof TauriInvokeCommands>(
   command: Command,
-  ...args: TauriInvokeCommands[Command]["args"] extends undefined ? [] : [TauriInvokeCommands[Command]["args"]]
+  ...args: TauriInvokeCommands[Command]["args"] extends undefined
+    ? []
+    : [TauriInvokeCommands[Command]["args"]]
 ): Promise<TauriInvokeCommands[Command]["return"]> {
   return invoke(command, args[0]);
 }

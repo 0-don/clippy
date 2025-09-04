@@ -9,7 +9,10 @@ import { SettingsStore } from "../../../store/settings-store";
 import { Progress, TauriError } from "../../../types";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { ListenEvent } from "../../../types/tauri-listen";
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "../../../utils/constants";
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from "../../../utils/constants";
 import { Button } from "../../elements/button";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
@@ -24,12 +27,19 @@ export const SettingsEncryption: Component<SettingsEncryptionProps> = ({}) => {
   return (
     <TextBlock
       Icon={BsFileEarmarkLock2Fill}
-      header={<Toggle disabled checked={SettingsStore.settings()?.encryption} />}
+      header={
+        <Toggle disabled checked={SettingsStore.settings()?.encryption} />
+      }
       title={t("SETTINGS.ENCRYPT.ENCRYPT_DECRYPT")}
     >
       <div class="px-5 pb-5">
-        <p class="text-sm text-zinc-700 dark:text-zinc-400">{t("SETTINGS.ENCRYPT.INFO")}</p>
-        <Show when={SettingsStore.settings()?.encryption} fallback={<Encrypt />}>
+        <p class="text-sm text-zinc-700 dark:text-zinc-400">
+          {t("SETTINGS.ENCRYPT.INFO")}
+        </p>
+        <Show
+          when={SettingsStore.settings()?.encryption}
+          fallback={<Encrypt />}
+        >
           <Decrypt />
         </Show>
       </div>
@@ -58,7 +68,10 @@ const Encrypt: Component = ({}) => {
     }
 
     try {
-      await invokeCommand(InvokeCommand.EnableEncryption, { password: password(), confirmPassword: confirmPassword() });
+      await invokeCommand(InvokeCommand.EnableEncryption, {
+        password: password(),
+        confirmPassword: confirmPassword(),
+      });
       await SettingsStore.init();
     } catch (error) {
       const { Error } = error as TauriError;
@@ -74,7 +87,13 @@ const Encrypt: Component = ({}) => {
     <form class="flex flex-col gap-2" onSubmit={onSubmit}>
       <div>
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
-        <Input required minLength={1} maxLength={128} value={password()} onInput={(e) => setPassword(e.target.value)} />
+        <Input
+          required
+          minLength={1}
+          maxLength={128}
+          value={password()}
+          onInput={(e) => setPassword(e.target.value)}
+        />
       </div>
       <div>
         <label>{t("SETTINGS.ENCRYPT.CONFIRM_PASSWORD")}</label>
@@ -125,7 +144,9 @@ const Decrypt: Component = ({}) => {
     setLoading(true);
 
     try {
-      await invokeCommand(InvokeCommand.DisableEncryption, { password: password() });
+      await invokeCommand(InvokeCommand.DisableEncryption, {
+        password: password(),
+      });
       await SettingsStore.init();
     } catch (error) {
       const { Error } = error as TauriError;
@@ -143,10 +164,15 @@ const Decrypt: Component = ({}) => {
         <Toggle
           checked={SettingsStore.settings()?.enryption_save_before_unlock}
           onChange={async (enryption_save_before_unlock) =>
-            SettingsStore.updateSettings({ ...SettingsStore.settings()!, enryption_save_before_unlock })
+            SettingsStore.updateSettings({
+              ...SettingsStore.settings()!,
+              enryption_save_before_unlock,
+            })
           }
         />
-        <label class="text-sm">{t("SETTINGS.ENCRYPT.SAVE_BEFORE_UNLOCK")}</label>
+        <label class="text-sm">
+          {t("SETTINGS.ENCRYPT.SAVE_BEFORE_UNLOCK")}
+        </label>
       </div>
       <form class="flex flex-col gap-1" onSubmit={onSubmit}>
         <div>

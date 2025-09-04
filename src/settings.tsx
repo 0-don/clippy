@@ -29,31 +29,47 @@ const Settings = () => {
     <div class="dark:bg-dark absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:text-white">
       <Tabs />
       <div class="px-5 pt-5 dark:text-white">
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.GENERAL"}>
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.GENERAL"}
+        >
           <SettingsGeneral />
         </Show>
 
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.BACKUP"}>
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.BACKUP"}
+        >
           <SettingsBackup />
         </Show>
 
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.ENCRYPTION"}>
+        <Show
+          when={
+            SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.ENCRYPTION"
+          }
+        >
           <SettingsEncryption />
         </Show>
 
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.HISTORY"}>
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.HISTORY"}
+        >
           <SettingsHistory />
         </Show>
 
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.HOTKEYS"}>
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.HOTKEYS"}
+        >
           <SettingsHotkeys />
         </Show>
 
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.PATTERNS"}>
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.PATTERNS"}
+        >
           <SettingsPatterns />
         </Show>
 
-        <Show when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.LIMITS"}>
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.LIMITS"}
+        >
           <SettingsLimits />
         </Show>
       </div>
@@ -67,5 +83,5 @@ render(
       <Settings />
     </LanguageProvider>
   ),
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );

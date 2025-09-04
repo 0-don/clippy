@@ -1,185 +1,185 @@
 {
-	"ABOUT": {
-		"ABOUT": "Über",
-		"COPYRIGHT": "Copyright(C) DC. Alle Rechte vorbehalten.",
-		"DEVELOPED_BY": "Entwickelt von 0-don. Unterstützt von Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Derzeit keine Updates verfügbar",
-		"OFFICIAL_WEBSITE": "Offizielle Website"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "Als HTML kopieren",
-		"COPY_AS_RTF": "Als RTF kopieren",
-		"DELETE_CLIPBOARD": "Zwischenablage löschen",
-		"NO_CLIPBOARDS_YET": "Noch keine Zwischenablagen...",
-		"SEARCH_ENTRIES": "Einträge durchsuchen",
-		"STAR_FAVORITE": "Star-Favorit"
-	},
-	"MAIN": {
-		"ERROR": {
-			"DATA_IS_NOT_ENCRYPTED": "Die Daten sind nicht verschlüsselt",
-			"ENCRYPTION_FAILED": "Verschlüsselung fehlgeschlagen",
-			"ENCRYPTION_KEY_ALREADY_SET": "Verschlüsselungsschlüssel bereits festgelegt",
-			"INCORRECT_PASSWORD": "Falsches Passwort",
-			"INVALID_ENCRYPTION_KEY": "Ungültiger Verschlüsselungsschlüssel",
-			"NO_ENCRYPTION_KEY_SET": "Kein Verschlüsselungsschlüssel festgelegt",
-			"PASSWORD_NOT_MATCH": "Das Passwort stimmt nicht überein"
-		},
-		"HOTKEY": {
-			"ABOUT": "Über",
-			"CHANGE_CLIPBOARD_DB_LOCATION": "Zwischenablage-Datenbankspeicherort ändern",
-			"DIGIT_1": "Ziffer 1",
-			"DIGIT_2": "Ziffer 2",
-			"DIGIT_3": "Ziffer 3",
-			"DIGIT_4": "Ziffer 4",
-			"DIGIT_5": "Ziffer 5",
-			"DIGIT_6": "Ziffer 6",
-			"DIGIT_7": "Ziffer 7",
-			"DIGIT_8": "Ziffer 8",
-			"DIGIT_9": "Ziffer 9",
-			"EXIT": "Ausfahrt",
-			"HISTORY": "Geschichte",
-			"NUM_1": "Nummer 1",
-			"NUM_2": "Nummer 2",
-			"NUM_3": "Nummer 3",
-			"NUM_4": "Nummer 4",
-			"NUM_5": "Nummer 5",
-			"NUM_6": "Nummer 6",
-			"NUM_7": "Nummer 7",
-			"NUM_8": "Nummer 8",
-			"NUM_9": "Nummer 9",
-			"RECENT_CLIPBOARDS": "Zuletzt verwendete Zwischenablagen",
-			"SCROLL_TO_TOP": "Nach oben scrollen",
-			"SETTINGS": "Einstellungen",
-			"STARRED_CLIPBOARDS": "Markierte Zwischenablagen",
-			"SYNC_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren",
-			"TYPE_CLIPBOARD": "Typ Zwischenablage",
-			"VIEW_MORE": "Mehr sehen",
-			"WINDOW_DISPLAY_TOGGLE": "Fensteranzeige umschalten"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Strg",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Arabisch",
-			"BN": "Bengali",
-			"DE": "Deutsch",
-			"EN": "Englisch",
-			"ES": "Spanisch",
-			"FR": "Französisch",
-			"HI": "Hindi",
-			"IT": "Italienisch",
-			"JA": "Japanisch",
-			"KO": "Koreanisch",
-			"NL": "Niederländisch",
-			"PL": "Polieren",
-			"PT": "Portugiesisch",
-			"RU": "Russisch",
-			"TH": "Thai",
-			"TR": "Türkisch",
-			"UR": "Urdu",
-			"VI": "Vietnamesisch",
-			"ZH": "Mandarin"
-		},
-		"OFFLINE": "Offline",
-		"ONLINE": "Online",
-		"POSITION": {
-			"BOTTOM_CENTER": "Unten in der Mitte",
-			"BOTTOM_LEFT": "Unten links",
-			"BOTTOM_RIGHT": "Unten rechts",
-			"CENTER": "Center",
-			"CURSOR": "Cursor",
-			"LEFT_CENTER": "Linke Mitte",
-			"RIGHT_CENTER": "Mitte rechts",
-			"TOP_CENTER": "Oben Mitte",
-			"TOP_LEFT": "Oben links",
-			"TOP_RIGHT": "Oben rechts",
-			"TRAY_BOTTOM_CENTER": "Tablett unten Mitte",
-			"TRAY_BOTTOM_LEFT": "Ablage unten links",
-			"TRAY_BOTTOM_RIGHT": "Ablage unten rechts",
-			"TRAY_CENTER": "Tablettmitte",
-			"TRAY_LEFT": "Ablage links",
-			"TRAY_RIGHT": "Ablage rechts"
-		},
-		"SYNCING": "Synchronisieren",
-		"UNLOCK_CLIPPY": "Clippy freischalten"
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CHANGE_LOCATION": "Standort ändern",
-			"CONFIG_LOCATION": "Konfigurationsort",
-			"DATABASE_LOCATION": "Datenbankstandort",
-			"OPEN": "Offen",
-			"RESET_LOCATION": "Standort zurücksetzen",
-			"SYNC": "Synchronisieren",
-			"SYNC_LIMIT": "Wie viele Zwischenablagen sollen synchronisiert werden?",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"
-		},
-		"ENCRYPT": {
-			"CONFIRM_PASSWORD": "Bestätige das Passwort",
-			"DECRYPT": "Alle Zwischenablagen entschlüsseln",
-			"DECRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal entschlüsselt",
-			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} von {{total}} lädt Remote-Zwischenablagen herunter",
-			"ENCRYPT": "Alle Zwischenablagen verschlüsseln",
-			"ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
-			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal verschlüsselt",
-			"INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden",
-			"PASSWORD": "Passwort",
-			"SAVE_BEFORE_UNLOCK": "Zwischenablagen speichern bevor die PIN beim Start eingegeben wurde?"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Sprache ändern",
-			"CHANGE_WINDOW_POSITION": "Fensterposition ändern",
-			"HTML_CLIPBOARD_TOOLTIP": "HTML-Zwischenablage-Tooltip",
-			"KEYBOARD_SHORTCUT": "Tastenkombination",
-			"START_CLIPPY_ON_STARTUP": "Starten Sie Clippy beim Systemstart",
-			"SWITCH_THEME": "Thema wechseln",
-			"SYSTEM": "System",
-			"WINDOW_SCALE": "Fenstermaßstab"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Alles löschen",
-			"CLEAR_FILE": "Datei löschen",
-			"CLEAR_HTML": "HTML löschen",
-			"CLEAR_IMAGE": "Klares Bild",
-			"CLEAR_RTF": "Rtf löschen",
-			"CLEAR_TEXT": "Klartext",
-			"DATABASE_INFO": "{{records}} lokale Elemente ({{size}}) sind auf diesem Computer gespeichert",
-			"SQL_DATABASE_INFO": "SQL-Datenbankinformationen",
-			"STORAGE_ACTIONS": "Speicheraktionen"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Ändern Sie Ihre Hotkeys"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Grenzwerte für die Zwischenablage",
-			"IF_SET_TO_ZERO": "Wenn der Wert auf 0 gesetzt ist, wird der Zwischenablagetyp vollständig übersprungen",
-			"MAX_FILE_SIZE": "Maximale Dateigröße",
-			"MAX_HTML_SIZE": "Maximale HTML-Größe",
-			"MAX_IMAGE_SIZE": "Maximale Bildgröße",
-			"MAX_RTF_SIZE": "Maximale RTF-Größe",
-			"MAX_TEXT_SIZE": "Maximale Textgröße"
-		},
-		"PATTERNS": {
-			"ACTIONS": "Aktionen",
-			"ADD": "Hinzufügen",
-			"CHANGE_YOUR_TEXT_MATCHES": "Ändern Sie Ihre Textübereinstimmungen",
-			"ENABLED": "Ermöglicht",
-			"INFO": "Entfernen Sie vertrauliche Daten aus der Zwischenablage, definieren Sie ein Glob- oder Regex-Muster und es wird durch eine Substitution ersetzt (leer lassen, wenn nichts vorhanden ist)",
-			"MATCH_EXPRESSION": "Übereinstimmungsausdruck",
-			"REMOVE": "Entfernen",
-			"SUBSTITUTION": "Auswechslung"
-		},
-		"SETTINGS": "Einstellungen",
-		"TAB": {
-			"BACKUP": "Sicherung",
-			"ENCRYPTION": "Verschlüsselung",
-			"GENERAL": "Allgemein",
-			"HISTORY": "Geschichte",
-			"HOTKEYS": "Tastenkombinationen",
-			"LIMITS": "Grenzen",
-			"PATTERNS": "Muster"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "Über",
+    "COPYRIGHT": "Copyright(C) DC. Alle Rechte vorbehalten.",
+    "DEVELOPED_BY": "Entwickelt von 0-don. Unterstützt von Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "Derzeit keine Updates verfügbar",
+    "OFFICIAL_WEBSITE": "Offizielle Website"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "Als HTML kopieren",
+    "COPY_AS_RTF": "Als RTF kopieren",
+    "DELETE_CLIPBOARD": "Zwischenablage löschen",
+    "NO_CLIPBOARDS_YET": "Noch keine Zwischenablagen...",
+    "SEARCH_ENTRIES": "Einträge durchsuchen",
+    "STAR_FAVORITE": "Star-Favorit"
+  },
+  "MAIN": {
+    "ERROR": {
+      "DATA_IS_NOT_ENCRYPTED": "Die Daten sind nicht verschlüsselt",
+      "ENCRYPTION_FAILED": "Verschlüsselung fehlgeschlagen",
+      "ENCRYPTION_KEY_ALREADY_SET": "Verschlüsselungsschlüssel bereits festgelegt",
+      "INCORRECT_PASSWORD": "Falsches Passwort",
+      "INVALID_ENCRYPTION_KEY": "Ungültiger Verschlüsselungsschlüssel",
+      "NO_ENCRYPTION_KEY_SET": "Kein Verschlüsselungsschlüssel festgelegt",
+      "PASSWORD_NOT_MATCH": "Das Passwort stimmt nicht überein"
+    },
+    "HOTKEY": {
+      "ABOUT": "Über",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Zwischenablage-Datenbankspeicherort ändern",
+      "DIGIT_1": "Ziffer 1",
+      "DIGIT_2": "Ziffer 2",
+      "DIGIT_3": "Ziffer 3",
+      "DIGIT_4": "Ziffer 4",
+      "DIGIT_5": "Ziffer 5",
+      "DIGIT_6": "Ziffer 6",
+      "DIGIT_7": "Ziffer 7",
+      "DIGIT_8": "Ziffer 8",
+      "DIGIT_9": "Ziffer 9",
+      "EXIT": "Ausfahrt",
+      "HISTORY": "Geschichte",
+      "NUM_1": "Nummer 1",
+      "NUM_2": "Nummer 2",
+      "NUM_3": "Nummer 3",
+      "NUM_4": "Nummer 4",
+      "NUM_5": "Nummer 5",
+      "NUM_6": "Nummer 6",
+      "NUM_7": "Nummer 7",
+      "NUM_8": "Nummer 8",
+      "NUM_9": "Nummer 9",
+      "RECENT_CLIPBOARDS": "Zuletzt verwendete Zwischenablagen",
+      "SCROLL_TO_TOP": "Nach oben scrollen",
+      "SETTINGS": "Einstellungen",
+      "STARRED_CLIPBOARDS": "Markierte Zwischenablagen",
+      "SYNC_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren",
+      "TYPE_CLIPBOARD": "Typ Zwischenablage",
+      "VIEW_MORE": "Mehr sehen",
+      "WINDOW_DISPLAY_TOGGLE": "Fensteranzeige umschalten"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Strg",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Arabisch",
+      "BN": "Bengali",
+      "DE": "Deutsch",
+      "EN": "Englisch",
+      "ES": "Spanisch",
+      "FR": "Französisch",
+      "HI": "Hindi",
+      "IT": "Italienisch",
+      "JA": "Japanisch",
+      "KO": "Koreanisch",
+      "NL": "Niederländisch",
+      "PL": "Polieren",
+      "PT": "Portugiesisch",
+      "RU": "Russisch",
+      "TH": "Thai",
+      "TR": "Türkisch",
+      "UR": "Urdu",
+      "VI": "Vietnamesisch",
+      "ZH": "Mandarin"
+    },
+    "OFFLINE": "Offline",
+    "ONLINE": "Online",
+    "POSITION": {
+      "BOTTOM_CENTER": "Unten in der Mitte",
+      "BOTTOM_LEFT": "Unten links",
+      "BOTTOM_RIGHT": "Unten rechts",
+      "CENTER": "Center",
+      "CURSOR": "Cursor",
+      "LEFT_CENTER": "Linke Mitte",
+      "RIGHT_CENTER": "Mitte rechts",
+      "TOP_CENTER": "Oben Mitte",
+      "TOP_LEFT": "Oben links",
+      "TOP_RIGHT": "Oben rechts",
+      "TRAY_BOTTOM_CENTER": "Tablett unten Mitte",
+      "TRAY_BOTTOM_LEFT": "Ablage unten links",
+      "TRAY_BOTTOM_RIGHT": "Ablage unten rechts",
+      "TRAY_CENTER": "Tablettmitte",
+      "TRAY_LEFT": "Ablage links",
+      "TRAY_RIGHT": "Ablage rechts"
+    },
+    "SYNCING": "Synchronisieren",
+    "UNLOCK_CLIPPY": "Clippy freischalten"
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CHANGE_LOCATION": "Standort ändern",
+      "CONFIG_LOCATION": "Konfigurationsort",
+      "DATABASE_LOCATION": "Datenbankstandort",
+      "OPEN": "Offen",
+      "RESET_LOCATION": "Standort zurücksetzen",
+      "SYNC": "Synchronisieren",
+      "SYNC_LIMIT": "Wie viele Zwischenablagen sollen synchronisiert werden?",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"
+    },
+    "ENCRYPT": {
+      "CONFIRM_PASSWORD": "Bestätige das Passwort",
+      "DECRYPT": "Alle Zwischenablagen entschlüsseln",
+      "DECRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal entschlüsselt",
+      "DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} von {{total}} lädt Remote-Zwischenablagen herunter",
+      "ENCRYPT": "Alle Zwischenablagen verschlüsseln",
+      "ENCRYPT_DECRYPT": "Verschlüsseln / Entschlüsseln",
+      "ENCRYPTION_PROGRESS_LOCAL": "{{current}} aus {{total}} Zwischenablagen werden lokal verschlüsselt",
+      "INFO": "Alle Zwischenablagen sind verschlüsselt, bei Verlust des Passworts kann nichts wiederhergestellt werden",
+      "PASSWORD": "Passwort",
+      "SAVE_BEFORE_UNLOCK": "Zwischenablagen speichern bevor die PIN beim Start eingegeben wurde?"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Sprache ändern",
+      "CHANGE_WINDOW_POSITION": "Fensterposition ändern",
+      "HTML_CLIPBOARD_TOOLTIP": "HTML-Zwischenablage-Tooltip",
+      "KEYBOARD_SHORTCUT": "Tastenkombination",
+      "START_CLIPPY_ON_STARTUP": "Starten Sie Clippy beim Systemstart",
+      "SWITCH_THEME": "Thema wechseln",
+      "SYSTEM": "System",
+      "WINDOW_SCALE": "Fenstermaßstab"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Alles löschen",
+      "CLEAR_FILE": "Datei löschen",
+      "CLEAR_HTML": "HTML löschen",
+      "CLEAR_IMAGE": "Klares Bild",
+      "CLEAR_RTF": "Rtf löschen",
+      "CLEAR_TEXT": "Klartext",
+      "DATABASE_INFO": "{{records}} lokale Elemente ({{size}}) sind auf diesem Computer gespeichert",
+      "SQL_DATABASE_INFO": "SQL-Datenbankinformationen",
+      "STORAGE_ACTIONS": "Speicheraktionen"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Ändern Sie Ihre Hotkeys"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Grenzwerte für die Zwischenablage",
+      "IF_SET_TO_ZERO": "Wenn der Wert auf 0 gesetzt ist, wird der Zwischenablagetyp vollständig übersprungen",
+      "MAX_FILE_SIZE": "Maximale Dateigröße",
+      "MAX_HTML_SIZE": "Maximale HTML-Größe",
+      "MAX_IMAGE_SIZE": "Maximale Bildgröße",
+      "MAX_RTF_SIZE": "Maximale RTF-Größe",
+      "MAX_TEXT_SIZE": "Maximale Textgröße"
+    },
+    "PATTERNS": {
+      "ACTIONS": "Aktionen",
+      "ADD": "Hinzufügen",
+      "CHANGE_YOUR_TEXT_MATCHES": "Ändern Sie Ihre Textübereinstimmungen",
+      "ENABLED": "Ermöglicht",
+      "INFO": "Entfernen Sie vertrauliche Daten aus der Zwischenablage, definieren Sie ein Glob- oder Regex-Muster und es wird durch eine Substitution ersetzt (leer lassen, wenn nichts vorhanden ist)",
+      "MATCH_EXPRESSION": "Übereinstimmungsausdruck",
+      "REMOVE": "Entfernen",
+      "SUBSTITUTION": "Auswechslung"
+    },
+    "SETTINGS": "Einstellungen",
+    "TAB": {
+      "BACKUP": "Sicherung",
+      "ENCRYPTION": "Verschlüsselung",
+      "GENERAL": "Allgemein",
+      "HISTORY": "Geschichte",
+      "HOTKEYS": "Tastenkombinationen",
+      "LIMITS": "Grenzen",
+      "PATTERNS": "Muster"
+    }
+  }
 }

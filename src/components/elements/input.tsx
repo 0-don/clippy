@@ -6,13 +6,18 @@ type InputProps = ComponentProps<"input"> & {
 };
 
 export const Input: Component<InputProps> = (props) => {
-  const [local, inputProps] = splitProps(props, ["debounce", "onInput", "class"]);
+  const [local, inputProps] = splitProps(props, [
+    "debounce",
+    "onInput",
+    "class",
+  ]);
   let timeoutId: number;
 
   const onInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
     if (!local.onInput) return;
 
-    const handler = typeof local.onInput === "function" ? local.onInput : local.onInput[0];
+    const handler =
+      typeof local.onInput === "function" ? local.onInput : local.onInput[0];
 
     if (local.debounce) {
       clearTimeout(timeoutId);
@@ -40,7 +45,7 @@ export const Input: Component<InputProps> = (props) => {
         onInput={onInput}
         class={cn(
           "w-full appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden dark:text-white",
-          local.class
+          local.class,
         )}
       />
     </div>

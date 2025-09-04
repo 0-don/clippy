@@ -17,15 +17,21 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
 
   return (
     <Show when={SettingsStore.settings()}>
-      <TextBlock Icon={HiSolidCog8Tooth} title={t("SETTINGS.LIMITS.CLIPBOARD_LIMITS")}>
+      <TextBlock
+        Icon={HiSolidCog8Tooth}
+        title={t("SETTINGS.LIMITS.CLIPBOARD_LIMITS")}
+      >
         <div class="flex items-center justify-between gap-2 px-5 pb-5">
-          <p class="text-sm text-zinc-700 dark:text-zinc-400">{t("SETTINGS.LIMITS.IF_SET_TO_ZERO")}</p>
+          <p class="text-sm text-zinc-700 dark:text-zinc-400">
+            {t("SETTINGS.LIMITS.IF_SET_TO_ZERO")}
+          </p>
         </div>
         <div class="flex items-center justify-between gap-2 px-5 pb-5">
           <div class="flex items-center gap-2 truncate">
             <FiFileText />
             <h6 class="text-sm">
-              {t("SETTINGS.LIMITS.MAX_TEXT_SIZE")} ({formatBytes(SettingsStore.settings()?.max_text_size)})
+              {t("SETTINGS.LIMITS.MAX_TEXT_SIZE")} (
+              {formatBytes(SettingsStore.settings()?.max_text_size)})
             </h6>
           </div>
 
@@ -49,7 +55,8 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
           <div class="flex items-center gap-2 truncate">
             <BsFiletypeHtml />
             <h6 class="text-sm">
-              {t("SETTINGS.LIMITS.MAX_HTML_SIZE")} ({formatBytes(SettingsStore.settings()?.max_html_size)})
+              {t("SETTINGS.LIMITS.MAX_HTML_SIZE")} (
+              {formatBytes(SettingsStore.settings()?.max_html_size)})
             </h6>
           </div>
 
@@ -73,7 +80,8 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
           <div class="flex items-center gap-2 truncate">
             <BsJournalRichtext />
             <h6 class="text-sm">
-              {t("SETTINGS.LIMITS.MAX_RTF_SIZE")} ({formatBytes(SettingsStore.settings()?.max_rtf_size)})
+              {t("SETTINGS.LIMITS.MAX_RTF_SIZE")} (
+              {formatBytes(SettingsStore.settings()?.max_rtf_size)})
             </h6>
           </div>
 
@@ -98,7 +106,8 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
           <div class="flex items-center gap-2 truncate">
             <VsFileBinary />
             <h6 class="text-sm">
-              {t("SETTINGS.LIMITS.MAX_FILE_SIZE")} ({formatBytes(SettingsStore.settings()?.max_file_size)})
+              {t("SETTINGS.LIMITS.MAX_FILE_SIZE")} (
+              {formatBytes(SettingsStore.settings()?.max_file_size)})
             </h6>
           </div>
 
@@ -123,7 +132,8 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
           <div class="flex items-center gap-2 truncate">
             <BsImages />
             <h6 class="text-sm">
-              {t("SETTINGS.LIMITS.MAX_IMAGE_SIZE")}({formatBytes(SettingsStore.settings()?.max_image_size)})
+              {t("SETTINGS.LIMITS.MAX_IMAGE_SIZE")}(
+              {formatBytes(SettingsStore.settings()?.max_image_size)})
             </h6>
           </div>
 

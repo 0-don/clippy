@@ -46,18 +46,33 @@ function App() {
             <p class="text-xs font-semibold text-gray-500 uppercase select-none dark:text-white">
               {t(AppStore.getCurrentTab().name)}
             </p>
-            <Show when={SettingsStore.settings()?.sync} fallback={<BsHddFill title={t("MAIN.OFFLINE")} />}>
-              <Show when={ClipboardStore.clipboardSyncProgress()} fallback={<FiGlobe title={t("MAIN.ONLINE")} />}>
+            <Show
+              when={SettingsStore.settings()?.sync}
+              fallback={<BsHddFill title={t("MAIN.OFFLINE")} />}
+            >
+              <Show
+                when={ClipboardStore.clipboardSyncProgress()}
+                fallback={<FiGlobe title={t("MAIN.ONLINE")} />}
+              >
                 <ImSpinner class="animate-spin" title={t("MAIN.SYNCING")} />
               </Show>
             </Show>
           </div>
 
-          <Show when={AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.RECENT_CLIPBOARDS"}>
+          <Show
+            when={
+              AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.RECENT_CLIPBOARDS"
+            }
+          >
             <RecentClipboards />
           </Show>
 
-          <Show when={AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS"}>
+          <Show
+            when={
+              AppStore.getCurrentTab()?.name ===
+              "MAIN.HOTKEY.STARRED_CLIPBOARDS"
+            }
+          >
             <StarredClipboards />
           </Show>
 
@@ -65,7 +80,9 @@ function App() {
             <ClipboardHistory />
           </Show>
 
-          <Show when={AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.VIEW_MORE"}>
+          <Show
+            when={AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.VIEW_MORE"}
+          >
             <ViewMore />
           </Show>
         </div>

@@ -44,11 +44,16 @@ function createSettingsStore() {
   const [settings, setSettings] = createSignal<Settings>();
 
   const setCurrentTab = (tabName: SettingsTabName) =>
-    setTabs((prev) => prev.map((tab) => ({ ...tab, current: tab.name === tabName })));
+    setTabs((prev) =>
+      prev.map((tab) => ({ ...tab, current: tab.name === tabName })),
+    );
 
   const getCurrentTab = () => tabs().find((tab) => tab.current);
 
-  const updateSettings = async (settings: Settings, upload: boolean | undefined = true) => {
+  const updateSettings = async (
+    settings: Settings,
+    upload: boolean | undefined = true,
+  ) => {
     if (upload) await invokeCommand(InvokeCommand.UpdateSettings, { settings });
     setSettings(settings);
     await invokeCommand(InvokeCommand.ToggleAutostart);
@@ -61,11 +66,14 @@ function createSettingsStore() {
     AppStore.setLocale.refetch();
   };
 
-  const changeClipboardDbLocation = async () => invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
+  const changeClipboardDbLocation = async () =>
+    invokeCommand(InvokeCommand.ChangeClipboardDbLocation);
 
-  const resetClipboardDbLocation = async () => invokeCommand(InvokeCommand.ResetClipboardDbLocation);
+  const resetClipboardDbLocation = async () =>
+    invokeCommand(InvokeCommand.ResetClipboardDbLocation);
 
-  const syncAuthenticateToggle = async () => invokeCommand(InvokeCommand.SyncAuthenticateToggle);
+  const syncAuthenticateToggle = async () =>
+    invokeCommand(InvokeCommand.SyncAuthenticateToggle);
 
   const openWindow = async (windowName: WebWindow, title: string) =>
     invokeCommand(InvokeCommand.OpenNewWindow, { windowName, title });

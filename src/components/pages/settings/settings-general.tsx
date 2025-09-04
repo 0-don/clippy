@@ -12,7 +12,12 @@ import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { HotkeyEvent, WebWindow } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
-import { CLIPPY_POSITIONS, ClippyPosition, Language, LANGUAGES } from "../../../utils/constants";
+import {
+  CLIPPY_POSITIONS,
+  ClippyPosition,
+  Language,
+  LANGUAGES,
+} from "../../../utils/constants";
 import { Dropdown } from "../../elements/dropdown";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
@@ -28,7 +33,10 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
 
   return (
     <Show when={SettingsStore.settings()}>
-      <TextBlock Icon={RiDeviceKeyboardFill} title={t("SETTINGS.GENERAL.KEYBOARD_SHORTCUT")}>
+      <TextBlock
+        Icon={RiDeviceKeyboardFill}
+        title={t("SETTINGS.GENERAL.KEYBOARD_SHORTCUT")}
+      >
         <div class="mb-2 flex items-center space-x-2 px-5 pb-2.5">
           <Show when={HotkeyStore.getHotkey(HotkeyEvent.WindowDisplayToggle)}>
             {(hotkey) => <Shortcut hotkey={hotkey()} />}
@@ -40,12 +48,19 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
             <VsRocket />
-            <h6 class="text-sm">{t("SETTINGS.GENERAL.START_CLIPPY_ON_STARTUP")}</h6>
+            <h6 class="text-sm">
+              {t("SETTINGS.GENERAL.START_CLIPPY_ON_STARTUP")}
+            </h6>
           </div>
           <div>
             <Toggle
               checked={SettingsStore.settings()?.startup}
-              onChange={async (startup) => SettingsStore.updateSettings({ ...SettingsStore.settings()!, startup })}
+              onChange={async (startup) =>
+                SettingsStore.updateSettings({
+                  ...SettingsStore.settings()!,
+                  startup,
+                })
+              }
             />
           </div>
         </div>
@@ -63,13 +78,18 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
             <TbTooltip />
-            <h6 class="text-sm">{t("SETTINGS.GENERAL.HTML_CLIPBOARD_TOOLTIP")}</h6>
+            <h6 class="text-sm">
+              {t("SETTINGS.GENERAL.HTML_CLIPBOARD_TOOLTIP")}
+            </h6>
           </div>
           <div>
             <Toggle
               checked={SettingsStore.settings()?.tooltip}
               onChange={async (tooltip: boolean) =>
-                SettingsStore.updateSettings({ ...SettingsStore.settings()!, tooltip })
+                SettingsStore.updateSettings({
+                  ...SettingsStore.settings()!,
+                  tooltip,
+                })
               }
             />
           </div>
@@ -78,17 +98,24 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
             <HiOutlineWindow />
-            <h6 class="text-sm">{t("SETTINGS.GENERAL.CHANGE_WINDOW_POSITION")}</h6>
+            <h6 class="text-sm">
+              {t("SETTINGS.GENERAL.CHANGE_WINDOW_POSITION")}
+            </h6>
           </div>
 
           <Dropdown
             items={CLIPPY_POSITIONS.map((value) => ({
               value,
-              label: msg(`MAIN.POSITION.${value.toUpperCase() as Uppercase<ClippyPosition>}`),
+              label: msg(
+                `MAIN.POSITION.${value.toUpperCase() as Uppercase<ClippyPosition>}`,
+              ),
             }))}
             value={SettingsStore.settings()!.position}
             onChange={(position) => {
-              SettingsStore.updateSettings({ ...SettingsStore.settings()!, position: position as ClippyPosition });
+              SettingsStore.updateSettings({
+                ...SettingsStore.settings()!,
+                position: position as ClippyPosition,
+              });
             }}
           />
         </div>
@@ -102,11 +129,16 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
           <Dropdown
             items={LANGUAGES.map((value) => ({
               value,
-              label: msg(`MAIN.LANGUAGE.${value.toUpperCase() as Uppercase<Language>}`),
+              label: msg(
+                `MAIN.LANGUAGE.${value.toUpperCase() as Uppercase<Language>}`,
+              ),
             }))}
             value={SettingsStore.settings()!.language}
             onChange={(language) => {
-              SettingsStore.updateSettings({ ...SettingsStore.settings()!, language: language as Language });
+              SettingsStore.updateSettings({
+                ...SettingsStore.settings()!,
+                language: language as Language,
+              });
             }}
           />
         </div>
@@ -129,7 +161,10 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 ...SettingsStore.settings()!,
                 display_scale: Number(parseFloat(e.target.value).toFixed(2)),
               });
-              await invokeCommand(InvokeCommand.OpenNewWindow, { windowName: WebWindow.Settings, title: "Settings" });
+              await invokeCommand(InvokeCommand.OpenNewWindow, {
+                windowName: WebWindow.Settings,
+                title: "Settings",
+              });
             }}
           />
         </div>

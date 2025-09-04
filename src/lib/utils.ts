@@ -1,4 +1,11 @@
-type ClassValue = string | number | boolean | undefined | null | { [key: string]: any } | ClassValue[];
+type ClassValue =
+  | string
+  | number
+  | boolean
+  | undefined
+  | null
+  | { [key: string]: any }
+  | ClassValue[];
 
 export function cn(...classLists: ClassValue[]): string {
   return clsx(classLists);

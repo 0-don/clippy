@@ -4,7 +4,10 @@ import { Component, createSignal, Index, Show } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { SettingsStore } from "../../../store/settings-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
-import { MAX_DESCRIPTION_LENGTH, MIN_PATTERN_LENGTH } from "../../../utils/constants";
+import {
+  MAX_DESCRIPTION_LENGTH,
+  MIN_PATTERN_LENGTH,
+} from "../../../utils/constants";
 import { Button } from "../../elements/button";
 import { CheckBox } from "../../elements/checkbox";
 import { Input } from "../../elements/input";
@@ -39,19 +42,33 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
   };
 
   return (
-    <TextBlock Icon={TbGridPattern} title={t("SETTINGS.PATTERNS.CHANGE_YOUR_TEXT_MATCHES")}>
+    <TextBlock
+      Icon={TbGridPattern}
+      title={t("SETTINGS.PATTERNS.CHANGE_YOUR_TEXT_MATCHES")}
+    >
       <div class="flex items-center justify-between gap-2 px-5 pb-5">
-        <p class="text-sm text-zinc-700 dark:text-zinc-400">{t("SETTINGS.PATTERNS.INFO")}</p>
+        <p class="text-sm text-zinc-700 dark:text-zinc-400">
+          {t("SETTINGS.PATTERNS.INFO")}
+        </p>
       </div>
       {/* Table Headers */}
       <div class="mb-2 grid grid-cols-[1fr_1fr_auto_auto] gap-2.5 px-5">
-        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">{t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}</div>
-        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">{t("SETTINGS.PATTERNS.SUBSTITUTION")}</div>
-        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">{t("SETTINGS.PATTERNS.ACTIONS")}</div>
+        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">
+          {t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}
+        </div>
+        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">
+          {t("SETTINGS.PATTERNS.SUBSTITUTION")}
+        </div>
+        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">
+          {t("SETTINGS.PATTERNS.ACTIONS")}
+        </div>
         <div></div> {/* Empty header for action button */}
       </div>
       {/* Add new pattern form */}
-      <form onSubmit={onSubmit} class="grid grid-cols-[1fr_1fr_auto_auto] gap-2.5 px-5 pb-5">
+      <form
+        onSubmit={onSubmit}
+        class="grid grid-cols-[1fr_1fr_auto_auto] gap-2.5 px-5 pb-5"
+      >
         <Input
           placeholder={t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}
           value={matchExpression()}
@@ -67,11 +84,23 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
           minLength={0}
           maxlength={MAX_DESCRIPTION_LENGTH}
         />
-        <CheckBox label={t("SETTINGS.PATTERNS.ENABLED")} checked={enabled()} onChange={setEnabled} />
-        <Button label={"SETTINGS.PATTERNS.ADD"} type="submit" class="w-24" Icon={TbGridPattern} />
+        <CheckBox
+          label={t("SETTINGS.PATTERNS.ENABLED")}
+          checked={enabled()}
+          onChange={setEnabled}
+        />
+        <Button
+          label={"SETTINGS.PATTERNS.ADD"}
+          type="submit"
+          class="w-24"
+          Icon={TbGridPattern}
+        />
       </form>
       <div class="flex items-center gap-2 px-5">
-        <Toggle checked={passwordType()} onChange={(val) => setPasswordType(val)} />
+        <Toggle
+          checked={passwordType()}
+          onChange={(val) => setPasswordType(val)}
+        />
         <Show when={passwordType()} fallback={<AiFillEye />}>
           <AiFillEyeInvisible />
         </Show>
@@ -93,7 +122,12 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
                       textMatchers:
                         SettingsStore.settings()?.text_matchers.map((p, i) =>
-                          i === index ? { ...p, match_expression: e.currentTarget.value || "" } : p
+                          i === index
+                            ? {
+                                ...p,
+                                match_expression: e.currentTarget.value || "",
+                              }
+                            : p,
                         ) || [],
                     });
                   }}
@@ -111,7 +145,12 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
                       textMatchers:
                         SettingsStore.settings()?.text_matchers.map((p, i) =>
-                          i === index ? { ...p, substitution: e.currentTarget.value || "" } : p
+                          i === index
+                            ? {
+                                ...p,
+                                substitution: e.currentTarget.value || "",
+                              }
+                            : p,
                         ) || [],
                     });
                   }}
@@ -123,7 +162,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
                       textMatchers:
                         SettingsStore.settings()?.text_matchers.map((p, i) =>
-                          i === index ? { ...p, enabled: !!enabled } : p
+                          i === index ? { ...p, enabled: !!enabled } : p,
                         ) || [],
                     })
                   }
@@ -134,7 +173,10 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                   class="w-24"
                   onClick={() =>
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {
-                      textMatchers: SettingsStore.settings()?.text_matchers.filter((_, i) => i !== index) || [],
+                      textMatchers:
+                        SettingsStore.settings()?.text_matchers.filter(
+                          (_, i) => i !== index,
+                        ) || [],
                     })
                   }
                 />

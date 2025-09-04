@@ -1,5 +1,17 @@
-import { ClipboardResponse, ClipboardWhere, DatabaseInfo, Hotkey, Settings, TextMatcher } from ".";
-import { ClipboardType, FolderLocation, PasswordAction, WebWindow } from "./enums";
+import {
+  ClipboardResponse,
+  ClipboardWhere,
+  DatabaseInfo,
+  Hotkey,
+  Settings,
+  TextMatcher,
+} from ".";
+import {
+  ClipboardType,
+  FolderLocation,
+  PasswordAction,
+  WebWindow,
+} from "./enums";
 
 export enum InvokeCommand {
   // Clipboard commands

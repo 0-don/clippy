@@ -10,7 +10,6 @@ interface ClipboardHeaderProps {
 }
 
 export const ClipboardHeader: Component<ClipboardHeaderProps> = (props) => {
-  
   return (
     <div class="relative" title={props.data.clipboard.id.toString()}>
       <props.Icon class="text-2xl text-zinc-700 dark:text-white" />

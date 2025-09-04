@@ -1,185 +1,185 @@
 {
-	"ABOUT": {
-		"ABOUT": "À propos",
-		"COPYRIGHT": "Copyright (C) DC. Tous droits réservés.",
-		"DEVELOPED_BY": "Développé par 0-don. Propulsé par Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Aucune mise à jour disponible actuellement",
-		"OFFICIAL_WEBSITE": "Site officiel"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "Copier en HTML",
-		"COPY_AS_RTF": "Copier au format RTF",
-		"DELETE_CLIPBOARD": "Supprimer le presse-papiers",
-		"NO_CLIPBOARDS_YET": "Pas encore de presse-papiers...",
-		"SEARCH_ENTRIES": "Rechercher des entrées",
-		"STAR_FAVORITE": "Favori des étoiles"
-	},
-	"MAIN": {
-		"ERROR": {
-			"DATA_IS_NOT_ENCRYPTED": "Les données ne sont pas cryptées",
-			"ENCRYPTION_FAILED": "Le cryptage a échoué",
-			"ENCRYPTION_KEY_ALREADY_SET": "Clé de chiffrement déjà définie",
-			"INCORRECT_PASSWORD": "Mot de passe incorrect",
-			"INVALID_ENCRYPTION_KEY": "Clé de cryptage invalide",
-			"NO_ENCRYPTION_KEY_SET": "Aucune clé de chiffrement définie",
-			"PASSWORD_NOT_MATCH": "Le mot de passe ne correspond pas"
-		},
-		"HOTKEY": {
-			"ABOUT": "À propos",
-			"CHANGE_CLIPBOARD_DB_LOCATION": "Changer l'emplacement de la base de données du presse-papiers",
-			"DIGIT_1": "Chiffre 1",
-			"DIGIT_2": "Chiffre 2",
-			"DIGIT_3": "Chiffre 3",
-			"DIGIT_4": "Chiffre 4",
-			"DIGIT_5": "Chiffre 5",
-			"DIGIT_6": "Chiffre 6",
-			"DIGIT_7": "Chiffre 7",
-			"DIGIT_8": "Chiffre 8",
-			"DIGIT_9": "Chiffre 9",
-			"EXIT": "Sortie",
-			"HISTORY": "Histoire",
-			"NUM_1": "Numéro 1",
-			"NUM_2": "Numéro 2",
-			"NUM_3": "Numéro 3",
-			"NUM_4": "Numéro 4",
-			"NUM_5": "Numéro 5",
-			"NUM_6": "Numéro 6",
-			"NUM_7": "Numéro 7",
-			"NUM_8": "Numéro 8",
-			"NUM_9": "Numéro 9",
-			"RECENT_CLIPBOARDS": "Presse-papiers récents",
-			"SCROLL_TO_TOP": "Faire défiler vers le haut",
-			"SETTINGS": "Paramètres",
-			"STARRED_CLIPBOARDS": "Presse-papiers étoilés",
-			"SYNC_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers",
-			"TYPE_CLIPBOARD": "Tapez le presse-papiers",
-			"VIEW_MORE": "Voir plus",
-			"WINDOW_DISPLAY_TOGGLE": "Basculement de l'affichage de la fenêtre"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "Arabe",
-			"BN": "Bengali",
-			"DE": "Allemand",
-			"EN": "Anglais",
-			"ES": "Espagnol",
-			"FR": "Français",
-			"HI": "Hindi",
-			"IT": "Italien",
-			"JA": "Japonais",
-			"KO": "Coréen",
-			"NL": "Néerlandais",
-			"PL": "Polonais",
-			"PT": "Portugais",
-			"RU": "Russe",
-			"TH": "Thaïlandais",
-			"TR": "Turc",
-			"UR": "Ourdou",
-			"VI": "Vietnamien",
-			"ZH": "Mandarin"
-		},
-		"OFFLINE": "Hors ligne",
-		"ONLINE": "En ligne",
-		"POSITION": {
-			"BOTTOM_CENTER": "En bas au centre",
-			"BOTTOM_LEFT": "En bas à gauche",
-			"BOTTOM_RIGHT": "En bas à droite",
-			"CENTER": "Centre",
-			"CURSOR": "Curseur",
-			"LEFT_CENTER": "Centre gauche",
-			"RIGHT_CENTER": "Centre droit",
-			"TOP_CENTER": "En haut au centre",
-			"TOP_LEFT": "En haut à gauche",
-			"TOP_RIGHT": "En haut à droite",
-			"TRAY_BOTTOM_CENTER": "Plateau en bas au centre",
-			"TRAY_BOTTOM_LEFT": "Plateau en bas à gauche",
-			"TRAY_BOTTOM_RIGHT": "Plateau en bas à droite",
-			"TRAY_CENTER": "Plateau central",
-			"TRAY_LEFT": "Plateau à gauche",
-			"TRAY_RIGHT": "Plateau à droite"
-		},
-		"SYNCING": "Synchronisation",
-		"UNLOCK_CLIPPY": "Déverrouiller le clippy"
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CHANGE_LOCATION": "Changer d'emplacement",
-			"CONFIG_LOCATION": "Emplacement de la configuration",
-			"DATABASE_LOCATION": "Emplacement de la base de données",
-			"OPEN": "Ouvrir",
-			"RESET_LOCATION": "Réinitialiser l'emplacement",
-			"SYNC": "Synchroniser",
-			"SYNC_LIMIT": "Combien de presse-papiers doivent être synchronisés ?",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
-		},
-		"ENCRYPT": {
-			"CONFIRM_PASSWORD": "Confirmez le mot de passe",
-			"DECRYPT": "Décrypter tous les presse-papiers",
-			"DECRYPTION_PROGRESS_LOCAL": "{{current}} des presse-papiers {{total}} sont décryptés localement",
-			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} de {{total}} téléchargement de presse-papiers distants",
-			"ENCRYPT": "Crypter tous les presse-papiers",
-			"ENCRYPT_DECRYPT": "Crypter / Décrypter",
-			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} des presse-papiers {{total}} sont chiffrés localement",
-			"INFO": "Tous les presse-papiers sont cryptés, si le mot de passe est perdu, rien ne peut être restauré",
-			"PASSWORD": "Mot de passe",
-			"SAVE_BEFORE_UNLOCK": "Enregistrer les presse-papiers avant que le code PIN n'ait été saisi au démarrage ?"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Changer de langue",
-			"CHANGE_WINDOW_POSITION": "Changer la position de la fenêtre",
-			"HTML_CLIPBOARD_TOOLTIP": "Info-bulle du presse-papiers HTML",
-			"KEYBOARD_SHORTCUT": "Raccourci clavier",
-			"START_CLIPPY_ON_STARTUP": "Démarrer Clippy au démarrage du système",
-			"SWITCH_THEME": "Changer de thème",
-			"SYSTEM": "Système",
-			"WINDOW_SCALE": "Échelle de fenêtre"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Tout effacer",
-			"CLEAR_FILE": "Effacer le fichier",
-			"CLEAR_HTML": "Effacer le HTML",
-			"CLEAR_IMAGE": "Image claire",
-			"CLEAR_RTF": "Effacer le RTF",
-			"CLEAR_TEXT": "Effacer le texte",
-			"DATABASE_INFO": "{{records}} éléments locaux ({{size}}) sont enregistrés sur cet ordinateur",
-			"SQL_DATABASE_INFO": "Informations sur la base de données SQL",
-			"STORAGE_ACTIONS": "Actions de stockage"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Changez vos raccourcis clavier"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Limites du presse-papiers",
-			"IF_SET_TO_ZERO": "Si défini sur 0, le type de presse-papiers sera entièrement ignoré",
-			"MAX_FILE_SIZE": "Taille maximale du fichier",
-			"MAX_HTML_SIZE": "Taille HTML maximale",
-			"MAX_IMAGE_SIZE": "Taille maximale de l'image",
-			"MAX_RTF_SIZE": "Taille maximale du fichier RTF",
-			"MAX_TEXT_SIZE": "Taille maximale du texte"
-		},
-		"PATTERNS": {
-			"ACTIONS": "Actions",
-			"ADD": "Ajouter",
-			"CHANGE_YOUR_TEXT_MATCHES": "Modifiez vos correspondances de texte",
-			"ENABLED": "Activé",
-			"INFO": "Supprimez les données sensibles des presse-papiers, définissez un modèle glob ou regex et elles seront remplacées par une substitution (laissez vide pour vide)",
-			"MATCH_EXPRESSION": "Expression de correspondance",
-			"REMOVE": "Retirer",
-			"SUBSTITUTION": "Substitution"
-		},
-		"SETTINGS": "Paramètres",
-		"TAB": {
-			"BACKUP": "Sauvegarde",
-			"ENCRYPTION": "Chiffrement",
-			"GENERAL": "Général",
-			"HISTORY": "Histoire",
-			"HOTKEYS": "Raccourcis clavier",
-			"LIMITS": "Limites",
-			"PATTERNS": "Motifs"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "À propos",
+    "COPYRIGHT": "Copyright (C) DC. Tous droits réservés.",
+    "DEVELOPED_BY": "Développé par 0-don. Propulsé par Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "Aucune mise à jour disponible actuellement",
+    "OFFICIAL_WEBSITE": "Site officiel"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "Copier en HTML",
+    "COPY_AS_RTF": "Copier au format RTF",
+    "DELETE_CLIPBOARD": "Supprimer le presse-papiers",
+    "NO_CLIPBOARDS_YET": "Pas encore de presse-papiers...",
+    "SEARCH_ENTRIES": "Rechercher des entrées",
+    "STAR_FAVORITE": "Favori des étoiles"
+  },
+  "MAIN": {
+    "ERROR": {
+      "DATA_IS_NOT_ENCRYPTED": "Les données ne sont pas cryptées",
+      "ENCRYPTION_FAILED": "Le cryptage a échoué",
+      "ENCRYPTION_KEY_ALREADY_SET": "Clé de chiffrement déjà définie",
+      "INCORRECT_PASSWORD": "Mot de passe incorrect",
+      "INVALID_ENCRYPTION_KEY": "Clé de cryptage invalide",
+      "NO_ENCRYPTION_KEY_SET": "Aucune clé de chiffrement définie",
+      "PASSWORD_NOT_MATCH": "Le mot de passe ne correspond pas"
+    },
+    "HOTKEY": {
+      "ABOUT": "À propos",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Changer l'emplacement de la base de données du presse-papiers",
+      "DIGIT_1": "Chiffre 1",
+      "DIGIT_2": "Chiffre 2",
+      "DIGIT_3": "Chiffre 3",
+      "DIGIT_4": "Chiffre 4",
+      "DIGIT_5": "Chiffre 5",
+      "DIGIT_6": "Chiffre 6",
+      "DIGIT_7": "Chiffre 7",
+      "DIGIT_8": "Chiffre 8",
+      "DIGIT_9": "Chiffre 9",
+      "EXIT": "Sortie",
+      "HISTORY": "Histoire",
+      "NUM_1": "Numéro 1",
+      "NUM_2": "Numéro 2",
+      "NUM_3": "Numéro 3",
+      "NUM_4": "Numéro 4",
+      "NUM_5": "Numéro 5",
+      "NUM_6": "Numéro 6",
+      "NUM_7": "Numéro 7",
+      "NUM_8": "Numéro 8",
+      "NUM_9": "Numéro 9",
+      "RECENT_CLIPBOARDS": "Presse-papiers récents",
+      "SCROLL_TO_TOP": "Faire défiler vers le haut",
+      "SETTINGS": "Paramètres",
+      "STARRED_CLIPBOARDS": "Presse-papiers étoilés",
+      "SYNC_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers",
+      "TYPE_CLIPBOARD": "Tapez le presse-papiers",
+      "VIEW_MORE": "Voir plus",
+      "WINDOW_DISPLAY_TOGGLE": "Basculement de l'affichage de la fenêtre"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "Arabe",
+      "BN": "Bengali",
+      "DE": "Allemand",
+      "EN": "Anglais",
+      "ES": "Espagnol",
+      "FR": "Français",
+      "HI": "Hindi",
+      "IT": "Italien",
+      "JA": "Japonais",
+      "KO": "Coréen",
+      "NL": "Néerlandais",
+      "PL": "Polonais",
+      "PT": "Portugais",
+      "RU": "Russe",
+      "TH": "Thaïlandais",
+      "TR": "Turc",
+      "UR": "Ourdou",
+      "VI": "Vietnamien",
+      "ZH": "Mandarin"
+    },
+    "OFFLINE": "Hors ligne",
+    "ONLINE": "En ligne",
+    "POSITION": {
+      "BOTTOM_CENTER": "En bas au centre",
+      "BOTTOM_LEFT": "En bas à gauche",
+      "BOTTOM_RIGHT": "En bas à droite",
+      "CENTER": "Centre",
+      "CURSOR": "Curseur",
+      "LEFT_CENTER": "Centre gauche",
+      "RIGHT_CENTER": "Centre droit",
+      "TOP_CENTER": "En haut au centre",
+      "TOP_LEFT": "En haut à gauche",
+      "TOP_RIGHT": "En haut à droite",
+      "TRAY_BOTTOM_CENTER": "Plateau en bas au centre",
+      "TRAY_BOTTOM_LEFT": "Plateau en bas à gauche",
+      "TRAY_BOTTOM_RIGHT": "Plateau en bas à droite",
+      "TRAY_CENTER": "Plateau central",
+      "TRAY_LEFT": "Plateau à gauche",
+      "TRAY_RIGHT": "Plateau à droite"
+    },
+    "SYNCING": "Synchronisation",
+    "UNLOCK_CLIPPY": "Déverrouiller le clippy"
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CHANGE_LOCATION": "Changer d'emplacement",
+      "CONFIG_LOCATION": "Emplacement de la configuration",
+      "DATABASE_LOCATION": "Emplacement de la base de données",
+      "OPEN": "Ouvrir",
+      "RESET_LOCATION": "Réinitialiser l'emplacement",
+      "SYNC": "Synchroniser",
+      "SYNC_LIMIT": "Combien de presse-papiers doivent être synchronisés ?",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
+    },
+    "ENCRYPT": {
+      "CONFIRM_PASSWORD": "Confirmez le mot de passe",
+      "DECRYPT": "Décrypter tous les presse-papiers",
+      "DECRYPTION_PROGRESS_LOCAL": "{{current}} des presse-papiers {{total}} sont décryptés localement",
+      "DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} de {{total}} téléchargement de presse-papiers distants",
+      "ENCRYPT": "Crypter tous les presse-papiers",
+      "ENCRYPT_DECRYPT": "Crypter / Décrypter",
+      "ENCRYPTION_PROGRESS_LOCAL": "{{current}} des presse-papiers {{total}} sont chiffrés localement",
+      "INFO": "Tous les presse-papiers sont cryptés, si le mot de passe est perdu, rien ne peut être restauré",
+      "PASSWORD": "Mot de passe",
+      "SAVE_BEFORE_UNLOCK": "Enregistrer les presse-papiers avant que le code PIN n'ait été saisi au démarrage ?"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Changer de langue",
+      "CHANGE_WINDOW_POSITION": "Changer la position de la fenêtre",
+      "HTML_CLIPBOARD_TOOLTIP": "Info-bulle du presse-papiers HTML",
+      "KEYBOARD_SHORTCUT": "Raccourci clavier",
+      "START_CLIPPY_ON_STARTUP": "Démarrer Clippy au démarrage du système",
+      "SWITCH_THEME": "Changer de thème",
+      "SYSTEM": "Système",
+      "WINDOW_SCALE": "Échelle de fenêtre"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Tout effacer",
+      "CLEAR_FILE": "Effacer le fichier",
+      "CLEAR_HTML": "Effacer le HTML",
+      "CLEAR_IMAGE": "Image claire",
+      "CLEAR_RTF": "Effacer le RTF",
+      "CLEAR_TEXT": "Effacer le texte",
+      "DATABASE_INFO": "{{records}} éléments locaux ({{size}}) sont enregistrés sur cet ordinateur",
+      "SQL_DATABASE_INFO": "Informations sur la base de données SQL",
+      "STORAGE_ACTIONS": "Actions de stockage"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Changez vos raccourcis clavier"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Limites du presse-papiers",
+      "IF_SET_TO_ZERO": "Si défini sur 0, le type de presse-papiers sera entièrement ignoré",
+      "MAX_FILE_SIZE": "Taille maximale du fichier",
+      "MAX_HTML_SIZE": "Taille HTML maximale",
+      "MAX_IMAGE_SIZE": "Taille maximale de l'image",
+      "MAX_RTF_SIZE": "Taille maximale du fichier RTF",
+      "MAX_TEXT_SIZE": "Taille maximale du texte"
+    },
+    "PATTERNS": {
+      "ACTIONS": "Actions",
+      "ADD": "Ajouter",
+      "CHANGE_YOUR_TEXT_MATCHES": "Modifiez vos correspondances de texte",
+      "ENABLED": "Activé",
+      "INFO": "Supprimez les données sensibles des presse-papiers, définissez un modèle glob ou regex et elles seront remplacées par une substitution (laissez vide pour vide)",
+      "MATCH_EXPRESSION": "Expression de correspondance",
+      "REMOVE": "Retirer",
+      "SUBSTITUTION": "Substitution"
+    },
+    "SETTINGS": "Paramètres",
+    "TAB": {
+      "BACKUP": "Sauvegarde",
+      "ENCRYPTION": "Chiffrement",
+      "GENERAL": "Général",
+      "HISTORY": "Histoire",
+      "HOTKEYS": "Raccourcis clavier",
+      "LIMITS": "Limites",
+      "PATTERNS": "Motifs"
+    }
+  }
 }
