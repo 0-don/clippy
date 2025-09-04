@@ -21,8 +21,8 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
               class={`${
                 current
                   ? "text-black dark:text-white"
-                  : "text-zinc-600 dark:text-gray-dark"
-              } relative flex h-6 w-full cursor-pointer select-none items-center justify-center py-5 text-xl hover:text-black dark:hover:text-white`}
+                  : "dark:text-gray-dark text-zinc-600"
+              } relative flex h-6 w-full cursor-pointer items-center justify-center py-5 text-xl select-none hover:text-black dark:hover:text-white`}
               title={t(currentHotkey!.name)}
               onClick={() => AppStore.changeTab(id)}
             >

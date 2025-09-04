@@ -6,7 +6,7 @@
     "qwtel.sqlite-viewer",
     "bradlc.vscode-tailwindcss",
     "inlang.vs-code-extension",
-    "esbenp.prettier-vscode",
+    "esbenp.prettier-vscode"
   ],
   "unwantedRecommendations": []
 }

@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
+      - "docs/**"
 
 concurrency:
   group: docker-${{ github.ref }}
@@ -24,6 +24,5 @@ jobs:
           echo TAURI_GOOGLE_CLIENT_SECRET=${{ secrets.TAURI_GOOGLE_CLIENT_SECRET }} >> .env
           cat .env
 
-      
       - name: Docker run
         run: cd docs && docker compose up -d --force-recreate --build

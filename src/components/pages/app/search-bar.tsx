@@ -58,7 +58,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
           </div>
           <input
             placeholder={t("CLIPBOARD.SEARCH_ENTRIES")}
-            class="w-full border border-gray-300 py-2 pl-8 pr-2 placeholder:text-sm focus:outline-hidden dark:border-dark-light dark:bg-dark-light dark:text-white dark:focus:bg-dark-dark"
+            class="dark:border-dark-light dark:bg-dark-light dark:focus:bg-dark-dark w-full border border-gray-300 py-2 pr-2 pl-8 placeholder:text-sm focus:outline-hidden dark:text-white"
             type="text"
             autofocus
             autocomplete="off"
