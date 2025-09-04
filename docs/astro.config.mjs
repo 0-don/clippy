@@ -1,4 +1,3 @@
-// @ts-check
 import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
