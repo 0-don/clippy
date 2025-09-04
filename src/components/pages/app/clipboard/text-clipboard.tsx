@@ -18,7 +18,9 @@ interface TextClipboardProps {
 }
 
 export const TextClipboard: Component<TextClipboardProps> = (props) => {
-  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_at).fromNow());
+  const [fromNowString, setFromNowString] = createSignal(
+    dayjs.utc(props.data.clipboard.created_at).fromNow(),
+  );
 
   let type = ClipboardType.Text;
 
@@ -57,7 +59,9 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
         return () => (
           <div
             class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
-            style={{ "background-color": data?.includes("#") ? data : `#${data}` }}
+            style={{
+              "background-color": data?.includes("#") ? data : `#${data}`,
+            }}
           />
         );
       case ClipboardTextType.Rgb:
@@ -94,7 +98,11 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
           <div class="min-w-0 flex-1">
             <p
               class="w-[calc(100vw-6.5rem)] truncate text-left text-sm"
-              title={!props.data.html?.data && SettingsStore.settings()?.tooltip ? data : undefined}
+              title={
+                !props.data.html?.data && SettingsStore.settings()?.tooltip
+                  ? data
+                  : undefined
+              }
             >
               {data}
             </p>

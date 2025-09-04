@@ -27,7 +27,11 @@ export const Dropdown: Component<DropdownProps> = (props) => {
         class="cursor-pointer appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden"
       >
         {props.items.map((item) => (
-          <option value={item.value} selected={item.value === props.value} class="text-red-500! dark:text-red-600!">
+          <option
+            value={item.value}
+            selected={item.value === props.value}
+            class="text-red-500! dark:text-red-600!"
+          >
             {t(item.label as DictionaryKey) || item.label}
           </option>
         ))}

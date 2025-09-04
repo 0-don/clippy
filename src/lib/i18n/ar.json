@@ -1,185 +1,185 @@
 {
-	"ABOUT": {
-		"ABOUT": "عن",
-		"COPYRIGHT": "جميع الحقوق محفوظة لشركة DC.",
-		"DEVELOPED_BY": "تم تطويره بواسطة 0-don. مدعوم بواسطة Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "لا توجد تحديثات متاحة حاليًا",
-		"OFFICIAL_WEBSITE": "الموقع الرسمي"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "نسخ كـ HTML",
-		"COPY_AS_RTF": "نسخ بصيغة RTF",
-		"DELETE_CLIPBOARD": "حذف الحافظة",
-		"NO_CLIPBOARDS_YET": "لا توجد حافظات بعد...",
-		"SEARCH_ENTRIES": "إدخالات البحث",
-		"STAR_FAVORITE": "النجم المفضل"
-	},
-	"MAIN": {
-		"ERROR": {
-			"DATA_IS_NOT_ENCRYPTED": "البيانات ليست مشفرة",
-			"ENCRYPTION_FAILED": "فشل التشفير",
-			"ENCRYPTION_KEY_ALREADY_SET": "تم تعيين مفتاح التشفير بالفعل",
-			"INCORRECT_PASSWORD": "كلمة سر خاطئة",
-			"INVALID_ENCRYPTION_KEY": "مفتاح تشفير غير صالح",
-			"NO_ENCRYPTION_KEY_SET": "لم يتم تعيين مفتاح التشفير",
-			"PASSWORD_NOT_MATCH": "كلمة المرور لا تتطابق"
-		},
-		"HOTKEY": {
-			"ABOUT": "عن",
-			"CHANGE_CLIPBOARD_DB_LOCATION": "تغيير موقع قاعدة بيانات الحافظة",
-			"DIGIT_1": "الرقم 1",
-			"DIGIT_2": "الرقم 2",
-			"DIGIT_3": "الرقم 3",
-			"DIGIT_4": "الرقم 4",
-			"DIGIT_5": "الرقم 5",
-			"DIGIT_6": "الرقم 6",
-			"DIGIT_7": "الرقم 7",
-			"DIGIT_8": "الرقم 8",
-			"DIGIT_9": "الرقم 9",
-			"EXIT": "مخرج",
-			"HISTORY": "تاريخ",
-			"NUM_1": "رقم 1",
-			"NUM_2": "رقم 2",
-			"NUM_3": "رقم 3",
-			"NUM_4": "رقم 4",
-			"NUM_5": "رقم 5",
-			"NUM_6": "رقم 6",
-			"NUM_7": "رقم 7",
-			"NUM_8": "رقم 8",
-			"NUM_9": "رقم 9",
-			"RECENT_CLIPBOARDS": "الحافظات الحديثة",
-			"SCROLL_TO_TOP": "انتقل إلى الأعلى",
-			"SETTINGS": "إعدادات",
-			"STARRED_CLIPBOARDS": "الحافظات المميزة",
-			"SYNC_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة",
-			"TYPE_CLIPBOARD": "نوع الحافظة",
-			"VIEW_MORE": "عرض المزيد",
-			"WINDOW_DISPLAY_TOGGLE": "تبديل عرض النافذة"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "عربي",
-			"BN": "البنغالية",
-			"DE": "ألمانية",
-			"EN": "إنجليزي",
-			"ES": "الأسبانية",
-			"FR": "فرنسي",
-			"HI": "الهندية",
-			"IT": "ايطالي",
-			"JA": "اليابانية",
-			"KO": "الكورية",
-			"NL": "هولندي",
-			"PL": "تلميع",
-			"PT": "البرتغالية",
-			"RU": "الروسية",
-			"TH": "التايلاندية",
-			"TR": "اللغة التركية",
-			"UR": "الأردية",
-			"VI": "الفيتنامية",
-			"ZH": "الماندرين"
-		},
-		"OFFLINE": "غير متصل على الانترنت",
-		"ONLINE": "متصل",
-		"POSITION": {
-			"BOTTOM_CENTER": "أسفل المركز",
-			"BOTTOM_LEFT": "أسفل اليسار",
-			"BOTTOM_RIGHT": "أسفل اليمين",
-			"CENTER": "مركز",
-			"CURSOR": "المؤشر",
-			"LEFT_CENTER": "الوسط الأيسر",
-			"RIGHT_CENTER": "الوسط الأيمن",
-			"TOP_CENTER": "المركز العلوي",
-			"TOP_LEFT": "أعلى اليسار",
-			"TOP_RIGHT": "أعلى اليمين",
-			"TRAY_BOTTOM_CENTER": "صينية أسفل المركز",
-			"TRAY_BOTTOM_LEFT": "صينية أسفل اليسار",
-			"TRAY_BOTTOM_RIGHT": "صينية أسفل اليمين",
-			"TRAY_CENTER": "مركز الصينية",
-			"TRAY_LEFT": "صينية اليسار",
-			"TRAY_RIGHT": "صينية اليمين"
-		},
-		"SYNCING": "المزامنة",
-		"UNLOCK_CLIPPY": "فتح القفل"
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CHANGE_LOCATION": "تغيير الموقع",
-			"CONFIG_LOCATION": "موقع التكوين",
-			"DATABASE_LOCATION": "موقع قاعدة البيانات",
-			"OPEN": "يفتح",
-			"RESET_LOCATION": "إعادة تعيين الموقع",
-			"SYNC": "المزامنة",
-			"SYNC_LIMIT": "كم عدد الحافظات التي يجب مزامنتها؟",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"
-		},
-		"ENCRYPT": {
-			"CONFIRM_PASSWORD": "تأكيد كلمة المرور",
-			"DECRYPT": "فك تشفير جميع الحافظات",
-			"DECRYPTION_PROGRESS_LOCAL": "تم فك تشفير{{current}} من {{total}} حافظة محليًا",
-			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} من {{total}} تنزيل الحافظات عن بعد",
-			"ENCRYPT": "تشفير كافة الحافظات",
-			"ENCRYPT_DECRYPT": "تشفير / فك التشفير",
-			"ENCRYPTION_PROGRESS_LOCAL": "يتم تشفير{{current}} من {{total}} حافظة محليًا",
-			"INFO": "يتم تشفير جميع الحافظات، وفي حالة فقدان كلمة المرور، لا يمكن استعادة أي شيء",
-			"PASSWORD": "كلمة المرور",
-			"SAVE_BEFORE_UNLOCK": "حفظ الحافظات قبل إدخال رقم التعريف الشخصي (PIN) عند بدء التشغيل؟"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "تغيير اللغة",
-			"CHANGE_WINDOW_POSITION": "تغيير موضع النافذة",
-			"HTML_CLIPBOARD_TOOLTIP": "تلميحات حول حافظة HTML",
-			"KEYBOARD_SHORTCUT": "اختصار لوحة المفاتيح",
-			"START_CLIPPY_ON_STARTUP": "بدء تشغيل Clippy عند بدء تشغيل النظام",
-			"SWITCH_THEME": "تبديل الثيم",
-			"SYSTEM": "نظام",
-			"WINDOW_SCALE": "مقياس النافذة"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "امسح الكل",
-			"CLEAR_FILE": "مسح الملف",
-			"CLEAR_HTML": "مسح HTML",
-			"CLEAR_IMAGE": "صورة واضحة",
-			"CLEAR_RTF": "مسح RTF",
-			"CLEAR_TEXT": "نص واضح",
-			"DATABASE_INFO": "تم حفظ{{records}} عنصر محلي ({{size}}) على هذا الكمبيوتر",
-			"SQL_DATABASE_INFO": "معلومات قاعدة بيانات SQL",
-			"STORAGE_ACTIONS": "إجراءات التخزين"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "تغيير مفاتيح التشغيل السريع الخاصة بك"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "حدود الحافظة",
-			"IF_SET_TO_ZERO": "إذا تم ضبطه على 0، فسيتم تخطي نوع الحافظة بالكامل",
-			"MAX_FILE_SIZE": "الحد الأقصى لحجم الملف",
-			"MAX_HTML_SIZE": "الحد الأقصى لحجم HTML",
-			"MAX_IMAGE_SIZE": "الحد الأقصى لحجم الصورة",
-			"MAX_RTF_SIZE": "الحد الأقصى لحجم RTF",
-			"MAX_TEXT_SIZE": "الحد الأقصى لحجم النص"
-		},
-		"PATTERNS": {
-			"ACTIONS": "أجراءات",
-			"ADD": "يضيف",
-			"CHANGE_YOUR_TEXT_MATCHES": "تغيير تطابقات النص الخاص بك",
-			"ENABLED": "ممكّن",
-			"INFO": "قم بإزالة البيانات الحساسة من الحافظات، وحدد نمط glob أو regex وسيتم استبداله بالاستبدال (اتركه فارغًا للوضع الفارغ)",
-			"MATCH_EXPRESSION": "تعبير المطابقة",
-			"REMOVE": "يزيل",
-			"SUBSTITUTION": "الاستبدال"
-		},
-		"SETTINGS": "إعدادات",
-		"TAB": {
-			"BACKUP": "دعم",
-			"ENCRYPTION": "التشفير",
-			"GENERAL": "عام",
-			"HISTORY": "تاريخ",
-			"HOTKEYS": "مفاتيح التشغيل السريع",
-			"LIMITS": "الحدود",
-			"PATTERNS": "أنماط"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "عن",
+    "COPYRIGHT": "جميع الحقوق محفوظة لشركة DC.",
+    "DEVELOPED_BY": "تم تطويره بواسطة 0-don. مدعوم بواسطة Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "لا توجد تحديثات متاحة حاليًا",
+    "OFFICIAL_WEBSITE": "الموقع الرسمي"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "نسخ كـ HTML",
+    "COPY_AS_RTF": "نسخ بصيغة RTF",
+    "DELETE_CLIPBOARD": "حذف الحافظة",
+    "NO_CLIPBOARDS_YET": "لا توجد حافظات بعد...",
+    "SEARCH_ENTRIES": "إدخالات البحث",
+    "STAR_FAVORITE": "النجم المفضل"
+  },
+  "MAIN": {
+    "ERROR": {
+      "DATA_IS_NOT_ENCRYPTED": "البيانات ليست مشفرة",
+      "ENCRYPTION_FAILED": "فشل التشفير",
+      "ENCRYPTION_KEY_ALREADY_SET": "تم تعيين مفتاح التشفير بالفعل",
+      "INCORRECT_PASSWORD": "كلمة سر خاطئة",
+      "INVALID_ENCRYPTION_KEY": "مفتاح تشفير غير صالح",
+      "NO_ENCRYPTION_KEY_SET": "لم يتم تعيين مفتاح التشفير",
+      "PASSWORD_NOT_MATCH": "كلمة المرور لا تتطابق"
+    },
+    "HOTKEY": {
+      "ABOUT": "عن",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "تغيير موقع قاعدة بيانات الحافظة",
+      "DIGIT_1": "الرقم 1",
+      "DIGIT_2": "الرقم 2",
+      "DIGIT_3": "الرقم 3",
+      "DIGIT_4": "الرقم 4",
+      "DIGIT_5": "الرقم 5",
+      "DIGIT_6": "الرقم 6",
+      "DIGIT_7": "الرقم 7",
+      "DIGIT_8": "الرقم 8",
+      "DIGIT_9": "الرقم 9",
+      "EXIT": "مخرج",
+      "HISTORY": "تاريخ",
+      "NUM_1": "رقم 1",
+      "NUM_2": "رقم 2",
+      "NUM_3": "رقم 3",
+      "NUM_4": "رقم 4",
+      "NUM_5": "رقم 5",
+      "NUM_6": "رقم 6",
+      "NUM_7": "رقم 7",
+      "NUM_8": "رقم 8",
+      "NUM_9": "رقم 9",
+      "RECENT_CLIPBOARDS": "الحافظات الحديثة",
+      "SCROLL_TO_TOP": "انتقل إلى الأعلى",
+      "SETTINGS": "إعدادات",
+      "STARRED_CLIPBOARDS": "الحافظات المميزة",
+      "SYNC_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة",
+      "TYPE_CLIPBOARD": "نوع الحافظة",
+      "VIEW_MORE": "عرض المزيد",
+      "WINDOW_DISPLAY_TOGGLE": "تبديل عرض النافذة"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "عربي",
+      "BN": "البنغالية",
+      "DE": "ألمانية",
+      "EN": "إنجليزي",
+      "ES": "الأسبانية",
+      "FR": "فرنسي",
+      "HI": "الهندية",
+      "IT": "ايطالي",
+      "JA": "اليابانية",
+      "KO": "الكورية",
+      "NL": "هولندي",
+      "PL": "تلميع",
+      "PT": "البرتغالية",
+      "RU": "الروسية",
+      "TH": "التايلاندية",
+      "TR": "اللغة التركية",
+      "UR": "الأردية",
+      "VI": "الفيتنامية",
+      "ZH": "الماندرين"
+    },
+    "OFFLINE": "غير متصل على الانترنت",
+    "ONLINE": "متصل",
+    "POSITION": {
+      "BOTTOM_CENTER": "أسفل المركز",
+      "BOTTOM_LEFT": "أسفل اليسار",
+      "BOTTOM_RIGHT": "أسفل اليمين",
+      "CENTER": "مركز",
+      "CURSOR": "المؤشر",
+      "LEFT_CENTER": "الوسط الأيسر",
+      "RIGHT_CENTER": "الوسط الأيمن",
+      "TOP_CENTER": "المركز العلوي",
+      "TOP_LEFT": "أعلى اليسار",
+      "TOP_RIGHT": "أعلى اليمين",
+      "TRAY_BOTTOM_CENTER": "صينية أسفل المركز",
+      "TRAY_BOTTOM_LEFT": "صينية أسفل اليسار",
+      "TRAY_BOTTOM_RIGHT": "صينية أسفل اليمين",
+      "TRAY_CENTER": "مركز الصينية",
+      "TRAY_LEFT": "صينية اليسار",
+      "TRAY_RIGHT": "صينية اليمين"
+    },
+    "SYNCING": "المزامنة",
+    "UNLOCK_CLIPPY": "فتح القفل"
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CHANGE_LOCATION": "تغيير الموقع",
+      "CONFIG_LOCATION": "موقع التكوين",
+      "DATABASE_LOCATION": "موقع قاعدة البيانات",
+      "OPEN": "يفتح",
+      "RESET_LOCATION": "إعادة تعيين الموقع",
+      "SYNC": "المزامنة",
+      "SYNC_LIMIT": "كم عدد الحافظات التي يجب مزامنتها؟",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"
+    },
+    "ENCRYPT": {
+      "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
+      "DECRYPT": "فك تشفير جميع الحافظات",
+      "DECRYPTION_PROGRESS_LOCAL": "تم فك تشفير{{current}} من {{total}} حافظة محليًا",
+      "DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} من {{total}} تنزيل الحافظات عن بعد",
+      "ENCRYPT": "تشفير كافة الحافظات",
+      "ENCRYPT_DECRYPT": "تشفير / فك التشفير",
+      "ENCRYPTION_PROGRESS_LOCAL": "يتم تشفير{{current}} من {{total}} حافظة محليًا",
+      "INFO": "يتم تشفير جميع الحافظات، وفي حالة فقدان كلمة المرور، لا يمكن استعادة أي شيء",
+      "PASSWORD": "كلمة المرور",
+      "SAVE_BEFORE_UNLOCK": "حفظ الحافظات قبل إدخال رقم التعريف الشخصي (PIN) عند بدء التشغيل؟"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "تغيير اللغة",
+      "CHANGE_WINDOW_POSITION": "تغيير موضع النافذة",
+      "HTML_CLIPBOARD_TOOLTIP": "تلميحات حول حافظة HTML",
+      "KEYBOARD_SHORTCUT": "اختصار لوحة المفاتيح",
+      "START_CLIPPY_ON_STARTUP": "بدء تشغيل Clippy عند بدء تشغيل النظام",
+      "SWITCH_THEME": "تبديل الثيم",
+      "SYSTEM": "نظام",
+      "WINDOW_SCALE": "مقياس النافذة"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "امسح الكل",
+      "CLEAR_FILE": "مسح الملف",
+      "CLEAR_HTML": "مسح HTML",
+      "CLEAR_IMAGE": "صورة واضحة",
+      "CLEAR_RTF": "مسح RTF",
+      "CLEAR_TEXT": "نص واضح",
+      "DATABASE_INFO": "تم حفظ{{records}} عنصر محلي ({{size}}) على هذا الكمبيوتر",
+      "SQL_DATABASE_INFO": "معلومات قاعدة بيانات SQL",
+      "STORAGE_ACTIONS": "إجراءات التخزين"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "تغيير مفاتيح التشغيل السريع الخاصة بك"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "حدود الحافظة",
+      "IF_SET_TO_ZERO": "إذا تم ضبطه على 0، فسيتم تخطي نوع الحافظة بالكامل",
+      "MAX_FILE_SIZE": "الحد الأقصى لحجم الملف",
+      "MAX_HTML_SIZE": "الحد الأقصى لحجم HTML",
+      "MAX_IMAGE_SIZE": "الحد الأقصى لحجم الصورة",
+      "MAX_RTF_SIZE": "الحد الأقصى لحجم RTF",
+      "MAX_TEXT_SIZE": "الحد الأقصى لحجم النص"
+    },
+    "PATTERNS": {
+      "ACTIONS": "أجراءات",
+      "ADD": "يضيف",
+      "CHANGE_YOUR_TEXT_MATCHES": "تغيير تطابقات النص الخاص بك",
+      "ENABLED": "ممكّن",
+      "INFO": "قم بإزالة البيانات الحساسة من الحافظات، وحدد نمط glob أو regex وسيتم استبداله بالاستبدال (اتركه فارغًا للوضع الفارغ)",
+      "MATCH_EXPRESSION": "تعبير المطابقة",
+      "REMOVE": "يزيل",
+      "SUBSTITUTION": "الاستبدال"
+    },
+    "SETTINGS": "إعدادات",
+    "TAB": {
+      "BACKUP": "دعم",
+      "ENCRYPTION": "التشفير",
+      "GENERAL": "عام",
+      "HISTORY": "تاريخ",
+      "HOTKEYS": "مفاتيح التشغيل السريع",
+      "LIMITS": "الحدود",
+      "PATTERNS": "أنماط"
+    }
+  }
 }

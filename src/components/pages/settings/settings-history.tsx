@@ -11,18 +11,21 @@ import { Button } from "../../elements/button";
 import { TextBlock } from "../../elements/text-block";
 import { useLanguage } from "../../provider/language-provider";
 
-const CLIPBOARD_TYPES: { type: ClipboardType | null; label: DictionaryKey }[] = [
-  { type: null, label: "SETTINGS.HISTORY.CLEAR_ALL" },
-  { type: ClipboardType.Text, label: "SETTINGS.HISTORY.CLEAR_TEXT" },
-  { type: ClipboardType.Html, label: "SETTINGS.HISTORY.CLEAR_HTML" },
-  { type: ClipboardType.Rtf, label: "SETTINGS.HISTORY.CLEAR_RTF" },
-  { type: ClipboardType.Image, label: "SETTINGS.HISTORY.CLEAR_IMAGE" },
-  { type: ClipboardType.File, label: "SETTINGS.HISTORY.CLEAR_FILE" },
-];
+const CLIPBOARD_TYPES: { type: ClipboardType | null; label: DictionaryKey }[] =
+  [
+    { type: null, label: "SETTINGS.HISTORY.CLEAR_ALL" },
+    { type: ClipboardType.Text, label: "SETTINGS.HISTORY.CLEAR_TEXT" },
+    { type: ClipboardType.Html, label: "SETTINGS.HISTORY.CLEAR_HTML" },
+    { type: ClipboardType.Rtf, label: "SETTINGS.HISTORY.CLEAR_RTF" },
+    { type: ClipboardType.Image, label: "SETTINGS.HISTORY.CLEAR_IMAGE" },
+    { type: ClipboardType.File, label: "SETTINGS.HISTORY.CLEAR_FILE" },
+  ];
 
 export const SettingsHistory: Component = () => {
   const { t } = useLanguage();
-  const [databaseInfo, { refetch }] = createResource(() => invokeCommand(InvokeCommand.GetDbInfo));
+  const [databaseInfo, { refetch }] = createResource(() =>
+    invokeCommand(InvokeCommand.GetDbInfo),
+  );
 
   const handleClear = async (type: ClipboardType | null) => {
     await invokeCommand(InvokeCommand.ClearClipboards, { type });
@@ -31,7 +34,10 @@ export const SettingsHistory: Component = () => {
 
   return (
     <>
-      <TextBlock Icon={SiSqlite} title={t("SETTINGS.HISTORY.SQL_DATABASE_INFO")}>
+      <TextBlock
+        Icon={SiSqlite}
+        title={t("SETTINGS.HISTORY.SQL_DATABASE_INFO")}
+      >
         <ul class="mx-5 list-disc px-5 pb-5">
           <li>
             {t("SETTINGS.HISTORY.DATABASE_INFO", {
@@ -42,10 +48,17 @@ export const SettingsHistory: Component = () => {
         </ul>
       </TextBlock>
 
-      <TextBlock Icon={BsDeviceHdd} title={t("SETTINGS.HISTORY.STORAGE_ACTIONS")}>
+      <TextBlock
+        Icon={BsDeviceHdd}
+        title={t("SETTINGS.HISTORY.STORAGE_ACTIONS")}
+      >
         <div class="flex w-full flex-wrap justify-center gap-2 px-5 pb-5">
           {CLIPBOARD_TYPES.map(({ type, label }) => (
-            <Button label={label} onClick={() => handleClear(type)} Icon={FiTrash2} />
+            <Button
+              label={label}
+              onClick={() => handleClear(type)}
+              Icon={FiTrash2}
+            />
           ))}
         </div>
       </TextBlock>

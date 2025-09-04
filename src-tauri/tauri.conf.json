@@ -34,7 +34,13 @@
     "category": "Utility",
     "copyright": "Copyright (c) 2024",
     "targets": ["app", "deb", "rpm", "dmg", "appimage", "nsis"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
     "linux": {
       "deb": {
         "depends": ["libxdo3"]

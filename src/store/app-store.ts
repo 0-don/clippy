@@ -12,10 +12,13 @@ import { SettingsStore } from "./settings-store";
 
 function createAppStore() {
   const [passwordLock, setPasswordLock] = createSignal<PasswordAction>();
-  const detectedLocale = localStorage.getItem(LANGUAGE_KEY) || Object.values(LANGUAGES)[0];
+  const detectedLocale =
+    localStorage.getItem(LANGUAGE_KEY) || Object.values(LANGUAGES)[0];
 
   const [locale, setLocale] = createResource(
-    async () => (await invokeCommand(InvokeCommand.GetSettings))?.language || detectedLocale
+    async () =>
+      (await invokeCommand(InvokeCommand.GetSettings))?.language ||
+      detectedLocale,
   );
 
   const [tabs, setTabs] = createSignal<Tabs[]>([
@@ -45,7 +48,8 @@ function createAppStore() {
     },
   ]);
 
-  const changeTab = (id: Tab) => setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
+  const changeTab = (id: Tab) =>
+    setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
   const getCurrentTab = () => tabs().find((s) => s.current)!;
 
   const darkMode = () =>

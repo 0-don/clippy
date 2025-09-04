@@ -22,7 +22,10 @@ const Index = () => {
 
   listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
 
-  listenEvent(ListenEvent.EnableGlobalHotkeyEvent, HotkeyStore.enableGlobalHotkeyEvent);
+  listenEvent(
+    ListenEvent.EnableGlobalHotkeyEvent,
+    HotkeyStore.enableGlobalHotkeyEvent,
+  );
 
   listenEvent(ListenEvent.ChangeTab, AppStore.changeTab);
 
@@ -39,5 +42,5 @@ render(
       <Index />
     </LanguageProvider>
   ),
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );

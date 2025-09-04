@@ -1,185 +1,185 @@
 {
-	"ABOUT": {
-		"ABOUT": "के बारे में",
-		"COPYRIGHT": "कॉपीराइट(सी) डीसी. सभी अधिकार सुरक्षित.",
-		"DEVELOPED_BY": "0-don द्वारा विकसित। Tauri द्वारा संचालित।",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "वर्तमान में कोई अपडेट उपलब्ध नहीं है",
-		"OFFICIAL_WEBSITE": "आधिकारिक वेबसाइट"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "HTML के रूप में कॉपी करें",
-		"COPY_AS_RTF": "RTF के रूप में कॉपी करें",
-		"DELETE_CLIPBOARD": "क्लिपबोर्ड हटाएं",
-		"NO_CLIPBOARDS_YET": "अभी तक कोई क्लिपबोर्ड नहीं...",
-		"SEARCH_ENTRIES": "प्रविष्टियाँ खोजें",
-		"STAR_FAVORITE": "स्टार पसंदीदा"
-	},
-	"MAIN": {
-		"ERROR": {
-			"DATA_IS_NOT_ENCRYPTED": "डेटा एन्क्रिप्टेड नहीं है",
-			"ENCRYPTION_FAILED": "एन्क्रिप्शन विफल",
-			"ENCRYPTION_KEY_ALREADY_SET": "एन्क्रिप्शन कुंजी पहले से सेट है",
-			"INCORRECT_PASSWORD": "ग़लत पासवर्ड",
-			"INVALID_ENCRYPTION_KEY": "अमान्य एन्क्रिप्शन कुंजी",
-			"NO_ENCRYPTION_KEY_SET": "कोई एन्क्रिप्शन कुंजी सेट नहीं है",
-			"PASSWORD_NOT_MATCH": "पासवर्ड मेल नहीं खाता"
-		},
-		"HOTKEY": {
-			"ABOUT": "के बारे में",
-			"CHANGE_CLIPBOARD_DB_LOCATION": "क्लिपबोर्ड Db स्थान बदलें",
-			"DIGIT_1": "अंक 1",
-			"DIGIT_2": "अंक 2",
-			"DIGIT_3": "अंक 3",
-			"DIGIT_4": "अंक 4",
-			"DIGIT_5": "अंक 5",
-			"DIGIT_6": "अंक 6",
-			"DIGIT_7": "अंक 7",
-			"DIGIT_8": "अंक 8",
-			"DIGIT_9": "अंक 9",
-			"EXIT": "बाहर निकलना",
-			"HISTORY": "इतिहास",
-			"NUM_1": "अंक 1",
-			"NUM_2": "अंक 2",
-			"NUM_3": "अंक 3",
-			"NUM_4": "अंक 4",
-			"NUM_5": "अंक 5",
-			"NUM_6": "अंक 6",
-			"NUM_7": "अंक 7",
-			"NUM_8": "अंक 8",
-			"NUM_9": "अंक 9",
-			"RECENT_CLIPBOARDS": "हाल ही के क्लिपबोर्ड",
-			"SCROLL_TO_TOP": "ऊपर स्क्रॉल करें",
-			"SETTINGS": "समायोजन",
-			"STARRED_CLIPBOARDS": "तारांकित क्लिपबोर्ड",
-			"SYNC_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक करें",
-			"TYPE_CLIPBOARD": "क्लिपबोर्ड टाइप करें",
-			"VIEW_MORE": "और देखें",
-			"WINDOW_DISPLAY_TOGGLE": "विंडो डिस्प्ले टॉगल"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Shift"
-		},
-		"LANGUAGE": {
-			"AR": "अरबी",
-			"BN": "बंगाली",
-			"DE": "जर्मन",
-			"EN": "अंग्रेज़ी",
-			"ES": "स्पैनिश",
-			"FR": "फ्रेंच",
-			"HI": "हिंदी",
-			"IT": "इतालवी",
-			"JA": "जापानी",
-			"KO": "कोरियाई",
-			"NL": "डच",
-			"PL": "पोलिश",
-			"PT": "पुर्तगाली",
-			"RU": "रूसी",
-			"TH": "थाई",
-			"TR": "तुर्की",
-			"UR": "उर्दू",
-			"VI": "वियतनामी",
-			"ZH": "अकर्मण्य"
-		},
-		"OFFLINE": "ऑफलाइन",
-		"ONLINE": "ऑनलाइन",
-		"POSITION": {
-			"BOTTOM_CENTER": "निचला बीच का",
-			"BOTTOM_LEFT": "तली छोड़ें",
-			"BOTTOM_RIGHT": "नीचे दाएं",
-			"CENTER": "केंद्र",
-			"CURSOR": "कर्सर",
-			"LEFT_CENTER": "बायां केंद्र",
-			"RIGHT_CENTER": "दायाँ मध्य",
-			"TOP_CENTER": "शीर्ष केंद्र",
-			"TOP_LEFT": "बाएं से बाएं",
-			"TOP_RIGHT": "ठीक तरह से ऊपर",
-			"TRAY_BOTTOM_CENTER": "ट्रे का निचला मध्य",
-			"TRAY_BOTTOM_LEFT": "ट्रे नीचे बाईं ओर",
-			"TRAY_BOTTOM_RIGHT": "ट्रे नीचे दाईं ओर",
-			"TRAY_CENTER": "ट्रे केंद्र",
-			"TRAY_LEFT": "ट्रे छोड़ दिया",
-			"TRAY_RIGHT": "ट्रे दायाँ"
-		},
-		"SYNCING": "सिंक्रनाइज़ किए जा रहे",
-		"UNLOCK_CLIPPY": "क्लिप्पी अनलॉक करें"
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CHANGE_LOCATION": "स्थान बदलें",
-			"CONFIG_LOCATION": "कॉन्फ़िगरेशन स्थान",
-			"DATABASE_LOCATION": "डेटाबेस स्थान",
-			"OPEN": "खुला",
-			"RESET_LOCATION": "स्थान रीसेट करें",
-			"SYNC": "साथ-साथ करना",
-			"SYNC_LIMIT": "कितने क्लिपबोर्ड को सिंक किया जाना चाहिए?",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें"
-		},
-		"ENCRYPT": {
-			"CONFIRM_PASSWORD": "पासवर्ड की पुष्टि कीजिये",
-			"DECRYPT": "सभी क्लिपबोर्ड को डिक्रिप्ट करें",
-			"DECRYPTION_PROGRESS_LOCAL": " {{total}} क्लिपबोर्ड में से{{current}} को स्थानीय रूप से डिक्रिप्ट किया जाता है",
-			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} से {{total}} दूरस्थ क्लिपबोर्ड डाउनलोड करना",
-			"ENCRYPT": "सभी क्लिपबोर्ड एन्क्रिप्ट करें",
-			"ENCRYPT_DECRYPT": "एन्क्रिप्ट / डिक्रिप्ट",
-			"ENCRYPTION_PROGRESS_LOCAL": " {{total}} क्लिपबोर्ड में से{{current}} स्थानीय रूप से एन्क्रिप्ट किए गए हैं",
-			"INFO": "सभी क्लिपबोर्ड एन्क्रिप्टेड हैं, यदि पासवर्ड खो जाए तो कुछ भी पुनर्स्थापित नहीं किया जा सकता",
-			"PASSWORD": "पासवर्ड",
-			"SAVE_BEFORE_UNLOCK": ""
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "भाषा बदलें",
-			"CHANGE_WINDOW_POSITION": "विंडो की स्थिति बदलें",
-			"HTML_CLIPBOARD_TOOLTIP": "HTML क्लिपबोर्ड टूलटिप",
-			"KEYBOARD_SHORTCUT": "कीबोर्ड शॉर्टकट",
-			"START_CLIPPY_ON_STARTUP": "सिस्टम स्टार्टअप पर क्लिप्पी प्रारंभ करें",
-			"SWITCH_THEME": "थीम बदलें",
-			"SYSTEM": "प्रणाली",
-			"WINDOW_SCALE": "विंडो स्केल"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "सभी साफ करें",
-			"CLEAR_FILE": "स्पष्ट फ़ाइल",
-			"CLEAR_HTML": "HTML साफ़ करें",
-			"CLEAR_IMAGE": "चित्र हटाएं",
-			"CLEAR_RTF": "आरटीएफ साफ़ करें",
-			"CLEAR_TEXT": "स्पष्ट पाठ",
-			"DATABASE_INFO": "इस कंप्यूटर पर{{records}} स्थानीय आइटम ({{size}}) सहेजे गए हैं",
-			"SQL_DATABASE_INFO": "SQL डेटाबेस जानकारी",
-			"STORAGE_ACTIONS": "भंडारण क्रियाएँ"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "अपनी हॉटकीज़ बदलें"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "क्लिपबोर्ड सीमाएँ",
-			"IF_SET_TO_ZERO": "यदि 0 पर सेट किया जाता है तो क्लिपबोर्ड प्रकार पूरी तरह से छोड़ दिया जाएगा",
-			"MAX_FILE_SIZE": "अधिकतम फ़ाइल आकार",
-			"MAX_HTML_SIZE": "अधिकतम HTML आकार",
-			"MAX_IMAGE_SIZE": "अधिकतम छवि आकार",
-			"MAX_RTF_SIZE": "अधिकतम Rtf आकार",
-			"MAX_TEXT_SIZE": "अधिकतम पाठ आकार"
-		},
-		"PATTERNS": {
-			"ACTIONS": "कार्रवाई",
-			"ADD": "जोड़ना",
-			"CHANGE_YOUR_TEXT_MATCHES": "अपने टेक्स्ट मिलान बदलें",
-			"ENABLED": "सक्रिय",
-			"INFO": "क्लिपबोर्ड से संवेदनशील डेटा निकालें, ग्लोब या रेगेक्स पैटर्न परिभाषित करें और इसे प्रतिस्थापन के साथ बदल दिया जाएगा (खाली के लिए खाली छोड़ दें)",
-			"MATCH_EXPRESSION": "मिलान अभिव्यक्ति",
-			"REMOVE": "निकालना",
-			"SUBSTITUTION": "प्रतिस्थापन"
-		},
-		"SETTINGS": "समायोजन",
-		"TAB": {
-			"BACKUP": "बैकअप",
-			"ENCRYPTION": "कूटलेखन",
-			"GENERAL": "सामान्य",
-			"HISTORY": "इतिहास",
-			"HOTKEYS": "हॉटकी",
-			"LIMITS": "सीमाएं",
-			"PATTERNS": "पैटर्न्स"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "के बारे में",
+    "COPYRIGHT": "कॉपीराइट(सी) डीसी. सभी अधिकार सुरक्षित.",
+    "DEVELOPED_BY": "0-don द्वारा विकसित। Tauri द्वारा संचालित।",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "वर्तमान में कोई अपडेट उपलब्ध नहीं है",
+    "OFFICIAL_WEBSITE": "आधिकारिक वेबसाइट"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "HTML के रूप में कॉपी करें",
+    "COPY_AS_RTF": "RTF के रूप में कॉपी करें",
+    "DELETE_CLIPBOARD": "क्लिपबोर्ड हटाएं",
+    "NO_CLIPBOARDS_YET": "अभी तक कोई क्लिपबोर्ड नहीं...",
+    "SEARCH_ENTRIES": "प्रविष्टियाँ खोजें",
+    "STAR_FAVORITE": "स्टार पसंदीदा"
+  },
+  "MAIN": {
+    "ERROR": {
+      "DATA_IS_NOT_ENCRYPTED": "डेटा एन्क्रिप्टेड नहीं है",
+      "ENCRYPTION_FAILED": "एन्क्रिप्शन विफल",
+      "ENCRYPTION_KEY_ALREADY_SET": "एन्क्रिप्शन कुंजी पहले से सेट है",
+      "INCORRECT_PASSWORD": "ग़लत पासवर्ड",
+      "INVALID_ENCRYPTION_KEY": "अमान्य एन्क्रिप्शन कुंजी",
+      "NO_ENCRYPTION_KEY_SET": "कोई एन्क्रिप्शन कुंजी सेट नहीं है",
+      "PASSWORD_NOT_MATCH": "पासवर्ड मेल नहीं खाता"
+    },
+    "HOTKEY": {
+      "ABOUT": "के बारे में",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "क्लिपबोर्ड Db स्थान बदलें",
+      "DIGIT_1": "अंक 1",
+      "DIGIT_2": "अंक 2",
+      "DIGIT_3": "अंक 3",
+      "DIGIT_4": "अंक 4",
+      "DIGIT_5": "अंक 5",
+      "DIGIT_6": "अंक 6",
+      "DIGIT_7": "अंक 7",
+      "DIGIT_8": "अंक 8",
+      "DIGIT_9": "अंक 9",
+      "EXIT": "बाहर निकलना",
+      "HISTORY": "इतिहास",
+      "NUM_1": "अंक 1",
+      "NUM_2": "अंक 2",
+      "NUM_3": "अंक 3",
+      "NUM_4": "अंक 4",
+      "NUM_5": "अंक 5",
+      "NUM_6": "अंक 6",
+      "NUM_7": "अंक 7",
+      "NUM_8": "अंक 8",
+      "NUM_9": "अंक 9",
+      "RECENT_CLIPBOARDS": "हाल ही के क्लिपबोर्ड",
+      "SCROLL_TO_TOP": "ऊपर स्क्रॉल करें",
+      "SETTINGS": "समायोजन",
+      "STARRED_CLIPBOARDS": "तारांकित क्लिपबोर्ड",
+      "SYNC_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक करें",
+      "TYPE_CLIPBOARD": "क्लिपबोर्ड टाइप करें",
+      "VIEW_MORE": "और देखें",
+      "WINDOW_DISPLAY_TOGGLE": "विंडो डिस्प्ले टॉगल"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Shift"
+    },
+    "LANGUAGE": {
+      "AR": "अरबी",
+      "BN": "बंगाली",
+      "DE": "जर्मन",
+      "EN": "अंग्रेज़ी",
+      "ES": "स्पैनिश",
+      "FR": "फ्रेंच",
+      "HI": "हिंदी",
+      "IT": "इतालवी",
+      "JA": "जापानी",
+      "KO": "कोरियाई",
+      "NL": "डच",
+      "PL": "पोलिश",
+      "PT": "पुर्तगाली",
+      "RU": "रूसी",
+      "TH": "थाई",
+      "TR": "तुर्की",
+      "UR": "उर्दू",
+      "VI": "वियतनामी",
+      "ZH": "अकर्मण्य"
+    },
+    "OFFLINE": "ऑफलाइन",
+    "ONLINE": "ऑनलाइन",
+    "POSITION": {
+      "BOTTOM_CENTER": "निचला बीच का",
+      "BOTTOM_LEFT": "तली छोड़ें",
+      "BOTTOM_RIGHT": "नीचे दाएं",
+      "CENTER": "केंद्र",
+      "CURSOR": "कर्सर",
+      "LEFT_CENTER": "बायां केंद्र",
+      "RIGHT_CENTER": "दायाँ मध्य",
+      "TOP_CENTER": "शीर्ष केंद्र",
+      "TOP_LEFT": "बाएं से बाएं",
+      "TOP_RIGHT": "ठीक तरह से ऊपर",
+      "TRAY_BOTTOM_CENTER": "ट्रे का निचला मध्य",
+      "TRAY_BOTTOM_LEFT": "ट्रे नीचे बाईं ओर",
+      "TRAY_BOTTOM_RIGHT": "ट्रे नीचे दाईं ओर",
+      "TRAY_CENTER": "ट्रे केंद्र",
+      "TRAY_LEFT": "ट्रे छोड़ दिया",
+      "TRAY_RIGHT": "ट्रे दायाँ"
+    },
+    "SYNCING": "सिंक्रनाइज़ किए जा रहे",
+    "UNLOCK_CLIPPY": "क्लिप्पी अनलॉक करें"
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CHANGE_LOCATION": "स्थान बदलें",
+      "CONFIG_LOCATION": "कॉन्फ़िगरेशन स्थान",
+      "DATABASE_LOCATION": "डेटाबेस स्थान",
+      "OPEN": "खुला",
+      "RESET_LOCATION": "स्थान रीसेट करें",
+      "SYNC": "साथ-साथ करना",
+      "SYNC_LIMIT": "कितने क्लिपबोर्ड को सिंक किया जाना चाहिए?",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें"
+    },
+    "ENCRYPT": {
+      "CONFIRM_PASSWORD": "पासवर्ड की पुष्टि कीजिये",
+      "DECRYPT": "सभी क्लिपबोर्ड को डिक्रिप्ट करें",
+      "DECRYPTION_PROGRESS_LOCAL": " {{total}} क्लिपबोर्ड में से{{current}} को स्थानीय रूप से डिक्रिप्ट किया जाता है",
+      "DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} से {{total}} दूरस्थ क्लिपबोर्ड डाउनलोड करना",
+      "ENCRYPT": "सभी क्लिपबोर्ड एन्क्रिप्ट करें",
+      "ENCRYPT_DECRYPT": "एन्क्रिप्ट / डिक्रिप्ट",
+      "ENCRYPTION_PROGRESS_LOCAL": " {{total}} क्लिपबोर्ड में से{{current}} स्थानीय रूप से एन्क्रिप्ट किए गए हैं",
+      "INFO": "सभी क्लिपबोर्ड एन्क्रिप्टेड हैं, यदि पासवर्ड खो जाए तो कुछ भी पुनर्स्थापित नहीं किया जा सकता",
+      "PASSWORD": "पासवर्ड",
+      "SAVE_BEFORE_UNLOCK": ""
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "भाषा बदलें",
+      "CHANGE_WINDOW_POSITION": "विंडो की स्थिति बदलें",
+      "HTML_CLIPBOARD_TOOLTIP": "HTML क्लिपबोर्ड टूलटिप",
+      "KEYBOARD_SHORTCUT": "कीबोर्ड शॉर्टकट",
+      "START_CLIPPY_ON_STARTUP": "सिस्टम स्टार्टअप पर क्लिप्पी प्रारंभ करें",
+      "SWITCH_THEME": "थीम बदलें",
+      "SYSTEM": "प्रणाली",
+      "WINDOW_SCALE": "विंडो स्केल"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "सभी साफ करें",
+      "CLEAR_FILE": "स्पष्ट फ़ाइल",
+      "CLEAR_HTML": "HTML साफ़ करें",
+      "CLEAR_IMAGE": "चित्र हटाएं",
+      "CLEAR_RTF": "आरटीएफ साफ़ करें",
+      "CLEAR_TEXT": "स्पष्ट पाठ",
+      "DATABASE_INFO": "इस कंप्यूटर पर{{records}} स्थानीय आइटम ({{size}}) सहेजे गए हैं",
+      "SQL_DATABASE_INFO": "SQL डेटाबेस जानकारी",
+      "STORAGE_ACTIONS": "भंडारण क्रियाएँ"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "अपनी हॉटकीज़ बदलें"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "क्लिपबोर्ड सीमाएँ",
+      "IF_SET_TO_ZERO": "यदि 0 पर सेट किया जाता है तो क्लिपबोर्ड प्रकार पूरी तरह से छोड़ दिया जाएगा",
+      "MAX_FILE_SIZE": "अधिकतम फ़ाइल आकार",
+      "MAX_HTML_SIZE": "अधिकतम HTML आकार",
+      "MAX_IMAGE_SIZE": "अधिकतम छवि आकार",
+      "MAX_RTF_SIZE": "अधिकतम Rtf आकार",
+      "MAX_TEXT_SIZE": "अधिकतम पाठ आकार"
+    },
+    "PATTERNS": {
+      "ACTIONS": "कार्रवाई",
+      "ADD": "जोड़ना",
+      "CHANGE_YOUR_TEXT_MATCHES": "अपने टेक्स्ट मिलान बदलें",
+      "ENABLED": "सक्रिय",
+      "INFO": "क्लिपबोर्ड से संवेदनशील डेटा निकालें, ग्लोब या रेगेक्स पैटर्न परिभाषित करें और इसे प्रतिस्थापन के साथ बदल दिया जाएगा (खाली के लिए खाली छोड़ दें)",
+      "MATCH_EXPRESSION": "मिलान अभिव्यक्ति",
+      "REMOVE": "निकालना",
+      "SUBSTITUTION": "प्रतिस्थापन"
+    },
+    "SETTINGS": "समायोजन",
+    "TAB": {
+      "BACKUP": "बैकअप",
+      "ENCRYPTION": "कूटलेखन",
+      "GENERAL": "सामान्य",
+      "HISTORY": "इतिहास",
+      "HOTKEYS": "हॉटकी",
+      "LIMITS": "सीमाएं",
+      "PATTERNS": "पैटर्न्स"
+    }
+  }
 }

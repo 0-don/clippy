@@ -46,8 +46,8 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
                 star: !o.clipboard.star,
               },
             }
-          : o
-      )
+          : o,
+      ),
     );
   };
 
@@ -68,7 +68,9 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   };
 
   return (
-    <div class={`group relative ${props.isSelected ? "bg-zinc-100 dark:bg-neutral-600" : ""}`}>
+    <div
+      class={`group relative ${props.isSelected ? "bg-zinc-100 dark:bg-neutral-600" : ""}`}
+    >
       {/* Actions overlay */}
       <div class="absolute top-0 right-0 bottom-0 z-10 my-1 flex flex-col items-end justify-between">
         <VsStarFull
@@ -78,7 +80,9 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
           }}
           title={t("CLIPBOARD.STAR_FAVORITE")}
           class={`${
-            props.data.clipboard.star ? "text-yellow-400 dark:text-yellow-300" : "hidden text-zinc-700"
+            props.data.clipboard.star
+              ? "text-yellow-400 dark:text-yellow-300"
+              : "hidden text-zinc-700"
           } cursor-pointer group-hover:block hover:text-yellow-400 dark:text-white dark:hover:text-yellow-300`}
         />
         <div class="flex items-center gap-1">
@@ -108,11 +112,17 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
       </div>
 
       {/* Content rendered by specific clipboard type */}
-      {props.data.clipboard.types.includes(ClipboardType.Image) && <ImageClipboard {...props} />}
-      {props.data.clipboard.types.includes(ClipboardType.File) && <FileClipboard {...props} />}
+      {props.data.clipboard.types.includes(ClipboardType.Image) && (
+        <ImageClipboard {...props} />
+      )}
+      {props.data.clipboard.types.includes(ClipboardType.File) && (
+        <FileClipboard {...props} />
+      )}
       {(props.data.clipboard.types.includes(ClipboardType.Text) ||
         props.data.clipboard.types.includes(ClipboardType.Html) ||
-        props.data.clipboard.types.includes(ClipboardType.Rtf)) && <TextClipboard {...props} />}
+        props.data.clipboard.types.includes(ClipboardType.Rtf)) && (
+        <TextClipboard {...props} />
+      )}
     </div>
   );
 };

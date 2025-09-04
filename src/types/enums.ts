@@ -56,7 +56,6 @@ export enum ClipboardType {
   File = "file",
 }
 
-
 export enum PasswordAction {
   Encrypt = "encrypt",
   Decrypt = "decrypt",

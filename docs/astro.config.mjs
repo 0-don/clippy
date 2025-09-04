@@ -12,8 +12,16 @@ export default defineConfig({
     starlight({
       title: "Clippy Docs",
       social: [
-        { icon: "github", label: "GitHub", href: "https://github.com/0-don/clippy" },
-        { icon: "discord", label: "Discord", href: "https://discord.gg/coding" },
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/0-don/clippy",
+        },
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.gg/coding",
+        },
       ],
       sidebar: [
         {
@@ -32,7 +40,10 @@ export default defineConfig({
             {
               label: "Features",
               items: [
-                { label: "Clipboard History", slug: "features/clipboard-history" },
+                {
+                  label: "Clipboard History",
+                  slug: "features/clipboard-history",
+                },
                 { label: "Global Hotkeys", slug: "features/hotkeys" },
                 { label: "Cloud Sync", slug: "features/cloud-sync" },
                 { label: "File Support", slug: "features/file-support" },

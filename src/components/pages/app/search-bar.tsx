@@ -1,6 +1,12 @@
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
-import { Component, createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
 import { ClipboardStore, initialWhere } from "../../../store/clipboard-store";
@@ -31,7 +37,10 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
         ...initialWhere,
         search: text.length && !img ? text : undefined,
         img: img || undefined,
-        star: AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS" ? true : undefined,
+        star:
+          AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS"
+            ? true
+            : undefined,
       }));
       const clipboards = await ClipboardStore.getClipboards();
       ClipboardStore.setClipboards(clipboards);

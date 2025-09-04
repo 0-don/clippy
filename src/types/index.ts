@@ -1,6 +1,12 @@
 import { IconTypes } from "solid-icons";
 import { DictionaryKey } from "../lib/i18n";
-import { ClippyPosition, Language, SettingsTabName, Tab, TabName } from "../utils/constants";
+import {
+  ClippyPosition,
+  Language,
+  SettingsTabName,
+  Tab,
+  TabName,
+} from "../utils/constants";
 import { ClipboardTextType, ClipboardType, HotkeyEvent } from "./enums";
 
 export type DatabaseInfo = {

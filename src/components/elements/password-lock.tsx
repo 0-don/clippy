@@ -6,7 +6,10 @@ import { invokeCommand } from "../../lib/tauri";
 import { AppStore } from "../../store/app-store";
 import { TauriError } from "../../types";
 import { InvokeCommand } from "../../types/tauri-invoke";
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "../../utils/constants";
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from "../../utils/constants";
 import { useLanguage } from "../provider/language-provider";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -23,7 +26,10 @@ export const PasswordLock: Component = () => {
     setLoading(true);
 
     try {
-      await invokeCommand(InvokeCommand.PasswordUnlock, { password: password(), action: AppStore.passwordLock()! });
+      await invokeCommand(InvokeCommand.PasswordUnlock, {
+        password: password(),
+        action: AppStore.passwordLock()!,
+      });
       AppStore.setPasswordLock(undefined);
     } catch (error) {
       const { Error } = error as TauriError;
@@ -48,7 +54,11 @@ export const PasswordLock: Component = () => {
             autofocus
           />
 
-          {error() && <p class="text-sm text-red-500">{t(error() as DictionaryKey) || error()}</p>}
+          {error() && (
+            <p class="text-sm text-red-500">
+              {t(error() as DictionaryKey) || error()}
+            </p>
+          )}
 
           <Button
             type="submit"

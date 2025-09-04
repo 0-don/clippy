@@ -11,7 +11,12 @@ export const DarkMode: Component<DarkModeProps> = ({}) => {
   return (
     <Toggle
       checked={SettingsStore.settings()?.dark_mode}
-      onChange={(dark_mode) => SettingsStore.updateSettings({ ...SettingsStore.settings()!, dark_mode })}
+      onChange={(dark_mode) =>
+        SettingsStore.updateSettings({
+          ...SettingsStore.settings()!,
+          dark_mode,
+        })
+      }
     />
   );
 };

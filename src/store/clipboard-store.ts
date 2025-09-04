@@ -11,9 +11,14 @@ export const initialWhere: ClipboardWhere = {
 };
 
 function createClipboardStore() {
-  const [clipboardSyncProgress, setClipboardSyncProgress] = createSignal<Progress>();
-  const [clipboardRef, setClipboardRef] = createSignal<HTMLDivElement | undefined>();
-  const [clipboards, setClipboards] = createSignal<ClipboardWithRelations[]>([]);
+  const [clipboardSyncProgress, setClipboardSyncProgress] =
+    createSignal<Progress>();
+  const [clipboardRef, setClipboardRef] = createSignal<
+    HTMLDivElement | undefined
+  >();
+  const [clipboards, setClipboards] = createSignal<ClipboardWithRelations[]>(
+    [],
+  );
   const [where, setWhere] = createSignal<ClipboardWhere>(initialWhere);
   const [hasMore, setHasMore] = createSignal(true);
   const resetWhere = () => setWhere(initialWhere);
@@ -28,7 +33,9 @@ function createClipboardStore() {
   const newClipboard = (clipboard: ClipboardWithRelations) => {
     setClipboards((prev) => {
       // Remove any existing clipboard with the same ID
-      const filteredClipboards = prev.filter((item) => item.clipboard.id !== clipboard.clipboard.id);
+      const filteredClipboards = prev.filter(
+        (item) => item.clipboard.id !== clipboard.clipboard.id,
+      );
 
       // Add new clipboard and sort
       const newClipboards = [clipboard, ...filteredClipboards];
@@ -71,7 +78,9 @@ function createClipboardStore() {
           setSelectedIndex((prev) => prev + 1);
         } else {
           // Normal navigation if not at last item or no more data
-          setSelectedIndex((prev) => (prev < clipboards().length - 1 ? prev + 1 : prev));
+          setSelectedIndex((prev) =>
+            prev < clipboards().length - 1 ? prev + 1 : prev,
+          );
         }
 
         // Ensure selected item is visible

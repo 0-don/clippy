@@ -17,7 +17,9 @@ interface ImageClipboardProps {
 
 export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
   let dbClickTimer: any;
-  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_at).fromNow());
+  const [fromNowString, setFromNowString] = createSignal(
+    dayjs.utc(props.data.clipboard.created_at).fromNow(),
+  );
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -34,7 +36,9 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
   const handleDoubleClick = async (e: MouseEvent) => {
     clearTimeout(dbClickTimer);
     e.stopPropagation();
-    await invokeCommand(InvokeCommand.SaveClipboardImage, { id: props.data.clipboard.id });
+    await invokeCommand(InvokeCommand.SaveClipboardImage, {
+      id: props.data.clipboard.id,
+    });
   };
 
   createEffect(() => {
@@ -47,7 +51,12 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
     `${props.data.image.width}x${props.data.image.height} ${formatBytes(Number(props.data.image.size || "0"))}`;
 
   return (
-    <button type="button" onClick={handleClick} onDblClick={handleDoubleClick} class="clipboard">
+    <button
+      type="button"
+      onClick={handleClick}
+      onDblClick={handleDoubleClick}
+      class="clipboard"
+    >
       <ClipboardHeader {...props} Icon={BsImages} />
 
       <div class="min-w-0 flex-1">

@@ -1,185 +1,185 @@
 {
-	"ABOUT": {
-		"ABOUT": "Info",
-		"COPYRIGHT": "Copyright(C) DC. Tutti i diritti riservati.",
-		"DEVELOPED_BY": "Sviluppato da 0-don con Tauri.",
-		"NO_UPDATES_CURRENTLY_AVAILABLE": "Questa versione è aggiornata",
-		"OFFICIAL_WEBSITE": "Sito ufficiale"
-	},
-	"CLIPBOARD": {
-		"COPY_AS_HTML": "Copia come HTML",
-		"COPY_AS_RTF": "Copia come RTF",
-		"DELETE_CLIPBOARD": "Elimina appunti",
-		"NO_CLIPBOARDS_YET": "Ancora nessun appunto..",
-		"SEARCH_ENTRIES": "Cerca voci",
-		"STAR_FAVORITE": "Segna come preferito"
-	},
-	"MAIN": {
-		"ERROR": {
-			"DATA_IS_NOT_ENCRYPTED": "I dati non sono criptati",
-			"ENCRYPTION_FAILED": "Criptazione non riuscita",
-			"ENCRYPTION_KEY_ALREADY_SET": "Chiave criptazione già impostata",
-			"INCORRECT_PASSWORD": "Password errata",
-			"INVALID_ENCRYPTION_KEY": "Chiave criptazione non valida",
-			"NO_ENCRYPTION_KEY_SET": "Nessuna chiave criptazione impostata",
-			"PASSWORD_NOT_MATCH": "La password non corrisponde"
-		},
-		"HOTKEY": {
-			"ABOUT": "Info",
-			"CHANGE_CLIPBOARD_DB_LOCATION": "Cambia posizione del database degli appunti",
-			"DIGIT_1": "Cifra 1",
-			"DIGIT_2": "Cifra 2",
-			"DIGIT_3": "Cifra 3",
-			"DIGIT_4": "Cifra 4",
-			"DIGIT_5": "Cifra 5",
-			"DIGIT_6": "Cifra 6",
-			"DIGIT_7": "Cifra 7",
-			"DIGIT_8": "Cifra 8",
-			"DIGIT_9": "Cifra 9",
-			"EXIT": "Esci",
-			"HISTORY": "Cronologia",
-			"NUM_1": "Numero 1",
-			"NUM_2": "Numero 2",
-			"NUM_3": "Numero 3",
-			"NUM_4": "Numero 4",
-			"NUM_5": "Numero 5",
-			"NUM_6": "Numero 6",
-			"NUM_7": "Numero 7",
-			"NUM_8": "Numero 8",
-			"NUM_9": "Numero 9",
-			"RECENT_CLIPBOARDS": "Appunti recenti",
-			"SCROLL_TO_TOP": "Scorri fino all'inizio",
-			"SETTINGS": "Impostazioni",
-			"STARRED_CLIPBOARDS": "Stelle appunti",
-			"SYNC_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
-			"TYPE_CLIPBOARD": "Tipo appunti",
-			"VIEW_MORE": "Visualizza altro",
-			"WINDOW_DISPLAY_TOGGLE": "Attiva/disattiva finestra"
-		},
-		"KEYS": {
-			"ALT": "Alt",
-			"CTRL": "Ctrl",
-			"SHIFT": "Maiusc"
-		},
-		"LANGUAGE": {
-			"AR": "Arabo",
-			"BN": "Bengalese",
-			"DE": "Tedesco",
-			"EN": "Inglese",
-			"ES": "Spagnolo",
-			"FR": "Francese",
-			"HI": "Hindi",
-			"IT": "Italiano",
-			"JA": "Giapponese",
-			"KO": "Coreano",
-			"NL": "Olandese",
-			"PL": "Polacco",
-			"PT": "Portoghese",
-			"RU": "Russo",
-			"TH": "Tailandese",
-			"TR": "Turco",
-			"UR": "Italiano:",
-			"VI": "Vietnamita",
-			"ZH": "Mandarino"
-		},
-		"OFFLINE": "Disconnesso",
-		"ONLINE": "In linea",
-		"POSITION": {
-			"BOTTOM_CENTER": "In basso al centro",
-			"BOTTOM_LEFT": "In basso a sinistra",
-			"BOTTOM_RIGHT": "In basso a destra",
-			"CENTER": "Al centro",
-			"CURSOR": "Cursore",
-			"LEFT_CENTER": "In centro a sinistra",
-			"RIGHT_CENTER": "In centro a destra",
-			"TOP_CENTER": "In alto al centro",
-			"TOP_LEFT": "In alto a sinistra",
-			"TOP_RIGHT": "In alto a destra",
-			"TRAY_BOTTOM_CENTER": "Icona sistema in basso al centro",
-			"TRAY_BOTTOM_LEFT": "Icona sistema in basso a sinistra",
-			"TRAY_BOTTOM_RIGHT": "Icona sistema in basso a destra",
-			"TRAY_CENTER": "Icona sistema al centro",
-			"TRAY_LEFT": "Icona sistema a sinistro",
-			"TRAY_RIGHT": "Icona sistema a destra"
-		},
-		"SYNCING": "Sincronizzazione",
-		"UNLOCK_CLIPPY": "Sblocca clippy"
-	},
-	"SETTINGS": {
-		"BACKUP": {
-			"CHANGE_LOCATION": "Cambia posizione",
-			"CONFIG_LOCATION": "Percorso configurazione",
-			"DATABASE_LOCATION": "Percorso database",
-			"OPEN": "Apri",
-			"RESET_LOCATION": "Reimposta posizione",
-			"SYNC": "Sincronizza",
-			"SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
-			"SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
-		},
-		"ENCRYPT": {
-			"CONFIRM_PASSWORD": "Conferma password",
-			"DECRYPT": "Decripta tutti gli appunti",
-			"DECRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti vengono decifrati localmente",
-			"DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} / {{total}} download appunti remoti",
-			"ENCRYPT": "Cripta tutti gli appunti",
-			"ENCRYPT_DECRYPT": "Cripta/decripta",
-			"ENCRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti sono criptati localmente",
-			"INFO": "Tutti gli appunti sono criptati, se la password viene persa non è possibile ripristinarli",
-			"PASSWORD": "Password",
-			"SAVE_BEFORE_UNLOCK": "Vuoi salvare gli appunti prima che venga inserito il PIN all'avvio?"
-		},
-		"GENERAL": {
-			"CHANGE_LANGUAGE": "Cambia lingua UI",
-			"CHANGE_WINDOW_POSITION": "Modifica posizione finestra",
-			"HTML_CLIPBOARD_TOOLTIP": "Suggerimenti appunti HTML",
-			"KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
-			"START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",
-			"SWITCH_THEME": "Modifica tema",
-			"SYSTEM": "Sistema",
-			"WINDOW_SCALE": "Scala finestra"
-		},
-		"HISTORY": {
-			"CLEAR_ALL": "Cancella tutto",
-			"CLEAR_FILE": "Elimina file",
-			"CLEAR_HTML": "Cancella HTML",
-			"CLEAR_IMAGE": "Cancella immagine",
-			"CLEAR_RTF": "Cancella RTF",
-			"CLEAR_TEXT": "Testo chiaro",
-			"DATABASE_INFO": "In questo computer sono salvati {{records}} elementi locali ({{size}})",
-			"SQL_DATABASE_INFO": "Info database SQL",
-			"STORAGE_ACTIONS": "Azioni archiviazione"
-		},
-		"HOTKEYS": {
-			"CHANGE_YOUR_HOTKEYS": "Modifica tasti scelta rapida"
-		},
-		"LIMITS": {
-			"CLIPBOARD_LIMITS": "Limiti appunti",
-			"IF_SET_TO_ZERO": "Se impostato a 0 il tipo di appunti verrà completamente ignorato",
-			"MAX_FILE_SIZE": "Dimensione massima file",
-			"MAX_HTML_SIZE": "Dimensione massima HTML",
-			"MAX_IMAGE_SIZE": "Dimensione massima immagine",
-			"MAX_RTF_SIZE": "Dimensione massima RTF",
-			"MAX_TEXT_SIZE": "Dimensione massima testo"
-		},
-		"PATTERNS": {
-			"ACTIONS": "Azioni",
-			"ADD": "Aggiungi",
-			"CHANGE_YOUR_TEXT_MATCHES": "Modifica corrispondenze del testo",
-			"ENABLED": "Abilitata",
-			"INFO": "Rimuovi i dati sensibili dagli appunti, definisci il modello glob o regex e verranno sostituiti tramite sostituzione (lascia vuoto per nessuna azione)",
-			"MATCH_EXPRESSION": "Espressione corrispondenza",
-			"REMOVE": "Rimuovi",
-			"SUBSTITUTION": "Sostituisci"
-		},
-		"SETTINGS": "Impostazioni",
-		"TAB": {
-			"BACKUP": "Backup",
-			"ENCRYPTION": "Criptazione",
-			"GENERAL": "Generale",
-			"HISTORY": "Cronologia",
-			"HOTKEYS": "Tasti scelta rapida",
-			"LIMITS": "Limiti",
-			"PATTERNS": "Modelli"
-		}
-	}
+  "ABOUT": {
+    "ABOUT": "Info",
+    "COPYRIGHT": "Copyright(C) DC. Tutti i diritti riservati.",
+    "DEVELOPED_BY": "Sviluppato da 0-don con Tauri.",
+    "NO_UPDATES_CURRENTLY_AVAILABLE": "Questa versione è aggiornata",
+    "OFFICIAL_WEBSITE": "Sito ufficiale"
+  },
+  "CLIPBOARD": {
+    "COPY_AS_HTML": "Copia come HTML",
+    "COPY_AS_RTF": "Copia come RTF",
+    "DELETE_CLIPBOARD": "Elimina appunti",
+    "NO_CLIPBOARDS_YET": "Ancora nessun appunto..",
+    "SEARCH_ENTRIES": "Cerca voci",
+    "STAR_FAVORITE": "Segna come preferito"
+  },
+  "MAIN": {
+    "ERROR": {
+      "DATA_IS_NOT_ENCRYPTED": "I dati non sono criptati",
+      "ENCRYPTION_FAILED": "Criptazione non riuscita",
+      "ENCRYPTION_KEY_ALREADY_SET": "Chiave criptazione già impostata",
+      "INCORRECT_PASSWORD": "Password errata",
+      "INVALID_ENCRYPTION_KEY": "Chiave criptazione non valida",
+      "NO_ENCRYPTION_KEY_SET": "Nessuna chiave criptazione impostata",
+      "PASSWORD_NOT_MATCH": "La password non corrisponde"
+    },
+    "HOTKEY": {
+      "ABOUT": "Info",
+      "CHANGE_CLIPBOARD_DB_LOCATION": "Cambia posizione del database degli appunti",
+      "DIGIT_1": "Cifra 1",
+      "DIGIT_2": "Cifra 2",
+      "DIGIT_3": "Cifra 3",
+      "DIGIT_4": "Cifra 4",
+      "DIGIT_5": "Cifra 5",
+      "DIGIT_6": "Cifra 6",
+      "DIGIT_7": "Cifra 7",
+      "DIGIT_8": "Cifra 8",
+      "DIGIT_9": "Cifra 9",
+      "EXIT": "Esci",
+      "HISTORY": "Cronologia",
+      "NUM_1": "Numero 1",
+      "NUM_2": "Numero 2",
+      "NUM_3": "Numero 3",
+      "NUM_4": "Numero 4",
+      "NUM_5": "Numero 5",
+      "NUM_6": "Numero 6",
+      "NUM_7": "Numero 7",
+      "NUM_8": "Numero 8",
+      "NUM_9": "Numero 9",
+      "RECENT_CLIPBOARDS": "Appunti recenti",
+      "SCROLL_TO_TOP": "Scorri fino all'inizio",
+      "SETTINGS": "Impostazioni",
+      "STARRED_CLIPBOARDS": "Stelle appunti",
+      "SYNC_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
+      "TYPE_CLIPBOARD": "Tipo appunti",
+      "VIEW_MORE": "Visualizza altro",
+      "WINDOW_DISPLAY_TOGGLE": "Attiva/disattiva finestra"
+    },
+    "KEYS": {
+      "ALT": "Alt",
+      "CTRL": "Ctrl",
+      "SHIFT": "Maiusc"
+    },
+    "LANGUAGE": {
+      "AR": "Arabo",
+      "BN": "Bengalese",
+      "DE": "Tedesco",
+      "EN": "Inglese",
+      "ES": "Spagnolo",
+      "FR": "Francese",
+      "HI": "Hindi",
+      "IT": "Italiano",
+      "JA": "Giapponese",
+      "KO": "Coreano",
+      "NL": "Olandese",
+      "PL": "Polacco",
+      "PT": "Portoghese",
+      "RU": "Russo",
+      "TH": "Tailandese",
+      "TR": "Turco",
+      "UR": "Italiano:",
+      "VI": "Vietnamita",
+      "ZH": "Mandarino"
+    },
+    "OFFLINE": "Disconnesso",
+    "ONLINE": "In linea",
+    "POSITION": {
+      "BOTTOM_CENTER": "In basso al centro",
+      "BOTTOM_LEFT": "In basso a sinistra",
+      "BOTTOM_RIGHT": "In basso a destra",
+      "CENTER": "Al centro",
+      "CURSOR": "Cursore",
+      "LEFT_CENTER": "In centro a sinistra",
+      "RIGHT_CENTER": "In centro a destra",
+      "TOP_CENTER": "In alto al centro",
+      "TOP_LEFT": "In alto a sinistra",
+      "TOP_RIGHT": "In alto a destra",
+      "TRAY_BOTTOM_CENTER": "Icona sistema in basso al centro",
+      "TRAY_BOTTOM_LEFT": "Icona sistema in basso a sinistra",
+      "TRAY_BOTTOM_RIGHT": "Icona sistema in basso a destra",
+      "TRAY_CENTER": "Icona sistema al centro",
+      "TRAY_LEFT": "Icona sistema a sinistro",
+      "TRAY_RIGHT": "Icona sistema a destra"
+    },
+    "SYNCING": "Sincronizzazione",
+    "UNLOCK_CLIPPY": "Sblocca clippy"
+  },
+  "SETTINGS": {
+    "BACKUP": {
+      "CHANGE_LOCATION": "Cambia posizione",
+      "CONFIG_LOCATION": "Percorso configurazione",
+      "DATABASE_LOCATION": "Percorso database",
+      "OPEN": "Apri",
+      "RESET_LOCATION": "Reimposta posizione",
+      "SYNC": "Sincronizza",
+      "SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
+    },
+    "ENCRYPT": {
+      "CONFIRM_PASSWORD": "Conferma password",
+      "DECRYPT": "Decripta tutti gli appunti",
+      "DECRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti vengono decifrati localmente",
+      "DOWNLOADING_REMOTE_CLIPBOARDS": "{{current}} / {{total}} download appunti remoti",
+      "ENCRYPT": "Cripta tutti gli appunti",
+      "ENCRYPT_DECRYPT": "Cripta/decripta",
+      "ENCRYPTION_PROGRESS_LOCAL": "{{current}} / {{total}} appunti sono criptati localmente",
+      "INFO": "Tutti gli appunti sono criptati, se la password viene persa non è possibile ripristinarli",
+      "PASSWORD": "Password",
+      "SAVE_BEFORE_UNLOCK": "Vuoi salvare gli appunti prima che venga inserito il PIN all'avvio?"
+    },
+    "GENERAL": {
+      "CHANGE_LANGUAGE": "Cambia lingua UI",
+      "CHANGE_WINDOW_POSITION": "Modifica posizione finestra",
+      "HTML_CLIPBOARD_TOOLTIP": "Suggerimenti appunti HTML",
+      "KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
+      "START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",
+      "SWITCH_THEME": "Modifica tema",
+      "SYSTEM": "Sistema",
+      "WINDOW_SCALE": "Scala finestra"
+    },
+    "HISTORY": {
+      "CLEAR_ALL": "Cancella tutto",
+      "CLEAR_FILE": "Elimina file",
+      "CLEAR_HTML": "Cancella HTML",
+      "CLEAR_IMAGE": "Cancella immagine",
+      "CLEAR_RTF": "Cancella RTF",
+      "CLEAR_TEXT": "Testo chiaro",
+      "DATABASE_INFO": "In questo computer sono salvati {{records}} elementi locali ({{size}})",
+      "SQL_DATABASE_INFO": "Info database SQL",
+      "STORAGE_ACTIONS": "Azioni archiviazione"
+    },
+    "HOTKEYS": {
+      "CHANGE_YOUR_HOTKEYS": "Modifica tasti scelta rapida"
+    },
+    "LIMITS": {
+      "CLIPBOARD_LIMITS": "Limiti appunti",
+      "IF_SET_TO_ZERO": "Se impostato a 0 il tipo di appunti verrà completamente ignorato",
+      "MAX_FILE_SIZE": "Dimensione massima file",
+      "MAX_HTML_SIZE": "Dimensione massima HTML",
+      "MAX_IMAGE_SIZE": "Dimensione massima immagine",
+      "MAX_RTF_SIZE": "Dimensione massima RTF",
+      "MAX_TEXT_SIZE": "Dimensione massima testo"
+    },
+    "PATTERNS": {
+      "ACTIONS": "Azioni",
+      "ADD": "Aggiungi",
+      "CHANGE_YOUR_TEXT_MATCHES": "Modifica corrispondenze del testo",
+      "ENABLED": "Abilitata",
+      "INFO": "Rimuovi i dati sensibili dagli appunti, definisci il modello glob o regex e verranno sostituiti tramite sostituzione (lascia vuoto per nessuna azione)",
+      "MATCH_EXPRESSION": "Espressione corrispondenza",
+      "REMOVE": "Rimuovi",
+      "SUBSTITUTION": "Sostituisci"
+    },
+    "SETTINGS": "Impostazioni",
+    "TAB": {
+      "BACKUP": "Backup",
+      "ENCRYPTION": "Criptazione",
+      "GENERAL": "Generale",
+      "HISTORY": "Cronologia",
+      "HOTKEYS": "Tasti scelta rapida",
+      "LIMITS": "Limiti",
+      "PATTERNS": "Modelli"
+    }
+  }
 }

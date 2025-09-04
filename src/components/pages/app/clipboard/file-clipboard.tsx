@@ -16,7 +16,9 @@ interface FileClipboardProps {
 }
 
 export const FileClipboard: Component<FileClipboardProps> = (props) => {
-  const [fromNowString, setFromNowString] = createSignal(dayjs.utc(props.data.clipboard.created_at).fromNow());
+  const [fromNowString, setFromNowString] = createSignal(
+    dayjs.utc(props.data.clipboard.created_at).fromNow(),
+  );
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -38,14 +40,20 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
         acc[type].files.push(file);
         return acc;
       },
-      {} as Record<string, { count: number; size: number; files: ClipboardFileModel[] }>
+      {} as Record<
+        string,
+        { count: number; size: number; files: ClipboardFileModel[] }
+      >,
     );
     return grouped || {};
   };
 
   const getFileListTitle = () => {
     return props.data.files
-      ?.map((file) => `${file.name}${file.extension ? `.${file.extension}` : ""} - ${formatBytes(file.size || 0)}`)
+      ?.map(
+        (file) =>
+          `${file.name}${file.extension ? `.${file.extension}` : ""} - ${formatBytes(file.size || 0)}`,
+      )
       .join("\n");
   };
 

@@ -20,21 +20,34 @@ interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const { t } = useLanguage();
-  const [databaseUrl, setDatabaseUrl] = createResource(() => invokeCommand(InvokeCommand.GetDbPath));
-  const [configUrl] = createResource(() => invokeCommand(InvokeCommand.GetConfigPath));
+  const [databaseUrl, setDatabaseUrl] = createResource(() =>
+    invokeCommand(InvokeCommand.GetDbPath),
+  );
+  const [configUrl] = createResource(() =>
+    invokeCommand(InvokeCommand.GetConfigPath),
+  );
 
   return (
     <>
       <TextBlock Icon={TbDatabaseStar} title={t("SETTINGS.BACKUP.SYNC")}>
         <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
           <div class="flex items-center space-x-2 truncate">
-            <div innerHTML={HotkeyStore.getHotkeyIcon(HotkeyEvent.SyncClipboardHistory)} class="relative" />
-            <h6 class="text-sm">{t("SETTINGS.BACKUP.SYNCHRONIZE_CLIPBOARD_HISTORY")}</h6>
+            <div
+              innerHTML={HotkeyStore.getHotkeyIcon(
+                HotkeyEvent.SyncClipboardHistory,
+              )}
+              class="relative"
+            />
+            <h6 class="text-sm">
+              {t("SETTINGS.BACKUP.SYNCHRONIZE_CLIPBOARD_HISTORY")}
+            </h6>
           </div>
 
           <Toggle
             checked={!!SettingsStore.settings()?.sync}
-            onChange={async () => void (await SettingsStore.syncAuthenticateToggle())}
+            onChange={async () =>
+              void (await SettingsStore.syncAuthenticateToggle())
+            }
           />
         </div>
 
@@ -52,9 +65,12 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               value={SettingsStore.settings()!.sync_limit}
               debounce={1000}
               onInput={async (e) => {
-                const settings = await invokeCommand(InvokeCommand.SyncLimitChange, {
-                  syncLimit: Number(e.target.value),
-                });
+                const settings = await invokeCommand(
+                  InvokeCommand.SyncLimitChange,
+                  {
+                    syncLimit: Number(e.target.value),
+                  },
+                );
                 SettingsStore.setSettings(settings);
               }}
             />
@@ -93,14 +109,21 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
 
             <Button
               label="SETTINGS.BACKUP.OPEN"
-              onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Database })}
+              onClick={() =>
+                invokeCommand(InvokeCommand.OpenFolder, {
+                  location: FolderLocation.Database,
+                })
+              }
               Icon={AiTwotoneFolderOpen}
             />
           </div>
         </div>
       </TextBlock>
 
-      <TextBlock Icon={BsGearWideConnected} title={t("SETTINGS.BACKUP.CONFIG_LOCATION")}>
+      <TextBlock
+        Icon={BsGearWideConnected}
+        title={t("SETTINGS.BACKUP.CONFIG_LOCATION")}
+      >
         <div class="list-disc px-5 pt-2.5 pb-5">
           <div class="relative w-full cursor-pointer">
             <div
@@ -112,7 +135,11 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <Button
               label="SETTINGS.BACKUP.OPEN"
               class="absolute inset-y-0 right-0"
-              onClick={() => invokeCommand(InvokeCommand.OpenFolder, { location: FolderLocation.Config })}
+              onClick={() =>
+                invokeCommand(InvokeCommand.OpenFolder, {
+                  location: FolderLocation.Config,
+                })
+              }
               Icon={AiTwotoneFolderOpen}
             />
           </div>
