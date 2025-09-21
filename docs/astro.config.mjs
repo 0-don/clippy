@@ -8,6 +8,7 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   output: "server",
   site: "https://clippy.coding.global",
+  trailingSlash: "ignore",
   integrations: [
     starlight({
       title: "Clippy Docs",
