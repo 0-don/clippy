@@ -1,16 +1,19 @@
 import { FaRegularImage } from "solid-icons/fa";
 import { FiSearch } from "solid-icons/fi";
+import { ImSpinner2 } from "solid-icons/im";
 import {
   Component,
   createEffect,
   createSignal,
   onCleanup,
   onMount,
+  Show,
 } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
 import { ClipboardStore, initialWhere } from "../../../store/clipboard-store";
 import { HotkeyStore } from "../../../store/hotkey-store";
+import { SettingsStore } from "../../../store/settings-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { useLanguage } from "../../provider/language-provider";
 
@@ -32,6 +35,9 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
     const text = search();
     const img = showImages();
 
+    // Use conditional debounce: 300ms for encrypted search, 0ms for non-encrypted
+    const debounceDelay = SettingsStore.settings()?.encryption ? 300 : 0;
+
     const delayDebounceFn = setTimeout(async () => {
       ClipboardStore.setWhere(() => ({
         ...initialWhere,
@@ -44,7 +50,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
       }));
       const clipboards = await ClipboardStore.getClipboards();
       ClipboardStore.setClipboards(clipboards);
-    }, 0);
+    }, debounceDelay);
 
     onCleanup(() => clearTimeout(delayDebounceFn));
   });
@@ -54,7 +60,12 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
       <div class="flex items-center dark:bg-zinc-800">
         <div class="relative w-full">
           <div class="absolute inset-y-0 left-2 flex items-center">
-            <FiSearch class="opacity-50 dark:text-white" />
+            <Show
+              when={!ClipboardStore.isSearching()}
+              fallback={<ImSpinner2 class="animate-spin opacity-50 dark:text-white" />}
+            >
+              <FiSearch class="opacity-50 dark:text-white" />
+            </Show>
           </div>
           <input
             placeholder={t("CLIPBOARD.SEARCH_ENTRIES")}

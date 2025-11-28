@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.4.5"
+version = "1.4.6"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
