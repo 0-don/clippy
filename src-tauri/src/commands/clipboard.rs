@@ -49,8 +49,19 @@ pub async fn get_clipboards(
             // No cache hit, load and decrypt all clipboards
             let all_clipboards = get_all_clipboards_db().await?;
 
-            // Decrypt all clipboards
-            let decrypted_clipboards: Vec<FullClipboardDto> = all_clipboards
+            // Exclude images from text search (when img filter is NOT explicitly enabled)
+            // This drastically reduces memory usage and improves performance
+            let clipboards_to_search = if img.is_none() || img == Some(false) {
+                all_clipboards
+                    .into_iter()
+                    .filter(|cb| cb.image.is_none())
+                    .collect::<Vec<_>>()
+            } else {
+                all_clipboards
+            };
+
+            // Decrypt all clipboards (excluding images for text search)
+            let decrypted_clipboards: Vec<FullClipboardDto> = clipboards_to_search
                 .into_iter()
                 .map(|clipboard| {
                     if clipboard.clipboard.encrypted {
@@ -67,7 +78,6 @@ pub async fn get_clipboards(
                 })
                 .collect();
 
-            // Cache all decrypted clipboards
             get_cache().insert(CACHE_KEY.to_string(), decrypted_clipboards.clone());
             decrypted_clipboards
         };

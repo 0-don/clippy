@@ -10,6 +10,7 @@ use crate::service::{
 use crate::tao::global::{get_app, get_cache};
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
+use common::constants::CACHE_KEY;
 use common::types::enums::{ClipboardTextType, ClipboardType};
 use common::types::orm_query::FullClipboardDbo;
 use common::types::types::TextMatcher;
@@ -109,8 +110,12 @@ impl ClipboardManagerExt for FullClipboardDbo {
                     .expect("Failed to upsert");
             }
 
-            // Clear cache for encrypted clipboards search
-            get_cache().invalidate_all();
+            if let Some(mut cached) = get_cache().get(CACHE_KEY) {
+                if clipboard.image.is_none() {
+                    cached.insert(0, clipboard.clone());
+                    get_cache().insert(CACHE_KEY.to_string(), cached);
+                }
+            }
 
             new_clipboard_event(clipboard);
         }

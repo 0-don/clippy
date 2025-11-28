@@ -4,10 +4,11 @@ use super::settings::get_global_settings;
 use super::sync::{get_sync_manager, get_sync_provider};
 use crate::prelude::*;
 use crate::tao::connection::db;
-use crate::tao::global::{get_app, get_main_window};
+use crate::tao::global::{get_app, get_cache, get_main_window};
 use crate::utils::providers::uuid_to_datetime;
 use chrono::NaiveDateTime;
 use common::builder::keyword::KeywordBuilder;
+use common::constants::CACHE_KEY;
 use common::io::clipboard::trim_clipboard_data;
 use common::types::enums::{ClipboardTextType, ClipboardType, Language, ListenEvent};
 use common::types::orm_query::{FullClipboardDbo, FullClipboardDto};
@@ -410,6 +411,14 @@ pub async fn delete_clipboards_db(
         .exec(&db)
         .await?;
 
+    // Update cache by removing deleted items instead of clearing everything
+    if result.rows_affected > 0 {
+        if let Some(mut cached) = get_cache().get(CACHE_KEY) {
+            cached.retain(|cb| !ids.contains(&cb.clipboard.id));
+            get_cache().insert(CACHE_KEY.to_string(), cached);
+        }
+    }
+
     // Only spawn deletion task if records were actually deleted
     if result.rows_affected > 0 && settings.sync {
         // Get the actually deleted IDs by querying what remains
@@ -546,6 +555,9 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
             }
         }
     }
+
+    // Clear cache since we deleted clipboards
+    get_cache().invalidate_all();
 
     // Handle remote deletion if sync is enabled
     if settings.sync && !remote_clipboards_to_delete.is_empty() {

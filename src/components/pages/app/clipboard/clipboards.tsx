@@ -1,4 +1,5 @@
 import { FiArrowUp } from "solid-icons/fi";
+import { ImSpinner2 } from "solid-icons/im";
 import { Component, For, Show, createSignal, onMount } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
 import { listenEvent } from "../../../../lib/tauri";
@@ -52,12 +53,21 @@ export const Clipboards: Component = () => {
     <Show
       when={ClipboardStore.clipboards().length}
       fallback={
-        <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
-          <img src={clippy} width="50%" alt="no clipboards" />
-          <h2 class="text-center text-2xl font-medium opacity-50">
-            {t("CLIPBOARD.NO_CLIPBOARDS_YET")}
-          </h2>
-        </div>
+        <Show
+          when={!ClipboardStore.isSearching()}
+          fallback={
+            <div class="flex h-screen w-full items-center justify-center">
+              <ImSpinner2 class="animate-spin text-4xl opacity-30 dark:text-white" />
+            </div>
+          }
+        >
+          <div class="flex h-screen w-full flex-col items-center justify-center space-y-3 opacity-30">
+            <img src={clippy} width="50%" alt="no clipboards" />
+            <h2 class="text-center text-2xl font-medium opacity-50">
+              {t("CLIPBOARD.NO_CLIPBOARDS_YET")}
+            </h2>
+          </div>
+        </Show>
       }
     >
       <div

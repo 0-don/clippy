@@ -2,6 +2,7 @@ import { createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
 import { ClipboardWhere, ClipboardWithRelations, Progress } from "../types";
 import { InvokeCommand } from "../types/tauri-invoke";
+import { AppStore } from "./app-store";
 
 export const initialWhere: ClipboardWhere = {
   cursor: undefined,
@@ -23,11 +24,17 @@ function createClipboardStore() {
   const [hasMore, setHasMore] = createSignal(true);
   const resetWhere = () => setWhere(initialWhere);
   const [selectedIndex, setSelectedIndex] = createSignal(-1);
+  const [isSearching, setIsSearching] = createSignal(false);
 
   const getClipboards = async () => {
-    const response = await invokeCommand(InvokeCommand.GetClipboards, where());
-    setHasMore(response.has_more);
-    return response.clipboards;
+    setIsSearching(true);
+    try {
+      const response = await invokeCommand(InvokeCommand.GetClipboards, where());
+      setHasMore(response.has_more);
+      return response.clipboards;
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const newClipboard = (clipboard: ClipboardWithRelations) => {
@@ -48,6 +55,12 @@ function createClipboardStore() {
   };
 
   const init = async () => {
+    const currentTab = AppStore.getCurrentTab();
+
+    if (currentTab?.name !== "MAIN.HOTKEY.RECENT_CLIPBOARDS") {
+      return;
+    }
+
     setWhere(initialWhere);
     const clipboards = await getClipboards();
     setClipboards(clipboards);
@@ -128,6 +141,8 @@ function createClipboardStore() {
     setSelectedIndex,
     clipboardSyncProgress,
     setClipboardSyncProgress,
+    isSearching,
+    setIsSearching,
   };
 }
 
