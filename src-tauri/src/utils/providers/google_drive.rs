@@ -26,10 +26,13 @@ use http_body_util::BodyExt;
 use migration::async_trait;
 use sea_orm::prelude::Uuid;
 use serde_json::Value;
-use std::{collections::HashMap, future::Future, io::Cursor, pin::Pin};
+use std::{collections::HashMap, future::Future, io::Cursor, pin::Pin, time::Duration};
 use tauri::{Emitter, EventTarget, Manager};
 use tauri_plugin_clipboard::Clipboard;
 use tauri_plugin_opener::OpenerExt;
+
+const AUTH_RETRY_INTERVAL_SECS: u64 = 60;
+const AUTH_MAX_RETRIES: u32 = 5;
 
 pub struct BrowserUrlOpenFlowDelegate;
 
@@ -56,10 +59,25 @@ impl InstalledFlowDelegate for BrowserUrlOpenFlowDelegate {
 
 pub struct GoogleDriveProviderImpl(GoogleDriveProvider);
 
-impl GoogleDriveProviderImpl {
-    pub async fn new() -> Result<Self, CommandError> {
-        let config = get_app().config();
+/// Silent delegate that fails without opening browser - used during retries
+pub struct SilentFlowDelegate;
 
+#[async_trait::async_trait]
+impl InstalledFlowDelegate for SilentFlowDelegate {
+    fn present_user_url<'a>(
+        &'a self,
+        _url: &'a str,
+        _need_code: bool,
+    ) -> Pin<Box<dyn Future<Output = Result<String, String>> + Send + 'a>> {
+        Box::pin(async move { Err("No internet".to_string()) })
+    }
+}
+
+impl GoogleDriveProviderImpl {
+    async fn build(
+        delegate: Box<dyn InstalledFlowDelegate + Send + Sync>,
+    ) -> Result<Self, CommandError> {
+        let config = get_app().config();
         let (client_id, client_secret) = match (
             std::env::var("TAURI_GOOGLE_CLIENT_ID"),
             std::env::var("TAURI_GOOGLE_CLIENT_SECRET"),
@@ -72,7 +90,6 @@ impl GoogleDriveProviderImpl {
                     .get("oauth")
                     .and_then(|o| o.get("google"))
                     .ok_or_else(|| CommandError::new("Missing Google OAuth configuration"))?;
-
                 (
                     plugins
                         .get("clientId")
@@ -97,12 +114,11 @@ impl GoogleDriveProviderImpl {
         };
 
         let token_path = std::path::Path::new(&get_data_path().config_path).join(TOKEN_NAME);
-
         let auth = yup_oauth2::InstalledFlowAuthenticator::builder(
             secret,
             yup_oauth2::InstalledFlowReturnMethod::HTTPRedirect,
         )
-        .flow_delegate(Box::new(BrowserUrlOpenFlowDelegate))
+        .flow_delegate(delegate)
         .persist_tokens_to_disk(token_path)
         .build()
         .await?;
@@ -117,20 +133,39 @@ impl GoogleDriveProviderImpl {
                         .build(),
                 );
 
-        let provider = GoogleDriveProvider {
+        Ok(Self(GoogleDriveProvider {
             hub: DriveHub::new(client, auth),
-        };
+        }))
+    }
 
-        let impl_provider = Self(provider); // Changed: Use tuple struct initialization
+    fn has_token() -> bool {
+        std::path::Path::new(&get_data_path().config_path)
+            .join(TOKEN_NAME)
+            .exists()
+    }
 
-        if impl_provider.is_authenticated().await {
-            printlog!("authenticated with Google Drive");
-            update_settings_synchronize_db(true)
-                .await
-                .expect("Failed to update settings");
+    pub async fn new() -> Result<Self, CommandError> {
+        // If token exists, retry silently before opening browser
+        if Self::has_token() {
+            for attempt in 1..=AUTH_MAX_RETRIES {
+                let provider = Self::build(Box::new(SilentFlowDelegate)).await?;
+                if provider.is_authenticated().await {
+                    printlog!("authenticated with Google Drive");
+                    update_settings_synchronize_db(true).await.ok();
+                    return Ok(provider);
+                }
+                printlog!("auth attempt {}/{} failed, retrying in {}s", attempt, AUTH_MAX_RETRIES, AUTH_RETRY_INTERVAL_SECS);
+                tokio::time::sleep(Duration::from_secs(AUTH_RETRY_INTERVAL_SECS)).await;
+            }
+            printlog!("all retries failed, opening browser");
         }
 
-        Ok(impl_provider)
+        let provider = Self::build(Box::new(BrowserUrlOpenFlowDelegate)).await?;
+        if provider.is_authenticated().await {
+            printlog!("authenticated with Google Drive");
+            update_settings_synchronize_db(true).await.ok();
+        }
+        Ok(provider)
     }
 
     async fn fetch_all_clipboard_files(&self) -> Result<Vec<File>, Box<dyn std::error::Error>> {
