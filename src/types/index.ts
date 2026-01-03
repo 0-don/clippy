@@ -141,6 +141,7 @@ export type Settings = {
   max_text_size: number;
   max_rtf_size: number;
   max_html_size: number;
+  suppress_hotkey_on_fullscreen: boolean;
 };
 
 export type TextMatcher = {

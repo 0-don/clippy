@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML-Zwischenablage-Tooltip",
       "KEYBOARD_SHORTCUT": "Tastenkombination",
       "START_CLIPPY_ON_STARTUP": "Starten Sie Clippy beim Systemstart",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Hotkey-Unterdrückung",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Unterdrückt globale Hotkeys, wenn eine andere Anwendung im Vollbildmodus ist",
       "SWITCH_THEME": "Thema wechseln",
       "SYSTEM": "System",
       "WINDOW_SCALE": "Fenstermaßstab"

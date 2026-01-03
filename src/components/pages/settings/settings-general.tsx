@@ -3,7 +3,7 @@ import { FiMoon } from "solid-icons/fi";
 import { HiOutlineWindow, HiSolidCog8Tooth } from "solid-icons/hi";
 import { IoLanguageOutline } from "solid-icons/io";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
-import { TbTooltip } from "solid-icons/tb";
+import { TbMaximize, TbTooltip } from "solid-icons/tb";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
 import { msg } from "../../../lib/i18n";
@@ -89,6 +89,31 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 SettingsStore.updateSettings({
                   ...SettingsStore.settings()!,
                   tooltip,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+          <div class="flex flex-col truncate">
+            <div class="flex items-center space-x-2">
+              <TbMaximize />
+              <h6 class="text-sm">
+                {t("SETTINGS.GENERAL.SUPPRESS_HOTKEY_ON_FULLSCREEN")}
+              </h6>
+            </div>
+            <p class="ml-6 text-xs text-zinc-500 dark:text-zinc-400">
+              {t("SETTINGS.GENERAL.SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO")}
+            </p>
+          </div>
+          <div>
+            <Toggle
+              checked={SettingsStore.settings()?.suppress_hotkey_on_fullscreen}
+              onChange={async (suppress_hotkey_on_fullscreen: boolean) =>
+                SettingsStore.updateSettings({
+                  ...SettingsStore.settings()!,
+                  suppress_hotkey_on_fullscreen,
                 })
               }
             />

@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "Información sobre herramientas del portapapeles HTML",
       "KEYBOARD_SHORTCUT": "Atajo de teclado",
       "START_CLIPPY_ON_STARTUP": "Iniciar Clippy al iniciar el sistema",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Supresión de teclas de acceso rápido",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Suprime las teclas de acceso rápido globales cuando otra aplicación está en modo de pantalla completa",
       "SWITCH_THEME": "Cambiar Tema",
       "SYSTEM": "Sistema",
       "WINDOW_SCALE": "Escala de ventana"

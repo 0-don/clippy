@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "Подсказка буфера обмена HTML",
       "KEYBOARD_SHORTCUT": "Сочетание клавиш",
       "START_CLIPPY_ON_STARTUP": "Запустить Clippy при запуске системы",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Подавление горячих клавиш",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Подавляет глобальные горячие клавиши, когда другое приложение в полноэкранном режиме",
       "SWITCH_THEME": "Сменить тему",
       "SYSTEM": "Система",
       "WINDOW_SCALE": "Масштаб окна"

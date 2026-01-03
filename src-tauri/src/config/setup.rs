@@ -11,7 +11,7 @@ use crate::{
     tao::{config::setup_config, tao_constants::setup_globals},
 };
 
-pub fn setup(app: &mut tauri::App) -> Result<(), Box<(dyn std::error::Error + 'static)>> {
+pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
     setup_globals(app);
     setup_config();
 
