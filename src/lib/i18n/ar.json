@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "تلميحات حول حافظة HTML",
       "KEYBOARD_SHORTCUT": "اختصار لوحة المفاتيح",
       "START_CLIPPY_ON_STARTUP": "بدء تشغيل Clippy عند بدء تشغيل النظام",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "كتم مفاتيح الاختصار",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "يكتم مفاتيح الاختصار العامة عندما يكون تطبيق آخر في وضع ملء الشاشة",
       "SWITCH_THEME": "تبديل الثيم",
       "SYSTEM": "نظام",
       "WINDOW_SCALE": "مقياس النافذة"

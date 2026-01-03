@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "Info-bulle du presse-papiers HTML",
       "KEYBOARD_SHORTCUT": "Raccourci clavier",
       "START_CLIPPY_ON_STARTUP": "Démarrer Clippy au démarrage du système",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Suppression des raccourcis clavier",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Supprime les raccourcis clavier globaux lorsqu'une autre application est en mode plein écran",
       "SWITCH_THEME": "Changer de thème",
       "SYSTEM": "Système",
       "WINDOW_SCALE": "Échelle de fenêtre"

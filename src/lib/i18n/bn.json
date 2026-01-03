@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "এইচটিএমএল ক্লিপবোর্ড টুলটিপ",
       "KEYBOARD_SHORTCUT": "কীবোর্ড শর্টকাট",
       "START_CLIPPY_ON_STARTUP": "সিস্টেম স্টার্টআপে Clippy শুরু করুন",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "হটকি দমন",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "অন্য অ্যাপ্লিকেশন পূর্ণস্ক্রীন মোডে থাকলে গ্লোবাল হটকিগুলি দমন করে",
       "SWITCH_THEME": "থিম পরিবর্তন করুন",
       "SYSTEM": "সিস্টেম",
       "WINDOW_SCALE": "উইন্ডো স্কেল"

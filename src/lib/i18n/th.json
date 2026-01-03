@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "คำแนะนำคลิปบอร์ด HTML",
       "KEYBOARD_SHORTCUT": "แป้นพิมพ์ลัด",
       "START_CLIPPY_ON_STARTUP": "เริ่ม Clippy เมื่อระบบเริ่มต้น",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "การระงับปุ่มลัด",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "ระงับปุ่มลัดทั่วไปเมื่อแอปพลิเคชันอื่นอยู่ในโหมดเต็มหน้าจอ",
       "SWITCH_THEME": "เปลี่ยนธีม",
       "SYSTEM": "ระบบ",
       "WINDOW_SCALE": "เครื่องชั่งหน้าต่าง"

@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML کلپ بورڈ ٹول ٹپ",
       "KEYBOARD_SHORTCUT": "کی بورڈ شارٹ کٹ",
       "START_CLIPPY_ON_STARTUP": "سسٹم اسٹارٹ اپ پر کلیپی شروع کریں۔",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "ہاٹ کی دبانا",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "جب کوئی دوسری ایپلی کیشن فل سکرین موڈ میں ہو تو عالمی ہاٹ کیز کو دباتا ہے",
       "SWITCH_THEME": "تھیم سوئچ کریں۔",
       "SYSTEM": "سسٹم",
       "WINDOW_SCALE": "کھڑکی کا پیمانہ"
