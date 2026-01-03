@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "Podpowiedź schowka HTML",
       "KEYBOARD_SHORTCUT": "Skrót klawiaturowy",
       "START_CLIPPY_ON_STARTUP": "Uruchom Clippy przy starcie systemu",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Tłumienie skrótów klawiszowych",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Tłumi globalne skróty klawiszowe, gdy inna aplikacja jest w trybie pełnoekranowym",
       "SWITCH_THEME": "Zmień motyw",
       "SYSTEM": "System",
       "WINDOW_SCALE": "Skala okna"

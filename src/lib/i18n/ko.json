@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML 클립보드 툴팁",
       "KEYBOARD_SHORTCUT": "단축키",
       "START_CLIPPY_ON_STARTUP": "시스템 시작 시 Clippy 시작",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "단축키 억제",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "다른 애플리케이션이 전체 화면 모드일 때 전역 단축키를 억제합니다",
       "SWITCH_THEME": "테마 변경",
       "SYSTEM": "체계",
       "WINDOW_SCALE": "창 크기"

@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML-klembord-tooltip",
       "KEYBOARD_SHORTCUT": "Sneltoets",
       "START_CLIPPY_ON_STARTUP": "Start Clippy bij het opstarten van het systeem",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Sneltoets onderdrukking",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Onderdrukt globale sneltoetsen wanneer een andere applicatie op volledig scherm staat",
       "SWITCH_THEME": "Thema wisselen",
       "SYSTEM": "SYSTEEM",
       "WINDOW_SCALE": "Venster schaal"

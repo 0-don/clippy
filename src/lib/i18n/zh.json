@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML 剪贴板工具提示",
       "KEYBOARD_SHORTCUT": "键盘快捷键",
       "START_CLIPPY_ON_STARTUP": "在系统启动时启动 Clippy",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "热键抑制",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "当其他应用程序处于全屏模式时抑制全局热键",
       "SWITCH_THEME": "切换主题",
       "SYSTEM": "系统",
       "WINDOW_SCALE": "窗口比例"

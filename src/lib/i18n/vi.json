@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "Công cụ chú giải clipboard HTML",
       "KEYBOARD_SHORTCUT": "Phím tắt",
       "START_CLIPPY_ON_STARTUP": "Khởi động Clippy khi khởi động hệ thống",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Chặn phím tắt",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Chặn các phím tắt toàn cục khi ứng dụng khác đang ở chế độ toàn màn hình",
       "SWITCH_THEME": "Chuyển đổi chủ đề",
       "SYSTEM": "Hệ thống",
       "WINDOW_SCALE": "Tỷ lệ cửa sổ"
