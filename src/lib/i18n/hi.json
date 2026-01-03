@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML क्लिपबोर्ड टूलटिप",
       "KEYBOARD_SHORTCUT": "कीबोर्ड शॉर्टकट",
       "START_CLIPPY_ON_STARTUP": "सिस्टम स्टार्टअप पर क्लिप्पी प्रारंभ करें",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "हॉटकी दमन",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "जब कोई अन्य एप्लिकेशन पूर्णस्क्रीन मोड में हो तो वैश्विक हॉटकी को दबाता है",
       "SWITCH_THEME": "थीम बदलें",
       "SYSTEM": "प्रणाली",
       "WINDOW_SCALE": "विंडो स्केल"

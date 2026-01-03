@@ -1,11 +1,13 @@
 use crate::commands::sync::sync_authenticate_toggle;
 use crate::prelude::*;
 use crate::service::clipboard::init_clipboards;
+use crate::service::settings::get_global_settings;
 use crate::service::window::open_window;
 use crate::tao::global::{
     get_app, get_global_hotkey_store, get_hotkey_running, get_hotkey_stop_tx, get_main_window,
     get_window_hotkey_store,
 };
+use crate::utils::fullscreen_detector::is_other_window_fullscreen;
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
@@ -49,7 +51,14 @@ pub fn setup_hotkey_listener() {
         loop {
             if let Ok(event) = receiver.try_recv() {
                 if event.state == HotKeyState::Pressed {
-                    // Check both global and window hotkey stores
+                    let settings = get_global_settings();
+                    if settings.suppress_hotkey_on_fullscreen && is_other_window_fullscreen() {
+                        if get_main_window().is_visible().unwrap_or(false) {
+                            get_main_window().hide().expect("Failed to hide window");
+                        }
+                        continue;
+                    }
+
                     let hotkey: Option<Key> = get_global_hotkey_store()
                         .get(&event.id)
                         .cloned()

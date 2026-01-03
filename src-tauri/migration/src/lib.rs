@@ -9,6 +9,7 @@ mod m000006_create_clipboard_file;
 mod m000007_create_settings;
 mod m000008_create_hotkey;
 mod m000009_seed;
+mod m000010_add_suppress_hotkey_on_fullscreen;
 
 pub struct Migrator;
 
@@ -25,6 +26,7 @@ impl MigratorTrait for Migrator {
             Box::new(m000007_create_settings::Migration),
             Box::new(m000008_create_hotkey::Migration),
             Box::new(m000009_seed::Migration),
+            Box::new(m000010_add_suppress_hotkey_on_fullscreen::Migration),
         ]
     }
 }

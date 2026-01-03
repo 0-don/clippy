@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML クリップボード ツールチップ",
       "KEYBOARD_SHORTCUT": "キーボードショートカット",
       "START_CLIPPY_ON_STARTUP": "システム起動時にClippyを起動する",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "ホットキー抑制",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "別のアプリケーションがフルスクリーンモードの場合、グローバルホットキーを抑制します",
       "SWITCH_THEME": "テーマを切り替える",
       "SYSTEM": "システム",
       "WINDOW_SCALE": "ウィンドウスケール"

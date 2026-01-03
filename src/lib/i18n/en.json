@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML clipboard tooltip",
       "KEYBOARD_SHORTCUT": "Keyboard shortcut",
       "START_CLIPPY_ON_STARTUP": "Start Clippy on system startup",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Hotkey Suppression",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Suppresses global hotkeys when another application is in fullscreen mode",
       "SWITCH_THEME": "Switch Theme",
       "SYSTEM": "System",
       "WINDOW_SCALE": "Window scale"

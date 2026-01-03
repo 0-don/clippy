@@ -1,7 +1,7 @@
 use common::io::keyboard::get_keyboard_layout;
 use common::types::enums::HotkeyEvent;
 use common::types::types::KeyboardLayout;
-use entity::{hotkey, settings};
+use entity::hotkey;
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::sea_orm::entity::*;
 
@@ -13,10 +13,12 @@ impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         let db = manager.get_connection();
 
-        settings::ActiveModel {
-            ..Default::default()
-        }
-        .insert(db)
+        // Use raw SQL to insert settings to avoid dependency on the current entity definition
+        // which might include columns that don't exist yet at this migration step.
+        db.execute(sea_orm::Statement::from_string(
+            manager.get_database_backend(),
+            "INSERT INTO settings DEFAULT VALUES".to_owned(),
+        ))
         .await?;
 
         let key = match get_keyboard_layout() {

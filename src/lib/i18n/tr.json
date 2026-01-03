@@ -134,6 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "HTML panosu araç ipucu",
       "KEYBOARD_SHORTCUT": "Klavye kısayolu",
       "START_CLIPPY_ON_STARTUP": "Sistem başlangıcında Clippy'yi başlatın",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Kısayol Tuşu Bastırma",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Başka bir uygulama tam ekran modundayken genel kısayol tuşlarını bastırır",
       "SWITCH_THEME": "Tema Değiştir",
       "SYSTEM": "Sistem",
       "WINDOW_SCALE": "Pencere ölçeği"
