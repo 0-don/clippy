@@ -134,8 +134,8 @@
       "HTML_CLIPBOARD_TOOLTIP": "Suggerimenti appunti HTML",
       "KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
       "START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",
-      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Soppressione tasti di scelta rapida",
-      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Sopprime i tasti di scelta rapida globali quando un'altra applicazione è in modalità schermo intero",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN": "Disabilita tasti scelta rapida",
+      "SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO": "Disabilita tasti scelta rapida globali quando un'altra applicazione è in modalità schermo intero",
       "SWITCH_THEME": "Modifica tema",
       "SYSTEM": "Sistema",
       "WINDOW_SCALE": "Scala finestra"
