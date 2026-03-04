@@ -6,9 +6,16 @@ services:
       dockerfile: Dockerfile
       target: prod
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4321/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - proxy
     labels:
+      - "autoheal=true"
       - "traefik.enable=true"
       - "traefik.http.routers.clippy-docs.rule=Host(`clippy.coding.global`) || Host(`www.clippy.coding.global`)"
       - "traefik.http.routers.clippy-docs.entrypoints=websecure"
