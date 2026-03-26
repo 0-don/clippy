@@ -114,9 +114,20 @@ impl GoogleDriveProviderImpl {
         };
 
         let token_path = std::path::Path::new(&get_data_path().config_path).join(TOKEN_NAME);
-        let auth = yup_oauth2::InstalledFlowAuthenticator::builder(
+
+        let connector = hyper_rustls::HttpsConnectorBuilder::new()
+            .with_native_roots()?
+            .https_or_http()
+            .enable_http2()
+            .build();
+
+        let executor = hyper_util::rt::TokioExecutor::new();
+        let auth = yup_oauth2::InstalledFlowAuthenticator::with_client(
             secret,
             yup_oauth2::InstalledFlowReturnMethod::HTTPRedirect,
+            yup_oauth2::client::CustomHyperClientBuilder::from(
+                hyper_util::client::legacy::Client::builder(executor).build(connector),
+            ),
         )
         .flow_delegate(delegate)
         .persist_tokens_to_disk(token_path)
@@ -129,7 +140,7 @@ impl GoogleDriveProviderImpl {
                     hyper_rustls::HttpsConnectorBuilder::new()
                         .with_native_roots()?
                         .https_or_http()
-                        .enable_http1()
+                        .enable_http2()
                         .build(),
                 );
 

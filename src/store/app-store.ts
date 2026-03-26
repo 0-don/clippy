@@ -1,6 +1,6 @@
 import { BsStarFill } from "solid-icons/bs";
 import { CgMore } from "solid-icons/cg";
-import { TbSearch } from "solid-icons/tb";
+import { TbOutlineSearch } from "solid-icons/tb";
 import { VsHistory } from "solid-icons/vs";
 import { createResource, createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
@@ -36,7 +36,7 @@ function createAppStore() {
     },
     {
       name: TAB_NAMES[2],
-      Icon: TbSearch,
+      Icon: TbOutlineSearch,
       current: false,
       id: HotkeyEvent.History,
     },
