@@ -11,7 +11,6 @@ concurrency:
   cancel-in-progress: true
 env:
   ARCH: x86_64
-  DEPENDENCIES_ARCH: "'libappindicator-gtk3' 'webkit2gtk-4.1' 'gtk3' 'xdotool'"
 jobs:
   setup:
     runs-on: ubuntu-22.04
@@ -98,32 +97,18 @@ jobs:
           releaseDraft: false
           prerelease: false
 
-      - name: copy deb package && create PKGBUILD file (ubuntu only)
+      - name: generate PKGBUILD from template (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           mkdir -p ${{ needs.setup.outputs.name_bin }}
-          cp -fr ${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} 
-          cat <<EOF > ./${{ needs.setup.outputs.name_bin }}/PKGBUILD
-            pkgname=${{ needs.setup.outputs.name_bin }}
-            pkgver=${{ needs.setup.outputs.version }}
-            md5sums=('$(md5sum ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }}  | awk '{print $1}')')
-            pkgrel=1
-            depends=(${{ env.DEPENDENCIES_ARCH }})
-            pkgdesc='${{ needs.setup.outputs.description }}'
-            arch=('${{ env.ARCH }}')
-            url="https://github.com/${{ github.repository }}"
-            license=('${{ needs.setup.outputs.license }}')
-            source=("\$url/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.deb_pkg_renamed }}")
-
-            build() {
-                rm control.tar.gz
-                tar xvf data.tar.gz
-            }
-
-            package() {
-                cp -fr usr/ \${pkgdir}
-            }
-          EOF
+          cp -fr ${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }}
+          DEB_SHA256=$(sha256sum ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} | awk '{print $1}')
+          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
+              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
+              -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
+              -e "s|{{LICENSE}}|${{ needs.setup.outputs.license }}|g" \
+              -e "s|{{SHA256}}|${DEB_SHA256}|g" \
+              .github/aur/PKGBUILD > ${{ needs.setup.outputs.name_bin }}/PKGBUILD
           cat ${{ needs.setup.outputs.name_bin }}/PKGBUILD
 
       - name: create arch package (ubuntu only)

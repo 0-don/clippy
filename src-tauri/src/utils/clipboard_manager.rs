@@ -127,7 +127,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
             let curr_types = ClipboardType::from_json_value(&self.clipboard_model.types.as_ref());
 
             match (last_types, curr_types) {
-                (Some(lt), Some(ct)) if lt.len() == ct.len() => {
+                (Some(lt), Some(ct)) if lt == ct => {
                     for t in ct {
                         match t {
                             ClipboardType::Text => {
