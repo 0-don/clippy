@@ -1,0 +1,37 @@
+import { readFileSync, writeFileSync } from "fs";
+import { join, resolve } from "path";
+
+const root = resolve();
+const version = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version;
+
+// Cargo.toml
+const cargoPath = join(root, "src-tauri/Cargo.toml");
+let cargo = readFileSync(cargoPath, "utf8");
+cargo = cargo.replace(/^(version\s*=\s*)"[^"]*"/m, `$1"${version}"`);
+writeFileSync(cargoPath, cargo);
+
+// tauri.conf.json
+const tauriPath = join(root, "src-tauri/tauri.conf.json");
+const tauri = JSON.parse(readFileSync(tauriPath, "utf8"));
+tauri.version = version;
+writeFileSync(tauriPath, JSON.stringify(tauri, null, 2) + "\n");
+
+// README.md - update download link versions
+const readmePath = join(root, "README.md");
+let readme = readFileSync(readmePath, "utf8");
+readme = readme.replace(
+  /\/releases\/download\/v[\d.]+\/clippy[_-][\d.]+/g,
+  (match) => match.replace(/[\d]+\.[\d]+\.[\d]+/g, version)
+);
+writeFileSync(readmePath, readme);
+
+// Cargo.lock - update the clippy package version
+const lockPath = join(root, "src-tauri/Cargo.lock");
+let lock = readFileSync(lockPath, "utf8");
+lock = lock.replace(
+  /(name = "clippy"\nversion = )"[^"]*"/,
+  `$1"${version}"`
+);
+writeFileSync(lockPath, lock);
+
+console.log(`Synced version ${version} to Cargo.toml, tauri.conf.json, Cargo.lock, README.md`);
