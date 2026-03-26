@@ -60,6 +60,11 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
       <ClipboardHeader {...props} Icon={BsImages} />
 
       <div class="min-w-0 flex-1">
+        {props.data.clipboard.name && (
+          <p class="w-[calc(100vw-6.5rem)] truncate text-left text-sm font-medium">
+            {props.data.clipboard.name}
+          </p>
+        )}
         {props.data.image?.thumbnail && (
           <img
             src={`data:image/*;base64,${props.data.image.thumbnail}`}

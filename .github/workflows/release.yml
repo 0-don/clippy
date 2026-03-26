@@ -16,14 +16,14 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       name: ${{ steps.get-package.outputs.name }}
-      name_bin: ${{ steps.get-package.outputs.name }}-bin
+      name_bin: ${{ steps.get-package.outputs.name }}-rs-bin
       version: ${{ steps.get-package.outputs.version }}
       description: ${{ steps.get-package.outputs.description }}
       license: ${{ steps.get-package.outputs.license }}
       deb_pkg_name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb
       deb_pkg_path: ./src-tauri/target/release/bundle/deb/
       deb_pkg_renamed: ${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-${{ env.ARCH }}.deb
-      arch_pkg_name: ${{ steps.get-package.outputs.name }}-bin-${{ steps.get-package.outputs.version }}-1-${{ env.ARCH }}.pkg.tar.zst
+      arch_pkg_name: ${{ steps.get-package.outputs.name }}-rs-bin-${{ steps.get-package.outputs.version }}-1-${{ env.ARCH }}.pkg.tar.zst
       tag_name: v${{ steps.get-package.outputs.version }}
     steps:
       - uses: actions/checkout@v4

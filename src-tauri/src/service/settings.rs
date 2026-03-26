@@ -2,6 +2,7 @@ use super::cipher::{init_password_lock_event, is_encryption_key_set};
 use super::clipboard::get_last_clipboard_db;
 use super::decrypt::decrypt_all_clipboards;
 use super::sync::upsert_settings_sync;
+use crate::config::tray::refresh_tray_menu;
 use crate::prelude::*;
 use crate::service::window::get_monitor_scale_factor;
 use crate::tao::connection::db;
@@ -57,6 +58,8 @@ pub async fn update_settings_db(
         .await?;
 
     set_global_settings(settings.clone());
+
+    refresh_tray_menu();
 
     upsert_settings_sync(&settings, false).await?;
 

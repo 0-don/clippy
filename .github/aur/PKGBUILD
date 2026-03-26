@@ -1,5 +1,5 @@
 # Maintainer: 0-don <https://github.com/0-don>
-pkgname={{NAME}}-bin
+pkgname={{NAME}}-rs-bin
 pkgver={{VERSION}}
 pkgrel=1
 pkgdesc="{{DESCRIPTION}}"
@@ -7,8 +7,8 @@ arch=('x86_64')
 url="https://github.com/0-don/{{NAME}}"
 license=('{{LICENSE}}')
 depends=('libappindicator-gtk3' 'webkit2gtk-4.1' 'gtk3' 'xdotool')
-provides=('{{NAME}}')
-conflicts=('{{NAME}}')
+provides=('{{NAME}}-rs')
+conflicts=('{{NAME}}-rs')
 source=("${pkgname}-${pkgver}.deb::${url}/releases/download/v${pkgver}/{{NAME}}_${pkgver}_amd64.deb")
 sha256sums=('{{SHA256}}')
 

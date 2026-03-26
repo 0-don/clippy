@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Удалить буфер обмена",
     "NO_CLIPBOARDS_YET": "Пока нет буферов обмена...",
     "SEARCH_ENTRIES": "Поиск записей",
+    "EDIT_NAME": "Изменить название",
+    "ENTER_NAME": "Введите название",
     "STAR_FAVORITE": "Звездный фаворит"
   },
   "MAIN": {

@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Usuń schowek",
     "NO_CLIPBOARDS_YET": "Jeszcze nie ma schowków...",
     "SEARCH_ENTRIES": "Wyszukaj wpisy",
+    "EDIT_NAME": "Edytuj nazwę",
+    "ENTER_NAME": "Wpisz nazwę",
     "STAR_FAVORITE": "Ulubieniec gwiazd"
   },
   "MAIN": {
