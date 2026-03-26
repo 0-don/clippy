@@ -15,7 +15,8 @@
     "gen": "sea-orm-cli migrate refresh -v -d src-tauri/migration && sea-orm-cli generate entity -l -o src-tauri/entity/src --model-extra-derives Default --expanded-format --with-serde both",
     "icon": "tauri icon",
     "format": "prettier --write .",
-    "version:sync": "node .github/sync-version.js"
+    "version:sync": "node .github/sync-version.js",
+    "postinstall": "husky"
   },
   "dependencies": {
     "@corvu/tooltip": "0.2.2",
@@ -29,6 +30,7 @@
     "@tailwindcss/vite": "4.2.2",
     "@tauri-apps/cli": "2.10.1",
     "cross-env": "10.1.0",
+    "husky": "9.1.7",
     "prettier": "3.8.1",
     "prettier-plugin-tailwindcss": "0.7.2",
     "tailwindcss": "4.2.2",
