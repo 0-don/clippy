@@ -27,6 +27,94 @@ impl Language {
     }
 }
 
+pub struct TrayLabels {
+    pub open: &'static str,
+    pub quit: &'static str,
+}
+
+impl Language {
+    pub fn tray_labels(&self) -> TrayLabels {
+        match self {
+            Language::English => TrayLabels {
+                open: "Open",
+                quit: "Quit",
+            },
+            Language::Mandarin => TrayLabels {
+                open: "打开",
+                quit: "退出",
+            },
+            Language::Hindi => TrayLabels {
+                open: "खोलें",
+                quit: "बाहर निकलें",
+            },
+            Language::Spanish => TrayLabels {
+                open: "Abrir",
+                quit: "Salir",
+            },
+            Language::French => TrayLabels {
+                open: "Ouvrir",
+                quit: "Quitter",
+            },
+            Language::Arabic => TrayLabels {
+                open: "فتح",
+                quit: "إنهاء",
+            },
+            Language::Bengali => TrayLabels {
+                open: "খুলুন",
+                quit: "প্রস্থান",
+            },
+            Language::Portuguese => TrayLabels {
+                open: "Abrir",
+                quit: "Sair",
+            },
+            Language::Russian => TrayLabels {
+                open: "Открыть",
+                quit: "Выход",
+            },
+            Language::Urdu => TrayLabels {
+                open: "کھولیں",
+                quit: "باہر نکلیں",
+            },
+            Language::Japanese => TrayLabels {
+                open: "開く",
+                quit: "終了",
+            },
+            Language::German => TrayLabels {
+                open: "Öffnen",
+                quit: "Beenden",
+            },
+            Language::Korean => TrayLabels {
+                open: "열기",
+                quit: "종료",
+            },
+            Language::Vietnamese => TrayLabels {
+                open: "Mở",
+                quit: "Thoát",
+            },
+            Language::Turkish => TrayLabels {
+                open: "Aç",
+                quit: "Çıkış",
+            },
+            Language::Italian => TrayLabels {
+                open: "Apri",
+                quit: "Esci",
+            },
+            Language::Thai => TrayLabels {
+                open: "เปิด",
+                quit: "ออก",
+            },
+            Language::Polish => TrayLabels {
+                open: "Otwórz",
+                quit: "Zamknij",
+            },
+            Language::Dutch => TrayLabels {
+                open: "Openen",
+                quit: "Afsluiten",
+            },
+        }
+    }
+}
+
 pub fn get_system_language() -> Language {
     if cfg!(target_os = "linux") {
         std::env::var("LANG")

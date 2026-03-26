@@ -18,6 +18,7 @@ export enum InvokeCommand {
   GetClipboards = "get_clipboards",
   DeleteClipboard = "delete_clipboard",
   StarClipboard = "star_clipboard",
+  RenameClipboard = "rename_clipboard",
   CopyClipboard = "copy_clipboard",
   ClearClipboards = "clear_clipboards",
   SaveClipboardImage = "save_clipboard_image",
@@ -69,6 +70,10 @@ export interface TauriInvokeCommands {
   };
   [InvokeCommand.StarClipboard]: {
     args: { id: number; star: boolean };
+    return: boolean;
+  };
+  [InvokeCommand.RenameClipboard]: {
+    args: { id: number; name: string | null };
     return: boolean;
   };
   [InvokeCommand.CopyClipboard]: {

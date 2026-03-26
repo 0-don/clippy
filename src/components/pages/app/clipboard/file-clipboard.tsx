@@ -69,6 +69,11 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
       <ClipboardHeader {...props} Icon={VsFileBinary} />
 
       <div class="min-w-0 flex-1" title={getFileListTitle()}>
+        {props.data.clipboard.name && (
+          <p class="w-[calc(100vw-6.5rem)] truncate text-left text-sm font-medium">
+            {props.data.clipboard.name}
+          </p>
+        )}
         {Object.entries(groupedFiles).map(([type, data]) => (
           <span class="flex items-center gap-1">
             <span class="truncate text-sm">

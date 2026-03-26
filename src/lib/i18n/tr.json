@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Panoyu sil",
     "NO_CLIPBOARDS_YET": "Henüz pano yok...",
     "SEARCH_ENTRIES": "Arama girişleri",
+    "EDIT_NAME": "Adı düzenle",
+    "ENTER_NAME": "Bir ad girin",
     "STAR_FAVORITE": "Yıldız favorisi"
   },
   "MAIN": {

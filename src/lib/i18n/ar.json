@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "حذف الحافظة",
     "NO_CLIPBOARDS_YET": "لا توجد حافظات بعد...",
     "SEARCH_ENTRIES": "إدخالات البحث",
+    "EDIT_NAME": "تعديل الاسم",
+    "ENTER_NAME": "أدخل اسمًا",
     "STAR_FAVORITE": "النجم المفضل"
   },
   "MAIN": {

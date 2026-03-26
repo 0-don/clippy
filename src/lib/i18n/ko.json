@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "클립보드 삭제",
     "NO_CLIPBOARDS_YET": "아직 클립보드가 없습니다...",
     "SEARCH_ENTRIES": "항목 검색",
+    "EDIT_NAME": "이름 편집",
+    "ENTER_NAME": "이름 입력",
     "STAR_FAVORITE": "스타가 좋아하는 것"
   },
   "MAIN": {
