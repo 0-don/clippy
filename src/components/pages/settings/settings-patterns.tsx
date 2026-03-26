@@ -1,5 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible } from "solid-icons/ai";
-import { TbGridPattern, TbTrash } from "solid-icons/tb";
+import { TbOutlineGridPattern, TbOutlineTrash } from "solid-icons/tb";
 import { Component, createSignal, Index, Show } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { SettingsStore } from "../../../store/settings-store";
@@ -43,7 +43,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
 
   return (
     <TextBlock
-      Icon={TbGridPattern}
+      Icon={TbOutlineGridPattern}
       title={t("SETTINGS.PATTERNS.CHANGE_YOUR_TEXT_MATCHES")}
     >
       <div class="flex items-center justify-between gap-2 px-5 pb-5">
@@ -93,7 +93,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
           label={"SETTINGS.PATTERNS.ADD"}
           type="submit"
           class="w-24"
-          Icon={TbGridPattern}
+          Icon={TbOutlineGridPattern}
         />
       </form>
       <div class="flex items-center gap-2 px-5">
@@ -169,7 +169,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                 />
                 <Button
                   label={"SETTINGS.PATTERNS.REMOVE"}
-                  Icon={TbTrash}
+                  Icon={TbOutlineTrash}
                   class="w-24"
                   onClick={() =>
                     invokeCommand(InvokeCommand.ChangeSettingsTextMatchers, {

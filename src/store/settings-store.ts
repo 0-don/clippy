@@ -1,7 +1,7 @@
 import { BsDatabaseFillGear, BsDatabaseLock } from "solid-icons/bs";
 import { HiSolidCog8Tooth } from "solid-icons/hi";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
-import { TbResize } from "solid-icons/tb";
+import { TbOutlineResize } from "solid-icons/tb";
 import { VsHistory, VsReplaceAll } from "solid-icons/vs";
 import { createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
@@ -37,7 +37,7 @@ function createSettingsStore() {
     },
     {
       name: SETTINGS_TAB[6],
-      Icon: TbResize,
+      Icon: TbOutlineResize,
       current: false,
     },
   ]);

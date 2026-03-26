@@ -2,7 +2,7 @@ import { AiTwotoneFolderOpen } from "solid-icons/ai";
 import { BiRegularReset } from "solid-icons/bi";
 import { BsGearWideConnected } from "solid-icons/bs";
 import { SiSqlite } from "solid-icons/si";
-import { TbDatabaseStar, TbExchange, TbNumber } from "solid-icons/tb";
+import { TbOutlineDatabaseStar, TbOutlineExchange, TbOutlineNumbers } from "solid-icons/tb";
 import { Component, createResource, Show } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { HotkeyStore } from "../../../store/hotkey-store";
@@ -29,7 +29,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
 
   return (
     <>
-      <TextBlock Icon={TbDatabaseStar} title={t("SETTINGS.BACKUP.SYNC")}>
+      <TextBlock Icon={TbOutlineDatabaseStar} title={t("SETTINGS.BACKUP.SYNC")}>
         <div class="mb-2 flex items-center justify-between space-x-2 px-5 pb-2.5">
           <div class="flex items-center space-x-2 truncate">
             <div
@@ -54,7 +54,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
         <Show when={SettingsStore.settings()?.sync}>
           <div class="flex items-center justify-between space-x-2 px-5 pb-5">
             <div class="flex items-center space-x-2 truncate">
-              <TbNumber />
+              <TbOutlineNumbers />
               <h6 class="text-sm">{t("SETTINGS.BACKUP.SYNC_LIMIT")}</h6>
             </div>
 
@@ -104,7 +104,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
                 await SettingsStore.changeClipboardDbLocation();
                 setDatabaseUrl.refetch();
               }}
-              Icon={TbExchange}
+              Icon={TbOutlineExchange}
             />
 
             <Button

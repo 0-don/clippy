@@ -1,6 +1,6 @@
 import { BsJournalRichtext } from "solid-icons/bs";
 import { IoTrashOutline } from "solid-icons/io";
-import { TbSourceCode } from "solid-icons/tb";
+import { TbOutlineSourceCode } from "solid-icons/tb";
 import { VsStarFull } from "solid-icons/vs";
 import { Component } from "solid-js";
 import { invokeCommand } from "../../../../lib/tauri";
@@ -94,7 +94,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
             />
           )}
           {props.data.html && (
-            <TbSourceCode
+            <TbOutlineSourceCode
               onClick={handleHtmlCopy}
               title={t("CLIPBOARD.COPY_AS_HTML")}
               class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-green-600 dark:text-white dark:hover:text-green-400"

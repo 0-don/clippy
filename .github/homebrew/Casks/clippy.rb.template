@@ -1,0 +1,17 @@
+cask "{{NAME}}" do
+  version "{{VERSION}}"
+  sha256 "{{SHA256}}"
+
+  url "https://github.com/0-don/{{NAME}}/releases/download/v#{version}/{{NAME}}_#{version}_aarch64.dmg"
+  name "Clippy"
+  desc "{{DESCRIPTION}}"
+  homepage "https://github.com/0-don/{{NAME}}"
+
+  app "{{NAME}}.app"
+
+  zap trash: [
+    "~/Library/Application Support/{{NAME}}",
+    "~/Library/Caches/{{NAME}}",
+    "~/Library/Preferences/{{NAME}}.plist",
+  ]
+end
