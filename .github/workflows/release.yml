@@ -167,10 +167,13 @@ jobs:
 
       - name: update homebrew cask (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/0-don/homebrew-clippy.git /tmp/homebrew-tap
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > ~/.ssh/aur
+          chmod 600 ~/.ssh/aur
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
+          git clone git@github.com:0-don/homebrew-clippy.git /tmp/homebrew-tap
           cd /tmp/homebrew-tap
 
           DMG_URL="https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}_${{ needs.setup.outputs.version }}_aarch64.dmg"
