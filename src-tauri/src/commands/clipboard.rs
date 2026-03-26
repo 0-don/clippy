@@ -6,7 +6,7 @@ use crate::tao::global::{get_app, get_cache};
 use crate::{
     service::clipboard::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboards_db, get_clipboard_count_db,
-        get_clipboard_db, get_clipboards_db, star_clipboard_db,
+        get_clipboard_db, get_clipboards_db, rename_clipboard_db, star_clipboard_db,
     },
     utils::hotkey_manager::unregister_hotkeys,
 };
@@ -149,6 +149,11 @@ pub async fn copy_clipboard(id: Uuid, r#type: ClipboardType) -> Result<bool, Com
 #[tauri::command]
 pub async fn star_clipboard(id: Uuid, star: bool) -> Result<bool, CommandError> {
     Ok(star_clipboard_db(id, star).await?)
+}
+
+#[tauri::command]
+pub async fn rename_clipboard(id: Uuid, name: Option<String>) -> Result<bool, CommandError> {
+    Ok(rename_clipboard_db(id, name).await?)
 }
 
 #[tauri::command]

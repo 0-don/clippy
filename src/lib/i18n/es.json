@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Eliminar el portapapeles",
     "NO_CLIPBOARDS_YET": "No hay portapapeles todavía...",
     "SEARCH_ENTRIES": "Buscar entradas",
+    "EDIT_NAME": "Editar nombre",
+    "ENTER_NAME": "Ingresa un nombre",
     "STAR_FAVORITE": "Favorito estrella"
   },
   "MAIN": {

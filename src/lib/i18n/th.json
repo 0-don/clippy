@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "ลบคลิปบอร์ด",
     "NO_CLIPBOARDS_YET": "ยังไม่มีคลิปบอร์ด...",
     "SEARCH_ENTRIES": "ค้นหารายการ",
+    "EDIT_NAME": "แก้ไขชื่อ",
+    "ENTER_NAME": "ป้อนชื่อ",
     "STAR_FAVORITE": "ดาวโปรด"
   },
   "MAIN": {

@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Excluir área de transferência",
     "NO_CLIPBOARDS_YET": "Ainda não há pranchetas...",
     "SEARCH_ENTRIES": "Entradas de pesquisa",
+    "EDIT_NAME": "Editar nome",
+    "ENTER_NAME": "Digite um nome",
     "STAR_FAVORITE": "Favorito das estrelas"
   },
   "MAIN": {

@@ -1,19 +1,30 @@
-use crate::{service::window::toggle_main_window, tao::global::get_app};
+use crate::{
+    service::{settings::get_global_settings, window::toggle_main_window},
+    tao::global::get_app,
+};
+use common::types::enums::Language;
 use tauri::{
     menu::{Menu, MenuItem},
-    tray::TrayIconBuilder,
+    tray::{TrayIconBuilder, TrayIconId},
 };
 
+const TRAY_ID: &str = "clippy_tray";
+
+fn build_tray_menu() -> Result<Menu<tauri::Wry>, Box<dyn std::error::Error>> {
+    let settings = get_global_settings();
+    let lang = Language::from_iso_code(&settings.language);
+    let labels = lang.tray_labels();
+
+    let quit = MenuItem::with_id(get_app(), "quit", labels.quit, true, None::<&str>)?;
+    let open = MenuItem::with_id(get_app(), "open", labels.open, true, None::<&str>)?;
+
+    Ok(Menu::with_items(get_app(), &[&open, &quit])?)
+}
+
 pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
-    // Create menu items
-    let quit = MenuItem::with_id(get_app(), "quit", "Quit", true, None::<&str>)?;
-    let open = MenuItem::with_id(get_app(), "open", "Open", true, None::<&str>)?;
+    let menu = build_tray_menu()?;
 
-    // Create the menu
-    let menu = Menu::with_items(get_app(), &[&open, &quit])?;
-
-    // Build and return the tray
-    TrayIconBuilder::new()
+    TrayIconBuilder::with_id(TRAY_ID)
         .icon(
             get_app()
                 .default_window_icon()
@@ -22,7 +33,6 @@ pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
         )
         .menu(&menu)
         .on_menu_event(|app, event| {
-            // Use event.id.0 to get the string value
             match event.id.0.as_str() {
                 "open" => toggle_main_window(),
                 "quit" => app.exit(0),
@@ -48,4 +58,18 @@ pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
         .build(get_app())?;
 
     Ok(())
+}
+
+pub fn refresh_tray_menu() {
+    let menu = match build_tray_menu() {
+        Ok(m) => m,
+        Err(e) => {
+            eprintln!("Failed to build tray menu: {}", e);
+            return;
+        }
+    };
+
+    if let Some(tray) = get_app().tray_by_id(&TrayIconId::new(TRAY_ID)) {
+        tray.set_menu(Some(menu)).ok();
+    }
 }

@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Delete clipboard",
     "NO_CLIPBOARDS_YET": "No clipboards yet...",
     "SEARCH_ENTRIES": "Search entries",
+    "EDIT_NAME": "Edit name",
+    "ENTER_NAME": "Enter a name",
     "STAR_FAVORITE": "Star favorite"
   },
   "MAIN": {

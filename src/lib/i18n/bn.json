@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "ক্লিপবোর্ড মুছুন",
     "NO_CLIPBOARDS_YET": "এখনো কোনো ক্লিপবোর্ড নেই...",
     "SEARCH_ENTRIES": "অনুসন্ধান এন্ট্রি",
+    "EDIT_NAME": "নাম সম্পাদনা করুন",
+    "ENTER_NAME": "একটি নাম লিখুন",
     "STAR_FAVORITE": "তারকা প্রিয়"
   },
   "MAIN": {
