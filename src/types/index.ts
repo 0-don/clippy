@@ -61,6 +61,7 @@ export interface ClipboardModel {
   types: ClipboardType[];
   star: boolean;
   created_at: string;
+  name: string | null;
 }
 
 export interface ClipboardTextModel {

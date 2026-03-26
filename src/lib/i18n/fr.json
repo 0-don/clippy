@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Supprimer le presse-papiers",
     "NO_CLIPBOARDS_YET": "Pas encore de presse-papiers...",
     "SEARCH_ENTRIES": "Rechercher des entrées",
+    "EDIT_NAME": "Modifier le nom",
+    "ENTER_NAME": "Saisir un nom",
     "STAR_FAVORITE": "Favori des étoiles"
   },
   "MAIN": {

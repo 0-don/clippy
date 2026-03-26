@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.5.0"
+version = "1.5.1"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -12,7 +12,7 @@ edition = "2021"
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "tauri_app_lib"
-crate-type = ["staticlib", "cdylib", "rlib"]
+crasdate-type = ["staticlib", "cdylib", "rlib"]
 
 [workspace]
 members = [".", "migration", "entity", "common"]

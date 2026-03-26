@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Zwischenablage löschen",
     "NO_CLIPBOARDS_YET": "Noch keine Zwischenablagen...",
     "SEARCH_ENTRIES": "Einträge durchsuchen",
+    "EDIT_NAME": "Name bearbeiten",
+    "ENTER_NAME": "Name eingeben",
     "STAR_FAVORITE": "Star-Favorit"
   },
   "MAIN": {

@@ -399,6 +399,20 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
     Ok(true)
 }
 
+pub async fn rename_clipboard_db(id: Uuid, name: Option<String>) -> Result<bool, CommandError> {
+    let db = db().await?;
+
+    let model = clipboard::ActiveModel {
+        id: Set(id),
+        name: Set(name),
+        ..Default::default()
+    };
+
+    clipboard::Entity::update(model).exec(&db).await?;
+
+    Ok(true)
+}
+
 pub async fn delete_clipboards_db(
     ids: Vec<Uuid>,
     command: Option<bool>,

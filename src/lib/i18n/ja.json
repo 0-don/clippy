@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "クリップボードを削除",
     "NO_CLIPBOARDS_YET": "クリップボードはまだありません...",
     "SEARCH_ENTRIES": "エントリを検索",
+    "EDIT_NAME": "名前を編集",
+    "ENTER_NAME": "名前を入力",
     "STAR_FAVORITE": "スターのお気に入り"
   },
   "MAIN": {

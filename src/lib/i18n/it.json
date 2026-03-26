@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "Elimina appunti",
     "NO_CLIPBOARDS_YET": "Ancora nessun appunto..",
     "SEARCH_ENTRIES": "Cerca voci",
+    "EDIT_NAME": "Modifica nome",
+    "ENTER_NAME": "Inserisci un nome",
     "STAR_FAVORITE": "Segna come preferito"
   },
   "MAIN": {

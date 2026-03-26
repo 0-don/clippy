@@ -21,6 +21,7 @@ pub struct Model {
     pub star: bool,
     pub encrypted: bool,
     pub created_at: DateTime,
+    pub name: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -30,6 +31,7 @@ pub enum Column {
     Star,
     Encrypted,
     CreatedAt,
+    Name,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -62,6 +64,7 @@ impl ColumnTrait for Column {
             Self::Star => ColumnType::Boolean.def(),
             Self::Encrypted => ColumnType::Boolean.def(),
             Self::CreatedAt => ColumnType::DateTime.def(),
+            Self::Name => ColumnType::String(StringLen::None).def().null(),
         }
     }
 }

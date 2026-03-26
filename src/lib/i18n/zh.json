@@ -12,6 +12,8 @@
     "DELETE_CLIPBOARD": "删除剪贴板",
     "NO_CLIPBOARDS_YET": "尚无剪贴板...",
     "SEARCH_ENTRIES": "搜索条目",
+    "EDIT_NAME": "编辑名称",
+    "ENTER_NAME": "输入名称",
     "STAR_FAVORITE": "明星最爱"
   },
   "MAIN": {

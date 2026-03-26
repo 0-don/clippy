@@ -34,6 +34,7 @@ pub fn run() {
             clipboard::get_clipboards,
             clipboard::delete_clipboard,
             clipboard::star_clipboard,
+            clipboard::rename_clipboard,
             clipboard::copy_clipboard,
             clipboard::clear_clipboards,
             clipboard::save_clipboard_image,
