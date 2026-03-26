@@ -1,6 +1,6 @@
 import { type Flatten, flatten } from "@solid-primitives/i18n";
-import { Language } from "../../utils/constants";
-import type * as en from "./en.json";
+import { Language } from "../utils/constants";
+import type * as en from "./i18n/en.json";
 
 export type RawDictionary = typeof en;
 export type Locale = `${Language}`;
@@ -10,7 +10,7 @@ export type DictionaryKey = {
 }[keyof Dictionary];
 
 export async function fetchDictionary(locale: Locale): Promise<Dictionary> {
-  const dict: RawDictionary = await import(`./${locale}.json?import`);
+  const dict: RawDictionary = await import(`./i18n/${locale}.json`);
   return flatten(dict);
 }
 

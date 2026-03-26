@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.4.9"
+version = "1.5.0"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -66,7 +66,7 @@ tree_magic_mini = "3"
 urlencoding = "2"
 
 # clipboard sync
-google-drive3 = "6"
+google-drive3 = { version = "7", features = ["yup-oauth2"] }
 http-body-util = "0"
 
 # cipher
