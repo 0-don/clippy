@@ -113,11 +113,14 @@ jobs:
 
       - name: create arch package (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
-        uses: 2m/arch-pkgbuild-builder@v1.17
-        with:
-          debug: true
-          target: pkgbuild
-          pkgname: ${{ needs.setup.outputs.name_bin }}/
+        run: |
+          docker run --rm -v "$PWD/${{ needs.setup.outputs.name_bin }}:/pkg" archlinux:latest bash -c "
+            pacman -Sy --noconfirm base-devel sudo &&
+            useradd -m builder &&
+            chown -R builder: /pkg &&
+            cd /pkg &&
+            sudo -u builder makepkg -f
+          "
 
       - name: upload arch && rpm release (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
