@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.5.7"
+version = "1.5.8"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -37,7 +37,7 @@ tauri-plugin-clipboard = "2"
 tauri-plugin-opener = "2"
 tauri-plugin-autostart = "2"
 tauri-plugin-single-instance = "2"
-global-hotkey = "0" # tauri-plugin-global-hotkey
+global-hotkey = { git = "https://github.com/0-don/global-hotkey", branch = "unified-wayland" } # tauri-plugin-global-hotkey
 
 sea-orm = "1"
 uuid = { version = "1", features = ["v7"] }
