@@ -93,19 +93,18 @@ pub fn setup_settings() {
 
     tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(async {
-            let last_clipboard = get_last_clipboard_db().await;
-            if last_clipboard.is_ok() {
-                return;
-            }
+            let is_first_run = get_last_clipboard_db().await.is_err();
 
             let mut settings = get_settings_db().await.expect("Failed to get settings");
 
-            settings.display_scale = get_monitor_scale_factor();
-            settings.language = get_system_language().to_string();
+            if is_first_run {
+                settings.display_scale = get_monitor_scale_factor();
+                settings.language = get_system_language().to_string();
 
-            let _ = update_settings_db(settings)
-                .await
-                .expect("Failed to update settings");
+                let _ = update_settings_db(settings)
+                    .await
+                    .expect("Failed to update settings");
+            }
         })
     });
 }
