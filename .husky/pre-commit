@@ -1,2 +1,2 @@
 node .github/sync-version.js
-git add src-tauri/Cargo.toml src-tauri/tauri.conf.json src-tauri/Cargo.lock README.md
+git add src-tauri/Cargo.toml src-tauri/tauri.conf.json src-tauri/Cargo.lock README.md src-tauri/installer-hooks.nsh
