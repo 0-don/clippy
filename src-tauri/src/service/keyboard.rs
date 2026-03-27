@@ -1,60 +1,25 @@
 use crate::service::clipboard::get_last_clipboard_db;
-use crate::tao::global::get_app;
 use common::types::enums::ClipboardType;
 use common::types::orm_query::FullClipboardDto;
 use enigo::{Enigo, Keyboard, Settings};
-use std::{process::Command, time::Duration};
-use tauri_plugin_dialog::DialogExt;
-use tauri_plugin_dialog::{MessageDialogButtons, MessageDialogKind};
+use std::time::Duration;
 
 pub async fn type_last_clipboard() {
     let clipboard = get_last_clipboard_db().await;
 
     if let Ok(clipboard_data) = clipboard {
         if let Some(content) = get_clipboard_content(&clipboard_data) {
-            if content.len() < 32 {
-                let mut enigo = Enigo::new(&Settings::default()).expect("failed to create enigo");
-                let _ = enigo.text(&content);
-            }
-        }
-    }
-}
-
-pub async fn type_last_clipboard_linux() -> Result<(), Box<dyn std::error::Error>> {
-    if !is_tool_installed("xdotool") {
-        get_app()
-            .dialog()
-            .message("xdotool is not installed. Please install it to continue.")
-            .title("Missing Dependency")
-            .kind(MessageDialogKind::Error)
-            .buttons(MessageDialogButtons::Ok)
-            .blocking_show();
-        return Ok(());
-    }
-
-    let clipboard = get_last_clipboard_db().await;
-
-    if let Ok(clipboard_data) = clipboard {
-        if let Some(content) = get_clipboard_content(&clipboard_data) {
-            // TODO: add the limit to db
             if content.len() < 500 {
                 std::thread::sleep(Duration::from_millis(300));
-                Command::new("xdotool")
-                    .args(&["type", "--clearmodifiers", "--", &content])
-                    .output()?;
+                match Enigo::new(&Settings::default()) {
+                    Ok(mut enigo) => {
+                        let _ = enigo.text(&content);
+                    }
+                    Err(_) => {}
+                }
             }
         }
     }
-
-    Ok(())
-}
-
-pub fn is_tool_installed(tool: &str) -> bool {
-    Command::new(tool)
-        .arg("--version")
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
 }
 
 fn get_clipboard_content(clipboard_data: &FullClipboardDto) -> Option<String> {

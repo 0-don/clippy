@@ -11,7 +11,7 @@ use crate::utils::fullscreen_detector::is_other_window_fullscreen;
 use crate::{
     service::{
         clipboard::copy_clipboard_from_index,
-        keyboard::{type_last_clipboard, type_last_clipboard_linux},
+        keyboard::type_last_clipboard,
         window::toggle_main_window,
     },
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
@@ -95,13 +95,7 @@ pub async fn parse_hotkey_event(key: &Key) {
             init_clipboards();
         }
         Some(HotkeyEvent::TypeClipboard) => {
-            if cfg!(target_os = "linux") {
-                type_last_clipboard_linux()
-                    .await
-                    .expect("Failed to type clipboard");
-            } else {
-                type_last_clipboard().await;
-            }
+            type_last_clipboard().await;
         }
         Some(HotkeyEvent::SyncClipboardHistory) => {
             let _ = sync_authenticate_toggle().await;

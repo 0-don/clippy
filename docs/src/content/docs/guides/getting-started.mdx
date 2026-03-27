@@ -9,14 +9,29 @@ description: Learn how to install and start using Clippy
 
 ### Package Managers
 
-**Arch Linux (AUR):**
+**Linux:**
 ```bash
-yay -S clippy-rs-bin
+yay -S clippy-rs-bin                              # Arch Linux (AUR)
+sudo snap install clippy-clipboard                 # Snap Store
+flatpak install flathub io.github._0_don.clippy   # Flathub
+sudo dnf copr enable 0-don/clippy && sudo dnf install clippy  # Fedora (COPR)
 ```
 
-**Homebrew (macOS):**
+**macOS:**
 ```bash
-brew install --cask 0-don/clippy/clippy
+brew install --cask 0-don/clippy/clippy            # Homebrew
+```
+
+**Windows:**
+```powershell
+winget install 0-don.clippy                        # Winget
+scoop bucket add clippy https://github.com/0-don/scoop-clippy && scoop install clippy  # Scoop
+choco install clippy-clipboard                     # Chocolatey
+```
+
+**Nix:**
+```bash
+nix-env -iA nixpkgs.clippy-clipboard              # Nix
 ```
 
 ### Manual Download

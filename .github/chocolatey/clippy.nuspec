@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>clippy-clipboard</id>
+    <version>{{VERSION}}</version>
+    <title>Clippy</title>
+    <authors>0-don</authors>
+    <owners>0-don</owners>
+    <projectUrl>https://github.com/0-don/clippy</projectUrl>
+    <licenseUrl>https://github.com/0-don/clippy/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/0-don/clippy</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/0-don/clippy/issues</bugTrackerUrl>
+    <tags>clipboard clipboard-manager productivity utility rust tauri</tags>
+    <summary>{{DESCRIPTION}}</summary>
+    <description>Privacy focused clipboard manager with sync and encryption. Supports text, images, files, HTML, and RTF content with cloud sync via Google Drive, end-to-end encryption, smart search, favorites, and customizable hotkeys.</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

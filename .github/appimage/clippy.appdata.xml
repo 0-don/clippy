@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github._0_don.clippy</id>
+  <name>Clippy</name>
+  <summary>Privacy focused clipboard manager with sync and encryption</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <url type="homepage">https://github.com/0-don/clippy</url>
+  <url type="bugtracker">https://github.com/0-don/clippy/issues</url>
+  <description>
+    <p>
+      Clippy is a clipboard manager built with Rust and Typescript.
+      It supports text, images, files, HTML, and RTF content with
+      cloud sync via Google Drive, end-to-end encryption,
+      smart search, favorites, and customizable hotkeys.
+    </p>
+  </description>
+  <categories>
+    <category>Utility</category>
+  </categories>
+</component>
