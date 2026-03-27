@@ -221,8 +221,11 @@ jobs:
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
       - name: publish snap (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04' && secrets.SNAPCRAFT_STORE_CREDENTIALS != ''
+        if: matrix.platform == 'ubuntu-22.04'
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         run: |
+          if [ -z "$SNAPCRAFT_STORE_CREDENTIALS" ]; then echo "No snap credentials, skipping"; exit 0; fi
           sudo snap install snapcraft --classic
           DEB_PATH="${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }}"
 
@@ -233,8 +236,6 @@ jobs:
 
           snapcraft
           snapcraft upload *.snap --release=stable
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
 
       - name: submit to winget (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
@@ -260,11 +261,14 @@ jobs:
           ls -la "$MANIFEST_DIR"
 
       - name: build copr package (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04' && secrets.COPR_API_TOKEN != ''
+        if: matrix.platform == 'ubuntu-22.04'
+        env:
+          COPR_API_TOKEN: ${{ secrets.COPR_API_TOKEN }}
         run: |
+          if [ -z "$COPR_API_TOKEN" ]; then echo "No COPR token, skipping"; exit 0; fi
           sudo pip3 install copr-cli
           mkdir -p ~/.config
-          echo "${{ secrets.COPR_API_TOKEN }}" > ~/.config/copr
+          echo "$COPR_API_TOKEN" > ~/.config/copr
 
           RPM_URL="https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}-${{ needs.setup.outputs.version }}-1.x86_64.rpm"
 
@@ -276,9 +280,12 @@ jobs:
           copr-cli build clippy /tmp/clippy.spec
 
       - name: publish to chocolatey (windows only)
-        if: matrix.platform == 'windows-latest' && secrets.CHOCOLATEY_API_KEY != ''
+        if: matrix.platform == 'windows-latest'
         shell: pwsh
+        env:
+          CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
         run: |
+          if (-not $env:CHOCOLATEY_API_KEY) { Write-Host "No Chocolatey API key, skipping"; exit 0 }
           $exe_url = "https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}_${{ needs.setup.outputs.version }}_x64-setup.exe"
           Invoke-WebRequest -Uri $exe_url -OutFile clippy-setup.exe
           $hash = (Get-FileHash clippy-setup.exe -Algorithm SHA256).Hash
@@ -289,4 +296,4 @@ jobs:
 
           cd $chocoDir
           choco pack
-          choco push clippy-clipboard.${{ needs.setup.outputs.version }}.nupkg --source https://push.chocolatey.org/ --api-key ${{ secrets.CHOCOLATEY_API_KEY }}
+          choco push clippy-clipboard.${{ needs.setup.outputs.version }}.nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
