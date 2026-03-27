@@ -20,19 +20,19 @@
 
 <div align="center">
 
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy_1.5.6_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy_1.5.7_x64-setup.exe">
   <img src="./public/windows.png"> Windows (x64)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy_1.5.6_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy_1.5.7_x64-setup.exe">
   Windows (arm64)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy_1.5.6_amd64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy_1.5.7_amd64.deb">
   <img src="./public/linux.png"> Linux (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy-1.5.6-1.x86_64.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy-1.5.7-1.x86_64.rpm">
   Linux (rpm)
 </a>
 •
@@ -40,15 +40,15 @@
   Linux (pkg.tar.zst)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy_1.5.6_amd64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy_1.5.7_amd64.AppImage">
   Linux (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy_1.5.6_aarch64.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy_1.5.7_aarch64.dmg">
   <img src="./public/apple.png"> macOS (Silicon)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.6/clippy_1.5.6_aarch64.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.7/clippy_1.5.7_aarch64.dmg">
   macOS (Intel)
 </a>
 <br>
