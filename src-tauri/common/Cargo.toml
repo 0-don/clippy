@@ -17,7 +17,7 @@ serde = "1"
 serde_json = "1"
 
 google-drive3 = "7"
-global-hotkey = "0"
+global-hotkey = { git = "https://github.com/0-don/global-hotkey", branch = "unified-wayland" }
 sea-orm = "1"
 tl = "0"
 chrono = "0"

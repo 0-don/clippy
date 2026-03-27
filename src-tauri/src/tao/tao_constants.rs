@@ -26,6 +26,9 @@ pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLo
 pub static CLIPBOARD_CACHE: OnceLock<Cache<String, Vec<FullClipboardDto>>> = OnceLock::new();
 
 pub fn setup_globals(app: &mut tauri::App) {
+    #[cfg(target_os = "linux")]
+    std::env::set_var("GLOBAL_HOTKEY_APP_ID", "clippy");
+
     APP.set(app.handle().clone())
         .unwrap_or_else(|_| panic!("Failed to initialize APP"));
     GLOBAL_HOTKEY_MANAGER
