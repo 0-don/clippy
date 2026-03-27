@@ -1,0 +1,26 @@
+{
+  "version": "{{VERSION}}",
+  "description": "{{DESCRIPTION}}",
+  "homepage": "https://github.com/0-don/clippy",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/0-don/clippy/releases/download/v{{VERSION}}/clippy_{{VERSION}}_x64-setup.exe",
+      "hash": "{{SHA256}}"
+    }
+  },
+  "installer": {
+    "script": "Start-Process \"$dir\\clippy_{{VERSION}}_x64-setup.exe\" -ArgumentList '/S' -Wait"
+  },
+  "uninstaller": {
+    "script": "Start-Process \"$env:LOCALAPPDATA\\clippy\\uninstall.exe\" -ArgumentList '/S' -Wait"
+  },
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/0-don/clippy/releases/download/v$version/clippy_$version_x64-setup.exe"
+      }
+    }
+  }
+}

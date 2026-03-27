@@ -20,19 +20,19 @@
 
 <div align="center">
 
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy_1.5.8_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy_1.5.9_x64-setup.exe">
   <img src="./public/windows.png"> Windows (x64)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy_1.5.8_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy_1.5.9_x64-setup.exe">
   Windows (arm64)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy_1.5.8_amd64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy_1.5.9_amd64.deb">
   <img src="./public/linux.png"> Linux (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy-1.5.8-1.x86_64.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy-1.5.9-1.x86_64.rpm">
   Linux (rpm)
 </a>
 •
@@ -40,15 +40,15 @@
   Linux (pkg.tar.zst)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy_1.5.8_amd64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy_1.5.9_amd64.AppImage">
   Linux (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy_1.5.8_aarch64.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy_1.5.9_aarch64.dmg">
   <img src="./public/apple.png"> macOS (Silicon)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.8/clippy_1.5.8_aarch64.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.9/clippy_1.5.9_aarch64.dmg">
   macOS (Intel)
 </a>
 <br>
@@ -58,14 +58,29 @@
 
 ### Package Managers
 
-**Arch Linux (AUR):**
+**Linux:**
 ```bash
-yay -S clippy-rs-bin
+yay -S clippy-rs-bin                              # Arch Linux (AUR)
+sudo snap install clippy-clipboard                 # Snap Store
+flatpak install flathub io.github._0_don.clippy   # Flathub
+sudo dnf copr enable 0-don/clippy && sudo dnf install clippy  # Fedora (COPR)
 ```
 
-**Homebrew (macOS):**
+**macOS:**
 ```bash
-brew install --cask 0-don/clippy/clippy
+brew install --cask 0-don/clippy/clippy            # Homebrew
+```
+
+**Windows:**
+```powershell
+winget install 0-don.clippy                        # Winget
+scoop bucket add clippy https://github.com/0-don/scoop-clippy && scoop install clippy  # Scoop
+choco install clippy-clipboard                     # Chocolatey
+```
+
+**Nix:**
+```bash
+nix-env -iA nixpkgs.clippy-clipboard              # Nix
 ```
 
 ### Features
@@ -139,13 +154,19 @@ xattr -r -d com.apple.quarantine /Applications/clippy.app
 <!-- usermod -aG sudo don -->
 <!-- echo "disable wayland" && sudo nano /etc/gdm3/daemon.conf -->
 <!-- sudo apt install ./clippy_1.3.0_amd64.deb -->
-<!-- sudo apt install pkg-config libglib2.0-dev libwebkit2gtk-4.1-dev libgtk-3-dev libxdo-dev libayatana-appindicator3-dev librsvg2-dev -->
+<!-- sudo apt install pkg-config libglib2.0-dev libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev -->
 
 <!-- OPENSUSE KDE X11 -->
-<!-- sudo zypper --non-interactive install -t pattern devel_basis && sudo zypper --non-interactive install glib2-devel webkit2gtk3-devel gtk3-devel libopenssl-devel xdotool-devel libayatana-appindicator3-1 libayatana-appindicator3-devel -->
+<!-- sudo zypper --non-interactive install -t pattern devel_basis && sudo zypper --non-interactive install glib2-devel webkit2gtk3-devel gtk3-devel libopenssl-devel libayatana-appindicator3-1 libayatana-appindicator3-devel -->
 <!-- sudo zypper install ./clippy-1.3.0-1.x86_64.rpm -->
 
 <!-- ENDEVOUROS KDE X11 -->
 <!-- sudo pacman -U clippy-bin-1.3.0-1-x86_64.pkg.tar.zst -->
 
 <!-- git reset --hard origin/master -->
+
+<!-- PACKAGE MANAGER PRs -->
+<!-- Winget: https://github.com/microsoft/winget-pkgs/pull/353083 -->
+<!-- Flathub: https://github.com/flathub/flathub/pull/8231 -->
+<!-- AppImage Hub: https://github.com/AppImage/appimage.github.io/pull/3725 -->
+<!-- Nix: https://github.com/NixOS/nixpkgs/pull/504239 -->

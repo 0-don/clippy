@@ -1,0 +1,42 @@
+name: clippy-clipboard
+version: "{{VERSION}}"
+summary: {{DESCRIPTION}}
+description: |
+  Privacy focused clipboard manager with sync & encryption.
+  Supports text, images, files, HTML, and RTF content.
+  Features cloud sync via Google Drive, end-to-end encryption,
+  smart search, favorites, and customizable hotkeys.
+grade: stable
+confinement: strict
+base: core22
+architectures:
+  - build-on: amd64
+
+parts:
+  clippy:
+    plugin: dump
+    source: https://github.com/0-don/{{NAME}}/releases/download/v{{VERSION}}/{{NAME}}_{{VERSION}}_amd64.deb
+    source-type: deb
+    stage-packages:
+      - libwebkit2gtk-4.1-0
+      - libgtk-3-0
+      - libayatana-appindicator3-1
+      - libssl3
+
+apps:
+  clippy:
+    command: usr/bin/{{NAME}}
+    desktop: usr/share/applications/{{NAME}}.desktop
+    extensions:
+      - gnome
+    plugs:
+      - home
+      - network
+      - network-bind
+      - x11
+      - wayland
+      - desktop
+      - desktop-legacy
+      - unity7
+      - gsettings
+      - opengl

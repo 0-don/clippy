@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.5.8"
+version = "1.5.9"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -53,7 +53,7 @@ chrono = "0"
 regex = "1"
 
 # keyboard input
-enigo = "0"
+enigo = { version = "0", features = ["wayland", "libei_smol"] }
 
 # image
 image = "0"
