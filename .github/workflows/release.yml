@@ -97,6 +97,19 @@ jobs:
           releaseDraft: false
           prerelease: false
 
+      - name: patch NSIS installer metadata (windows only)
+        if: matrix.platform == 'windows-latest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $setupExe = Get-ChildItem -Path "src-tauri/target/release/bundle/nsis" -Filter "*-setup.exe" | Select-Object -First 1
+          if ($setupExe) {
+            Invoke-WebRequest -Uri "https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe" -OutFile "$env:TEMP\rcedit.exe"
+            & "$env:TEMP\rcedit.exe" $setupExe.FullName --set-version-string "FileDescription" "clippy Installer"
+            gh release upload "${{ needs.setup.outputs.tag_name }}" $setupExe.FullName --clobber
+          }
+
       - name: generate PKGBUILD from template (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |

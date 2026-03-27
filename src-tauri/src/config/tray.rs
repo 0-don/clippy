@@ -24,6 +24,8 @@ fn build_tray_menu() -> Result<Menu<tauri::Wry>, Box<dyn std::error::Error>> {
 pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
     let menu = build_tray_menu()?;
 
+    let version = get_app().package_info().version.to_string();
+
     TrayIconBuilder::with_id(TRAY_ID)
         .icon(
             get_app()
@@ -31,6 +33,7 @@ pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
                 .expect("failed to get default icon")
                 .to_owned(),
         )
+        .tooltip(format!("clippy {}", version))
         .menu(&menu)
         .on_menu_event(|app, event| {
             match event.id.0.as_str() {
