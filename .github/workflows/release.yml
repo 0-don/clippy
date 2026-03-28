@@ -220,22 +220,27 @@ jobs:
           git add bucket/clippy.json
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
-      - name: publish snap (ubuntu only)
+      - name: prepare snapcraft.yaml (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         run: |
-          if [ -z "$SNAPCRAFT_STORE_CREDENTIALS" ]; then echo "No snap credentials, skipping"; exit 0; fi
-          sudo snap install snapcraft --classic
-          DEB_PATH="${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }}"
-
           sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
               -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
               -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
               .github/snap/snapcraft.yaml > snapcraft.yaml
 
-          snapcraft pack --destructive-mode
-          snapcraft upload *.snap --release=stable
+      - name: build snap (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        uses: snapcore/action-build@v1
+        id: snap-build
+
+      - name: publish snap (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04' && steps.snap-build.outputs.snap
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        run: |
+          if [ -z "$SNAPCRAFT_STORE_CREDENTIALS" ]; then echo "No snap credentials, skipping"; exit 0; fi
+          sudo snap install snapcraft --classic
+          snapcraft upload ${{ steps.snap-build.outputs.snap }} --release=stable
 
       - name: submit to winget (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
