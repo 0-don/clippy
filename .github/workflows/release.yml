@@ -234,7 +234,7 @@ jobs:
               -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
               .github/snap/snapcraft.yaml > snapcraft.yaml
 
-          snapcraft
+          snapcraft pack --destructive-mode
           snapcraft upload *.snap --release=stable
 
       - name: submit to winget (ubuntu only)
