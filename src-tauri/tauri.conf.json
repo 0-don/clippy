@@ -53,7 +53,7 @@
       "deb": {
         "depends": [],
         "files": {
-          "../.github/flathub/io.github._0_don.clippy.metainfo.xml": "/usr/share/metainfo/io.github._0_don.clippy.metainfo.xml"
+          "/usr/share/metainfo/io.github._0_don.clippy.metainfo.xml": "../.github/flathub/io.github._0_don.clippy.metainfo.xml"
         }
       },
       "rpm": {

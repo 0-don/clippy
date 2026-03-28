@@ -12,7 +12,7 @@
     <projectSourceUrl>https://github.com/0-don/clippy</projectSourceUrl>
     <bugTrackerUrl>https://github.com/0-don/clippy/issues</bugTrackerUrl>
     <tags>clipboard clipboard-manager productivity utility rust tauri</tags>
-    <summary>{{DESCRIPTION}}</summary>
+    <summary>Privacy focused clipboard manager with sync and encryption</summary>
     <description>Privacy focused clipboard manager with sync and encryption. Supports text, images, files, HTML, and RTF content with cloud sync via Google Drive, end-to-end encryption, smart search, favorites, and customizable hotkeys.</description>
   </metadata>
   <files>
