@@ -92,7 +92,7 @@ jobs:
         if: startsWith(matrix.platform, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install -y libayatana-appindicator3-dev libwebkit2gtk-4.1-dev
+          sudo apt-get install -y libayatana-appindicator3-dev libwebkit2gtk-4.1-dev patchelf xdg-utils
 
       - name: install frontend dependencies
         run: yarn install
