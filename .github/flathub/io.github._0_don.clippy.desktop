@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Clippy
+Comment=Privacy focused clipboard manager with sync and encryption
+Exec=clippy
+Icon=io.github._0_don.clippy
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=clipboard;manager;copy;paste;history;
+StartupWMClass=clippy
