@@ -21,35 +21,43 @@
 <div align="center">
 
 <a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_x64-setup.exe">
-  <img src="./public/windows.png"> Windows (x64)
+  <img src="./public/windows.png"> Windows x64
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_x64-setup.exe">
-  Windows (arm64)
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_arm64-setup.exe">
+  Windows ARM64
 </a>
 <br>
 <a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_amd64.deb">
-  <img src="./public/linux.png"> Linux (deb)
+  <img src="./public/linux.png"> Linux x64 (deb)
 </a>
 •
 <a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy-1.5.11-1.x86_64.rpm">
-  Linux (rpm)
+  Linux x64 (rpm)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.0/clippy-bin-1.5.0-1-x86_64.pkg.tar.zst">
-  Linux (pkg.tar.zst)
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy-bin-1.5.11-1-x86_64.pkg.tar.zst">
+  Linux x64 (pkg.tar.zst)
 </a>
 •
 <a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_amd64.AppImage">
-  Linux (AppImage)
+  Linux x64 (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_aarch64.dmg">
-  <img src="./public/apple.png"> macOS (Silicon)
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_arm64.deb">
+  Linux ARM64 (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_aarch64.dmg">
-  macOS (Intel)
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy-1.5.11-1.aarch64.rpm">
+  Linux ARM64 (rpm)
+</a>
+•
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_aarch64.AppImage">
+  Linux ARM64 (AppImage)
+</a>
+<br>
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_universal.dmg">
+  <img src="./public/apple.png"> macOS (Universal)
 </a>
 <br>
 <br>
