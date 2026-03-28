@@ -133,7 +133,7 @@ jobs:
             sudo -u builder makepkg -f --nodeps
           "
 
-      - name: upload arch && rpm release (ubuntu only)
+      - name: upload arch package to release (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         uses: softprops/action-gh-release@v1
         with:
@@ -142,17 +142,30 @@ jobs:
           files: |
             ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.arch_pkg_name }}
 
-      - name: publish to AUR (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+  publish-linux:
+    needs: [setup, build-tauri]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup ssh
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > ~/.ssh/aur
           chmod 600 ~/.ssh/aur
           ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: download deb from release
+        run: |
+          curl -sL "https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.deb_pkg_name }}" -o /tmp/clippy.deb
+          echo "DEB_SHA256=$(sha256sum /tmp/clippy.deb | awk '{print $1}')" >> $GITHUB_ENV
+
+      - name: publish to AUR
+        run: |
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
-
-          DEB_SHA256=$(sha256sum ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} | awk '{print $1}')
-
           git clone ssh://aur@aur.archlinux.org/${{ needs.setup.outputs.name }}-rs-bin.git /tmp/aur-pkg
           cd /tmp/aur-pkg
 
@@ -160,7 +173,7 @@ jobs:
               -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
               -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
               -e "s|{{LICENSE}}|${{ needs.setup.outputs.license }}|g" \
-              -e "s|{{SHA256}}|${DEB_SHA256}|g" \
+              -e "s|{{SHA256}}|${{ env.DEB_SHA256 }}|g" \
               ${{ github.workspace }}/.github/aur/PKGBUILD > PKGBUILD
 
           mkdir -p /tmp/pkgbuild-work
@@ -179,13 +192,8 @@ jobs:
           git add PKGBUILD .SRCINFO
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
-      - name: update homebrew cask (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: update homebrew cask
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > ~/.ssh/aur
-          chmod 600 ~/.ssh/aur
-          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
           git clone git@github.com:0-don/homebrew-clippy.git /tmp/homebrew-tap
           cd /tmp/homebrew-tap
@@ -205,13 +213,8 @@ jobs:
           git add Casks/clippy.rb
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
-      - name: update scoop bucket (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: update scoop bucket
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > ~/.ssh/aur
-          chmod 600 ~/.ssh/aur
-          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
           git clone git@github.com:0-don/scoop-clippy.git /tmp/scoop-bucket
           cd /tmp/scoop-bucket
@@ -231,21 +234,19 @@ jobs:
           git add bucket/clippy.json
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
-      - name: prepare snapcraft.yaml (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: prepare snapcraft.yaml
         run: |
           sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
               -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
               -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
               .github/snap/snapcraft.yaml > snapcraft.yaml
 
-      - name: build snap (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: build snap
         uses: snapcore/action-build@v1
         id: snap-build
 
-      - name: publish snap (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04' && steps.snap-build.outputs.snap
+      - name: publish snap
+        if: steps.snap-build.outputs.snap
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         run: |
@@ -253,31 +254,7 @@ jobs:
           sudo snap install snapcraft --classic
           snapcraft upload ${{ steps.snap-build.outputs.snap }} --release=stable
 
-      - name: submit to winget (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          EXE_URL="https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}_${{ needs.setup.outputs.version }}_x64-setup.exe"
-          curl -sL "$EXE_URL" -o /tmp/clippy-setup.exe
-          EXE_SHA256=$(sha256sum /tmp/clippy-setup.exe | awk '{print $1}' | tr '[:lower:]' '[:upper:]')
-
-          MANIFEST_DIR="/tmp/winget-manifests/manifests/0/0-don/clippy/${{ needs.setup.outputs.version }}"
-          mkdir -p "$MANIFEST_DIR"
-
-          for tmpl in .github/winget/*.yaml; do
-            filename=$(basename "$tmpl")
-            sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-                -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
-                -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
-                -e "s|{{SHA256}}|${EXE_SHA256}|g" \
-                "$tmpl" > "$MANIFEST_DIR/$filename"
-          done
-
-          echo "Winget manifests generated at $MANIFEST_DIR"
-          echo "To submit: fork microsoft/winget-pkgs, copy manifests, open PR"
-          ls -la "$MANIFEST_DIR"
-
-      - name: build copr package (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: build copr package
         env:
           COPR_API_TOKEN: ${{ secrets.COPR_API_TOKEN }}
         run: |
@@ -286,8 +263,6 @@ jobs:
           mkdir -p ~/.config
           echo "$COPR_API_TOKEN" > ~/.config/copr
 
-          RPM_URL="https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}-${{ needs.setup.outputs.version }}-1.x86_64.rpm"
-
           sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
               -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
               -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
@@ -295,8 +270,13 @@ jobs:
 
           copr-cli build clippy /tmp/clippy.spec
 
-      - name: publish to chocolatey (windows only)
-        if: matrix.platform == 'windows-latest'
+  publish-windows:
+    needs: [setup, build-tauri]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: publish to chocolatey
         shell: pwsh
         env:
           CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
@@ -307,7 +287,7 @@ jobs:
           $hash = (Get-FileHash clippy-setup.exe -Algorithm SHA256).Hash
 
           $chocoDir = ".github/chocolatey"
-          (Get-Content "$chocoDir/clippy.nuspec") -replace '\{\{VERSION\}\}', '${{ needs.setup.outputs.version }}' -replace '\{\{DESCRIPTION\}\}', '${{ needs.setup.outputs.description }}' | Set-Content "$chocoDir/clippy.nuspec"
+          (Get-Content "$chocoDir/clippy.nuspec") -replace '\{\{VERSION\}\}', '${{ needs.setup.outputs.version }}' | Set-Content "$chocoDir/clippy.nuspec"
           (Get-Content "$chocoDir/tools/chocolateyinstall.ps1") -replace '\{\{VERSION\}\}', '${{ needs.setup.outputs.version }}' -replace '\{\{SHA256\}\}', $hash | Set-Content "$chocoDir/tools/chocolateyinstall.ps1"
 
           cd $chocoDir
