@@ -235,7 +235,6 @@ jobs:
 
       - name: publish snap (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' && steps.snap-build.outputs.snap
-        continue-on-error: true
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         run: |
