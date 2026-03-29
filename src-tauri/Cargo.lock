@@ -961,7 +961,7 @@ dependencies = [
 
 [[package]]
 name = "clippy"
-version = "1.5.11"
+version = "1.5.12"
 dependencies = [
  "async-trait",
  "base64 0.22.1",

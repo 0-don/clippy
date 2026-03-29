@@ -20,19 +20,19 @@
 
 <div align="center">
 
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_x64-setup.exe">
   <img src="./public/windows.png"> Windows x64
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_arm64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_arm64-setup.exe">
   Windows ARM64
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_amd64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_amd64.deb">
   <img src="./public/linux.png"> Linux x64 (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy-1.5.11-1.x86_64.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy-1.5.12-1.x86_64.rpm">
   Linux x64 (rpm)
 </a>
 •
@@ -40,23 +40,23 @@
   Linux x64 (pkg.tar.zst)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_amd64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_amd64.AppImage">
   Linux x64 (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_arm64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_arm64.deb">
   Linux ARM64 (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy-1.5.11-1.aarch64.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy-1.5.12-1.aarch64.rpm">
   Linux ARM64 (rpm)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_aarch64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_aarch64.AppImage">
   Linux ARM64 (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.5.11/clippy_1.5.11_universal.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.5.12/clippy_1.5.12_universal.dmg">
   <img src="./public/apple.png"> macOS (Universal)
 </a>
 <br>
@@ -167,6 +167,9 @@ xattr -r -d com.apple.quarantine /Applications/clippy.app
 <!-- OPENSUSE KDE X11 -->
 <!-- sudo zypper --non-interactive install -t pattern devel_basis && sudo zypper --non-interactive install glib2-devel webkit2gtk3-devel gtk3-devel libopenssl-devel libayatana-appindicator3-1 libayatana-appindicator3-devel -->
 <!-- sudo zypper install ./clippy-1.3.0-1.x86_64.rpm -->
+
+<!-- sudo dnf install gcc gcc-c++ make pkg-config glib2-devel webkit2gtk4.1-devel gtk3-devel openssl-devel libayatana-appindicator-gtk3-devel -->
+
 
 <!-- ENDEVOUROS KDE X11 -->
 <!-- sudo pacman -U clippy-bin-1.3.0-1-x86_64.pkg.tar.zst -->
