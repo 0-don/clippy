@@ -25,9 +25,6 @@ entity = { path = "entity" }
 migration = { path = "migration" }
 common = { path = "common" }
 
-[target.'cfg(target_os = "linux")'.dependencies]
-libappindicator-sys = "0"
-
 tauri = { version = "2", features = [
   "macos-private-api",
   "devtools",
