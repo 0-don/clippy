@@ -6,6 +6,7 @@ use common::types::enums::Language;
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{TrayIconBuilder, TrayIconId},
+    Manager,
 };
 
 const TRAY_ID: &str = "clippy_tray";
@@ -26,13 +27,14 @@ pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
 
     let version = get_app().package_info().version.to_string();
 
-    let tray = TrayIconBuilder::with_id(TRAY_ID)
+    TrayIconBuilder::with_id(TRAY_ID)
         .icon(
             get_app()
                 .default_window_icon()
                 .expect("failed to get default icon")
                 .to_owned(),
         )
+        .temp_dir_path(get_app().path().app_cache_dir().unwrap_or_default())
         .tooltip(format!("clippy {}", version))
         .menu(&menu)
         .on_menu_event(|app, event| {
@@ -59,32 +61,6 @@ pub fn setup_system_tray() -> Result<(), Box<dyn std::error::Error>> {
             }
         })
         .build(get_app())?;
-
-    // On Linux, set the icon by freedesktop name so the AppIndicator
-    // uses the system icon theme instead of a temp file pixmap.
-    // Flatpak renames the icon to the app ID, so detect that.
-    #[cfg(target_os = "linux")]
-    tray.with_inner_tray_icon(|inner| {
-        use std::ffi::CString;
-        let name = if std::path::Path::new("/.flatpak-info").exists() {
-            "io.github._0_don.clippy"
-        } else {
-            "clippy"
-        };
-        unsafe {
-            let ptr = inner.app_indicator() as *mut libappindicator_sys::AppIndicator;
-            if !ptr.is_null() {
-                let icon_name = CString::new(name).unwrap();
-                let icon_desc = CString::new("Clippy").unwrap();
-                libappindicator_sys::app_indicator_set_icon_full(
-                    ptr,
-                    icon_name.as_ptr(),
-                    icon_desc.as_ptr(),
-                );
-            }
-        }
-    })?;
-    let _ = tray;
 
     Ok(())
 }
