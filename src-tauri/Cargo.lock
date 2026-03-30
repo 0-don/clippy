@@ -975,6 +975,7 @@ dependencies = [
  "http-body-util",
  "image",
  "infer",
+ "libappindicator-sys",
  "migration",
  "mime_guess",
  "moka",
