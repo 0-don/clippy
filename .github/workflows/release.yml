@@ -262,7 +262,9 @@ jobs:
           GH_TOKEN="${{ secrets.GH_PAT }}" gh pr create --repo flathub/io.github._0_don.clippy \
             --base master --head "$BRANCH" \
             --title "Update to ${{ needs.setup.outputs.version }}" \
-            --body "Automated update from release workflow" || echo "PR already exists or creation skipped"
+            --body "Automated update from release workflow" || echo "PR already exists"
+          GH_TOKEN="${{ secrets.GH_PAT }}" gh pr merge --repo flathub/io.github._0_don.clippy \
+            "$BRANCH" --auto --squash || echo "Auto-merge enable failed"
 
       - name: prepare snapcraft.yaml
         run: |
