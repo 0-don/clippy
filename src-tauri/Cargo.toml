@@ -75,7 +75,8 @@ ring = "0"
 # caching
 moka = { version = "0", features = ["sync"] }
 
-# ocr
+# ocr (excluded on Windows ARM64: no prebuilt MNN, see https://github.com/zibo-chen/rust-paddle-ocr/issues/34)
+[target.'cfg(not(all(target_os = "windows", target_arch = "aarch64")))'.dependencies]
 ocr-rs = "2"
 
 [profile.release]

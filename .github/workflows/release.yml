@@ -88,12 +88,6 @@ jobs:
           restore-keys: |
             ${{ matrix.platform }}-cargo-
 
-      - name: pin cmake for windows arm64
-        if: matrix.platform == 'windows-11-arm'
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: "~3.31"
-
       - name: install dependencies (ubuntu only)
         if: startsWith(matrix.platform, 'ubuntu')
         run: |
