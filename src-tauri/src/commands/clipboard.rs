@@ -18,7 +18,9 @@ use common::{
     types::{enums::ClipboardType, orm_query::ClipboardsResponse, types::CommandError},
 };
 use sea_orm::prelude::Uuid;
+use serde::Serialize;
 use std::fs::File;
+use tauri::ipc::Channel;
 use tauri::Manager;
 
 #[tauri::command]
@@ -42,57 +44,94 @@ pub async fn get_clipboards(
 
     // Only use cache for encrypted clipboards WITH a search term
     let clipboards = if is_encrypted && search.is_some() && !search.as_ref().unwrap().is_empty() {
-        // Get or populate the cache
-        let all_decrypted = if let Some(cached) = get_cache().get(CACHE_KEY) {
-            cached
-        } else {
-            // No cache hit, load and decrypt all clipboards
-            let all_clipboards = get_all_clipboards_db().await?;
-
-            // Exclude images from text search (when img filter is NOT explicitly enabled)
-            // This drastically reduces memory usage and improves performance
-            let clipboards_to_search = if img.is_none() || img == Some(false) {
-                all_clipboards
-                    .into_iter()
-                    .filter(|cb| cb.image.is_none())
-                    .collect::<Vec<_>>()
+        // If cache is ready, use it for fast in-memory search
+        if let Some(cached) = get_cache().get(CACHE_KEY) {
+            let filtered =
+                filter_clipboards(&cached, search.as_ref(), star, img, &settings);
+            let start = cursor.unwrap_or(0) as usize;
+            let end = (start + 25).min(filtered.len());
+            if start < filtered.len() {
+                filtered[start..end].to_vec()
             } else {
-                all_clipboards
-            };
-
-            // Decrypt all clipboards (excluding images for text search)
-            let decrypted_clipboards: Vec<FullClipboardDto> = clipboards_to_search
-                .into_iter()
-                .map(|clipboard| {
-                    if clipboard.clipboard.encrypted {
-                        match decrypt_clipboard(clipboard.clone()) {
-                            Ok(decrypted) => decrypted,
-                            Err(e) => {
-                                printlog!("Failed to decrypt clipboard: {:?}", e);
-                                clipboard
-                            }
-                        }
-                    } else {
-                        clipboard
-                    }
-                })
-                .collect();
-
-            get_cache().insert(CACHE_KEY.to_string(), decrypted_clipboards.clone());
-            decrypted_clipboards
-        };
-
-        // Apply filters in memory
-        let filtered = filter_clipboards(&all_decrypted, search.as_ref(), star, img, &settings);
-
-        // Apply pagination
-        let start = cursor.unwrap_or(0) as usize;
-        let end = (start + 25).min(filtered.len());
-
-        if start < filtered.len() {
-            filtered[start..end].to_vec()
+                Vec::new()
+            }
         } else {
-            Vec::new()
+            // Cache not ready: decrypt only enough to fill the first page,
+            // then populate the full cache in background for subsequent searches
+            let all_clipboards = get_all_clipboards_db().await?;
+            let page_size = 25usize;
+            let start = cursor.unwrap_or(0) as usize;
+            let needed = start + page_size;
+
+            let mut matched: Vec<FullClipboardDto> = Vec::new();
+            let mut decrypted_so_far = 0usize;
+
+            // Decrypt only until we have enough matches for the requested page
+            for clipboard in &all_clipboards {
+                let mut cb = if clipboard.clipboard.encrypted {
+                    match decrypt_clipboard(clipboard.clone()) {
+                        Ok(decrypted) => decrypted,
+                        Err(e) => {
+                            printlog!("Failed to decrypt clipboard: {:?}", e);
+                            clipboard.clone()
+                        }
+                    }
+                } else {
+                    clipboard.clone()
+                };
+
+                if let Some(ref mut image) = cb.image {
+                    image.data = Vec::new();
+                }
+
+                decrypted_so_far += 1;
+
+                let single = vec![cb];
+                let matches =
+                    filter_clipboards(&single, search.as_ref(), star, img, &settings);
+                matched.extend(matches);
+
+                if matched.len() >= needed {
+                    break;
+                }
+            }
+
+            // Populate full cache in background for instant subsequent searches
+            let remaining = all_clipboards.len().saturating_sub(decrypted_so_far);
+            if remaining > 0 {
+                tokio::spawn(async move {
+                    let mut all_decrypted: Vec<FullClipboardDto> =
+                        Vec::with_capacity(all_clipboards.len());
+
+                    for (i, clipboard) in all_clipboards.into_iter().enumerate() {
+                        let mut cb = if clipboard.clipboard.encrypted {
+                            decrypt_clipboard(clipboard.clone()).unwrap_or(clipboard)
+                        } else {
+                            clipboard
+                        };
+
+                        if let Some(ref mut image) = cb.image {
+                            image.data = Vec::new();
+                        }
+
+                        all_decrypted.push(cb);
+
+                        // Yield every 50 records to keep the runtime responsive
+                        if (i + 1) % 50 == 0 {
+                            tokio::task::yield_now().await;
+                        }
+                    }
+
+                    get_cache().insert(CACHE_KEY.to_string(), all_decrypted);
+                });
+            }
+
+            let end = needed.min(matched.len());
+            if start < matched.len() {
+                matched[start..end].to_vec()
+            } else {
+                Vec::new()
+            }
         }
     } else {
         // For regular search (non-encrypted OR encrypted without search string)
@@ -138,6 +177,91 @@ pub async fn get_clipboards(
         total,
         has_more,
     })
+}
+
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase", tag = "event", content = "data")]
+pub enum SearchEvent {
+    Batch {
+        clipboards: Vec<FullClipboardDto>,
+    },
+    Done {
+        total: u64,
+    },
+}
+
+#[tauri::command]
+pub async fn search_clipboards(
+    search: Option<String>,
+    star: Option<bool>,
+    img: Option<bool>,
+    on_chunk: Channel<SearchEvent>,
+) -> Result<(), CommandError> {
+    let settings = get_global_settings();
+    let is_encrypted = settings.encryption && is_encryption_key_set();
+    let total = get_clipboard_count_db().await?;
+
+    if !is_encrypted {
+        let clipboards = get_clipboards_db(None, search, star, img).await?;
+        on_chunk.send(SearchEvent::Batch {
+            clipboards: trim_clipboard_data(clipboards),
+        })?;
+        on_chunk.send(SearchEvent::Done { total })?;
+        return Ok(());
+    }
+
+    // Encrypted: check cache first
+    if let Some(cached) = get_cache().get(CACHE_KEY) {
+        let filtered = filter_clipboards(&cached, search.as_ref(), star, img, &settings);
+        for chunk in filtered.chunks(100) {
+            on_chunk.send(SearchEvent::Batch {
+                clipboards: trim_clipboard_data(chunk.to_vec()),
+            })?;
+        }
+        on_chunk.send(SearchEvent::Done { total })?;
+        return Ok(());
+    }
+
+    // Encrypted, no cache: decrypt all, stream matches, build cache
+    let all_clipboards = get_all_clipboards_db().await?;
+    let mut all_decrypted: Vec<FullClipboardDto> = Vec::with_capacity(all_clipboards.len());
+    let mut batch: Vec<FullClipboardDto> = Vec::new();
+
+    for clipboard in all_clipboards {
+        let mut cb = if clipboard.clipboard.encrypted {
+            decrypt_clipboard(clipboard.clone()).unwrap_or(clipboard)
+        } else {
+            clipboard
+        };
+
+        if let Some(ref mut image) = cb.image {
+            image.data = Vec::new();
+        }
+
+        let single = vec![cb.clone()];
+        let matches = filter_clipboards(&single, search.as_ref(), star, img, &settings);
+        if !matches.is_empty() {
+            batch.extend(matches);
+            if batch.len() >= 100 {
+                on_chunk.send(SearchEvent::Batch {
+                    clipboards: trim_clipboard_data(batch.clone()),
+                })?;
+                batch.clear();
+            }
+        }
+
+        all_decrypted.push(cb);
+    }
+
+    if !batch.is_empty() {
+        on_chunk.send(SearchEvent::Batch {
+            clipboards: trim_clipboard_data(batch),
+        })?;
+    }
+
+    get_cache().insert(CACHE_KEY.to_string(), all_decrypted);
+    on_chunk.send(SearchEvent::Done { total })?;
+    Ok(())
 }
 
 #[tauri::command]

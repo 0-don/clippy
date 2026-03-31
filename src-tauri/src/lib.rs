@@ -32,6 +32,7 @@ pub fn run() {
         .setup(setup::setup)
         .invoke_handler(tauri::generate_handler![
             clipboard::get_clipboards,
+            clipboard::search_clipboards,
             clipboard::delete_clipboard,
             clipboard::star_clipboard,
             clipboard::rename_clipboard,

@@ -14,7 +14,7 @@ Clippy's **Clipboard History** is a powerful tool that captures and manages your
 ### Multi-Content Support
 
 - **Text, HTML, RTF**: Store different text formats effortlessly.
-- **Images**: Automatically generates **thumbnails** for easy preview.
+- **Images**: Automatically generates **thumbnails** for easy preview. Includes **OCR text extraction** for 100+ languages, making image content searchable.
 - **Files**: Captures file paths and displays **metadata**.
 
 ### Smart Clipboard Capabilities

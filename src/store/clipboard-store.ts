@@ -1,6 +1,12 @@
+import { Channel } from "@tauri-apps/api/core";
 import { createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
-import { ClipboardWhere, ClipboardWithRelations, Progress } from "../types";
+import {
+  ClipboardWhere,
+  ClipboardWithRelations,
+  Progress,
+  SearchEvent,
+} from "../types";
 import { InvokeCommand } from "../types/tauri-invoke";
 import { AppStore } from "./app-store";
 
@@ -33,6 +39,36 @@ function createClipboardStore() {
       setHasMore(response.has_more);
       return response.clipboards;
     } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const searchStream = async (
+    search?: string,
+    star?: boolean,
+    img?: boolean,
+  ) => {
+    setIsSearching(true);
+    setClipboards([]);
+    setHasMore(false);
+
+    const onChunk = new Channel<SearchEvent>();
+    onChunk.onmessage = (message) => {
+      if (message.event === "batch") {
+        setClipboards((prev) => [...prev, ...message.data.clipboards]);
+      } else if (message.event === "done") {
+        setIsSearching(false);
+      }
+    };
+
+    try {
+      await invokeCommand(InvokeCommand.SearchClipboards, {
+        search: search || undefined,
+        star: star || undefined,
+        img: img || undefined,
+        onChunk,
+      });
+    } catch {
       setIsSearching(false);
     }
   };
@@ -133,6 +169,7 @@ function createClipboardStore() {
     resetClipboards,
     resetWhere,
     getClipboards,
+    searchStream,
     clipboardRef,
     setClipboardRef,
     init,
