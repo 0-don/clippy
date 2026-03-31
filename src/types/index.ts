@@ -109,6 +109,10 @@ export interface ClipboardResponse {
   has_more: boolean;
 }
 
+export type SearchEvent =
+  | { event: "batch"; data: { clipboards: ClipboardWithRelations[] } }
+  | { event: "done"; data: { total: number } };
+
 export type Hotkey = {
   id: number;
   event: HotkeyEvent;
