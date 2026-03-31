@@ -7,7 +7,9 @@ use crate::service::{
     clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
+use crate::tao::connection::db;
 use crate::tao::global::{get_app, get_cache};
+use crate::utils::ocr;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
 use common::constants::CACHE_KEY;
@@ -17,6 +19,7 @@ use common::types::types::TextMatcher;
 use image::imageops;
 use regex::Regex;
 use sea_orm::prelude::Uuid;
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
@@ -102,6 +105,37 @@ impl ClipboardManagerExt for FullClipboardDbo {
             let clipboard = insert_clipboard_dbo(manager)
                 .await
                 .expect("Failed to insert");
+
+            // Run OCR in background for image clipboards
+            if let Some(ref image) = clipboard.image {
+                let image_data = image.data.clone();
+                let clipboard_id = clipboard.clipboard.id;
+                let should_encrypt = settings.encryption && is_encryption_key_set();
+                tokio::spawn(async move {
+                    if let Some(ocr_text) = ocr::extract_text_from_image(&image_data) {
+                        let stored_text = if should_encrypt {
+                            use crate::service::encrypt::encrypt_data;
+                            STANDARD.encode(
+                                encrypt_data(ocr_text.as_bytes())
+                                    .expect("OCR text encryption failed"),
+                            )
+                        } else {
+                            ocr_text
+                        };
+                        if let Ok(conn) = db().await {
+                            let update = entity::clipboard_image::ActiveModel {
+                                ocr_text: Set(Some(stored_text)),
+                                ..Default::default()
+                            };
+                            let _ = entity::clipboard_image::Entity::update_many()
+                                .set(update)
+                                .filter(entity::clipboard_image::Column::ClipboardId.eq(clipboard_id))
+                                .exec(&conn)
+                                .await;
+                        }
+                    }
+                });
+            }
 
             // If encryption is enabled and key is set, encrypt clipboard before upsert
             if settings.encryption && is_encryption_key_set() {

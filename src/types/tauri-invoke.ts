@@ -3,9 +3,11 @@ import {
   ClipboardWhere,
   DatabaseInfo,
   Hotkey,
+  SearchEvent,
   Settings,
   TextMatcher,
 } from ".";
+import { Channel } from "@tauri-apps/api/core";
 import {
   ClipboardType,
   FolderLocation,
@@ -22,6 +24,7 @@ export enum InvokeCommand {
   CopyClipboard = "copy_clipboard",
   ClearClipboards = "clear_clipboards",
   SaveClipboardImage = "save_clipboard_image",
+  SearchClipboards = "search_clipboards",
 
   // Hotkey commands
   GetHotkeys = "get_hotkeys",
@@ -86,6 +89,15 @@ export interface TauriInvokeCommands {
   };
   [InvokeCommand.SaveClipboardImage]: {
     args: { id: number };
+    return: void;
+  };
+  [InvokeCommand.SearchClipboards]: {
+    args: {
+      search?: string;
+      star?: boolean;
+      img?: boolean;
+      onChunk: Channel<SearchEvent>;
+    };
     return: void;
   };
 
