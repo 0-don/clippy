@@ -164,6 +164,14 @@ pub fn encrypt_clipboard(mut clipboard: FullClipboardDto) -> FullClipboardDto {
                 image.thumbnail = STANDARD.encode(&encrypted_thumbnail);
             }
         }
+
+        if let Some(ocr_text) = &image.ocr_text {
+            if !looks_like_encrypted_data(ocr_text.as_bytes()) {
+                image.ocr_text = Some(STANDARD.encode(
+                    encrypt_data(ocr_text.as_bytes()).expect("OCR text encryption failed"),
+                ));
+            }
+        }
     }
 
     if !clipboard.files.is_empty() {

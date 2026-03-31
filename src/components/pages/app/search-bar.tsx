@@ -39,17 +39,22 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
     const debounceDelay = SettingsStore.settings()?.encryption ? 300 : 0;
 
     const delayDebounceFn = setTimeout(async () => {
-      ClipboardStore.setWhere(() => ({
-        ...initialWhere,
-        search: text.length && !img ? text : undefined,
-        img: img || undefined,
-        star:
-          AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS"
-            ? true
-            : undefined,
-      }));
-      const clipboards = await ClipboardStore.getClipboards();
-      ClipboardStore.setClipboards(clipboards);
+      const star =
+        AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS"
+          ? true
+          : undefined;
+      const search = text.length && !img ? text : undefined;
+
+      if (search || img) {
+        await ClipboardStore.searchStream(search, star, img || undefined);
+      } else {
+        ClipboardStore.setWhere(() => ({
+          ...initialWhere,
+          star,
+        }));
+        const clipboards = await ClipboardStore.getClipboards();
+        ClipboardStore.setClipboards(clipboards);
+      }
     }, debounceDelay);
 
     onCleanup(() => clearTimeout(delayDebounceFn));

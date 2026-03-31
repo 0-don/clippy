@@ -272,6 +272,36 @@ pub fn decrypt_clipboard(
                 return Err(EncryptionError::DecryptionFailed);
             }
         }
+
+        if let Some(ocr_text) = &image.ocr_text {
+            match STANDARD.decode(ocr_text) {
+                Ok(decoded) => match decrypt_data(&decoded) {
+                    Ok(decrypted) => match String::from_utf8(decrypted) {
+                        Ok(str_data) => image.ocr_text = Some(str_data),
+                        Err(e) => {
+                            printlog!(
+                                "Failed to convert decrypted OCR text to UTF-8 for clipboard {}: {}",
+                                clipboard.clipboard.id,
+                                e
+                            );
+                            return Err(EncryptionError::DecryptionFailed);
+                        }
+                    },
+                    Err(e) => {
+                        printlog!(
+                            "Failed to decrypt OCR text for clipboard {}: {:?}",
+                            clipboard.clipboard.id,
+                            e
+                        );
+                        return Err(e);
+                    }
+                },
+                Err(_) => {
+                    // OCR text might not be encrypted (e.g. added after encryption was enabled)
+                    // Leave it as-is
+                }
+            }
+        }
     }
 
     if !clipboard.files.is_empty() {

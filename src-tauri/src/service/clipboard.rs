@@ -308,6 +308,7 @@ pub async fn get_clipboards_db(
                         .or(clipboard_file::Column::Extension.contains(&s))
                         .or(clipboard_file::Column::MimeType.contains(&s))
                         .or(clipboard_image::Column::Extension.contains(&s))
+                        .or(clipboard_image::Column::OcrText.contains(&s))
                         .or(clipboard_text::Column::Type.contains(&s))
                         .or(clipboard_html::Column::Data.contains(&s))
                         .or(clipboard_rtf::Column::Data.contains(&s)),
@@ -808,6 +809,9 @@ pub fn filter_clipboards(
                     })
                     || clipboard.image.as_ref().map_or(false, |i| {
                         i.extension.to_lowercase().contains(&search_lower)
+                            || i.ocr_text
+                                .as_ref()
+                                .map_or(false, |t| t.to_lowercase().contains(&search_lower))
                     })
                     || clipboard
                         .text

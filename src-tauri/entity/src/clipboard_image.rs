@@ -24,6 +24,7 @@ pub struct Model {
     pub extension: String,
     pub width: i32,
     pub height: i32,
+    pub ocr_text: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -36,6 +37,7 @@ pub enum Column {
     Extension,
     Width,
     Height,
+    OcrText,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -67,6 +69,7 @@ impl ColumnTrait for Column {
             Self::Extension => ColumnType::String(StringLen::None).def(),
             Self::Width => ColumnType::Integer.def(),
             Self::Height => ColumnType::Integer.def(),
+            Self::OcrText => ColumnType::Text.def().null(),
         }
     }
 }
