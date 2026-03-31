@@ -238,11 +238,16 @@ jobs:
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
       - name: update flathub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
           git clone git@github.com:flathub/io.github._0_don.clippy.git /tmp/flathub
           cd /tmp/flathub
           git submodule update --init
+
+          BRANCH="update-v${{ needs.setup.outputs.version }}"
+          git checkout -b "$BRANCH"
 
           COMMIT_HASH=$(git -C ${{ github.workspace }} rev-parse HEAD)
           sed -i "s|commit: .*|commit: ${COMMIT_HASH}|" io.github._0_don.clippy.yml
@@ -260,7 +265,13 @@ jobs:
           git config user.email "0-don@users.noreply.github.com"
           git config user.name "0-don"
           git add io.github._0_don.clippy.yml cargo-sources.json node-sources.json
-          git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
+          git diff --cached --quiet && exit 0
+          git commit -m "Update to ${{ needs.setup.outputs.version }}"
+          git push origin "$BRANCH"
+          gh pr create --repo flathub/io.github._0_don.clippy \
+            --base master --head "$BRANCH" \
+            --title "Update to ${{ needs.setup.outputs.version }}" \
+            --body "Automated update from release workflow"
 
       - name: prepare snapcraft.yaml
         run: |
