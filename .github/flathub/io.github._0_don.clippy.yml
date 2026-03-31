@@ -1,42 +1,68 @@
-app-id: io.github._0_don.clippy
+id: io.github._0_don.clippy
 runtime: org.gnome.Platform
-runtime-version: "46"
+runtime-version: "50"
 sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.node20
 command: clippy
+rename-icon: clippy
 finish-args:
   - --share=ipc
   - --share=network
   - --socket=x11
-  - --socket=wayland
-  - --socket=fallback-x11
   - --device=dri
   - --talk-name=org.kde.StatusNotifierWatcher
   - --talk-name=com.canonical.AppMenu.Registrar
-  - --talk-name=org.freedesktop.Notifications
-  - --filesystem=home
+
+build-options:
+  append-path: /usr/lib/sdk/node20/bin:/usr/lib/sdk/rust-stable/bin
 
 modules:
+  - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
+
   - name: clippy
     buildsystem: simple
+    build-options:
+      env:
+        CARGO_HOME: /run/build/clippy/cargo
+        CARGO_NET_OFFLINE: "true"
     build-commands:
-      - ar x clippy.deb
-      - tar xf data.tar.*
-      - install -Dm755 usr/bin/clippy /app/bin/clippy
-      - install -Dm644 usr/share/applications/clippy.desktop /app/share/applications/io.github._0_don.clippy.desktop
+      - npm ci --offline --legacy-peer-deps --cache=$PWD/flatpak-node/npm-cache
+      - cargo --offline fetch --manifest-path src-tauri/Cargo.toml
       - |
-        for size in 32x32 128x128 256x256; do
-          if [ -f "usr/share/icons/hicolor/${size}/apps/clippy.png" ]; then
-            install -Dm644 "usr/share/icons/hicolor/${size}/apps/clippy.png" \
-              "/app/share/icons/hicolor/${size}/apps/io.github._0_don.clippy.png"
+        OCR_VERSION=$(ls ${CARGO_HOME}/vendor/ | grep -oP 'ocr-rs-\K[0-9.]+' | head -1)
+        if [ -n "$OCR_VERSION" ]; then
+          MNN_VENDOR_DIR="${CARGO_HOME}/vendor/ocr-rs-${OCR_VERSION}/3rd_party/prebuilt"
+          mkdir -p "${MNN_VENDOR_DIR}"
+          ARCH_NAME="$(uname -m)"
+          [ "$ARCH_NAME" = "x86_64" ] && ARCH_NAME="x86_64" || ARCH_NAME="aarch64"
+          TARBALL="mnn-dev-linux-${ARCH_NAME}.tar.gz"
+          if [ -f "$TARBALL" ]; then
+            cp "$TARBALL" "${MNN_VENDOR_DIR}/"
+            tar xzf "${MNN_VENDOR_DIR}/${TARBALL}" -C "${MNN_VENDOR_DIR}/"
           fi
-        done
-      - install -Dm644 io.github._0_don.clippy.metainfo.xml /app/share/metainfo/io.github._0_don.clippy.metainfo.xml
-      - sed -i 's|Exec=clippy|Exec=/app/bin/clippy|' /app/share/applications/io.github._0_don.clippy.desktop
-      - sed -i 's|Icon=clippy|Icon=io.github._0_don.clippy|' /app/share/applications/io.github._0_don.clippy.desktop
+        fi
+      - npx tauri build --no-bundle
+      - install -Dm755 src-tauri/target/release/clippy -t /app/bin/
+      - install -Dm644 src-tauri/icons/32x32.png /app/share/icons/hicolor/32x32/apps/clippy.png
+      - install -Dm644 src-tauri/icons/128x128.png /app/share/icons/hicolor/128x128/apps/clippy.png
+      - install -Dm644 src-tauri/icons/128x128@2x.png /app/share/icons/hicolor/256x256/apps/clippy.png
+      - install -Dm644 .github/flathub/io.github._0_don.clippy.metainfo.xml -t /app/share/metainfo/
+      - install -Dm644 src-tauri/clippy.desktop /app/share/applications/io.github._0_don.clippy.desktop
     sources:
+      - type: git
+        url: https://github.com/0-don/clippy.git
+        commit: {{COMMIT_HASH}}
+      - node-sources.json
+      - cargo-sources.json
       - type: file
-        url: https://github.com/0-don/clippy/releases/download/v{{VERSION}}/clippy_{{VERSION}}_amd64.deb
-        sha256: {{SHA256}}
-        dest-filename: clippy.deb
+        url: https://github.com/zibo-chen/MNN-Prebuilds/releases/download/dev/mnn-dev-linux-x86_64.tar.gz
+        sha256: {{MNN_X86_64_SHA256}}
+        only-arches:
+          - x86_64
       - type: file
-        path: io.github._0_don.clippy.metainfo.xml
+        url: https://github.com/zibo-chen/MNN-Prebuilds/releases/download/dev/mnn-dev-linux-aarch64.tar.gz
+        sha256: {{MNN_AARCH64_SHA256}}
+        only-arches:
+          - aarch64
