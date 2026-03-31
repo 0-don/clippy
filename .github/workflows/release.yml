@@ -259,7 +259,7 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "Update to ${{ needs.setup.outputs.version }}"
           git push origin "$BRANCH"
-          gh pr create --repo flathub/io.github._0_don.clippy \
+          GH_TOKEN="${{ secrets.GH_PAT }}" gh pr create --repo flathub/io.github._0_don.clippy \
             --base master --head "$BRANCH" \
             --title "Update to ${{ needs.setup.outputs.version }}" \
             --body "Automated update from release workflow"
