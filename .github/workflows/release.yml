@@ -243,7 +243,13 @@ jobs:
           git checkout -b "$BRANCH"
 
           COMMIT_HASH=$(git -C ${{ github.workspace }} rev-parse HEAD)
-          sed -i "s|commit: .*|commit: ${COMMIT_HASH}|" io.github._0_don.clippy.yml
+          MNN_X86=$(curl -sL "https://github.com/zibo-chen/MNN-Prebuilds/releases/download/dev/mnn-dev-linux-x86_64.tar.gz" | sha256sum | awk '{print $1}')
+          MNN_ARM=$(curl -sL "https://github.com/zibo-chen/MNN-Prebuilds/releases/download/dev/mnn-dev-linux-aarch64.tar.gz" | sha256sum | awk '{print $1}')
+
+          sed -e "s|{{COMMIT_HASH}}|${COMMIT_HASH}|g" \
+              -e "s|{{MNN_X86_64_SHA256}}|${MNN_X86}|g" \
+              -e "s|{{MNN_AARCH64_SHA256}}|${MNN_ARM}|g" \
+              ${{ github.workspace }}/.github/flathub/io.github._0_don.clippy.yml > io.github._0_don.clippy.yml
 
           pip3 install tomlkit aiohttp
           python3 <(curl -sL https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/refs/heads/master/cargo/flatpak-cargo-generator.py) \
@@ -263,8 +269,6 @@ jobs:
             --base master --head "$BRANCH" \
             --title "Update to ${{ needs.setup.outputs.version }}" \
             --body "Automated update from release workflow" || echo "PR already exists"
-          GH_TOKEN="${{ secrets.GH_PAT }}" gh pr merge --repo flathub/io.github._0_don.clippy \
-            "$BRANCH" --auto --squash || echo "Auto-merge enable failed"
 
       - name: prepare snapcraft.yaml
         run: |
