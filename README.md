@@ -67,28 +67,32 @@
 ### Package Managers
 
 **Linux:**
+
 ```bash
-yay -S clippy-rs-bin                              # Arch Linux (AUR)
-sudo snap install clippy-clipboard                 # Snap Store
-flatpak install flathub io.github._0_don.clippy   # Flathub
-sudo dnf copr enable 0-don/clippy && sudo dnf install clippy  # Fedora (COPR)
+yay -S clippy-rs-bin
+sudo snap install clippy-clipboard
+flatpak install flathub io.github._0_don.clippy
+sudo dnf copr enable 0-don/clippy && sudo dnf install clippy
 ```
 
 **macOS:**
+
 ```bash
-brew install --cask 0-don/clippy/clippy            # Homebrew
+brew install --cask 0-don/clippy/clippy
 ```
 
 **Windows:**
+
 ```powershell
-winget install 0-don.clippy                        # Winget
-scoop bucket add clippy https://github.com/0-don/scoop-clippy && scoop install clippy  # Scoop
-choco install clippy-clipboard                     # Chocolatey
+winget install 0-don.clippy
+scoop bucket add clippy https://github.com/0-don/scoop-clippy && scoop install clippy
+choco install clippy-clipboard
 ```
 
 **Nix:**
+
 ```bash
-nix-env -iA nixpkgs.clippy-clipboard              # Nix
+nix-env -iA nixpkgs.clippy-clipboard
 ```
 
 ### Features
@@ -169,7 +173,6 @@ xattr -r -d com.apple.quarantine /Applications/clippy.app
 <!-- sudo zypper install ./clippy-1.3.0-1.x86_64.rpm -->
 
 <!-- sudo dnf install gcc gcc-c++ make pkg-config glib2-devel webkit2gtk4.1-devel gtk3-devel openssl-devel libayatana-appindicator-gtk3-devel -->
-
 
 <!-- ENDEVOUROS KDE X11 -->
 <!-- sudo pacman -U clippy-bin-1.3.0-1-x86_64.pkg.tar.zst -->
