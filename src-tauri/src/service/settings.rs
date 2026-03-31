@@ -104,6 +104,9 @@ pub fn setup_settings() {
                 let _ = update_settings_db(settings)
                     .await
                     .expect("Failed to update settings");
+
+                // Show window on first launch so users know the app is running
+                crate::service::window::toggle_main_window();
             }
         })
     });
