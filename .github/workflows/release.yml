@@ -237,6 +237,31 @@ jobs:
           git add bucket/clippy.json
           git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
 
+      - name: update flathub
+        run: |
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
+          git clone git@github.com:flathub/io.github._0_don.clippy.git /tmp/flathub
+          cd /tmp/flathub
+          git submodule update --init
+
+          COMMIT_HASH=$(git -C ${{ github.workspace }} rev-parse HEAD)
+          sed -i "s|commit: .*|commit: ${COMMIT_HASH}|" io.github._0_don.clippy.yml
+
+          pip3 install tomlkit aiohttp
+          python3 <(curl -sL https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/refs/heads/master/cargo/flatpak-cargo-generator.py) \
+            ${{ github.workspace }}/src-tauri/Cargo.lock -o cargo-sources.json
+
+          pip3 install requirements-parser
+          git clone https://github.com/flatpak/flatpak-builder-tools.git /tmp/fbt
+          cd /tmp/fbt/node && pip3 install .
+          flatpak-node-generator npm ${{ github.workspace }}/package-lock.json -o /tmp/flathub/node-sources.json
+          cd /tmp/flathub
+
+          git config user.email "0-don@users.noreply.github.com"
+          git config user.name "0-don"
+          git add io.github._0_don.clippy.yml cargo-sources.json node-sources.json
+          git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
+
       - name: prepare snapcraft.yaml
         run: |
           sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
