@@ -9,35 +9,27 @@ on:
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
-env:
-  ARCH: x86_64
+
 jobs:
   setup:
     runs-on: ubuntu-22.04
     outputs:
-      name: ${{ steps.get-package.outputs.name }}
-      name_bin: ${{ steps.get-package.outputs.name }}-rs-bin
-      version: ${{ steps.get-package.outputs.version }}
-      description: ${{ steps.get-package.outputs.description }}
-      license: ${{ steps.get-package.outputs.license }}
-      deb_pkg_name: ${{ steps.get-package.outputs.name }}_${{ steps.get-package.outputs.version }}_amd64.deb
-      deb_pkg_path: ./src-tauri/target/release/bundle/deb/
-      deb_pkg_renamed: ${{ steps.get-package.outputs.name }}-${{ steps.get-package.outputs.version }}-${{ env.ARCH }}.deb
-      arch_pkg_name: ${{ steps.get-package.outputs.name }}-rs-bin-${{ steps.get-package.outputs.version }}-1-${{ env.ARCH }}.pkg.tar.zst
-      tag_name: v${{ steps.get-package.outputs.version }}
+      name: ${{ steps.pkg.outputs.name }}
+      version: ${{ steps.pkg.outputs.version }}
+      description: ${{ steps.pkg.outputs.description }}
+      license: ${{ steps.pkg.outputs.license }}
+      tag_name: v${{ steps.pkg.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-      - name: setup node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
       - name: get package info
-        id: get-package
+        id: pkg
         run: |
-          echo "name=$(node -p "require('./package.json').name")" >> $GITHUB_OUTPUT
-          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-          echo "description=$(node -p "require('./package.json').description")" >> $GITHUB_OUTPUT
-          echo "license=$(node -p "require('./package.json').license")" >> $GITHUB_OUTPUT
+          for field in name version description license; do
+            echo "$field=$(node -p "require('./package.json').$field")" >> $GITHUB_OUTPUT
+          done
 
   build-tauri:
     needs: [setup]
@@ -58,46 +50,45 @@ jobs:
           - platform: "windows-11-arm"
             args: ""
     runs-on: ${{ matrix.platform }}
+    env:
+      NAME: ${{ needs.setup.outputs.name }}
+      VERSION: ${{ needs.setup.outputs.version }}
+      TAG: ${{ needs.setup.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: setup node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: Replace environment variables in config
+      - name: replace config secrets
         env:
           TAURI_GOOGLE_CLIENT_ID: ${{ secrets.TAURI_GOOGLE_CLIENT_ID }}
           TAURI_GOOGLE_CLIENT_SECRET: ${{ secrets.TAURI_GOOGLE_CLIENT_SECRET }}
         run: node ./.github/replace-config.js
 
-      - name: install rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: cache rust dependencies
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
             src-tauri/target
           key: ${{ matrix.platform }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
-          restore-keys: |
-            ${{ matrix.platform }}-cargo-
+          restore-keys: ${{ matrix.platform }}-cargo-
 
-      - name: install dependencies (ubuntu only)
+      - name: install dependencies (ubuntu)
         if: startsWith(matrix.platform, 'ubuntu')
         run: |
           sudo apt-get update
           sudo apt-get install -y libayatana-appindicator3-dev libwebkit2gtk-4.1-dev patchelf xdg-utils
 
-      - name: install frontend dependencies
-        run: yarn install
+      - run: yarn install
 
-      - name: Set NO_STRIP environment variable
+      - name: set NO_STRIP
         if: startsWith(matrix.platform, 'ubuntu') || matrix.platform == 'macos-latest'
         run: echo "NO_STRIP=true" >> $GITHUB_ENV
 
@@ -105,51 +96,54 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ needs.setup.outputs.tag_name }}
-          releaseName: ${{ needs.setup.outputs.tag_name  }}
+          tagName: ${{ env.TAG }}
+          releaseName: ${{ env.TAG }}
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
 
-      - name: generate PKGBUILD from template (ubuntu only)
+      - name: build and upload arch package
         if: matrix.platform == 'ubuntu-22.04'
+        env:
+          NAME_BIN: ${{ env.NAME }}-rs-bin
         run: |
-          mkdir -p ${{ needs.setup.outputs.name_bin }}
-          cp -fr ${{ needs.setup.outputs.deb_pkg_path }}${{ needs.setup.outputs.deb_pkg_name }} ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }}
-          DEB_SHA256=$(sha256sum ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.deb_pkg_renamed }} | awk '{print $1}')
-          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
+          DEB_SRC="src-tauri/target/release/bundle/deb/${NAME}_${VERSION}_amd64.deb"
+          DEB_SHA256=$(sha256sum "$DEB_SRC" | awk '{print $1}')
+
+          mkdir -p "$NAME_BIN"
+          cp "$DEB_SRC" "$NAME_BIN/${NAME}-${VERSION}-x86_64.deb"
+
+          sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" \
               -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
               -e "s|{{LICENSE}}|${{ needs.setup.outputs.license }}|g" \
               -e "s|{{SHA256}}|${DEB_SHA256}|g" \
-              .github/aur/PKGBUILD > ${{ needs.setup.outputs.name_bin }}/PKGBUILD
-          cat ${{ needs.setup.outputs.name_bin }}/PKGBUILD
+              .github/aur/PKGBUILD > "$NAME_BIN/PKGBUILD"
 
-      - name: create arch package (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
-        run: |
-          docker run --rm -v "$PWD/${{ needs.setup.outputs.name_bin }}:/pkg" archlinux:latest bash -c "
+          docker run --rm -v "$PWD/$NAME_BIN:/pkg" archlinux:latest bash -c "
             pacman -Sy --noconfirm base-devel sudo &&
-            useradd -m builder &&
-            chown -R builder: /pkg &&
-            cd /pkg &&
-            sudo -u builder makepkg -f --nodeps
+            useradd -m builder && chown -R builder: /pkg &&
+            cd /pkg && sudo -u builder makepkg -f --nodeps
           "
 
-      - name: upload arch package to release (ubuntu only)
+      - name: upload arch package to release
         if: matrix.platform == 'ubuntu-22.04'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ needs.setup.outputs.tag_name  }}
-          files: |
-            ${{ needs.setup.outputs.name_bin }}/${{ needs.setup.outputs.arch_pkg_name }}
+          tag_name: ${{ env.TAG }}
+          files: ${{ env.NAME }}-rs-bin/${{ env.NAME }}-rs-bin-${{ env.VERSION }}-1-x86_64.pkg.tar.zst
 
   publish-linux:
     needs: [setup, build-tauri]
     runs-on: ubuntu-22.04
     permissions:
       contents: write
+    env:
+      NAME: ${{ needs.setup.outputs.name }}
+      VERSION: ${{ needs.setup.outputs.version }}
+      TAG: ${{ needs.setup.outputs.tag_name }}
+      DESC: ${{ needs.setup.outputs.description }}
+      LICENSE: ${{ needs.setup.outputs.license }}
     steps:
       - uses: actions/checkout@v4
 
@@ -163,73 +157,59 @@ jobs:
           git config --global user.email "0-don@users.noreply.github.com"
           git config --global user.name "0-don"
 
-      - name: download deb from release
+      - name: download release artifacts and compute hashes
         run: |
-          curl -sL "https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.deb_pkg_name }}" -o /tmp/clippy.deb
+          BASE="https://github.com/0-don/${NAME}/releases/download/${TAG}"
+          curl -sL "${BASE}/${NAME}_${VERSION}_amd64.deb" -o /tmp/clippy.deb
+          curl -sL "${BASE}/${NAME}_${VERSION}_universal.dmg" -o /tmp/clippy.dmg
+          curl -sL "${BASE}/${NAME}_${VERSION}_x64-setup.exe" -o /tmp/clippy-setup.exe
+
           echo "DEB_SHA256=$(sha256sum /tmp/clippy.deb | awk '{print $1}')" >> $GITHUB_ENV
+          echo "DMG_SHA256=$(sha256sum /tmp/clippy.dmg | awk '{print $1}')" >> $GITHUB_ENV
+          echo "EXE_SHA256=$(sha256sum /tmp/clippy-setup.exe | awk '{print $1}')" >> $GITHUB_ENV
 
       - name: publish to AUR
         run: |
+          render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
-          git clone ssh://aur@aur.archlinux.org/${{ needs.setup.outputs.name }}-rs-bin.git /tmp/aur-pkg
+          git clone ssh://aur@aur.archlinux.org/${NAME}-rs-bin.git /tmp/aur-pkg
           cd /tmp/aur-pkg
 
-          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
-              -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
-              -e "s|{{LICENSE}}|${{ needs.setup.outputs.license }}|g" \
-              -e "s|{{SHA256}}|${{ env.DEB_SHA256 }}|g" \
-              ${{ github.workspace }}/.github/aur/PKGBUILD > PKGBUILD
+          render -e "s|{{SHA256}}|${DEB_SHA256}|g" \
+            ${{ github.workspace }}/.github/aur/PKGBUILD > PKGBUILD
 
-          mkdir -p /tmp/pkgbuild-work
-          cp PKGBUILD /tmp/pkgbuild-work/
-          docker run --rm -v "/tmp/pkgbuild-work:/pkg" archlinux:latest bash -c "
+          docker run --rm -v "/tmp/aur-pkg:/pkg" archlinux:latest bash -c "
             pacman -Sy --noconfirm pacman-contrib sudo &&
-            useradd -m builder &&
-            chown -R builder: /pkg &&
-            cd /pkg &&
-            sudo -u builder makepkg --printsrcinfo > .SRCINFO
+            useradd -m builder && chown -R builder: /pkg &&
+            cd /pkg && sudo -u builder makepkg --printsrcinfo > .SRCINFO
           "
-          cp /tmp/pkgbuild-work/.SRCINFO .
 
           git add PKGBUILD .SRCINFO
-          git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
+          git diff --cached --quiet || git commit -m "Update to ${VERSION}" && git push
 
       - name: update homebrew cask
         run: |
+          render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
           git clone https://github.com/0-don/homebrew-clippy.git /tmp/homebrew-tap
           cd /tmp/homebrew-tap
 
-          DMG_URL="https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}_${{ needs.setup.outputs.version }}_universal.dmg"
-          curl -sL "$DMG_URL" -o /tmp/clippy.dmg
-          DMG_SHA256=$(sha256sum /tmp/clippy.dmg | awk '{print $1}')
-
-          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
-              -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
-              -e "s|{{SHA256}}|${DMG_SHA256}|g" \
-              ${{ github.workspace }}/.github/homebrew/Casks/clippy.rb.template > Casks/clippy.rb
+          render -e "s|{{SHA256}}|${DMG_SHA256}|g" \
+            ${{ github.workspace }}/.github/homebrew/Casks/clippy.rb.template > Casks/clippy.rb
 
           git add Casks/clippy.rb
-          git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
+          git diff --cached --quiet || git commit -m "Update to ${VERSION}" && git push
 
       - name: update scoop bucket
         run: |
+          render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
           git clone https://github.com/0-don/scoop-clippy.git /tmp/scoop-bucket
           cd /tmp/scoop-bucket
 
-          EXE_URL="https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}_${{ needs.setup.outputs.version }}_x64-setup.exe"
-          curl -sL "$EXE_URL" -o /tmp/clippy-setup.exe
-          EXE_SHA256=$(sha256sum /tmp/clippy-setup.exe | awk '{print $1}')
-
-          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
-              -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
-              -e "s|{{SHA256}}|${EXE_SHA256}|g" \
-              ${{ github.workspace }}/.github/scoop/clippy.json > bucket/clippy.json
+          render -e "s|{{SHA256}}|${EXE_SHA256}|g" \
+            ${{ github.workspace }}/.github/scoop/clippy.json > bucket/clippy.json
 
           git add bucket/clippy.json
-          git diff --cached --quiet || git commit -m "Update to ${{ needs.setup.outputs.version }}" && git push
+          git diff --cached --quiet || git commit -m "Update to ${VERSION}" && git push
 
       - name: update flathub
         env:
@@ -239,7 +219,7 @@ jobs:
           cd /tmp/flathub
           git submodule update --init
 
-          BRANCH="update-v${{ needs.setup.outputs.version }}"
+          BRANCH="update-v${VERSION}"
           git checkout -b "$BRANCH"
 
           COMMIT_HASH=$(git -C ${{ github.workspace }} rev-parse HEAD)
@@ -263,19 +243,17 @@ jobs:
 
           git add io.github._0_don.clippy.yml cargo-sources.json node-sources.json
           git diff --cached --quiet && exit 0
-          git commit -m "Update to ${{ needs.setup.outputs.version }}"
+          git commit -m "Update to ${VERSION}"
           git push origin "$BRANCH" --force
-          GH_TOKEN="${{ secrets.GH_PAT }}" gh pr create --repo flathub/io.github._0_don.clippy \
+          gh pr create --repo flathub/io.github._0_don.clippy \
             --base master --head "$BRANCH" \
-            --title "Update to ${{ needs.setup.outputs.version }}" \
+            --title "Update to ${VERSION}" \
             --body "Automated update from release workflow" || echo "PR already exists"
 
       - name: prepare snapcraft.yaml
         run: |
-          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
-              -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
-              .github/snap/snapcraft.yaml > snapcraft.yaml
+          render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
+          render .github/snap/snapcraft.yaml > snapcraft.yaml
 
       - name: build snap
         uses: snapcore/action-build@v1
@@ -298,12 +276,8 @@ jobs:
           sudo pip3 install copr-cli
           mkdir -p ~/.config
           echo "$COPR_API_TOKEN" > ~/.config/copr
-
-          sed -e "s|{{NAME}}|${{ needs.setup.outputs.name }}|g" \
-              -e "s|{{VERSION}}|${{ needs.setup.outputs.version }}|g" \
-              -e "s|{{DESCRIPTION}}|${{ needs.setup.outputs.description }}|g" \
-              .github/copr/clippy.spec > /tmp/clippy.spec
-
+          render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
+          render .github/copr/clippy.spec > /tmp/clippy.spec
           copr-cli build clippy /tmp/clippy.spec
 
   publish-windows:
@@ -316,16 +290,19 @@ jobs:
         shell: pwsh
         env:
           CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
+          VERSION: ${{ needs.setup.outputs.version }}
+          TAG: ${{ needs.setup.outputs.tag_name }}
+          NAME: ${{ needs.setup.outputs.name }}
         run: |
           if (-not $env:CHOCOLATEY_API_KEY) { Write-Host "No Chocolatey API key, skipping"; exit 0 }
-          $exe_url = "https://github.com/0-don/${{ needs.setup.outputs.name }}/releases/download/${{ needs.setup.outputs.tag_name }}/${{ needs.setup.outputs.name }}_${{ needs.setup.outputs.version }}_x64-setup.exe"
+          $exe_url = "https://github.com/0-don/$env:NAME/releases/download/$env:TAG/${env:NAME}_${env:VERSION}_x64-setup.exe"
           Invoke-WebRequest -Uri $exe_url -OutFile clippy-setup.exe
           $hash = (Get-FileHash clippy-setup.exe -Algorithm SHA256).Hash
 
           $chocoDir = ".github/chocolatey"
-          (Get-Content "$chocoDir/clippy.nuspec") -replace '\{\{VERSION\}\}', '${{ needs.setup.outputs.version }}' | Set-Content "$chocoDir/clippy.nuspec"
-          (Get-Content "$chocoDir/tools/chocolateyinstall.ps1") -replace '\{\{VERSION\}\}', '${{ needs.setup.outputs.version }}' -replace '\{\{SHA256\}\}', $hash | Set-Content "$chocoDir/tools/chocolateyinstall.ps1"
+          (Get-Content "$chocoDir/clippy.nuspec") -replace '\{\{VERSION\}\}', $env:VERSION | Set-Content "$chocoDir/clippy.nuspec"
+          (Get-Content "$chocoDir/tools/chocolateyinstall.ps1") -replace '\{\{VERSION\}\}', $env:VERSION -replace '\{\{SHA256\}\}', $hash | Set-Content "$chocoDir/tools/chocolateyinstall.ps1"
 
           cd $chocoDir
           choco pack
-          choco push clippy-clipboard.${{ needs.setup.outputs.version }}.nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
+          choco push "clippy-clipboard.$env:VERSION.nupkg" --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
