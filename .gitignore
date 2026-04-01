@@ -20,3 +20,4 @@ config.json
 token.json
 .env
 test.json
+.mcp.json
