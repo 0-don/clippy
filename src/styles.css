@@ -42,7 +42,7 @@ dark: "#aaaaaa",
 }
 
 ::-webkit-scrollbar {
-  @apply h-[2px] w-[2px];
+  @apply h-0.5 w-0.5;
 }
 ::-webkit-scrollbar-button {
   @apply h-0 w-0;
