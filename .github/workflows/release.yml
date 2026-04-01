@@ -178,11 +178,14 @@ jobs:
           render -e "s|{{SHA256}}|${DEB_SHA256}|g" \
             ${{ github.workspace }}/.github/aur/PKGBUILD > PKGBUILD
 
-          docker run --rm -v "/tmp/aur-pkg:/pkg" archlinux:latest bash -c "
+          mkdir -p /tmp/pkgbuild-work
+          cp PKGBUILD /tmp/pkgbuild-work/
+          docker run --rm -v "/tmp/pkgbuild-work:/pkg" archlinux:latest bash -c "
             pacman -Sy --noconfirm pacman-contrib sudo &&
             useradd -m builder && chown -R builder: /pkg &&
             cd /pkg && sudo -u builder makepkg --printsrcinfo > .SRCINFO
           "
+          cp /tmp/pkgbuild-work/.SRCINFO .
 
           git add PKGBUILD .SRCINFO
           git diff --cached --quiet || git commit -m "Update to ${VERSION}" && git push
