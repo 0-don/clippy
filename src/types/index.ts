@@ -140,7 +140,7 @@ export type Settings = {
   display_scale: number;
   position: ClippyPosition;
   encryption: boolean;
-  enryption_save_before_unlock: boolean;
+  encryption_save_before_unlock: boolean;
   max_file_size: number;
   max_image_size: number;
   max_text_size: number;

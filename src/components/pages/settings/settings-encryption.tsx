@@ -162,11 +162,11 @@ const Decrypt: Component = ({}) => {
     <>
       <div class="my-4 flex items-center gap-2">
         <Toggle
-          checked={SettingsStore.settings()?.enryption_save_before_unlock}
-          onChange={async (enryption_save_before_unlock) =>
+          checked={SettingsStore.settings()?.encryption_save_before_unlock}
+          onChange={async (encryption_save_before_unlock) =>
             SettingsStore.updateSettings({
               ...SettingsStore.settings()!,
-              enryption_save_before_unlock,
+              encryption_save_before_unlock,
             })
           }
         />

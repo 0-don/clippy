@@ -12,65 +12,65 @@ use tokio::sync::oneshot;
 pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
     MAIN_WINDOW
         .get()
-        .expect("Failed to get MAIN_WINDOW")
+        .expect("MAIN_WINDOW not initialized")
         .lock()
-        .expect("Failed to lock MAIN_WINDOW")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_global_hotkey_manager() -> MutexGuard<'static, SafeHotKeyManager> {
     GLOBAL_HOTKEY_MANAGER
         .get()
-        .expect("Failed to get GLOBAL_HOTKEY_MANAGER")
+        .expect("GLOBAL_HOTKEY_MANAGER not initialized")
         .lock()
-        .expect("Failed to lock GLOBAL_HOTKEY_MANAGER")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_window_hotkey_manager() -> MutexGuard<'static, Option<SafeHotKeyManager>> {
     WINDOW_HOTKEY_MANAGER
         .get()
-        .expect("Failed to get WINDOW_HOTKEY_MANAGER")
+        .expect("WINDOW_HOTKEY_MANAGER not initialized")
         .lock()
-        .expect("Failed to lock WINDOW_HOTKEY_MANAGER")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_global_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
     GLOBAL_HOTKEYS
         .get()
-        .expect("Failed to get GLOBAL_HOTKEYS")
+        .expect("GLOBAL_HOTKEYS not initialized")
         .lock()
-        .expect("Failed to lock GLOBAL_HOTKEYS")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_window_hotkey_store() -> MutexGuard<'static, HashMap<u32, Key>> {
     WINDOW_HOTKEYS
         .get()
-        .expect("Failed to get WINDOW_HOTKEYS")
+        .expect("WINDOW_HOTKEYS not initialized")
         .lock()
-        .expect("Failed to lock WINDOW_HOTKEYS")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_window_stop_tx() -> MutexGuard<'static, Option<oneshot::Sender<()>>> {
     WINDOW_STOP_TX
         .get()
-        .expect("Failed to get WINDOW_STOP_TX")
+        .expect("WINDOW_STOP_TX not initialized")
         .lock()
-        .expect("Failed to lock WINDOW_STOP_TX")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_hotkey_stop_tx() -> MutexGuard<'static, Option<oneshot::Sender<()>>> {
     HOTKEY_STOP_TX
         .get()
-        .expect("Failed to get HOTKEY_STOP_TX")
+        .expect("HOTKEY_STOP_TX not initialized")
         .lock()
-        .expect("Failed to lock HOTKEY_STOP_TX")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_hotkey_running() -> MutexGuard<'static, bool> {
     HOTKEY_RUNNING
         .get()
-        .expect("Failed to get HOTKEY_RUNNING")
+        .expect("HOTKEY_RUNNING not initialized")
         .lock()
-        .expect("Failed to lock HOTKEY_RUNNING")
+        .unwrap_or_else(|e| e.into_inner())
 }
 
 pub fn get_app() -> &'static AppHandle {

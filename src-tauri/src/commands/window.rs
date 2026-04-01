@@ -29,7 +29,10 @@ pub fn get_app_version(app: AppHandle) -> String {
 
 #[tauri::command]
 pub fn open_browser_url(url: String, app: AppHandle) -> Result<(), CommandError> {
-    Ok(app.opener().open_url(url, None::<String>)?)
+    Ok(app
+        .opener()
+        .open_url(url, None::<String>)
+        .map_err(|e| CommandError::new(&e.to_string()))?)
 }
 
 #[tauri::command]
