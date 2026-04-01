@@ -21,5 +21,6 @@ rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
 %files
 %{_bindir}/clippy
+/usr/lib/clippy/
 %{_datadir}/applications/clippy.desktop
 %{_datadir}/icons/hicolor/*/apps/clippy.png
