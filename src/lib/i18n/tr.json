@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "Arama girişleri",
     "EDIT_NAME": "Adı düzenle",
     "ENTER_NAME": "Bir ad girin",
-    "STAR_FAVORITE": "Yıldız favorisi"
+    "STAR_FAVORITE": "Yıldız favorisi",
+    "DOUBLE_CLICK_SAVE": "Masaüstüne kaydetmek için çift tıklayın"
   },
   "MAIN": {
     "ERROR": {
