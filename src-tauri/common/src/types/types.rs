@@ -59,9 +59,26 @@ impl CommandError {
     }
 }
 
-// Simplified error handling using a single variant
-impl<E: std::error::Error> From<E> for CommandError {
-    fn from(err: E) -> Self {
+impl From<sea_orm::DbErr> for CommandError {
+    fn from(err: sea_orm::DbErr) -> Self {
+        CommandError::Error(err.to_string())
+    }
+}
+
+impl From<serde_json::Error> for CommandError {
+    fn from(err: serde_json::Error) -> Self {
+        CommandError::Error(err.to_string())
+    }
+}
+
+impl From<std::io::Error> for CommandError {
+    fn from(err: std::io::Error) -> Self {
+        CommandError::Error(err.to_string())
+    }
+}
+
+impl From<Box<dyn std::error::Error>> for CommandError {
+    fn from(err: Box<dyn std::error::Error>) -> Self {
         CommandError::Error(err.to_string())
     }
 }
