@@ -1,10 +1,10 @@
 use crate::prelude::*;
 use crate::service::cipher::is_encryption_key_set;
-use crate::service::clipboard::{new_clipboard_event, upsert_clipboard_dto};
+use crate::service::clipboard::{init_clipboards, new_clipboard_event, upsert_clipboard_dto};
 use crate::service::encrypt::encrypt_clipboard;
 use crate::service::settings::get_global_settings;
 use crate::service::{
-    clipboard::{get_last_clipboard_db, insert_clipboard_dbo},
+    clipboard::{bump_clipboard_timestamp, get_recent_clipboards_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
 use crate::tao::connection::db;
@@ -24,6 +24,17 @@ use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use std::fs;
 use std::io::Cursor;
 use std::path::Path;
+use std::sync::LazyLock;
+
+static RE_LINK: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$").unwrap()
+});
+static RE_HEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$").unwrap()
+});
+static RE_RGB: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)").unwrap()
+});
 use tauri::Manager;
 use tauri_plugin_clipboard::Clipboard;
 use urlencoding::decode;
@@ -31,7 +42,7 @@ use urlencoding::decode;
 pub trait ClipboardManagerExt {
     fn new() -> FullClipboardDbo;
     fn upsert_clipboard() -> impl std::future::Future<Output = ()> + Send;
-    fn check_if_last_is_same(&mut self) -> impl std::future::Future<Output = bool> + Send;
+    fn check_if_duplicate(&mut self) -> impl std::future::Future<Output = Option<Uuid>> + Send;
     fn parse_model(
         &mut self,
         text: Option<String>,
@@ -88,7 +99,15 @@ impl ClipboardManagerExt for FullClipboardDbo {
 
         let content_changed = manager.apply_text_matchers();
 
-        if !manager.check_if_last_is_same().await && manager.clipboard_model.types.is_set() {
+        // Check for duplicates in recent clipboard history
+        if let Some(existing_id) = manager.check_if_duplicate().await {
+            // Bump existing entry to the top instead of creating a duplicate
+            let _ = bump_clipboard_timestamp(existing_id).await;
+            init_clipboards();
+            return;
+        }
+
+        if manager.clipboard_model.types.is_set() {
             if content_changed {
                 // Update system clipboard with modified content if pattern replacements were applied
                 if let sea_orm::ActiveValue::Set(text) = manager.clipboard_text_model.data {
@@ -124,17 +143,16 @@ impl ClipboardManagerExt for FullClipboardDbo {
                         } else {
                             ocr_text
                         };
-                        if let Ok(conn) = db().await {
-                            let update = entity::clipboard_image::ActiveModel {
-                                ocr_text: Set(Some(stored_text)),
-                                ..Default::default()
-                            };
-                            let _ = entity::clipboard_image::Entity::update_many()
-                                .set(update)
-                                .filter(entity::clipboard_image::Column::ClipboardId.eq(clipboard_id))
-                                .exec(&conn)
-                                .await;
-                        }
+                        let conn = db();
+                        let update = entity::clipboard_image::ActiveModel {
+                            ocr_text: Set(Some(stored_text)),
+                            ..Default::default()
+                        };
+                        let _ = entity::clipboard_image::Entity::update_many()
+                            .set(update)
+                            .filter(entity::clipboard_image::Column::ClipboardId.eq(clipboard_id))
+                            .exec(conn)
+                            .await;
                     }
                 });
             }
@@ -157,81 +175,91 @@ impl ClipboardManagerExt for FullClipboardDbo {
         }
     }
 
-    async fn check_if_last_is_same(&mut self) -> bool {
-        if let Ok(last) = get_last_clipboard_db().await {
-            let last_types = ClipboardType::from_json_value(&last.clipboard.types);
-            let curr_types = ClipboardType::from_json_value(&self.clipboard_model.types.as_ref());
+    async fn check_if_duplicate(&mut self) -> Option<Uuid> {
+        let recent = get_recent_clipboards_db(10).await.ok()?;
+        let curr_types = ClipboardType::from_json_value(&self.clipboard_model.types.as_ref())?;
 
-            match (last_types, curr_types) {
-                (Some(lt), Some(ct)) if lt == ct => {
-                    for t in ct {
-                        match t {
-                            ClipboardType::Text => {
-                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
-                                    (&last.text, &self.clipboard_text_model.data)
-                                {
-                                    if curr != &last.data {
-                                        return false;
-                                    }
-                                }
-                            }
-                            ClipboardType::Html => {
-                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
-                                    (&last.html, &self.clipboard_html_model.data)
-                                {
-                                    if curr != &last.data {
-                                        return false;
-                                    }
-                                }
-                            }
-                            ClipboardType::Rtf => {
-                                if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
-                                    (&last.rtf, &self.clipboard_rtf_model.data)
-                                {
-                                    if curr != &last.data {
-                                        return false;
-                                    }
-                                }
-                            }
-                            ClipboardType::Image => {
-                                if let (Some(last_img), sea_orm::ActiveValue::Set(curr_data)) =
-                                    (&last.image, &self.clipboard_image_model.data)
-                                {
-                                    // Compare the data field from last_img with curr_data
-                                    if curr_data != &last_img.data {
-                                        return false;
-                                    }
-                                } else {
-                                    // If either is None/NotSet, they're different
-                                    return false;
-                                }
-                            }
-                            ClipboardType::File => {
-                                if self.clipboard_files_model.len() != last.files.len() {
-                                    return false;
-                                }
-                                for (curr_file, last_file) in
-                                    self.clipboard_files_model.iter().zip(&last.files)
-                                {
-                                    if let sea_orm::ActiveValue::Set(curr_data) = &curr_file.data {
-                                        if curr_data != &last_file.data {
-                                            return false;
-                                        }
-                                    } else {
-                                        // If either is None/NotSet, they're different
-                                        return false;
-                                    }
-                                }
+        for entry in recent {
+            let entry_types = match ClipboardType::from_json_value(&entry.clipboard.types) {
+                Some(t) if t == curr_types => t,
+                _ => continue,
+            };
+
+            let mut is_match = true;
+            for t in &entry_types {
+                match t {
+                    ClipboardType::Text => {
+                        if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                            (&entry.text, &self.clipboard_text_model.data)
+                        {
+                            if curr != &last.data {
+                                is_match = false;
+                                break;
                             }
                         }
                     }
-                    true
+                    ClipboardType::Html => {
+                        if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                            (&entry.html, &self.clipboard_html_model.data)
+                        {
+                            if curr != &last.data {
+                                is_match = false;
+                                break;
+                            }
+                        }
+                    }
+                    ClipboardType::Rtf => {
+                        if let (Some(last), sea_orm::ActiveValue::Set(curr)) =
+                            (&entry.rtf, &self.clipboard_rtf_model.data)
+                        {
+                            if curr != &last.data {
+                                is_match = false;
+                                break;
+                            }
+                        }
+                    }
+                    ClipboardType::Image => {
+                        match (&entry.image, &self.clipboard_image_model.data) {
+                            (Some(last_img), sea_orm::ActiveValue::Set(curr_data)) => {
+                                if curr_data != &last_img.data {
+                                    is_match = false;
+                                    break;
+                                }
+                            }
+                            _ => {
+                                is_match = false;
+                                break;
+                            }
+                        }
+                    }
+                    ClipboardType::File => {
+                        if self.clipboard_files_model.len() != entry.files.len() {
+                            is_match = false;
+                            break;
+                        }
+                        for (curr_file, last_file) in
+                            self.clipboard_files_model.iter().zip(&entry.files)
+                        {
+                            if let sea_orm::ActiveValue::Set(curr_data) = &curr_file.data {
+                                if curr_data != &last_file.data {
+                                    is_match = false;
+                                    break;
+                                }
+                            } else {
+                                is_match = false;
+                                break;
+                            }
+                        }
+                    }
                 }
-                _ => false,
             }
-        } else {
-            false
+
+            if is_match {
+                return Some(entry.clipboard.id);
+            }
         }
+
+        None
     }
 
     fn parse_model(
@@ -251,24 +279,9 @@ impl ClipboardManagerExt for FullClipboardDbo {
             types.push(ClipboardType::Text);
             self.clipboard_text_model.data = Set(text.clone());
             self.clipboard_text_model.r#type = Set(match text {
-                t if Regex::new(r"^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$")
-                    .expect("Invalid regex")
-                    .is_match(&t) =>
-                {
-                    ClipboardTextType::Link
-                }
-                t if Regex::new(r"^#?(?:[0-9a-fA-F]{3}){1,2}(?:[0-9]{2})?$")
-                    .expect("Invalid regex")
-                    .is_match(&t) =>
-                {
-                    ClipboardTextType::Hex
-                }
-                t if Regex::new(r"^(?:rgb|rgba|hsl|hsla|hsv|hwb)\((.*)\)")
-                    .expect("Invalid regex")
-                    .is_match(&t) =>
-                {
-                    ClipboardTextType::Rgb
-                }
+                t if RE_LINK.is_match(&t) => ClipboardTextType::Link,
+                t if RE_HEX.is_match(&t) => ClipboardTextType::Hex,
+                t if RE_RGB.is_match(&t) => ClipboardTextType::Rgb,
                 _ => ClipboardTextType::Text,
             }
             .to_string());

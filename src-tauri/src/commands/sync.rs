@@ -7,7 +7,7 @@ use crate::{
 };
 use common::types::types::CommandError;
 use entity::settings::{self, ActiveModel};
-use sea_orm::{ActiveModelTrait, DatabaseConnection, EntityTrait};
+use sea_orm::{ActiveModelTrait, EntityTrait};
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
@@ -16,7 +16,7 @@ pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
 
 #[tauri::command]
 pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, CommandError> {
-    let db: DatabaseConnection = db().await?;
+    let db = db();
     let mut settings = get_global_settings();
 
     settings.sync_limit = sync_limit;
@@ -24,7 +24,7 @@ pub async fn sync_limit_change(sync_limit: i32) -> Result<settings::Model, Comma
     let active_model: ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
-        .exec(&db)
+        .exec(db)
         .await?;
 
     if settings.sync {

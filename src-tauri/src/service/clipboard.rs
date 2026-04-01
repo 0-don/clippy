@@ -21,7 +21,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm::RelationTrait;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, EntityTrait, JoinType, LoaderTrait, PaginatorTrait, QueryFilter,
-    QueryOrder, QuerySelect, QueryTrait,
+    QueryOrder, QuerySelect, QueryTrait, TransactionTrait,
 };
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -32,14 +32,14 @@ use tokio::try_join;
 pub async fn load_clipboards_with_relations(
     clipboards: Vec<clipboard::Model>,
 ) -> Vec<FullClipboardDto> {
-    let db = db().await.expect("Failed to establish connection");
+    let db = db();
 
     let (texts, htmls, images, rtfs, files) = try_join!(
-        clipboards.load_one(clipboard_text::Entity, &db),
-        clipboards.load_one(clipboard_html::Entity, &db),
-        clipboards.load_one(clipboard_image::Entity, &db),
-        clipboards.load_one(clipboard_rtf::Entity, &db),
-        clipboards.load_many(clipboard_file::Entity, &db),
+        clipboards.load_one(clipboard_text::Entity, db),
+        clipboards.load_one(clipboard_html::Entity, db),
+        clipboards.load_one(clipboard_image::Entity, db),
+        clipboards.load_one(clipboard_rtf::Entity, db),
+        clipboards.load_many(clipboard_file::Entity, db),
     )
     .expect("Failed to load clipboard relations");
 
@@ -63,16 +63,16 @@ pub async fn load_clipboards_with_relations(
 }
 
 pub async fn get_clipboard_count_db() -> Result<u64, DbErr> {
-    let db = db().await?;
+    let db = db();
 
-    let count = clipboard::Entity::find().count(&db).await?;
+    let count = clipboard::Entity::find().count(db).await?;
 
     Ok(count)
 }
 
 pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboardDto, DbErr> {
-    let db = db().await?;
-    let clipboard = model.clipboard_model.insert(&db).await?;
+    let db = db();
+    let clipboard = model.clipboard_model.insert(db).await?;
 
     // Insert text if data exists
     let text = match &model.clipboard_text_model.data {
@@ -80,7 +80,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
             let mut text_model = model.clipboard_text_model;
             text_model.id = Set(Uuid::now_v7());
             text_model.clipboard_id = Set(clipboard.id);
-            Some(text_model.insert(&db).await?)
+            Some(text_model.insert(db).await?)
         }
         _ => None,
     };
@@ -91,7 +91,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
             let mut html_model = model.clipboard_html_model;
             html_model.id = Set(Uuid::now_v7());
             html_model.clipboard_id = Set(clipboard.id);
-            Some(html_model.insert(&db).await?)
+            Some(html_model.insert(db).await?)
         }
         _ => None,
     };
@@ -102,7 +102,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
             let mut rtf_model = model.clipboard_rtf_model;
             rtf_model.id = Set(Uuid::now_v7());
             rtf_model.clipboard_id = Set(clipboard.id);
-            Some(rtf_model.insert(&db).await?)
+            Some(rtf_model.insert(db).await?)
         }
         _ => None,
     };
@@ -113,7 +113,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
             let mut image_model = model.clipboard_image_model;
             image_model.id = Set(Uuid::now_v7());
             image_model.clipboard_id = Set(clipboard.id);
-            Some(image_model.insert(&db).await?)
+            Some(image_model.insert(db).await?)
         }
         _ => None,
     };
@@ -124,7 +124,7 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
         for mut file_model in model.clipboard_files_model {
             file_model.id = Set(Uuid::now_v7());
             file_model.clipboard_id = Set(clipboard.id);
-            files.push(file_model.insert(&db).await?);
+            files.push(file_model.insert(db).await?);
         }
         files
     } else {
@@ -142,77 +142,74 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
 }
 
 pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> {
-    let db = db().await?;
+    let txn = db().begin().await?;
 
     // Delete existing clipboard and all related records through cascade
     entity::clipboard::Entity::delete_by_id(model.clipboard.id)
-        .exec(&db)
+        .exec(&txn)
         .await?;
 
     // Insert clipboard
     entity::clipboard::ActiveModel::from(model.clipboard)
-        .insert(&db)
+        .insert(&txn)
         .await?;
 
     // Insert text if data exists
-    match model.text {
-        Some(text) if !text.data.is_empty() => Some(
+    if let Some(text) = model.text {
+        if !text.data.is_empty() {
             entity::clipboard_text::ActiveModel::from(text)
-                .insert(&db)
-                .await?,
-        ),
-        _ => None,
-    };
-
-    // Insert html if data exists
-    match model.html {
-        Some(html) if !html.data.is_empty() => Some(
-            entity::clipboard_html::ActiveModel::from(html)
-                .insert(&db)
-                .await?,
-        ),
-        _ => None,
-    };
-
-    // Insert image if data exists
-    match model.image {
-        Some(image) if !image.data.is_empty() => Some(
-            entity::clipboard_image::ActiveModel::from(image)
-                .insert(&db)
-                .await?,
-        ),
-        _ => None,
-    };
-
-    // Insert rtf if data exists
-    match model.rtf {
-        Some(rtf) if !rtf.data.is_empty() => Some(
-            entity::clipboard_rtf::ActiveModel::from(rtf)
-                .insert(&db)
-                .await?,
-        ),
-        _ => None,
-    };
-
-    // Insert files if they exist
-    if !model.files.is_empty() {
-        let mut files = Vec::new();
-        for file in model.files {
-            files.push(
-                entity::clipboard_file::ActiveModel::from(file)
-                    .insert(&db)
-                    .await?,
-            );
+                .insert(&txn)
+                .await?;
         }
     }
 
+    // Insert html if data exists
+    if let Some(html) = model.html {
+        if !html.data.is_empty() {
+            entity::clipboard_html::ActiveModel::from(html)
+                .insert(&txn)
+                .await?;
+        }
+    }
+
+    // Insert image if data exists
+    if let Some(image) = model.image {
+        if !image.data.is_empty() {
+            entity::clipboard_image::ActiveModel::from(image)
+                .insert(&txn)
+                .await?;
+        }
+    }
+
+    // Insert rtf if data exists
+    if let Some(rtf) = model.rtf {
+        if !rtf.data.is_empty() {
+            entity::clipboard_rtf::ActiveModel::from(rtf)
+                .insert(&txn)
+                .await?;
+        }
+    }
+
+    // Batch insert files if they exist
+    if !model.files.is_empty() {
+        let file_models: Vec<entity::clipboard_file::ActiveModel> = model
+            .files
+            .into_iter()
+            .map(entity::clipboard_file::ActiveModel::from)
+            .collect();
+        entity::clipboard_file::Entity::insert_many(file_models)
+            .exec(&txn)
+            .await?;
+    }
+
+    txn.commit().await?;
     Ok(())
 }
 
 pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
-    let db = db().await?;
+    let db = db();
     let clipboard = clipboard::Entity::find_by_id(id)
-        .one(&db)
+        .one(db)
         .await?
         .ok_or(DbErr::RecordNotFound("Clipboard not found".into()))?;
 
@@ -224,7 +221,7 @@ pub async fn get_clipboard_db(id: Uuid) -> Result<FullClipboardDto, DbErr> {
 pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
     let clipboard = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)
-        .one(&db().await?)
+        .one(db())
         .await?
         .ok_or_else(|| DbErr::RecordNotFound("last clipboard not found".to_string()))?;
 
@@ -241,11 +238,41 @@ pub async fn get_last_clipboard_db() -> Result<FullClipboardDto, DbErr> {
     Ok(dto)
 }
 
-pub async fn get_all_clipboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
-    let db = db().await?;
+pub async fn get_recent_clipboards_db(limit: u64) -> Result<Vec<FullClipboardDto>, DbErr> {
     let clipboards = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)
-        .all(&db)
+        .limit(limit)
+        .all(db())
+        .await?;
+
+    let mut dtos = load_clipboards_with_relations(clipboards).await;
+
+    for dto in &mut dtos {
+        if dto.clipboard.encrypted && is_encryption_key_set() {
+            if let Ok(decrypted) = decrypt_clipboard(dto.clone()) {
+                *dto = decrypted;
+            }
+        }
+    }
+
+    Ok(dtos)
+}
+
+pub async fn bump_clipboard_timestamp(id: Uuid) -> Result<(), DbErr> {
+    let new_id = Uuid::now_v7();
+    clipboard::Entity::update_many()
+        .col_expr(clipboard::Column::Id, sea_orm::sea_query::Expr::value(new_id))
+        .filter(clipboard::Column::Id.eq(id))
+        .exec(db())
+        .await?;
+    Ok(())
+}
+
+pub async fn get_all_clipboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
+    let db = db();
+    let clipboards = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::Id)
+        .all(db)
         .await?;
 
     Ok(load_clipboards_with_relations(clipboards).await)
@@ -257,7 +284,7 @@ pub async fn get_clipboards_db(
     star: Option<bool>,
     img: Option<bool>,
 ) -> Result<Vec<FullClipboardDto>, DbErr> {
-    let db = db().await?;
+    let db = db();
     let (clipboard_keywords, text_keywords) = KeywordBuilder::build_default();
 
     let settings = get_global_settings();
@@ -319,25 +346,25 @@ pub async fn get_clipboards_db(
         .limit(25)
         .order_by_desc(clipboard::Column::Id);
 
-    let clipboards = query.all(&db).await?;
+    let clipboards = query.all(db).await?;
 
     Ok(load_clipboards_with_relations(clipboards).await)
 }
 
 pub async fn get_latest_syncable_cliboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
-    let db = db().await?;
+    let db = db();
     let settings = get_global_settings();
 
     let latest_syncable_clipboards = clipboard::Entity::find()
         .limit(settings.sync_limit as u64)
         .order_by_desc(clipboard::Column::Id)
-        .all(&db)
+        .all(db)
         .await?;
 
     let sync_favorite_clipboards = clipboard::Entity::find()
         .filter(clipboard::Column::Star.eq(true))
         .order_by_desc(clipboard::Column::Id)
-        .all(&db)
+        .all(db)
         .await?;
 
     let latest_syncable_clipboards_len = latest_syncable_clipboards.len();
@@ -375,7 +402,7 @@ pub async fn get_latest_syncable_cliboards_db() -> Result<Vec<FullClipboardDto>,
 }
 
 pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandError> {
-    let db = db().await?;
+    let db = db();
 
     let model = clipboard::ActiveModel {
         id: Set(id),
@@ -383,7 +410,7 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
         ..Default::default()
     };
 
-    let clipboard = clipboard::Entity::update(model).exec(&db).await?;
+    let clipboard = clipboard::Entity::update(model).exec(db).await?;
 
     let settings = get_app().state::<Mutex<settings::Model>>();
     if settings.lock().expect("Failed to lock settings").sync {
@@ -401,7 +428,7 @@ pub async fn star_clipboard_db(id: Uuid, star: bool) -> Result<bool, CommandErro
 }
 
 pub async fn rename_clipboard_db(id: Uuid, name: Option<String>) -> Result<bool, CommandError> {
-    let db = db().await?;
+    let db = db();
 
     let model = clipboard::ActiveModel {
         id: Set(id),
@@ -409,7 +436,7 @@ pub async fn rename_clipboard_db(id: Uuid, name: Option<String>) -> Result<bool,
         ..Default::default()
     };
 
-    clipboard::Entity::update(model).exec(&db).await?;
+    clipboard::Entity::update(model).exec(db).await?;
 
     Ok(true)
 }
@@ -419,11 +446,11 @@ pub async fn delete_clipboards_db(
     command: Option<bool>,
 ) -> Result<(), CommandError> {
     let settings = get_global_settings();
-    let db = db().await?;
+    let db = db();
 
     let result = clipboard::Entity::delete_many()
         .filter(clipboard::Column::Id.is_in(ids.clone()))
-        .exec(&db)
+        .exec(db)
         .await?;
 
     // Update cache by removing deleted items instead of clearing everything
@@ -442,7 +469,7 @@ pub async fn delete_clipboards_db(
             .select_only()
             .column(clipboard::Column::Id)
             .into_tuple()
-            .all(&db)
+            .all(db)
             .await?;
 
         let deleted_ids: Vec<Uuid> = ids
@@ -481,7 +508,7 @@ pub async fn delete_clipboards_db(
 }
 
 pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), DbErr> {
-    let db = db().await?;
+    let db = db();
     let settings = get_global_settings();
     let mut remote_clipboards_to_delete = Vec::new();
 
@@ -489,14 +516,14 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
         None => {
             let clipboards_to_delete = clipboard::Entity::find()
                 .filter(clipboard::Column::Star.eq(false))
-                .all(&db)
+                .all(db)
                 .await?;
             remote_clipboards_to_delete.extend(clipboards_to_delete);
 
             // Delete all non-starred clipboards
             clipboard::Entity::delete_many()
                 .filter(clipboard::Column::Star.eq(false))
-                .exec(&db)
+                .exec(db)
                 .await?;
         }
         Some(clipboard_type) => {
@@ -507,7 +534,7 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                         .eq(false)
                         .and(clipboard::Column::Types.contains(clipboard_type.to_string())),
                 )
-                .all(&db)
+                .all(db)
                 .await?;
 
             for clipboard in clipboards {
@@ -516,31 +543,31 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                     ClipboardType::Text => {
                         clipboard_text::Entity::delete_many()
                             .filter(clipboard_text::Column::ClipboardId.eq(clipboard.id))
-                            .exec(&db)
+                            .exec(db)
                             .await?;
                     }
                     ClipboardType::Image => {
                         clipboard_image::Entity::delete_many()
                             .filter(clipboard_image::Column::ClipboardId.eq(clipboard.id))
-                            .exec(&db)
+                            .exec(db)
                             .await?;
                     }
                     ClipboardType::Html => {
                         clipboard_html::Entity::delete_many()
                             .filter(clipboard_html::Column::ClipboardId.eq(clipboard.id))
-                            .exec(&db)
+                            .exec(db)
                             .await?;
                     }
                     ClipboardType::Rtf => {
                         clipboard_rtf::Entity::delete_many()
                             .filter(clipboard_rtf::Column::ClipboardId.eq(clipboard.id))
-                            .exec(&db)
+                            .exec(db)
                             .await?;
                     }
                     ClipboardType::File => {
                         clipboard_file::Entity::delete_many()
                             .filter(clipboard_file::Column::ClipboardId.eq(clipboard.id))
-                            .exec(&db)
+                            .exec(db)
                             .await?;
                     }
                 }
@@ -555,7 +582,7 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
 
                         // If no types remain, delete the clipboard
                         clipboard::Entity::delete_by_id(clipboard.id.clone())
-                            .exec(&db)
+                            .exec(db)
                             .await?;
                     } else {
                         // Update the clipboard with the remaining types
@@ -564,7 +591,7 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                             types: Set(ClipboardType::to_json_value(&types)),
                             ..Default::default()
                         };
-                        clipboard::Entity::update(model).exec(&db).await?;
+                        clipboard::Entity::update(model).exec(db).await?;
                     }
                 }
             }
@@ -610,15 +637,15 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
 }
 
 pub async fn count_clipboards_db() -> Result<u64, DbErr> {
-    let db = db().await?;
+    let db = db();
 
-    let count = clipboard::Entity::find().count(&db).await?;
+    let count = clipboard::Entity::find().count(db).await?;
 
     Ok(count)
 }
 
 pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, (bool, NaiveDateTime)>, DbErr> {
-    let db = db().await?;
+    let db = db();
 
     let clipboards = clipboard::Entity::find()
         .select_only()
@@ -629,7 +656,7 @@ pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, (bool, NaiveDateTi
         ])
         .order_by_desc(clipboard::Column::Id)
         .into_tuple()
-        .all(&db)
+        .all(db)
         .await?;
 
     Ok(clipboards
@@ -639,13 +666,13 @@ pub async fn get_clipboard_uuids_db() -> Result<HashMap<Uuid, (bool, NaiveDateTi
 }
 
 pub async fn copy_clipboard_from_index(i: u64) -> Result<Option<Model>, DbErr> {
-    let db = db().await?;
+    let db = db();
 
     let model = clipboard::Entity::find()
         .order_by_desc(clipboard::Column::Id)
         .offset(Some(i))
         .limit(1)
-        .one(&db)
+        .one(db)
         .await?;
 
     if model.is_none() {

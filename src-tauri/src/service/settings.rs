@@ -34,10 +34,10 @@ pub fn autostart() {
 }
 
 pub async fn get_settings_db() -> Result<settings::Model, DbErr> {
-    let db: DatabaseConnection = db().await?;
+    let db = db();
 
     let settings = settings::Entity::find_by_id(1)
-        .one(&db)
+        .one(db)
         .await?
         .expect("Settings not found");
 
@@ -49,12 +49,12 @@ pub async fn get_settings_db() -> Result<settings::Model, DbErr> {
 pub async fn update_settings_db(
     settings: settings::Model,
 ) -> Result<settings::Model, CommandError> {
-    let db: DatabaseConnection = db().await?;
+    let db = db();
 
     let active_model: settings::ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
-        .exec(&db)
+        .exec(db)
         .await?;
 
     set_global_settings(settings.clone());
@@ -69,7 +69,7 @@ pub async fn update_settings_db(
 }
 
 pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Model, DbErr> {
-    let db: DatabaseConnection = db().await?;
+    let db = db();
 
     let mut settings = get_global_settings();
 
@@ -78,7 +78,7 @@ pub async fn update_settings_synchronize_db(sync: bool) -> Result<settings::Mode
     let active_model: settings::ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
-        .exec(&db)
+        .exec(db)
         .await?;
 
     set_global_settings(settings.clone());
@@ -122,7 +122,7 @@ pub async fn update_settings_text_matchers(
     let active_model: settings::ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
-        .exec(&db().await?)
+        .exec(db())
         .await?;
 
     set_global_settings(settings.clone());
@@ -142,7 +142,7 @@ pub async fn update_settings_from_sync(
         return Ok(());
     }
 
-    let db: DatabaseConnection = db().await?;
+    let db = db();
     let current_settings = get_global_settings();
 
     // Handle encryption state changes
@@ -215,7 +215,7 @@ pub async fn update_settings_from_sync(
         let active_model: settings::ActiveModel = new_settings.into();
 
         let settings = settings::Entity::update(active_model.reset_all())
-            .exec(&db)
+            .exec(db)
             .await?;
 
         // Update global settings

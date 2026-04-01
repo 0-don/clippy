@@ -1,7 +1,13 @@
 use std::{fmt, sync::Mutex};
+use zeroize::Zeroize;
 
-// Global encryption key stored in memory
-pub static ENCRYPTION_KEY: Mutex<Option<[u8; 32]>> = Mutex::new(None);
+/// Wrapper around encryption key bytes that zeros memory on drop
+#[derive(Zeroize)]
+#[zeroize(drop)]
+pub struct EncryptionKeyData(pub [u8; 32]);
+
+// Global encryption key stored in memory (zeroed on drop)
+pub static ENCRYPTION_KEY: Mutex<Option<EncryptionKeyData>> = Mutex::new(None);
 
 #[derive(Debug)]
 pub enum EncryptionError {

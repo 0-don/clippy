@@ -13,20 +13,20 @@ use sea_orm::{ActiveModelTrait, EntityTrait};
 use tauri::{Emitter, EventTarget};
 
 pub async fn get_all_hotkeys_db() -> Result<Vec<Model>, DbErr> {
-    let db: DatabaseConnection = db().await?;
+    let db = db();
 
-    let hotkeys = hotkey::Entity::find().all(&db).await?;
+    let hotkeys = hotkey::Entity::find().all(db).await?;
 
     Ok(hotkeys)
 }
 
 pub async fn update_hotkey_db(hotkey: Model) -> Result<Model, DbErr> {
-    let db: DatabaseConnection = db().await?;
+    let db = db();
 
     let active_model: ActiveModel = hotkey.into();
 
     let updated_hotkey = hotkey::Entity::update(active_model.reset_all())
-        .exec(&db)
+        .exec(db)
         .await?;
 
     Ok(updated_hotkey)
