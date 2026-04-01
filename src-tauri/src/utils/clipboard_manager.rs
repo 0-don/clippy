@@ -72,7 +72,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
         let settings = get_global_settings();
 
         // If clipboards are encypted but not saved before unlocking, return
-        if settings.encryption && !settings.enryption_save_before_unlock && !is_encryption_key_set()
+        if settings.encryption && !settings.encryption_save_before_unlock && !is_encryption_key_set()
         {
             return;
         }

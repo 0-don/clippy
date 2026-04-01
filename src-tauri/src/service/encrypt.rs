@@ -74,15 +74,17 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
             if let Ok(clipboard) = provider.download_by_id(&remote.provider_id).await {
                 clipboards.push(clipboard);
 
-                get_app().emit_to(
-                    EventTarget::any(),
-                    ListenEvent::Progress.to_string().as_str(),
-                    Progress {
-                        label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
-                        total: download_total,
-                        current: index + 1,
-                    },
-                )?;
+                get_app()
+                    .emit_to(
+                        EventTarget::any(),
+                        ListenEvent::Progress.to_string().as_str(),
+                        Progress {
+                            label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
+                            total: download_total,
+                            current: index + 1,
+                        },
+                    )
+                    .map_err(|e| CommandError::new(&e.to_string()))?;
             }
         }
         (Some(provider), remote_clipboards)
@@ -96,15 +98,17 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
         let encrypted = encrypt_clipboard(clipboard);
         upsert_clipboard_dto(encrypted.clone()).await?;
 
-        get_app().emit_to(
-            EventTarget::any(),
-            ListenEvent::Progress.to_string().as_str(),
-            Progress {
-                label: "SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS_LOCAL".to_string(),
-                total,
-                current: index + 1,
-            },
-        )?;
+        get_app()
+            .emit_to(
+                EventTarget::any(),
+                ListenEvent::Progress.to_string().as_str(),
+                Progress {
+                    label: "SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS_LOCAL".to_string(),
+                    total,
+                    current: index + 1,
+                },
+            )
+            .map_err(|e| CommandError::new(&e.to_string()))?;
 
         if let Some(provider) = &provider {
             if let Some(remote) = remote_clipboards

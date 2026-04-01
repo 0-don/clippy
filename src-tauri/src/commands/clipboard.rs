@@ -205,8 +205,8 @@ pub async fn search_clipboards(
         let clipboards = get_clipboards_db(None, search, star, img).await?;
         on_chunk.send(SearchEvent::Batch {
             clipboards: trim_clipboard_data(clipboards),
-        })?;
-        on_chunk.send(SearchEvent::Done { total })?;
+        }).map_err(|e| CommandError::new(&e.to_string()))?;
+        on_chunk.send(SearchEvent::Done { total }).map_err(|e| CommandError::new(&e.to_string()))?;
         return Ok(());
     }
 
@@ -216,9 +216,9 @@ pub async fn search_clipboards(
         for chunk in filtered.chunks(100) {
             on_chunk.send(SearchEvent::Batch {
                 clipboards: trim_clipboard_data(chunk.to_vec()),
-            })?;
+            }).map_err(|e| CommandError::new(&e.to_string()))?;
         }
-        on_chunk.send(SearchEvent::Done { total })?;
+        on_chunk.send(SearchEvent::Done { total }).map_err(|e| CommandError::new(&e.to_string()))?;
         return Ok(());
     }
 
@@ -245,7 +245,7 @@ pub async fn search_clipboards(
             if batch.len() >= 100 {
                 on_chunk.send(SearchEvent::Batch {
                     clipboards: trim_clipboard_data(batch.clone()),
-                })?;
+                }).map_err(|e| CommandError::new(&e.to_string()))?;
                 batch.clear();
             }
         }
@@ -256,11 +256,11 @@ pub async fn search_clipboards(
     if !batch.is_empty() {
         on_chunk.send(SearchEvent::Batch {
             clipboards: trim_clipboard_data(batch),
-        })?;
+        }).map_err(|e| CommandError::new(&e.to_string()))?;
     }
 
     get_cache().insert(CACHE_KEY.to_string(), all_decrypted);
-    on_chunk.send(SearchEvent::Done { total })?;
+    on_chunk.send(SearchEvent::Done { total }).map_err(|e| CommandError::new(&e.to_string()))?;
     Ok(())
 }
 
@@ -315,12 +315,14 @@ pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
                 "No image data found in clipboard".to_string(),
             ))?
             .data,
-    )?;
+    )
+    .map_err(|e| CommandError::new(&e.to_string()))?;
 
     // Create a path for the new image file on the desktop
     let image_path = get_app()
         .path()
-        .desktop_dir()?
+        .desktop_dir()
+        .map_err(|e| CommandError::new(&e.to_string()))?
         .join(format!("clipboard-{}.{}", id, extension));
 
     // Convert extension to ImageFormat
@@ -335,6 +337,8 @@ pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
 
     // Save the image to the desktop with the correct format
     let mut file = File::create(&image_path)?;
-    image.write_to(&mut file, format)?;
+    image
+        .write_to(&mut file, format)
+        .map_err(|e| CommandError::new(&e.to_string()))?;
     Ok(())
 }

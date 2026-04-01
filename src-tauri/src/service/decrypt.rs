@@ -46,15 +46,17 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
         // Download all remote clipboards with progress logging
         let download_total = remote_clipboards.len();
         for (index, remote) in remote_clipboards.iter().enumerate() {
-            get_app().emit_to(
-                EventTarget::any(),
-                ListenEvent::Progress.to_string().as_str(),
-                Progress {
-                    label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
-                    total: download_total,
-                    current: index + 1,
-                },
-            )?;
+            get_app()
+                .emit_to(
+                    EventTarget::any(),
+                    ListenEvent::Progress.to_string().as_str(),
+                    Progress {
+                        label: "SETTINGS.ENCRYPT.DOWNLOADING_REMOTE_CLIPBOARDS".to_string(),
+                        total: download_total,
+                        current: index + 1,
+                    },
+                )
+                .map_err(|e| CommandError::new(&e.to_string()))?;
 
             if !remote.encrypted {
                 continue;
@@ -79,15 +81,17 @@ pub async fn decrypt_all_clipboards() -> Result<(), CommandError> {
 
     let total = clipboards.len();
     for (index, clipboard) in clipboards.into_iter().enumerate() {
-        get_app().emit_to(
-            EventTarget::any(),
-            ListenEvent::Progress.to_string().as_str(),
-            Progress {
-                label: "SETTINGS.ENCRYPT.DECRYPTION_PROGRESS".to_string(),
-                total,
-                current: index + 1,
-            },
-        )?;
+        get_app()
+            .emit_to(
+                EventTarget::any(),
+                ListenEvent::Progress.to_string().as_str(),
+                Progress {
+                    label: "SETTINGS.ENCRYPT.DECRYPTION_PROGRESS".to_string(),
+                    total,
+                    current: index + 1,
+                },
+            )
+            .map_err(|e| CommandError::new(&e.to_string()))?;
         match decrypt_clipboard(clipboard.clone()) {
             Ok(decrypted) => {
                 upsert_clipboard_dto(decrypted.clone()).await?;
