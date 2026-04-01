@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "搜索条目",
     "EDIT_NAME": "编辑名称",
     "ENTER_NAME": "输入名称",
-    "STAR_FAVORITE": "明星最爱"
+    "STAR_FAVORITE": "明星最爱",
+    "DOUBLE_CLICK_SAVE": "双击保存到桌面"
   },
   "MAIN": {
     "ERROR": {

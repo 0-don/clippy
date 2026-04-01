@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "ค้นหารายการ",
     "EDIT_NAME": "แก้ไขชื่อ",
     "ENTER_NAME": "ป้อนชื่อ",
-    "STAR_FAVORITE": "ดาวโปรด"
+    "STAR_FAVORITE": "ดาวโปรด",
+    "DOUBLE_CLICK_SAVE": "ดับเบิลคลิกเพื่อบันทึกไปยังเดสก์ท็อป"
   },
   "MAIN": {
     "ERROR": {

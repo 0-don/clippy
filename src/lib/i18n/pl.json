@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "Wyszukaj wpisy",
     "EDIT_NAME": "Edytuj nazwę",
     "ENTER_NAME": "Wpisz nazwę",
-    "STAR_FAVORITE": "Ulubieniec gwiazd"
+    "STAR_FAVORITE": "Ulubieniec gwiazd",
+    "DOUBLE_CLICK_SAVE": "Kliknij dwukrotnie, aby zapisać na pulpicie"
   },
   "MAIN": {
     "ERROR": {

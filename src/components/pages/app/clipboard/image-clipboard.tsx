@@ -8,6 +8,7 @@ import { InvokeCommand } from "../../../../types/tauri-invoke";
 import { formatBytes } from "../../../../utils";
 import { LANGUAGES } from "../../../../utils/constants";
 import dayjs from "../../../../utils/dayjs";
+import { useLanguage } from "../../../provider/language-provider";
 import { ClipboardHeader } from "./clipboard-header";
 
 interface ImageClipboardProps {
@@ -16,6 +17,7 @@ interface ImageClipboardProps {
 }
 
 export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
+  const { t } = useLanguage();
   let dbClickTimer: any;
   const [fromNowString, setFromNowString] = createSignal(
     dayjs.utc(props.data.clipboard.created_at).fromNow(),
@@ -23,12 +25,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
-    if (e.detail === 2) {
-      clearTimeout(dbClickTimer);
-      await invokeCommand(InvokeCommand.SaveClipboardImage, {
-        id: props.data.clipboard.id,
-      });
-    } else if (e.detail === 1) {
+    if (e.detail === 1) {
       dbClickTimer = setTimeout(async () => {
         await invokeCommand(InvokeCommand.CopyClipboard, {
           id: props.data.clipboard.id,
@@ -36,6 +33,14 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
         });
       }, 200);
     }
+  };
+
+  const handleDoubleClick = async (e: MouseEvent) => {
+    clearTimeout(dbClickTimer);
+    e.stopPropagation();
+    await invokeCommand(InvokeCommand.SaveClipboardImage, {
+      id: props.data.clipboard.id,
+    });
   };
 
   createEffect(() => {
@@ -51,6 +56,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
     <button
       type="button"
       onClick={handleClick}
+      onDblClick={handleDoubleClick}
       class="clipboard"
     >
       <ClipboardHeader {...props} Icon={BsImages} />
@@ -66,7 +72,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
             src={`data:image/*;base64,${props.data.image.thumbnail}`}
             class="max-h-20 w-[calc(100%-3rem)] rounded-md object-cover"
             alt={imageInfo}
-            title={imageInfo}
+            title={`${imageInfo}\n${t("CLIPBOARD.DOUBLE_CLICK_SAVE")}`}
           />
         )}
         <div

@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "Search entries",
     "EDIT_NAME": "Edit name",
     "ENTER_NAME": "Enter a name",
-    "STAR_FAVORITE": "Star favorite"
+    "STAR_FAVORITE": "Star favorite",
+    "DOUBLE_CLICK_SAVE": "Double click to save to desktop"
   },
   "MAIN": {
     "ERROR": {

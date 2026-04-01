@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "إدخالات البحث",
     "EDIT_NAME": "تعديل الاسم",
     "ENTER_NAME": "أدخل اسمًا",
-    "STAR_FAVORITE": "النجم المفضل"
+    "STAR_FAVORITE": "النجم المفضل",
+    "DOUBLE_CLICK_SAVE": "انقر مرتين للحفظ على سطح المكتب"
   },
   "MAIN": {
     "ERROR": {

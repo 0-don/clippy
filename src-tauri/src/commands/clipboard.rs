@@ -295,7 +295,12 @@ pub async fn clear_clipboards(r#type: Option<ClipboardType>) -> Result<(), Comma
 
 #[tauri::command]
 pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
-    let clipboard = get_clipboard_db(id).await?;
+    let mut clipboard = get_clipboard_db(id).await?;
+
+    if clipboard.clipboard.encrypted && is_encryption_key_set() {
+        clipboard = decrypt_clipboard(clipboard)
+            .map_err(|e| CommandError::Error(format!("Failed to decrypt clipboard: {}", e)))?;
+    }
 
     let extension = clipboard
         .image
@@ -329,8 +334,7 @@ pub async fn save_clipboard_image(id: Uuid) -> Result<(), CommandError> {
     };
 
     // Save the image to the desktop with the correct format
-    let mut file = File::create(image_path)?;
+    let mut file = File::create(&image_path)?;
     image.write_to(&mut file, format)?;
-
     Ok(())
 }

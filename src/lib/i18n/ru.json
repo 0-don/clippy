@@ -14,7 +14,8 @@
     "SEARCH_ENTRIES": "Поиск записей",
     "EDIT_NAME": "Изменить название",
     "ENTER_NAME": "Введите название",
-    "STAR_FAVORITE": "Звездный фаворит"
+    "STAR_FAVORITE": "Звездный фаворит",
+    "DOUBLE_CLICK_SAVE": "Двойной клик для сохранения на рабочий стол"
   },
   "MAIN": {
     "ERROR": {
