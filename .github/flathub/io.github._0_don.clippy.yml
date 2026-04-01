@@ -5,6 +5,7 @@ sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
   - org.freedesktop.Sdk.Extension.node20
+  - org.freedesktop.Sdk.Extension.llvm20
 command: clippy
 rename-icon: clippy
 finish-args:
@@ -16,7 +17,8 @@ finish-args:
   - --talk-name=com.canonical.AppMenu.Registrar
 
 build-options:
-  append-path: /usr/lib/sdk/node20/bin:/usr/lib/sdk/rust-stable/bin
+  append-path: /usr/lib/sdk/node20/bin:/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm20/bin
+  prepend-ld-library-path: /usr/lib/sdk/llvm20/lib
 
 modules:
   - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
@@ -27,6 +29,7 @@ modules:
       env:
         CARGO_HOME: /run/build/clippy/cargo
         CARGO_NET_OFFLINE: "true"
+        LIBCLANG_PATH: /usr/lib/sdk/llvm20/lib
     build-commands:
       - npm ci --offline --legacy-peer-deps --cache=$PWD/flatpak-node/npm-cache
       - cargo --offline fetch --manifest-path src-tauri/Cargo.toml
