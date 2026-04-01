@@ -8,12 +8,18 @@ use crate::{
         cipher::init_encryption_password_lock, settings::setup_settings, sync::setup_sync_interval,
         window::setup_window,
     },
-    tao::{config::setup_config, tao_constants::setup_globals},
+    tao::{config::setup_config, connection::init_db, tao_constants::setup_globals},
 };
 
 pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
     setup_globals(app);
     setup_config();
+
+    tokio::task::block_in_place(|| {
+        tokio::runtime::Handle::current()
+            .block_on(init_db())
+            .expect("Failed to initialize database");
+    });
 
     setup_settings();
     setup_window();

@@ -1,35 +1,25 @@
 use super::config::{get_config, get_data_path};
+use super::tao_constants::DB;
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{Database, DbConn};
-use std::sync::Once;
 
-#[allow(dead_code)]
-static INIT: Once = Once::new();
-
-pub async fn db() -> Result<DbConn, DbErr> {
+pub async fn init_db() -> Result<(), DbErr> {
     let database_url = if cfg!(debug_assertions) {
         get_debug_database_url()
     } else {
         get_prod_database_url()
     };
 
-    // Connect using the url with foreign keys enabled
-    let db = Database::connect(&database_url).await?;
+    let conn = Database::connect(&database_url).await?;
+    Migrator::up(&conn, None).await?;
+    DB.set(conn)
+        .unwrap_or_else(|_| panic!("Database already initialized"));
+    Ok(())
+}
 
-    INIT.call_once(|| {
-        println!("Running migrations...");
-        let conn_for_migration = db.clone();
-        tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(async move {
-                Migrator::up(&conn_for_migration, None)
-                    .await
-                    .expect("Failed to run migrations");
-            })
-        });
-    });
-
-    Ok(db)
+pub fn db() -> &'static DbConn {
+    DB.get().expect("Database not initialized")
 }
 
 fn get_prod_database_url() -> String {
@@ -40,9 +30,7 @@ fn get_prod_database_url() -> String {
 
     let config: Config = serde_json::from_str(&json).expect("Failed to parse config file");
 
-    let db = format!("sqlite://{}?mode=rwc", config.db);
-
-    db
+    format!("sqlite://{}?mode=rwc", config.db)
 }
 
 fn get_debug_database_url() -> String {
