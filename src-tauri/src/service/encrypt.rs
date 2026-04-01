@@ -15,7 +15,6 @@ use entity::clipboard;
 use ring::rand::SecureRandom;
 use ring::{aead, rand};
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
-use std::thread::sleep;
 use tauri::{Emitter, EventTarget};
 
 pub async fn encrypt_all_clipboards(full: bool) -> Result<(), CommandError> {
@@ -35,13 +34,13 @@ pub async fn encrypt_all_clipboards(full: bool) -> Result<(), CommandError> {
 
 async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
     let settings = get_global_settings();
-    let db = db().await?;
+    let db = db();
 
     // Get all local unencrypted clipboards
     let mut clipboards = load_clipboards_with_relations(
         clipboard::Entity::find()
             .filter(clipboard::Column::Encrypted.eq(false))
-            .all(&db)
+            .all(db)
             .await?,
     )
     .await;
@@ -117,12 +116,9 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
         }
     }
 
+    // Restart sync manager (was stopped at the beginning if sync was enabled)
     if settings.sync && provider.is_some() {
-        // race condition with settings sync
-        tauri::async_runtime::spawn(async {
-            sleep(std::time::Duration::from_secs(5));
-            get_sync_manager().lock().await.start().await;
-        });
+        get_sync_manager().lock().await.start().await;
     }
 
     init_clipboards();
@@ -208,13 +204,13 @@ pub fn encrypt_clipboard(mut clipboard: FullClipboardDto) -> FullClipboardDto {
 
 /// Encrypts data using AES-256-GCM
 pub fn encrypt_data(data: &[u8]) -> Result<Vec<u8>, EncryptionError> {
-    let key_bytes = ENCRYPTION_KEY
+    let guard = ENCRYPTION_KEY
         .lock()
-        .map_err(|_| EncryptionError::KeyLockFailed)?
-        .ok_or(EncryptionError::NoKey)?;
+        .map_err(|_| EncryptionError::KeyLockFailed)?;
+    let key_data = guard.as_ref().ok_or(EncryptionError::NoKey)?;
 
     // Create unbound key from key bytes
-    let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_bytes)
+    let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, &key_data.0)
         .map_err(|_| EncryptionError::EncryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);
 

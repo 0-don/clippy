@@ -1,6 +1,6 @@
 import { FiArrowUp } from "solid-icons/fi";
 import { ImSpinner2 } from "solid-icons/im";
-import { Component, For, Show, createSignal, onMount } from "solid-js";
+import { Component, For, Show, createSignal, onCleanup, onMount } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
 import { listenEvent } from "../../../../lib/tauri";
 import { ClipboardStore } from "../../../../store/clipboard-store";
@@ -37,16 +37,18 @@ export const Clipboards: Component = () => {
     }
   };
 
-  onMount(() =>
-    listenEvent(ListenEvent.ScrollToTop, () =>
+  onMount(async () => {
+    const unlisten = await listenEvent(ListenEvent.ScrollToTop, () =>
       ClipboardStore.clipboardRef()?.scrollTo(0, 0),
-    ),
-  );
+    );
+    onCleanup(() => unlisten());
+  });
 
   onMount(() => {
     window.addEventListener("keydown", ClipboardStore.handleKeyDown);
-    return () =>
-      window.removeEventListener("keydown", ClipboardStore.handleKeyDown);
+  });
+  onCleanup(() => {
+    window.removeEventListener("keydown", ClipboardStore.handleKeyDown);
   });
 
   return (

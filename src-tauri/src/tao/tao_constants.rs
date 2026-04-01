@@ -11,6 +11,7 @@ use std::{
 use tauri::{Manager, WebviewWindow};
 use tokio::sync::oneshot;
 
+pub static DB: OnceLock<sea_orm::DbConn> = OnceLock::new();
 pub static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub static MAIN_WINDOW: OnceLock<Arc<Mutex<WebviewWindow>>> = OnceLock::new();
 
