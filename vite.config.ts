@@ -41,7 +41,7 @@ export default defineConfig(async () => ({
   build: {
     rollupOptions: {
       input: {
-        main: join(resolve(), "index.html"),
+        main: join(resolve(), "pages/index.html"),
         about: join(resolve(), "pages/about.html"),
         settings: join(resolve(), "pages/settings.html"),
       },

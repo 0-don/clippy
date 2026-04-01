@@ -4,6 +4,7 @@ import { Component, createSignal } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
 import { invokeCommand } from "../../lib/tauri";
 import { AppStore } from "../../store/app-store";
+import { ClipboardStore } from "../../store/clipboard-store";
 import { TauriError } from "../../types";
 import { InvokeCommand } from "../../types/tauri-invoke";
 import {
@@ -31,6 +32,7 @@ export const PasswordLock: Component = () => {
         action: AppStore.passwordLock()!,
       });
       AppStore.setPasswordLock(undefined);
+      await ClipboardStore.resetClipboards();
     } catch (error) {
       const { Error } = error as TauriError;
       setError(Error);
@@ -40,7 +42,7 @@ export const PasswordLock: Component = () => {
   };
 
   return (
-    <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95">
+    <div class="fixed inset-0 z-9999 flex items-center justify-center bg-black/95">
       <div class="dark:bg-dark w-80 rounded-lg bg-white p-5 shadow-lg">
         <form class="flex flex-col gap-2" onSubmit={onSubmit}>
           <Input
