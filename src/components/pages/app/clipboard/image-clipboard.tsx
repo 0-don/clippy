@@ -23,7 +23,12 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
-    if (e.detail === 1) {
+    if (e.detail === 2) {
+      clearTimeout(dbClickTimer);
+      await invokeCommand(InvokeCommand.SaveClipboardImage, {
+        id: props.data.clipboard.id,
+      });
+    } else if (e.detail === 1) {
       dbClickTimer = setTimeout(async () => {
         await invokeCommand(InvokeCommand.CopyClipboard, {
           id: props.data.clipboard.id,
@@ -31,14 +36,6 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
         });
       }, 200);
     }
-  };
-
-  const handleDoubleClick = async (e: MouseEvent) => {
-    clearTimeout(dbClickTimer);
-    e.stopPropagation();
-    await invokeCommand(InvokeCommand.SaveClipboardImage, {
-      id: props.data.clipboard.id,
-    });
   };
 
   createEffect(() => {
@@ -54,7 +51,6 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
     <button
       type="button"
       onClick={handleClick}
-      onDblClick={handleDoubleClick}
       class="clipboard"
     >
       <ClipboardHeader {...props} Icon={BsImages} />
