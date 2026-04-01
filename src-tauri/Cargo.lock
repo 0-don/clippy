@@ -2403,7 +2403,7 @@ checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
 [[package]]
 name = "global-hotkey"
 version = "0.7.0"
-source = "git+https://github.com/0-don/global-hotkey?branch=unified-wayland#dc57a820bd0b6c31e43fb61857505ca5ab244de0"
+source = "git+https://github.com/0-don/global-hotkey?branch=unified-wayland#83f5cf55a80111b29805eae453fd63b20b781a53"
 dependencies = [
  "ashpd",
  "crossbeam-channel",
