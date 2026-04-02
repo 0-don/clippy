@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.6.4"
+version = "1.6.5"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -42,7 +42,6 @@ global-hotkey = { git = "https://github.com/0-don/global-hotkey", branch = "unif
 sea-orm = "1"
 uuid = { version = "1", features = ["v7"] }
 tokio = { version = "1", features = ["full"] }
-async-trait = "0"
 serde = "1"
 serde_json = "1"
 
@@ -75,8 +74,7 @@ ring = "0"
 # caching
 moka = { version = "0", features = ["sync"] }
 
-# ocr (excluded on Windows ARM64: no prebuilt MNN, see https://github.com/zibo-chen/rust-paddle-ocr/issues/34)
-[target.'cfg(not(all(target_os = "windows", target_arch = "aarch64")))'.dependencies]
+# ocr
 ocr-rs = "2"
 
 [profile.release]

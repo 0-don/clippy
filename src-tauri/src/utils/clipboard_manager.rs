@@ -9,7 +9,6 @@ use crate::service::{
 };
 use crate::tao::connection::db;
 use crate::tao::global::{get_app, get_cache};
-#[cfg(not(all(target_os = "windows", target_arch = "aarch64")))]
 use crate::utils::ocr;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::DateTime;
@@ -127,7 +126,6 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 .expect("Failed to insert");
 
             // Run OCR in background for image clipboards
-            #[cfg(not(all(target_os = "windows", target_arch = "aarch64")))]
             if let Some(ref image) = clipboard.image {
                 let image_data = image.data.clone();
                 let clipboard_id = clipboard.clipboard.id;
