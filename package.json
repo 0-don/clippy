@@ -1,6 +1,6 @@
 {
   "name": "clippy",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Clipboard Manager built with Rust & Typescript",
   "license": "MIT",
   "type": "module",
