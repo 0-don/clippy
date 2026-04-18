@@ -7,7 +7,13 @@ services:
       target: prod
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4321/"]
+      test:
+        [
+          "CMD",
+          "bun",
+          "-e",
+          "process.exit((await fetch('http://localhost:4321/')).ok ? 0 : 1)",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
