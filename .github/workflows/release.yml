@@ -276,7 +276,7 @@ jobs:
           COPR_API_TOKEN: ${{ secrets.COPR_API_TOKEN }}
         run: |
           if [ -z "$COPR_API_TOKEN" ]; then echo "No COPR token, skipping"; exit 0; fi
-          sudo pip3 install copr-cli
+          sudo pip3 install copr-cli rich
           mkdir -p ~/.config
           echo "$COPR_API_TOKEN" > ~/.config/copr
           render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
