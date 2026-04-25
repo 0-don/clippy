@@ -144,6 +144,9 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
 
     // Process database hotkeys
     for hotkey in hotkeys {
+        if !hotkey.status || hotkey.key.eq_ignore_ascii_case("none") {
+            continue;
+        }
         let hotkey_str = parse_shortcut(
             hotkey.ctrl,
             hotkey.alt,
