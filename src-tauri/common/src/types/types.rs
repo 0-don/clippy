@@ -38,6 +38,7 @@ pub struct Key {
     pub ctrl: bool,
     pub alt: bool,
     pub shift: bool,
+    pub super_key: bool,
     pub key: String,
     pub hotkey: HotKey,
 }

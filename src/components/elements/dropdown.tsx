@@ -30,7 +30,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
           <option
             value={item.value}
             selected={item.value === props.value}
-            class="text-red-500! dark:text-red-600!"
+            class="bg-white text-black dark:bg-dark-light dark:text-white"
           >
             {t(item.label as DictionaryKey) || item.label}
           </option>

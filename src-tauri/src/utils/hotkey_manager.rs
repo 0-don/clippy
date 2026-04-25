@@ -148,6 +148,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             hotkey.ctrl,
             hotkey.alt,
             hotkey.shift,
+            hotkey.super_key,
             &format_key_for_parsing(&hotkey.key.to_uppercase()),
         );
 
@@ -162,6 +163,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
             ctrl: hotkey.ctrl,
             alt: hotkey.alt,
             shift: hotkey.shift,
+            super_key: hotkey.super_key,
             key: hotkey.key,
             hotkey: key,
         };
@@ -176,9 +178,9 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
 
     // Add digit and numpad hotkeys (these are window-specific)
     for i in 1..=9 {
-        let hotkey_digit = parse_shortcut(false, false, false, &format!("Digit{}", i));
+        let hotkey_digit = parse_shortcut(false, false, false, false, &format!("Digit{}", i));
         let key_digit: HotKey = hotkey_digit.parse()?;
-        let hotkey_num = parse_shortcut(false, false, false, &format!("Numpad{}", i));
+        let hotkey_num = parse_shortcut(false, false, false, false, &format!("Numpad{}", i));
         let key_num: HotKey = hotkey_num.parse()?;
 
         let key_structs = vec![
@@ -191,6 +193,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
                 ctrl: false,
                 alt: false,
                 shift: false,
+                super_key: false,
                 key: i.to_string(),
                 hotkey: key_digit,
             },
@@ -203,6 +206,7 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
                 ctrl: false,
                 alt: false,
                 shift: false,
+                super_key: false,
                 key: i.to_string(),
                 hotkey: key_num,
             },
@@ -216,10 +220,13 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
     Ok(())
 }
 
-pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, key: &str) -> String {
+pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, super_key: bool, key: &str) -> String {
     let mut modifiers = String::new();
     if ctrl {
         modifiers += "CmdOrCtrl+";
+    }
+    if super_key {
+        modifiers += "Super+";
     }
     if alt {
         modifiers += "Alt+";

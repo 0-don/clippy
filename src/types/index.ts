@@ -119,6 +119,7 @@ export type Hotkey = {
   ctrl: boolean;
   alt: boolean;
   shift: boolean;
+  super_key: boolean;
   key: string;
   status: boolean;
   name: DictionaryKey;
