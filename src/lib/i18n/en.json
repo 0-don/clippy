@@ -15,7 +15,9 @@
     "EDIT_NAME": "Edit name",
     "ENTER_NAME": "Enter a name",
     "STAR_FAVORITE": "Star favorite",
-    "DOUBLE_CLICK_SAVE": "Double click to save to desktop"
+    "DOUBLE_CLICK_SAVE": "Double click to save to desktop",
+    "EXPAND": "Expand",
+    "COLLAPSE": "Collapse"
   },
   "MAIN": {
     "ERROR": {

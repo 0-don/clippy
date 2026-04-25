@@ -15,7 +15,9 @@
     "EDIT_NAME": "이름 편집",
     "ENTER_NAME": "이름 입력",
     "STAR_FAVORITE": "스타가 좋아하는 것",
-    "DOUBLE_CLICK_SAVE": "더블 클릭하여 바탕화면에 저장"
+    "DOUBLE_CLICK_SAVE": "더블 클릭하여 바탕화면에 저장",
+    "EXPAND": "펼치기",
+    "COLLAPSE": "접기"
   },
   "MAIN": {
     "ERROR": {

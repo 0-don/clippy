@@ -15,7 +15,9 @@
     "EDIT_NAME": "تعديل الاسم",
     "ENTER_NAME": "أدخل اسمًا",
     "STAR_FAVORITE": "النجم المفضل",
-    "DOUBLE_CLICK_SAVE": "انقر مرتين للحفظ على سطح المكتب"
+    "DOUBLE_CLICK_SAVE": "انقر مرتين للحفظ على سطح المكتب",
+    "EXPAND": "توسيع",
+    "COLLAPSE": "طي"
   },
   "MAIN": {
     "ERROR": {

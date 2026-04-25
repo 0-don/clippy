@@ -1,6 +1,7 @@
 import { BsImages } from "solid-icons/bs";
 import { Component, createEffect, createSignal } from "solid-js";
 import { invokeCommand } from "../../../../lib/tauri";
+import { ClipboardStore } from "../../../../store/clipboard-store";
 import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
@@ -70,7 +71,11 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
         {props.data.image?.thumbnail && (
           <img
             src={`data:image/*;base64,${props.data.image.thumbnail}`}
-            class="max-h-20 w-[calc(100%-3rem)] rounded-md object-cover"
+            class={`w-[calc(100%-3rem)] rounded-md ${
+              ClipboardStore.isExpanded(props.data.clipboard.id)
+                ? "max-h-96 object-contain"
+                : "max-h-20 object-cover"
+            }`}
             alt={imageInfo}
             title={`${imageInfo}\n${t("CLIPBOARD.DOUBLE_CLICK_SAVE")}`}
           />

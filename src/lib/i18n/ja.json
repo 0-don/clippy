@@ -15,7 +15,9 @@
     "EDIT_NAME": "名前を編集",
     "ENTER_NAME": "名前を入力",
     "STAR_FAVORITE": "スターのお気に入り",
-    "DOUBLE_CLICK_SAVE": "ダブルクリックでデスクトップに保存"
+    "DOUBLE_CLICK_SAVE": "ダブルクリックでデスクトップに保存",
+    "EXPAND": "展開",
+    "COLLAPSE": "折りたたむ"
   },
   "MAIN": {
     "ERROR": {

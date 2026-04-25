@@ -15,7 +15,9 @@
     "EDIT_NAME": "Edytuj nazwę",
     "ENTER_NAME": "Wpisz nazwę",
     "STAR_FAVORITE": "Ulubieniec gwiazd",
-    "DOUBLE_CLICK_SAVE": "Kliknij dwukrotnie, aby zapisać na pulpicie"
+    "DOUBLE_CLICK_SAVE": "Kliknij dwukrotnie, aby zapisać na pulpicie",
+    "EXPAND": "Rozwiń",
+    "COLLAPSE": "Zwiń"
   },
   "MAIN": {
     "ERROR": {

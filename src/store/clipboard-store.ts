@@ -31,6 +31,21 @@ function createClipboardStore() {
   const resetWhere = () => setWhere(initialWhere);
   const [selectedIndex, setSelectedIndex] = createSignal(-1);
   const [isSearching, setIsSearching] = createSignal(false);
+  const [expandedIds, setExpandedIds] = createSignal<Set<number>>(new Set());
+
+  const toggleExpanded = (id: number) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const isExpanded = (id: number) => expandedIds().has(id);
 
   const getClipboards = async () => {
     setIsSearching(true);
@@ -98,6 +113,7 @@ function createClipboardStore() {
     }
 
     setWhere(initialWhere);
+    setExpandedIds(new Set<number>());
     const clipboards = await getClipboards();
     setClipboards(clipboards);
     ClipboardStore.clipboardRef()?.scrollTo(0, 0);
@@ -106,6 +122,7 @@ function createClipboardStore() {
   const resetClipboards = async () => {
     setWhere(initialWhere);
     setHasMore(true);
+    setExpandedIds(new Set<number>());
     const clipboards = await getClipboards();
     setClipboards(clipboards);
   };
@@ -180,6 +197,9 @@ function createClipboardStore() {
     setClipboardSyncProgress,
     isSearching,
     setIsSearching,
+    expandedIds,
+    toggleExpanded,
+    isExpanded,
   };
 }
 

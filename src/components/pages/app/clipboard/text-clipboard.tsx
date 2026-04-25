@@ -4,6 +4,7 @@ import { FiFileText, FiLink } from "solid-icons/fi";
 import { Component, createEffect, createSignal } from "solid-js";
 import { rgbCompatible } from "../../../../lib/colors";
 import { invokeCommand } from "../../../../lib/tauri";
+import { ClipboardStore } from "../../../../store/clipboard-store";
 import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardWithRelations } from "../../../../types";
 import { ClipboardTextType, ClipboardType } from "../../../../types/enums";
@@ -101,13 +102,23 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
                 <p class="w-[calc(100vw-6.5rem)] truncate text-left text-sm font-medium">
                   {props.data.clipboard.name}
                 </p>
-                <p class="w-[calc(100vw-6.5rem)] truncate text-left text-xs text-zinc-500 dark:text-zinc-400">
+                <p
+                  class={`w-[calc(100vw-6.5rem)] text-left text-xs text-zinc-500 dark:text-zinc-400 ${
+                    ClipboardStore.isExpanded(props.data.clipboard.id)
+                      ? "max-h-96 overflow-y-auto wrap-break-word whitespace-pre-wrap"
+                      : "truncate"
+                  }`}
+                >
                   {data}
                 </p>
               </>
             ) : (
               <p
-                class="w-[calc(100vw-6.5rem)] truncate text-left text-sm"
+                class={`w-[calc(100vw-6.5rem)] text-left text-sm ${
+                  ClipboardStore.isExpanded(props.data.clipboard.id)
+                    ? "max-h-96 overflow-y-auto wrap-break-word whitespace-pre-wrap"
+                    : "truncate"
+                }`}
                 title={
                   !props.data.html?.data && SettingsStore.settings()?.tooltip
                     ? data
