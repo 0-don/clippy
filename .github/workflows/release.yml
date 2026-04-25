@@ -309,3 +309,7 @@ jobs:
           cd $chocoDir
           choco pack
           choco push "clippy-clipboard.$env:VERSION.nupkg" --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::warning::Chocolatey push failed (commonly 403 when a prior version is still in moderation). Continuing without failing the job."
+            exit 0
+          }
