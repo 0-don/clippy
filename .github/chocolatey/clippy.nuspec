@@ -7,10 +7,14 @@
     <authors>0-don</authors>
     <owners>0-don</owners>
     <projectUrl>https://github.com/0-don/clippy</projectUrl>
+    <projectSourceUrl>https://github.com/0-don/clippy</projectSourceUrl>
+    <packageSourceUrl>https://github.com/0-don/clippy/tree/main/.github/chocolatey</packageSourceUrl>
+    <docsUrl>https://github.com/0-don/clippy/blob/main/README.md</docsUrl>
+    <bugTrackerUrl>https://github.com/0-don/clippy/issues</bugTrackerUrl>
     <licenseUrl>https://github.com/0-don/clippy/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <projectSourceUrl>https://github.com/0-don/clippy</projectSourceUrl>
-    <bugTrackerUrl>https://github.com/0-don/clippy/issues</bugTrackerUrl>
+    <iconUrl>https://raw.githubusercontent.com/0-don/clippy/main/src-tauri/icons/128x128.png</iconUrl>
+    <releaseNotes>https://github.com/0-don/clippy/releases/tag/v{{VERSION}}</releaseNotes>
     <tags>clipboard clipboard-manager productivity utility rust tauri</tags>
     <summary>Privacy focused clipboard manager with sync and encryption</summary>
     <description>Privacy focused clipboard manager with sync and encryption. Supports text, images, files, HTML, and RTF content with cloud sync via Google Drive, end-to-end encryption, smart search, favorites, and customizable hotkeys.</description>
