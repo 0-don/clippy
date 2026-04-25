@@ -1,4 +1,5 @@
 use crate::{
+    prelude::*,
     service::hotkey::{get_all_hotkeys_db, init_hotkey_window, update_hotkey_db},
     utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
 };
@@ -18,9 +19,9 @@ pub async fn update_hotkey(hotkey: Model) {
         .await
         .expect("Failed to update hotkey");
 
-    upsert_hotkeys_in_store()
-        .await
-        .expect("Failed to upsert hotkeys in store");
+    if let Err(e) = upsert_hotkeys_in_store().await {
+        printlog!("Failed to upsert hotkeys in store: {:?}", e);
+    }
 
     register_hotkeys(true);
 
