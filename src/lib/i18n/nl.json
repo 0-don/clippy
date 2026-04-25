@@ -15,7 +15,9 @@
     "EDIT_NAME": "Naam bewerken",
     "ENTER_NAME": "Voer een naam in",
     "STAR_FAVORITE": "Favoriete ster",
-    "DOUBLE_CLICK_SAVE": "Dubbelklik om op te slaan op het bureaublad"
+    "DOUBLE_CLICK_SAVE": "Dubbelklik om op te slaan op het bureaublad",
+    "EXPAND": "Uitklappen",
+    "COLLAPSE": "Inklappen"
   },
   "MAIN": {
     "ERROR": {

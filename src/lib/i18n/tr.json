@@ -15,7 +15,9 @@
     "EDIT_NAME": "Adı düzenle",
     "ENTER_NAME": "Bir ad girin",
     "STAR_FAVORITE": "Yıldız favorisi",
-    "DOUBLE_CLICK_SAVE": "Masaüstüne kaydetmek için çift tıklayın"
+    "DOUBLE_CLICK_SAVE": "Masaüstüne kaydetmek için çift tıklayın",
+    "EXPAND": "Genişlet",
+    "COLLAPSE": "Daralt"
   },
   "MAIN": {
     "ERROR": {

@@ -15,7 +15,9 @@
     "EDIT_NAME": "Editar nombre",
     "ENTER_NAME": "Ingresa un nombre",
     "STAR_FAVORITE": "Favorito estrella",
-    "DOUBLE_CLICK_SAVE": "Doble clic para guardar en el escritorio"
+    "DOUBLE_CLICK_SAVE": "Doble clic para guardar en el escritorio",
+    "EXPAND": "Expandir",
+    "COLLAPSE": "Contraer"
   },
   "MAIN": {
     "ERROR": {

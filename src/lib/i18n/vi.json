@@ -15,7 +15,9 @@
     "EDIT_NAME": "Chỉnh sửa tên",
     "ENTER_NAME": "Nhập tên",
     "STAR_FAVORITE": "Ngôi sao yêu thích",
-    "DOUBLE_CLICK_SAVE": "Nhấp đúp để lưu vào màn hình nền"
+    "DOUBLE_CLICK_SAVE": "Nhấp đúp để lưu vào màn hình nền",
+    "EXPAND": "Mở rộng",
+    "COLLAPSE": "Thu gọn"
   },
   "MAIN": {
     "ERROR": {

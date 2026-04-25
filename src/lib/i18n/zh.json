@@ -15,7 +15,9 @@
     "EDIT_NAME": "编辑名称",
     "ENTER_NAME": "输入名称",
     "STAR_FAVORITE": "明星最爱",
-    "DOUBLE_CLICK_SAVE": "双击保存到桌面"
+    "DOUBLE_CLICK_SAVE": "双击保存到桌面",
+    "EXPAND": "展开",
+    "COLLAPSE": "折叠"
   },
   "MAIN": {
     "ERROR": {

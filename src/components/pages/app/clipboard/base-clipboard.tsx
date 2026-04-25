@@ -1,5 +1,5 @@
 import { BsJournalRichtext } from "solid-icons/bs";
-import { FiEdit3 } from "solid-icons/fi";
+import { FiChevronDown, FiChevronUp, FiEdit3 } from "solid-icons/fi";
 import { IoTrashOutline } from "solid-icons/io";
 import { TbOutlineSourceCode } from "solid-icons/tb";
 import { VsStarFull } from "solid-icons/vs";
@@ -114,6 +114,17 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
     });
   };
 
+  const canExpand = () =>
+    props.data.clipboard.types.includes(ClipboardType.Image) ||
+    props.data.clipboard.types.includes(ClipboardType.Text) ||
+    props.data.clipboard.types.includes(ClipboardType.Html) ||
+    props.data.clipboard.types.includes(ClipboardType.Rtf);
+
+  const handleExpandToggle = (e: MouseEvent) => {
+    e.stopPropagation();
+    ClipboardStore.toggleExpanded(props.data.clipboard.id);
+  };
+
   return (
     <div
       class={`group relative ${props.isSelected ? "bg-zinc-100 dark:bg-neutral-600" : ""}`}
@@ -169,14 +180,30 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
                 />
               )}
             </div>
-            <IoTrashOutline
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete(props.data.clipboard.id);
-              }}
-              title={t("CLIPBOARD.DELETE_CLIPBOARD")}
-              class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-red-600 dark:text-white dark:hover:text-red-600"
-            />
+            <div class="flex items-center gap-1">
+              {canExpand() &&
+                (ClipboardStore.isExpanded(props.data.clipboard.id) ? (
+                  <FiChevronUp
+                    onClick={handleExpandToggle}
+                    title={t("CLIPBOARD.COLLAPSE")}
+                    class="cursor-pointer text-zinc-700 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                  />
+                ) : (
+                  <FiChevronDown
+                    onClick={handleExpandToggle}
+                    title={t("CLIPBOARD.EXPAND")}
+                    class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                  />
+                ))}
+              <IoTrashOutline
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(props.data.clipboard.id);
+                }}
+                title={t("CLIPBOARD.DELETE_CLIPBOARD")}
+                class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-red-600 dark:text-white dark:hover:text-red-600"
+              />
+            </div>
           </div>
 
           {/* Content rendered by specific clipboard type */}

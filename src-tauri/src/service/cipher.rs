@@ -2,6 +2,7 @@ use super::{
     clipboard::load_clipboards_with_relations,
     decrypt::{decrypt_all_clipboards, decrypt_clipboard},
     encrypt::encrypt_all_clipboards,
+    hotkey::init_hotkey_event,
     settings::get_global_settings,
 };
 use crate::tao::{connection::db, global::get_app};
@@ -92,6 +93,8 @@ pub async fn handle_password_unlock(
             }
         }
     }
+
+    init_hotkey_event();
 
     Ok(())
 }
