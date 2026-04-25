@@ -64,7 +64,10 @@
     "KEYS": {
       "ALT": "Alt",
       "CTRL": "Ctrl",
-      "SHIFT": "Shift"
+      "SHIFT": "Shift",
+      "SUPER_LINUX": "Super",
+      "SUPER_MAC": "Cmd",
+      "SUPER_WIN": "Win"
     },
     "LANGUAGE": {
       "AR": "아라비아 말",

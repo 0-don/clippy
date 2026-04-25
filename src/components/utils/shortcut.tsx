@@ -1,4 +1,5 @@
 import { Component, Show } from "solid-js";
+import { DictionaryKey } from "../../lib/i18n";
 import { HotkeyStore } from "../../store/hotkey-store";
 import { Hotkey } from "../../types";
 import { GLOBAL_SHORTCUT_KEYS } from "../../utils/constants";
@@ -9,6 +10,13 @@ import { useLanguage } from "../provider/language-provider";
 interface ShortcutProps {
   hotkey: Hotkey;
 }
+
+const SUPER_LABEL_KEY: DictionaryKey = (() => {
+  const ua = navigator.userAgent;
+  if (/Mac|iPhone|iPad/.test(ua)) return "MAIN.KEYS.SUPER_MAC";
+  if (/Windows/.test(ua)) return "MAIN.KEYS.SUPER_WIN";
+  return "MAIN.KEYS.SUPER_LINUX";
+})();
 
 export const Shortcut: Component<ShortcutProps> = (props) => {
   const { t } = useLanguage();
@@ -26,6 +34,13 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
             HotkeyStore.updateHotkey({ ...props.hotkey, ctrl })
           }
           label={t("MAIN.KEYS.CTRL")}
+        />
+        <CheckBox
+          checked={props.hotkey.super_key}
+          onChange={(super_key) =>
+            HotkeyStore.updateHotkey({ ...props.hotkey, super_key })
+          }
+          label={t(SUPER_LABEL_KEY)}
         />
         <CheckBox
           checked={props.hotkey.alt}

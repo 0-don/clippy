@@ -64,7 +64,10 @@
     "KEYS": {
       "ALT": "Alt",
       "CTRL": "Ctrl",
-      "SHIFT": "Maiusc"
+      "SHIFT": "Maiusc",
+      "SUPER_LINUX": "Super",
+      "SUPER_MAC": "Cmd",
+      "SUPER_WIN": "Win"
     },
     "LANGUAGE": {
       "AR": "Arabo",

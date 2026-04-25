@@ -13,6 +13,7 @@ mod m000010_add_suppress_hotkey_on_fullscreen;
 mod m000011_add_name_to_clipboard;
 mod m000012_add_ocr_text_to_clipboard_image;
 mod m000013_fix_encryption_typo;
+mod m000014_add_super_to_hotkey;
 
 pub struct Migrator;
 
@@ -33,6 +34,7 @@ impl MigratorTrait for Migrator {
             Box::new(m000011_add_name_to_clipboard::Migration),
             Box::new(m000012_add_ocr_text_to_clipboard_image::Migration),
             Box::new(m000013_fix_encryption_typo::Migration),
+            Box::new(m000014_add_super_to_hotkey::Migration),
         ]
     }
 }
