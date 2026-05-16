@@ -102,6 +102,24 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
 
+      - name: upload windows portable
+        if: startsWith(matrix.platform, 'windows')
+        shell: bash
+        run: |
+          ARCH=$([ "${{ matrix.platform }}" = "windows-11-arm" ] && echo "arm64" || echo "x64")
+          SRC="src-tauri/target/release/${NAME}.exe"
+          DEST="${NAME}_${VERSION}_${ARCH}-portable.exe"
+          cp "$SRC" "$DEST"
+          echo "PORTABLE_FILE=$DEST" >> $GITHUB_ENV
+
+      - name: upload windows portable to release
+        if: startsWith(matrix.platform, 'windows')
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.TAG }}
+          files: ${{ env.PORTABLE_FILE }}
+
       - name: build and upload arch package
         if: matrix.platform == 'ubuntu-22.04'
         env:
