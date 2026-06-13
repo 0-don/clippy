@@ -7,7 +7,7 @@ import { defineConfig } from "astro/config";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  site: "https://clippy.coding.global",
+  site: "https://clippy.coding-global.com",
   trailingSlash: "ignore",
   integrations: [
     starlight({

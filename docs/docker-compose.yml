@@ -23,7 +23,7 @@ services:
     labels:
       - "autoheal=true"
       - "traefik.enable=true"
-      - "traefik.http.routers.clippy-docs.rule=Host(`clippy.coding.global`) || Host(`www.clippy.coding.global`)"
+      - "traefik.http.routers.clippy-docs.rule=Host(`clippy.coding-global.com`) || Host(`www.clippy.coding-global.com`)"
       - "traefik.http.routers.clippy-docs.entrypoints=websecure"
       - "traefik.http.routers.clippy-docs.tls.certresolver=letsencrypt"
       - "traefik.http.services.clippy-docs.loadbalancer.server.port=4321"
