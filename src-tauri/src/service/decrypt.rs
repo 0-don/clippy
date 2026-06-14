@@ -312,6 +312,75 @@ pub fn decrypt_clipboard_with_key(
     Ok(clipboard)
 }
 
+/// Search-only decrypt: decrypts the small fields search needs (text/html/rtf,
+/// image thumbnail/ocr/extension, file name/extension/mime) and SKIPS the heavy
+/// `image.data` / `file.data` blobs (which are loaded empty for search). Used by the
+/// encrypted search path so it never decrypts megabyte image bodies. Pure CPU, no
+/// global lock: safe across rayon workers.
+pub fn decrypt_clipboard_search(
+    mut clipboard: FullClipboardDto,
+    key: &[u8; 32],
+) -> Result<FullClipboardDto, EncryptionError> {
+    if !clipboard.clipboard.encrypted {
+        return Err(EncryptionError::NotEncrypted);
+    }
+    let id = clipboard.clipboard.id;
+
+    if let Some(text) = &mut clipboard.text {
+        text.data = decrypt_string_field(&text.data, id, "text", key)?;
+    }
+
+    if let Some(html) = &mut clipboard.html {
+        html.data = decrypt_string_field(&html.data, id, "html", key)?;
+    }
+
+    if let Some(rtf) = &mut clipboard.rtf {
+        rtf.data = decrypt_string_field(&rtf.data, id, "rtf", key)?;
+    }
+
+    if let Some(image) = &mut clipboard.image {
+        // image.data intentionally left empty (not loaded for search).
+        let thumb_decoded = STANDARD.decode(&image.thumbnail).map_err(|e| {
+            printlog!(
+                "Failed to base64 decode thumbnail for clipboard {}: {}",
+                id,
+                e
+            );
+            EncryptionError::DecryptionFailed
+        })?;
+        image.thumbnail =
+            STANDARD.encode(decrypt_binary_field(&thumb_decoded, id, "thumbnail", key)?);
+
+        if let Some(ocr_text) = &image.ocr_text {
+            // OCR text might not be encrypted (e.g. added after encryption was enabled)
+            if let Ok(decoded) = STANDARD.decode(ocr_text) {
+                if let Ok(decrypted) = decrypt_data_with_key(&decoded, key) {
+                    if let Ok(str_data) = String::from_utf8(decrypted) {
+                        image.ocr_text = Some(str_data);
+                    }
+                }
+            }
+        }
+    }
+
+    for (i, file) in clipboard.files.iter_mut().enumerate() {
+        // file.data intentionally left empty (not loaded for search).
+        file.name = decrypt_string_field(&file.name, id, &format!("file[{}].name", i), key)?;
+
+        if let Some(ext) = &file.extension {
+            file.extension =
+                Some(decrypt_string_field(ext, id, &format!("file[{}].ext", i), key)?);
+        }
+        if let Some(mime) = &file.mime_type {
+            file.mime_type =
+                Some(decrypt_string_field(mime, id, &format!("file[{}].mime", i), key)?);
+        }
+    }
+
+    clipboard.clipboard.encrypted = false;
+    Ok(clipboard)
+}
+
 /// Reads the global encryption key bytes once. Callers that decrypt many items should
 /// call this once and reuse the copy, avoiding per-field mutex contention.
 pub fn read_encryption_key() -> Result<[u8; 32], EncryptionError> {

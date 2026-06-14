@@ -29,6 +29,8 @@ function createClipboardStore() {
   );
   const [where, setWhere] = createSignal<ClipboardWhere>(initialWhere);
   const [hasMore, setHasMore] = createSignal(true);
+  // Monotonic id to discard stale streamed search results (latest call wins).
+  let searchRequestId = 0;
   const resetWhere = () => setWhere(initialWhere);
   const [selectedIndex, setSelectedIndex] = createSignal(-1);
   const [isSearching, setIsSearching] = createSignal(false);
@@ -64,12 +66,18 @@ function createClipboardStore() {
     star?: boolean,
     img?: boolean,
   ) => {
+    // Supersede any in-flight search: a newer call bumps the id, so stale Channel
+    // batches (the backend can't hard-abort the promise) are ignored on arrival.
+    const requestId = searchRequestId + 1;
+    searchRequestId = requestId;
+
     setIsSearching(true);
     setClipboards([]);
     setHasMore(false);
 
     const onChunk = new Channel<SearchEvent>();
     onChunk.onmessage = (message) => {
+      if (requestId !== searchRequestId) return;
       if (message.event === "batch") {
         setClipboards((prev) => [...prev, ...message.data.clipboards]);
       } else if (message.event === "done") {
@@ -85,7 +93,7 @@ function createClipboardStore() {
         onChunk,
       });
     } catch {
-      setIsSearching(false);
+      if (requestId === searchRequestId) setIsSearching(false);
     }
   };
 

@@ -1,8 +1,12 @@
 use crate::service::cipher::is_encryption_key_set;
-use crate::service::clipboard::{filter_clipboards, get_all_clipboards_db, init_clipboards};
-use crate::service::decrypt::decrypt_clipboard;
+use crate::service::clipboard::{
+    filter_clipboards, get_all_clipboards_db, init_clipboards, load_clipboards_for_search,
+};
+use crate::service::decrypt::{decrypt_clipboard, decrypt_clipboard_search, read_encryption_key};
 use crate::service::settings::get_global_settings;
+use crate::tao::connection::db;
 use crate::tao::global::{get_app, get_cache};
+use crate::tao::tao_constants::SEARCH_GENERATION;
 use crate::{
     service::clipboard::{
         clear_clipboards_db, copy_clipboard_from_id, delete_clipboards_db, get_clipboard_count_db,
@@ -17,9 +21,13 @@ use common::{
     printlog,
     types::{enums::ClipboardType, orm_query::ClipboardsResponse, types::CommandError},
 };
+use entity::clipboard;
+use rayon::prelude::*;
 use sea_orm::prelude::Uuid;
+use sea_orm::{EntityTrait, PaginatorTrait, QueryOrder};
 use serde::Serialize;
 use std::fs::File;
+use std::sync::atomic::Ordering;
 use tauri::ipc::Channel;
 use tauri::Manager;
 
@@ -190,6 +198,9 @@ pub enum SearchEvent {
     },
 }
 
+/// Rows per page for the encrypted no-cache search path.
+const SEARCH_PAGE_SIZE: u64 = 64;
+
 #[tauri::command]
 pub async fn search_clipboards(
     search: Option<String>,
@@ -197,12 +208,20 @@ pub async fn search_clipboards(
     img: Option<bool>,
     on_chunk: Channel<SearchEvent>,
 ) -> Result<(), CommandError> {
+    // Bump the generation. Any in-flight search with an older generation will see this
+    // and bail, so a newer keystroke supersedes (cancels) the previous search.
+    let my_gen = SEARCH_GENERATION.fetch_add(1, Ordering::Relaxed) + 1;
+    let superseded = || SEARCH_GENERATION.load(Ordering::Relaxed) != my_gen;
+
     let settings = get_global_settings();
     let is_encrypted = settings.encryption && is_encryption_key_set();
     let total = get_clipboard_count_db().await?;
 
     if !is_encrypted {
         let clipboards = get_clipboards_db(None, search, star, img).await?;
+        if superseded() {
+            return Ok(());
+        }
         on_chunk.send(SearchEvent::Batch {
             clipboards: trim_clipboard_data(clipboards),
         }).map_err(|e| CommandError::new(&e.to_string()))?;
@@ -214,6 +233,9 @@ pub async fn search_clipboards(
     if let Some(cached) = get_cache().get(CACHE_KEY) {
         let filtered = filter_clipboards(&cached, search.as_ref(), star, img, &settings);
         for chunk in filtered.chunks(100) {
+            if superseded() {
+                return Ok(());
+            }
             on_chunk.send(SearchEvent::Batch {
                 clipboards: trim_clipboard_data(chunk.to_vec()),
             }).map_err(|e| CommandError::new(&e.to_string()))?;
@@ -222,41 +244,54 @@ pub async fn search_clipboards(
         return Ok(());
     }
 
-    // Encrypted, no cache: decrypt all, stream matches, build cache
-    let all_clipboards = get_all_clipboards_db().await?;
-    let mut all_decrypted: Vec<FullClipboardDto> = Vec::with_capacity(all_clipboards.len());
-    let mut batch: Vec<FullClipboardDto> = Vec::new();
+    // Encrypted, no cache: paginate, decrypt small fields in parallel (never image/file
+    // blobs), stream matches, build a blob-free cache. Cancel if superseded.
+    let key = read_encryption_key().map_err(|e| CommandError::new(&e.to_string()))?;
+    let mut all_decrypted: Vec<FullClipboardDto> = Vec::new();
 
-    for clipboard in all_clipboards {
-        let mut cb = if clipboard.clipboard.encrypted {
-            decrypt_clipboard(clipboard.clone()).unwrap_or(clipboard)
-        } else {
-            clipboard
-        };
+    let mut paginator = clipboard::Entity::find()
+        .order_by_desc(clipboard::Column::Id)
+        .paginate(db(), SEARCH_PAGE_SIZE);
 
-        if let Some(ref mut image) = cb.image {
-            image.data = Vec::new();
+    while let Some(models) = paginator
+        .fetch_and_next()
+        .await
+        .map_err(|e| CommandError::new(&e.to_string()))?
+    {
+        if superseded() {
+            return Ok(());
         }
 
-        let single = vec![cb.clone()];
-        let matches = filter_clipboards(&single, search.as_ref(), star, img, &settings);
+        // Load this page without blob columns, then decrypt small fields in parallel.
+        let page = load_clipboards_for_search(models).await;
+        let decrypted_page: Vec<FullClipboardDto> = tokio::task::spawn_blocking(move || {
+            page.into_par_iter()
+                .map(|c| {
+                    if c.clipboard.encrypted {
+                        decrypt_clipboard_search(c.clone(), &key).unwrap_or(c)
+                    } else {
+                        c
+                    }
+                })
+                .collect()
+        })
+        .await
+        .map_err(|e| CommandError::new(&e.to_string()))?;
+
+        let matches = filter_clipboards(&decrypted_page, search.as_ref(), star, img, &settings);
         if !matches.is_empty() {
-            batch.extend(matches);
-            if batch.len() >= 100 {
-                on_chunk.send(SearchEvent::Batch {
-                    clipboards: trim_clipboard_data(batch.clone()),
-                }).map_err(|e| CommandError::new(&e.to_string()))?;
-                batch.clear();
-            }
+            on_chunk
+                .send(SearchEvent::Batch {
+                    clipboards: trim_clipboard_data(matches),
+                })
+                .map_err(|e| CommandError::new(&e.to_string()))?;
         }
 
-        all_decrypted.push(cb);
+        all_decrypted.extend(decrypted_page);
     }
 
-    if !batch.is_empty() {
-        on_chunk.send(SearchEvent::Batch {
-            clipboards: trim_clipboard_data(batch),
-        }).map_err(|e| CommandError::new(&e.to_string()))?;
+    if superseded() {
+        return Ok(());
     }
 
     get_cache().insert(CACHE_KEY.to_string(), all_decrypted);

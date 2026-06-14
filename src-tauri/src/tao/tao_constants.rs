@@ -6,7 +6,7 @@ use moka::sync::Cache;
 use sea_orm::Iden;
 use std::{
     collections::HashMap,
-    sync::{Arc, Mutex, OnceLock},
+    sync::{atomic::AtomicU64, Arc, Mutex, OnceLock},
 };
 use tauri::{Manager, WebviewWindow};
 use tokio::sync::oneshot;
@@ -25,6 +25,10 @@ pub static WINDOW_HOTKEYS: OnceLock<Arc<Mutex<HashMap<u32, Key>>>> = OnceLock::n
 pub static HOTKEY_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static WINDOW_STOP_TX: OnceLock<Mutex<Option<oneshot::Sender<()>>>> = OnceLock::new();
 pub static CLIPBOARD_CACHE: OnceLock<Cache<String, Vec<FullClipboardDto>>> = OnceLock::new();
+
+/// Monotonic search generation. Each search_clipboards call bumps it; an in-flight
+/// stream bails when it sees a newer generation (cancels superseded searches).
+pub static SEARCH_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 pub fn setup_globals(app: &mut tauri::App) {
     #[cfg(target_os = "linux")]

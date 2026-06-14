@@ -20,8 +20,8 @@ use entity::{
 use sea_orm::prelude::Uuid;
 use sea_orm::RelationTrait;
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, EntityTrait, JoinType, LoaderTrait, PaginatorTrait, QueryFilter,
-    QueryOrder, QuerySelect, QueryTrait, TransactionTrait,
+    ActiveModelTrait, ColumnTrait, EntityTrait, Iterable, JoinType, LoaderTrait, PaginatorTrait,
+    QueryFilter, QueryOrder, QuerySelect, QueryTrait, TransactionTrait,
 };
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -58,6 +58,82 @@ pub async fn load_clipboards_with_relations(
             image: i,
             rtf: r,
             files: f,
+        })
+        .collect()
+}
+
+/// Like `load_clipboards_with_relations` but never loads the heavy `image.data` /
+/// `file.data` blob columns (search filters only touch ocr_text/extension/text, and
+/// the list renders thumbnails). The `data` field is set to an empty Vec via a SQL
+/// literal so no blob bytes hit RAM or the decryptor. Full blobs are loaded on demand
+/// when a clipboard is actually opened.
+pub async fn load_clipboards_for_search(
+    clipboards: Vec<clipboard::Model>,
+) -> Vec<FullClipboardDto> {
+    use sea_orm::sea_query::Expr;
+
+    let db = db();
+    let ids: Vec<Uuid> = clipboards.iter().map(|c| c.id).collect();
+
+    // Text/html/rtf have no large blobs: load normally.
+    let texts_fut = clipboards.load_one(clipboard_text::Entity, db);
+    let htmls_fut = clipboards.load_one(clipboard_html::Entity, db);
+    let rtfs_fut = clipboards.load_one(clipboard_rtf::Entity, db);
+
+    // Image/file: select every column EXCEPT data, substituting an empty blob literal
+    // so the row deserializes into the full Model without touching overflow pages.
+    let empty_blob = Vec::<u8>::new();
+    let images_fut = clipboard_image::Entity::find()
+        .filter(clipboard_image::Column::ClipboardId.is_in(ids.clone()))
+        .select_only()
+        .columns(
+            clipboard_image::Column::iter()
+                .filter(|c| !matches!(c, clipboard_image::Column::Data)),
+        )
+        .column_as(Expr::value(empty_blob.clone()), clipboard_image::Column::Data)
+        .into_model::<clipboard_image::Model>()
+        .all(db);
+    let files_fut = clipboard_file::Entity::find()
+        .filter(clipboard_file::Column::ClipboardId.is_in(ids.clone()))
+        .select_only()
+        .columns(
+            clipboard_file::Column::iter()
+                .filter(|c| !matches!(c, clipboard_file::Column::Data)),
+        )
+        .column_as(Expr::value(empty_blob.clone()), clipboard_file::Column::Data)
+        .into_model::<clipboard_file::Model>()
+        .all(db);
+
+    let (texts, htmls, rtfs, images, files) =
+        try_join!(texts_fut, htmls_fut, rtfs_fut, images_fut, files_fut)
+            .expect("Failed to load clipboard relations for search");
+
+    // Group image/file rows by clipboard_id (one image per clipboard, many files).
+    let mut image_by_clip: HashMap<Uuid, clipboard_image::Model> = HashMap::new();
+    for image in images {
+        image_by_clip.insert(image.clipboard_id, image);
+    }
+    let mut files_by_clip: HashMap<Uuid, Vec<clipboard_file::Model>> = HashMap::new();
+    for file in files {
+        files_by_clip.entry(file.clipboard_id).or_default().push(file);
+    }
+
+    clipboards
+        .into_iter()
+        .zip(texts)
+        .zip(htmls)
+        .zip(rtfs)
+        .map(|(((c, t), h), r)| {
+            let image = image_by_clip.remove(&c.id);
+            let files = files_by_clip.remove(&c.id).unwrap_or_default();
+            FullClipboardDto {
+                clipboard: c,
+                text: t,
+                html: h,
+                image,
+                rtf: r,
+                files,
+            }
         })
         .collect()
 }
