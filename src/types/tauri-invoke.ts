@@ -2,6 +2,7 @@ import {
   ClipboardResponse,
   ClipboardWhere,
   DatabaseInfo,
+  DecryptEvent,
   Hotkey,
   SearchEvent,
   Settings,
@@ -52,7 +53,9 @@ export enum InvokeCommand {
   // Cipher commands
   EnableEncryption = "enable_encryption",
   DisableEncryption = "disable_encryption",
+  DisableEncryptionStream = "disable_encryption_stream",
   PasswordUnlock = "password_unlock",
+  PasswordUnlockStream = "password_unlock_stream",
 
   // App info commands
   GetAppVersion = "get_app_version",
@@ -178,8 +181,16 @@ export interface TauriInvokeCommands {
     args: { password: string };
     return: void;
   };
+  [InvokeCommand.DisableEncryptionStream]: {
+    args: { password: string; onChunk: Channel<DecryptEvent> };
+    return: void;
+  };
   [InvokeCommand.PasswordUnlock]: {
     args: { password: string; action: PasswordAction };
+    return: void;
+  };
+  [InvokeCommand.PasswordUnlockStream]: {
+    args: { password: string; onChunk: Channel<DecryptEvent> };
     return: void;
   };
 

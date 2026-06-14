@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.6.14"
+version = "1.6.15"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -42,6 +42,7 @@ global-hotkey = { git = "https://github.com/0-don/global-hotkey", branch = "unif
 sea-orm = "1"
 uuid = { version = "1", features = ["v7"] }
 tokio = { version = "1", features = ["full"] }
+rayon = "1"
 serde = "1"
 serde_json = "1"
 

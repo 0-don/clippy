@@ -4,6 +4,7 @@ import { invokeCommand } from "../lib/tauri";
 import {
   ClipboardWhere,
   ClipboardWithRelations,
+  DecryptEvent,
   Progress,
   SearchEvent,
 } from "../types";
@@ -88,21 +89,59 @@ function createClipboardStore() {
     }
   };
 
-  const newClipboard = (clipboard: ClipboardWithRelations) => {
-    setClipboards((prev) => {
-      // Remove any existing clipboard with the same ID
-      const filteredClipboards = prev.filter(
-        (item) => item.clipboard.id !== clipboard.clipboard.id,
-      );
-
-      // Add new clipboard and sort
-      const newClipboards = [clipboard, ...filteredClipboards];
-      return newClipboards.sort((a, b) => {
-        const dateA = new Date(a.clipboard.created_at).getTime();
-        const dateB = new Date(b.clipboard.created_at).getTime();
-        return dateB - dateA;
-      });
+  // Merge incoming clipboards into the list: dedupe by id (incoming wins), then sort
+  // newest-first by created_at. Streaming decrypt batches arrive in arbitrary page
+  // order, so the client always sorts and server page order does not matter.
+  const mergeClipboards = (
+    prev: ClipboardWithRelations[],
+    incoming: ClipboardWithRelations[],
+  ): ClipboardWithRelations[] => {
+    const incomingIds = new Set(incoming.map((item) => item.clipboard.id));
+    const merged = [
+      ...incoming,
+      ...prev.filter((item) => !incomingIds.has(item.clipboard.id)),
+    ];
+    return merged.sort((a, b) => {
+      const dateA = new Date(a.clipboard.created_at).getTime();
+      const dateB = new Date(b.clipboard.created_at).getTime();
+      return dateB - dateA;
     });
+  };
+
+  const newClipboard = (clipboard: ClipboardWithRelations) => {
+    setClipboards((prev) => mergeClipboards(prev, [clipboard]));
+  };
+
+  const unlockStream = async (
+    command:
+      | InvokeCommand.PasswordUnlockStream
+      | InvokeCommand.DisableEncryptionStream,
+    password: string,
+  ) => {
+    setIsSearching(true);
+
+    const onChunk = new Channel<DecryptEvent>();
+    onChunk.onmessage = (message) => {
+      if (message.event === "batch") {
+        setClipboards((prev) =>
+          mergeClipboards(prev, message.data.clipboards),
+        );
+        setClipboardSyncProgress({
+          label: "SETTINGS.ENCRYPT.DECRYPTION_PROGRESS_LOCAL",
+          current: message.data.current,
+          total: message.data.total,
+        });
+      } else if (message.event === "done") {
+        setIsSearching(false);
+        setClipboardSyncProgress(undefined);
+      }
+    };
+
+    try {
+      await invokeCommand(command, { password, onChunk });
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const init = async () => {
@@ -187,6 +226,8 @@ function createClipboardStore() {
     resetWhere,
     getClipboards,
     searchStream,
+    unlockStream,
+    mergeClipboards,
     clipboardRef,
     setClipboardRef,
     init,

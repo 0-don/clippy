@@ -113,6 +113,17 @@ export type SearchEvent =
   | { event: "batch"; data: { clipboards: ClipboardWithRelations[] } }
   | { event: "done"; data: { total: number } };
 
+export type DecryptEvent =
+  | {
+      event: "batch";
+      data: {
+        clipboards: ClipboardWithRelations[];
+        current: number;
+        total: number;
+      };
+    }
+  | { event: "done"; data: {} };
+
 export type Hotkey = {
   id: number;
   event: HotkeyEvent;

@@ -1,6 +1,6 @@
 use super::{
     clipboard::load_clipboards_with_relations,
-    decrypt::{decrypt_all_clipboards, decrypt_clipboard},
+    decrypt::{decrypt_all_clipboards, decrypt_all_clipboards_streaming, decrypt_clipboard},
     encrypt::encrypt_all_clipboards,
     hotkey::init_hotkey_event,
     settings::get_global_settings,
@@ -10,6 +10,7 @@ use crate::{prelude::*, service::settings::update_settings_db};
 use common::types::{
     cipher::{EncryptionError, EncryptionKeyData, ENCRYPTION_KEY},
     enums::{ListenEvent, PasswordAction},
+    orm_query::FullClipboardDto,
     types::CommandError,
 };
 use entity::clipboard;
@@ -19,6 +20,46 @@ use tauri::{Emitter, EventTarget};
 
 const PBKDF2_SALT: &[u8] = b"clippy";
 const PBKDF2_ITERATIONS: u32 = 600_000;
+
+/// Sets the encryption key from the password and verifies it by test-decrypting one
+/// stored clipboard, falling back to the legacy SHA-256 key for migration. Returns
+/// `Ok(true)` if any encrypted clipboard exists (so a decrypt/encrypt pass is needed),
+/// `Ok(false)` if there is nothing encrypted to act on.
+async fn set_key_and_verify_password(password: &str) -> Result<bool, CommandError> {
+    set_encryption_key(password).map_err(|e| CommandError::new(&e.to_string()))?;
+
+    let db = db();
+    let encrypted_clipboard = clipboard::Entity::find()
+        .filter(clipboard::Column::Encrypted.eq(true))
+        .one(db)
+        .await?;
+
+    let Some(clipboard) = encrypted_clipboard else {
+        return Ok(false);
+    };
+
+    let mut clipboards = load_clipboards_with_relations(vec![clipboard]).await;
+    let test_clipboard = clipboards.remove(0);
+
+    // Try PBKDF2 key first, fall back to legacy SHA-256 for migration.
+    if decrypt_clipboard(test_clipboard.clone()).is_err() {
+        clear_encryption_key();
+        set_encryption_key_legacy_sha256(password)
+            .map_err(|e| CommandError::new(&e.to_string()))?;
+
+        decrypt_clipboard(test_clipboard).map_err(|e| {
+            clear_encryption_key();
+            match e {
+                EncryptionError::DecryptionFailed | EncryptionError::InvalidKey => {
+                    CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD")
+                }
+                _ => CommandError::new(&e.to_string()),
+            }
+        })?;
+    }
+
+    Ok(true)
+}
 
 pub async fn handle_password_unlock(
     password: String,
@@ -35,63 +76,40 @@ pub async fn handle_password_unlock(
             update_settings_db(settings).await?;
         }
         PasswordAction::Decrypt | PasswordAction::SyncDecrypt => {
-            set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
-
-            // Verify password by trying to decrypt something
-            let db = db();
-            let encrypted_clipboard = clipboard::Entity::find()
-                .filter(clipboard::Column::Encrypted.eq(true))
-                .one(db)
-                .await?;
-
-            if let Some(clipboard) = encrypted_clipboard {
-                let mut clipboards = load_clipboards_with_relations(vec![clipboard]).await;
-                let test_clipboard = clipboards.remove(0);
-                let mut used_legacy = false;
-
-                // Try PBKDF2 key first, fall back to legacy SHA-256 for migration
-                if decrypt_clipboard(test_clipboard.clone()).is_err() {
-                    clear_encryption_key();
-                    set_encryption_key_legacy_sha256(&password)
-                        .map_err(|e| CommandError::new(&e.to_string()))?;
-
-                    decrypt_clipboard(test_clipboard).map_err(|e| {
-                        clear_encryption_key();
-                        match e {
-                            EncryptionError::DecryptionFailed | EncryptionError::InvalidKey => {
-                                CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD")
-                            }
-                            _ => CommandError::new(&e.to_string()),
-                        }
-                    })?;
-                    used_legacy = true;
-                }
-
-                if used_legacy {
-                    // Legacy SHA-256 key worked: keep using it for this session.
-                    // Existing data stays encrypted with the old key.
-                    // New clipboards will also use the legacy key since it's what's set.
-                    if matches!(action, PasswordAction::SyncDecrypt) {
-                        let mut settings = get_global_settings();
-                        settings.encryption = false;
-                        update_settings_db(settings).await?;
-                        decrypt_all_clipboards().await?;
-                    } else {
-                        encrypt_all_clipboards(false).await?;
-                    }
+            if set_key_and_verify_password(&password).await? {
+                if matches!(action, PasswordAction::SyncDecrypt) {
+                    let mut settings = get_global_settings();
+                    settings.encryption = false;
+                    update_settings_db(settings).await?;
+                    decrypt_all_clipboards().await?;
                 } else {
-                    // Normal path (PBKDF2 key worked)
-                    if matches!(action, PasswordAction::SyncDecrypt) {
-                        let mut settings = get_global_settings();
-                        settings.encryption = false;
-                        update_settings_db(settings).await?;
-                        decrypt_all_clipboards().await?;
-                    } else {
-                        encrypt_all_clipboards(false).await?;
-                    }
+                    encrypt_all_clipboards(false).await?;
                 }
             }
         }
+    }
+
+    init_hotkey_event();
+
+    Ok(())
+}
+
+/// Streaming variant of the permanent-decrypt unlock (SyncDecrypt). Verifies the
+/// password, flips encryption off, then decrypts every clipboard via the paginated
+/// parallel core, invoking `on_batch(batch, current, total)` per page so the caller
+/// can stream decrypted clipboards to the UI as they land.
+pub async fn handle_password_unlock_streaming<F>(
+    password: String,
+    on_batch: F,
+) -> Result<(), CommandError>
+where
+    F: FnMut(Vec<FullClipboardDto>, usize, usize),
+{
+    if set_key_and_verify_password(&password).await? {
+        let mut settings = get_global_settings();
+        settings.encryption = false;
+        update_settings_db(settings).await?;
+        decrypt_all_clipboards_streaming(on_batch).await?;
     }
 
     init_hotkey_event();

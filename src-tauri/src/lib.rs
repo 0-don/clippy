@@ -66,7 +66,9 @@ pub fn run() {
             //
             cipher::enable_encryption,
             cipher::disable_encryption,
+            cipher::disable_encryption_stream,
             cipher::password_unlock,
+            cipher::password_unlock_stream,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

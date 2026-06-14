@@ -1,3 +1,4 @@
+import { Channel } from "@tauri-apps/api/core";
 import { AiFillLock, AiFillUnlock } from "solid-icons/ai";
 import { BsFileEarmarkLock2Fill } from "solid-icons/bs";
 import { ImSpinner } from "solid-icons/im";
@@ -5,8 +6,9 @@ import { Component, createSignal, Show } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { cn } from "../../../lib/utils";
+import { ClipboardStore } from "../../../store/clipboard-store";
 import { SettingsStore } from "../../../store/settings-store";
-import { Progress, TauriError } from "../../../types";
+import { DecryptEvent, Progress, TauriError } from "../../../types";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { ListenEvent } from "../../../types/tauri-listen";
 import {
@@ -144,8 +146,24 @@ const Decrypt: Component = ({}) => {
     setLoading(true);
 
     try {
-      await invokeCommand(InvokeCommand.DisableEncryption, {
+      const onChunk = new Channel<DecryptEvent>();
+      onChunk.onmessage = (message) => {
+        if (message.event === "batch") {
+          // Stream decrypted clipboards into the live list as each page lands.
+          ClipboardStore.setClipboards((prev) =>
+            ClipboardStore.mergeClipboards(prev, message.data.clipboards),
+          );
+          setEncryptionProgress({
+            label: "SETTINGS.ENCRYPT.DECRYPTION_PROGRESS_LOCAL",
+            current: message.data.current,
+            total: message.data.total,
+          });
+        }
+      };
+
+      await invokeCommand(InvokeCommand.DisableEncryptionStream, {
         password: password(),
+        onChunk,
       });
       await SettingsStore.init();
     } catch (error) {
