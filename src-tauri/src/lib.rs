@@ -100,6 +100,7 @@ pub fn run() {
             settings::toggle_autostart,
             settings::change_clipboard_db_location,
             settings::reset_clipboard_db_location,
+            settings::get_os,
             //
             window::open_new_window,
             window::open_browser_url,

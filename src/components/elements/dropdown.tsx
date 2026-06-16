@@ -18,7 +18,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
   return (
     <div
       onClick={() => ref()?.dispatchEvent(new MouseEvent("mousedown"))}
-      class={`${props.className ? props.className : ""} group dark:border-dark-light dark:bg-dark-light flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus:ring-0 focus:outline-hidden dark:text-white`}
+      class={`${props.className ? props.className : ""} group flex items-center justify-between rounded-md border border-border bg-popover p-1 px-1.5 text-sm text-foreground focus:ring-0 focus:outline-hidden`}
     >
       <select
         ref={setRef}
@@ -30,13 +30,13 @@ export const Dropdown: Component<DropdownProps> = (props) => {
           <option
             value={item.value}
             selected={item.value === props.value}
-            class="bg-white text-black dark:bg-dark-light dark:text-white"
+            class="bg-popover text-popover-foreground"
           >
             {t(item.label as DictionaryKey) || item.label}
           </option>
         ))}
       </select>
-      <VsArrowSwap class="rotate-90 group-hover:text-indigo-200" />
+      <VsArrowSwap class="rotate-90 group-hover:text-primary" />
     </div>
   );
 };

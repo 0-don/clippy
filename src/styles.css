@@ -9,6 +9,361 @@
 
   --color-gray-dark: #aaaaaa;
 }
+
+/* ---------------------------------------------------------------------------
+   Theme system (shadcn token schema)
+   - Semantic tokens (--background, --primary, ...) are defined per named theme
+     below, once for light (:root / [data-theme]) and once for dark (.dark[...]).
+   - @theme inline maps each token to a Tailwind v4 color utility so classes
+     like bg-background / text-foreground / border-border resolve to them.
+   - data-theme on <html> selects the palette; .dark selects light vs dark
+     within it; data-glass makes surfaces translucent for the native blur.
+   Values are the official shadcn OKLCH registry colors.
+--------------------------------------------------------------------------- */
+@theme inline {
+  /* Surface tokens go through --surface-mix(): opaque normally (alpha 100%), and
+     made translucent when glass is on by lowering --glass-surface-alpha. This is
+     done at the color-utility layer so it can't be overridden by a higher-
+     specificity theme block (the bug where glass surfaces stayed opaque). */
+  --color-background: color-mix(
+    in srgb,
+    var(--background) var(--glass-surface-alpha, 100%),
+    transparent
+  );
+  --color-card: color-mix(
+    in srgb,
+    var(--card) var(--glass-card-alpha, 100%),
+    transparent
+  );
+  --color-popover: color-mix(
+    in srgb,
+    var(--popover) var(--glass-popover-alpha, 100%),
+    transparent
+  );
+  --color-secondary: color-mix(
+    in srgb,
+    var(--secondary) var(--glass-secondary-alpha, 100%),
+    transparent
+  );
+  --color-muted: color-mix(
+    in srgb,
+    var(--muted) var(--glass-muted-alpha, 100%),
+    transparent
+  );
+  /* Non-surface tokens stay solid. */
+  --color-foreground: var(--foreground);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* When glass is off, the webview must paint the theme background so the window
+   is opaque (the Tauri window itself is transparent). When glass is ON, the
+   surface goes transparent so the native OS blur shows through instead. */
+html,
+body {
+  background: var(--background);
+}
+[data-glass="on"],
+[data-glass="on"] body {
+  background: transparent;
+}
+
+/* ============================ NEUTRAL (default) ============================ */
+:root,
+[data-theme="neutral"] {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #4f46e5; /* original indigo-600 accent */
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: #6366f1; /* original indigo-500 focus ring */
+}
+/* Neutral dark = clippy's ORIGINAL palette, so the default look (glass off) is
+   unchanged from before the theme system: dark #252526, dark-light #333333,
+   dark-dark #1c1c1c, gray-dark #aaaaaa, white text. */
+.dark:not([data-theme]),
+.dark[data-theme="neutral"] {
+  --background: #252526; /* original --color-dark (app/window bg) */
+  --foreground: #ffffff;
+  --card: #333333; /* original --color-dark-light (panels/overlays) */
+  --card-foreground: #ffffff;
+  --popover: #333333;
+  --popover-foreground: #ffffff;
+  --primary: #6366f1; /* original indigo accent (checkboxes/toggles/links) */
+  --primary-foreground: #ffffff;
+  --secondary: #333333; /* original --color-dark-light (sidebar) */
+  --secondary-foreground: #ffffff;
+  --muted: #404040; /* original neutral-700 (hover/selected, lighter than bg) */
+  --muted-foreground: #aaaaaa; /* original --color-gray-dark */
+  --accent: #333333;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: #3f3f46; /* zinc-700, matches original border-zinc-700 dividers */
+  --input: #3f3f46;
+  --ring: #6366f1; /* original indigo accent for focus rings */
+}
+
+/* Full themes: every surface (background, card, popover, secondary, muted,
+   accent) is tinted in the theme's hue, sakura-style — not just the accent.
+   Light blocks tint toward white; dark blocks toward a deep tinted charcoal.
+   Hue is constant per theme; only lightness/chroma vary across tokens. */
+
+/* ================================= ROSE (hue ~12) ======================== */
+[data-theme="rose"] {
+  --background: oklch(0.985 0.012 12);
+  --foreground: oklch(0.3 0.06 12);
+  --card: oklch(0.975 0.02 12);
+  --card-foreground: oklch(0.3 0.06 12);
+  --popover: oklch(0.98 0.018 12);
+  --popover-foreground: oklch(0.3 0.06 12);
+  --primary: oklch(0.55 0.22 16);
+  --primary-foreground: oklch(0.985 0.01 12);
+  --secondary: oklch(0.94 0.035 12);
+  --secondary-foreground: oklch(0.34 0.07 12);
+  --muted: oklch(0.95 0.03 12);
+  --muted-foreground: oklch(0.52 0.07 12);
+  --accent: oklch(0.92 0.05 12);
+  --accent-foreground: oklch(0.34 0.07 12);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.035 12);
+  --input: oklch(0.91 0.035 12);
+  --ring: oklch(0.55 0.22 16);
+}
+.dark[data-theme="rose"] {
+  --background: oklch(0.225 0.03 12);
+  --foreground: oklch(0.95 0.02 12);
+  --card: oklch(0.275 0.038 12);
+  --card-foreground: oklch(0.95 0.02 12);
+  --popover: oklch(0.275 0.038 12);
+  --popover-foreground: oklch(0.95 0.02 12);
+  --primary: oklch(0.62 0.22 16);
+  --primary-foreground: oklch(0.99 0.01 12);
+  --secondary: oklch(0.33 0.045 12);
+  --secondary-foreground: oklch(0.95 0.02 12);
+  --muted: oklch(0.34 0.045 12);
+  --muted-foreground: oklch(0.74 0.04 12);
+  --accent: oklch(0.37 0.06 12);
+  --accent-foreground: oklch(0.95 0.02 12);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.62 0.22 16);
+}
+
+/* ================================= BLUE (hue ~262) ======================= */
+[data-theme="blue"] {
+  --background: oklch(0.985 0.012 262);
+  --foreground: oklch(0.3 0.05 262);
+  --card: oklch(0.975 0.02 262);
+  --card-foreground: oklch(0.3 0.05 262);
+  --popover: oklch(0.98 0.018 262);
+  --popover-foreground: oklch(0.3 0.05 262);
+  --primary: oklch(0.52 0.22 262);
+  --primary-foreground: oklch(0.985 0.01 262);
+  --secondary: oklch(0.94 0.035 262);
+  --secondary-foreground: oklch(0.34 0.06 262);
+  --muted: oklch(0.95 0.03 262);
+  --muted-foreground: oklch(0.52 0.06 262);
+  --accent: oklch(0.92 0.05 262);
+  --accent-foreground: oklch(0.34 0.06 262);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.035 262);
+  --input: oklch(0.91 0.035 262);
+  --ring: oklch(0.52 0.22 262);
+}
+.dark[data-theme="blue"] {
+  --background: oklch(0.22 0.03 262);
+  --foreground: oklch(0.95 0.015 262);
+  --card: oklch(0.27 0.04 262);
+  --card-foreground: oklch(0.95 0.015 262);
+  --popover: oklch(0.27 0.04 262);
+  --popover-foreground: oklch(0.95 0.015 262);
+  --primary: oklch(0.62 0.2 262);
+  --primary-foreground: oklch(0.99 0.01 262);
+  --secondary: oklch(0.32 0.045 262);
+  --secondary-foreground: oklch(0.95 0.015 262);
+  --muted: oklch(0.33 0.045 262);
+  --muted-foreground: oklch(0.74 0.04 262);
+  --accent: oklch(0.36 0.06 262);
+  --accent-foreground: oklch(0.95 0.015 262);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.62 0.2 262);
+}
+
+/* =============================== EMERALD (hue ~164) ===================== */
+[data-theme="emerald"] {
+  --background: oklch(0.985 0.012 164);
+  --foreground: oklch(0.3 0.05 164);
+  --card: oklch(0.975 0.02 164);
+  --card-foreground: oklch(0.3 0.05 164);
+  --popover: oklch(0.98 0.018 164);
+  --popover-foreground: oklch(0.3 0.05 164);
+  --primary: oklch(0.52 0.13 164);
+  --primary-foreground: oklch(0.985 0.01 164);
+  --secondary: oklch(0.94 0.035 164);
+  --secondary-foreground: oklch(0.34 0.06 164);
+  --muted: oklch(0.95 0.03 164);
+  --muted-foreground: oklch(0.52 0.06 164);
+  --accent: oklch(0.92 0.05 164);
+  --accent-foreground: oklch(0.34 0.06 164);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.035 164);
+  --input: oklch(0.91 0.035 164);
+  --ring: oklch(0.52 0.13 164);
+}
+.dark[data-theme="emerald"] {
+  --background: oklch(0.215 0.03 164);
+  --foreground: oklch(0.95 0.015 164);
+  --card: oklch(0.265 0.04 164);
+  --card-foreground: oklch(0.95 0.015 164);
+  --popover: oklch(0.265 0.04 164);
+  --popover-foreground: oklch(0.95 0.015 164);
+  --primary: oklch(0.66 0.15 164);
+  --primary-foreground: oklch(0.2 0.05 164);
+  --secondary: oklch(0.31 0.045 164);
+  --secondary-foreground: oklch(0.95 0.015 164);
+  --muted: oklch(0.32 0.045 164);
+  --muted-foreground: oklch(0.74 0.04 164);
+  --accent: oklch(0.35 0.06 164);
+  --accent-foreground: oklch(0.95 0.015 164);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.66 0.15 164);
+}
+
+/* ================================ VIOLET (hue ~300) ===================== */
+[data-theme="violet"] {
+  --background: oklch(0.985 0.012 300);
+  --foreground: oklch(0.3 0.05 300);
+  --card: oklch(0.975 0.02 300);
+  --card-foreground: oklch(0.3 0.05 300);
+  --popover: oklch(0.98 0.018 300);
+  --popover-foreground: oklch(0.3 0.05 300);
+  --primary: oklch(0.52 0.22 300);
+  --primary-foreground: oklch(0.985 0.01 300);
+  --secondary: oklch(0.94 0.035 300);
+  --secondary-foreground: oklch(0.34 0.06 300);
+  --muted: oklch(0.95 0.03 300);
+  --muted-foreground: oklch(0.52 0.06 300);
+  --accent: oklch(0.92 0.05 300);
+  --accent-foreground: oklch(0.34 0.06 300);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.035 300);
+  --input: oklch(0.91 0.035 300);
+  --ring: oklch(0.52 0.22 300);
+}
+.dark[data-theme="violet"] {
+  --background: oklch(0.22 0.03 300);
+  --foreground: oklch(0.95 0.015 300);
+  --card: oklch(0.27 0.04 300);
+  --card-foreground: oklch(0.95 0.015 300);
+  --popover: oklch(0.27 0.04 300);
+  --popover-foreground: oklch(0.95 0.015 300);
+  --primary: oklch(0.62 0.21 300);
+  --primary-foreground: oklch(0.99 0.01 300);
+  --secondary: oklch(0.32 0.045 300);
+  --secondary-foreground: oklch(0.95 0.015 300);
+  --muted: oklch(0.33 0.045 300);
+  --muted-foreground: oklch(0.74 0.04 300);
+  --accent: oklch(0.36 0.06 300);
+  --accent-foreground: oklch(0.95 0.015 300);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.62 0.21 300);
+}
+
+/* ================================= AMBER (hue ~70) ====================== */
+[data-theme="amber"] {
+  --background: oklch(0.985 0.014 70);
+  --foreground: oklch(0.32 0.05 60);
+  --card: oklch(0.975 0.024 70);
+  --card-foreground: oklch(0.32 0.05 60);
+  --popover: oklch(0.98 0.02 70);
+  --popover-foreground: oklch(0.32 0.05 60);
+  --primary: oklch(0.62 0.16 60);
+  --primary-foreground: oklch(0.99 0.02 95);
+  --secondary: oklch(0.94 0.04 75);
+  --secondary-foreground: oklch(0.36 0.06 60);
+  --muted: oklch(0.95 0.035 75);
+  --muted-foreground: oklch(0.54 0.06 60);
+  --accent: oklch(0.92 0.06 75);
+  --accent-foreground: oklch(0.36 0.06 60);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.04 75);
+  --input: oklch(0.91 0.04 75);
+  --ring: oklch(0.62 0.16 60);
+}
+.dark[data-theme="amber"] {
+  --background: oklch(0.225 0.025 70);
+  --foreground: oklch(0.95 0.02 80);
+  --card: oklch(0.275 0.032 70);
+  --card-foreground: oklch(0.95 0.02 80);
+  --popover: oklch(0.275 0.032 70);
+  --popover-foreground: oklch(0.95 0.02 80);
+  --primary: oklch(0.77 0.16 75);
+  --primary-foreground: oklch(0.25 0.06 60);
+  --secondary: oklch(0.33 0.04 70);
+  --secondary-foreground: oklch(0.95 0.02 80);
+  --muted: oklch(0.34 0.04 70);
+  --muted-foreground: oklch(0.75 0.04 80);
+  --accent: oklch(0.37 0.05 70);
+  --accent-foreground: oklch(0.95 0.02 80);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.77 0.16 75);
+}
+
+/* Glass: lower the surface alphas so the @theme color-mix makes surfaces
+   translucent and the native acrylic blur shows through (like the Windows
+   context menu). These are dedicated alpha vars (not the theme color vars), so
+   there's no specificity conflict with the theme blocks and no circular var
+   reference. Text/border tokens stay fully opaque for readability.
+
+   Light themes use much HIGHER alphas: their surfaces are near-white, so going
+   too transparent lets the blurred wallpaper oversaturate them (unreadable hot
+   pink/colour wash). Dark themes can be more transparent and still read well. */
+[data-glass="on"] {
+  --glass-surface-alpha: 12%;
+  --glass-card-alpha: 18%;
+  --glass-popover-alpha: 30%;
+  --glass-secondary-alpha: 15%;
+  --glass-muted-alpha: 22%;
+}
+[data-glass="on"]:not(.dark) {
+  --glass-surface-alpha: 70%;
+  --glass-card-alpha: 75%;
+  --glass-popover-alpha: 85%;
+  --glass-secondary-alpha: 72%;
+  --glass-muted-alpha: 75%;
+}
+
 /** @type {import('tailwindcss').Config} */
 
 /* dark: {
@@ -48,10 +403,10 @@ dark: "#aaaaaa",
   @apply h-0 w-0;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-linear-to-t from-transparent via-indigo-600 to-transparent;
+  @apply bg-linear-to-t from-transparent via-primary to-transparent;
 }
 ::-webkit-scrollbar-thumb:horizontal {
-  @apply bg-linear-to-l from-transparent via-indigo-600 to-transparent;
+  @apply bg-linear-to-l from-transparent via-primary to-transparent;
 }
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-transparent;
@@ -82,5 +437,5 @@ input::-webkit-inner-spin-button {
 }
 
 .clipboard {
-  @apply flex w-full cursor-pointer items-center gap-2 border-b border-zinc-400 px-3 py-2 select-none hover:bg-zinc-200 focus:outline-hidden dark:border-b-zinc-700 dark:hover:bg-neutral-700;
+  @apply flex w-full cursor-pointer items-center gap-2 border-b border-border px-3 py-2 select-none hover:bg-muted focus:outline-hidden;
 }

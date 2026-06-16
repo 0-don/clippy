@@ -26,9 +26,9 @@ const Settings = () => {
   });
 
   return (
-    <div class="dark:bg-dark absolute flex h-full w-full flex-col overflow-x-hidden bg-white text-black dark:text-white">
+    <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-background text-foreground">
       <Tabs />
-      <div class="px-5 pt-5 dark:text-white">
+      <div class="px-5 pt-5 text-foreground">
         <Show
           when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.GENERAL"}
         >

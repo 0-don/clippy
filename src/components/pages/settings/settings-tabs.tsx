@@ -83,7 +83,7 @@ export const Tabs: Component<TabsProps> = ({}) => {
   };
 
   return (
-    <div class="border-b border-gray-500">
+    <div class="border-b border-border">
       <div class="flex justify-center">
         <nav
           ref={setNavRef}
@@ -101,13 +101,13 @@ export const Tabs: Component<TabsProps> = ({}) => {
                   type="button"
                   class={`${
                     current
-                      ? "border-zinc-600 text-zinc-600 dark:border-white dark:text-white"
-                      : "border-transparent hover:border-zinc-600 hover:text-zinc-600 dark:text-gray-500 dark:hover:border-white dark:hover:text-white"
+                      ? "border-primary text-primary"
+                      : "border-transparent hover:border-primary hover:text-primary text-muted-foreground"
                   } group inline-flex cursor-pointer items-center border-b-2 px-2 py-4 text-sm font-medium whitespace-nowrap`}
                   onClick={() => SettingsStore.setCurrentTab(name)}
                   title={t(name)}
                 >
-                  <Icon class="text-1xl mr-2 dark:text-white" />
+                  <Icon class="text-1xl mr-2 text-foreground" />
                   <span class="max-w-20 truncate">{t(name)}</span>
                 </button>
               )}

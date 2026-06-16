@@ -127,7 +127,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
 
   return (
     <div
-      class={`group relative ${props.isSelected ? "bg-zinc-100 dark:bg-neutral-600" : ""}`}
+      class={`group relative ${props.isSelected ? "bg-muted" : ""}`}
     >
       {editing() ? (
         <div class="flex items-center gap-2 px-3 py-2">
@@ -140,7 +140,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
             onBlur={handleRenameConfirm}
             onClick={(e) => e.stopPropagation()}
             placeholder={t("CLIPBOARD.ENTER_NAME")}
-            class="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm outline-none focus:border-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white dark:focus:border-blue-400"
+            class="w-full rounded border border-border bg-background px-2 py-1 text-sm outline-none focus:border-primary text-foreground"
           />
         </div>
       ) : (
@@ -156,27 +156,27 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
               class={`${
                 props.data.clipboard.star
                   ? "text-yellow-400 dark:text-yellow-300"
-                  : "hidden text-zinc-700"
-              } cursor-pointer group-hover:block hover:text-yellow-400 dark:text-white dark:hover:text-yellow-300`}
+                  : "hidden text-foreground"
+              } cursor-pointer group-hover:block hover:text-yellow-400 dark:hover:text-yellow-300`}
             />
             <div class="flex items-center gap-1">
               <FiEdit3
                 onClick={handleEditName}
                 title={t("CLIPBOARD.EDIT_NAME")}
-                class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                class="hidden cursor-pointer text-foreground group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
               />
               {props.data.rtf && (
                 <BsJournalRichtext
                   onClick={handleRtfCopy}
                   title={t("CLIPBOARD.COPY_AS_RTF")}
-                  class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                  class="hidden cursor-pointer text-foreground group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
                 />
               )}
               {props.data.html && (
                 <TbOutlineSourceCode
                   onClick={handleHtmlCopy}
                   title={t("CLIPBOARD.COPY_AS_HTML")}
-                  class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-green-600 dark:text-white dark:hover:text-green-400"
+                  class="hidden cursor-pointer text-foreground group-hover:block hover:text-green-600 dark:hover:text-green-400"
                 />
               )}
             </div>
@@ -186,13 +186,13 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
                   <FiChevronUp
                     onClick={handleExpandToggle}
                     title={t("CLIPBOARD.COLLAPSE")}
-                    class="cursor-pointer text-zinc-700 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                    class="cursor-pointer text-foreground hover:text-blue-600 dark:hover:text-blue-400"
                   />
                 ) : (
                   <FiChevronDown
                     onClick={handleExpandToggle}
                     title={t("CLIPBOARD.EXPAND")}
-                    class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
+                    class="hidden cursor-pointer text-foreground group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
                   />
                 ))}
               <IoTrashOutline
@@ -201,7 +201,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
                   handleDelete(props.data.clipboard.id);
                 }}
                 title={t("CLIPBOARD.DELETE_CLIPBOARD")}
-                class="hidden cursor-pointer text-zinc-700 group-hover:block hover:text-red-600 dark:text-white dark:hover:text-red-600"
+                class="hidden cursor-pointer text-foreground group-hover:block hover:text-red-600 dark:hover:text-red-600"
               />
             </div>
           </div>

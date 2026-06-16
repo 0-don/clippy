@@ -35,6 +35,8 @@ pub struct Model {
     pub max_rtf_size: i32,
     pub max_html_size: i32,
     pub suppress_hotkey_on_fullscreen: bool,
+    pub theme: String,
+    pub glass: bool,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -58,6 +60,8 @@ pub enum Column {
     MaxRtfSize,
     MaxHtmlSize,
     SuppressHotkeyOnFullscreen,
+    Theme,
+    Glass,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -98,6 +102,8 @@ impl ColumnTrait for Column {
             Self::MaxRtfSize => ColumnType::Integer.def(),
             Self::MaxHtmlSize => ColumnType::Integer.def(),
             Self::SuppressHotkeyOnFullscreen => ColumnType::Boolean.def(),
+            Self::Theme => ColumnType::String(StringLen::None).def(),
+            Self::Glass => ColumnType::Boolean.def(),
         }
     }
 }

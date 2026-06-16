@@ -40,3 +40,10 @@ pub async fn change_clipboard_db_location() {
 pub async fn reset_clipboard_db_location() {
     reset_clipboard_db_location_disable();
 }
+
+/// Returns the current OS ("windows" | "macos" | "linux" | ...). The frontend
+/// uses this to hide the glass toggle on platforms where it is unsupported.
+#[tauri::command]
+pub fn get_os() -> String {
+    std::env::consts::OS.to_string()
+}

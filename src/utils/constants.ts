@@ -94,6 +94,18 @@ export const CLIPPY_POSITIONS = [
   // "tray_bottom_center",
 ] as const;
 
+// Named color themes selectable in settings. Each maps to a [data-theme="..."]
+// token block in styles.css. "neutral" is the default.
+export const THEMES = [
+  "neutral",
+  "rose",
+  "blue",
+  "emerald",
+  "violet",
+  "amber",
+] as const;
+export type ThemeName = (typeof THEMES)[number];
+
 export const GLOBAL_SHORTCUT_KEYS = [
   "none",
   "A",

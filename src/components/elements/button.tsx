@@ -26,7 +26,7 @@ export const Button: Component<ButtonProps> = (props) => {
       type={buttonProps.type || "button"}
       {...buttonProps}
       class={cn(
-        "flex items-center justify-center rounded-sm bg-zinc-600 px-1 py-1 text-xs font-bold text-white hover:bg-zinc-700 disabled:bg-neutral-500",
+        "flex items-center justify-center rounded-sm bg-primary px-1 py-1 text-xs font-bold text-primary-foreground hover:bg-primary/90 disabled:bg-muted",
         !buttonProps.disabled ? "cursor-pointer" : "cursor-not-allowed",
         local.class,
       )}

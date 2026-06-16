@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "ٹرے دائیں"
     },
     "SYNCING": "مطابقت پذیری",
+    "THEME": {
+      "AMBER": "عنبر",
+      "BLUE": "نیلا",
+      "EMERALD": "زمرد",
+      "NEUTRAL": "غیر جانبدار",
+      "ROSE": "گلابی",
+      "VIOLET": "بنفشی"
+    },
     "UNLOCK_CLIPPY": "کلپی کو غیر مقفل کریں۔"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "زبان بدلو",
       "CHANGE_WINDOW_POSITION": "ونڈو کی پوزیشن تبدیل کریں۔",
+      "COLOR_THEME": "رنگ تھیم",
+      "GLASS_EFFECT": "گلاس ایفیکٹ",
       "HTML_CLIPBOARD_TOOLTIP": "HTML کلپ بورڈ ٹول ٹپ",
       "KEYBOARD_SHORTCUT": "کی بورڈ شارٹ کٹ",
       "START_CLIPPY_ON_STARTUP": "سسٹم اسٹارٹ اپ پر کلیپی شروع کریں۔",

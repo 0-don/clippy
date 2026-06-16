@@ -1,13 +1,14 @@
 import { CgDisplayFlex } from "solid-icons/cg";
-import { FiMoon } from "solid-icons/fi";
+import { FiDroplet, FiMoon } from "solid-icons/fi";
 import { HiOutlineWindow, HiSolidCog8Tooth } from "solid-icons/hi";
-import { IoLanguageOutline } from "solid-icons/io";
+import { IoColorPaletteOutline, IoLanguageOutline } from "solid-icons/io";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { TbOutlineMaximize, TbOutlineTooltip } from "solid-icons/tb";
 import { VsRocket } from "solid-icons/vs";
 import { Component, Show } from "solid-js";
 import { msg } from "../../../lib/i18n";
 import { invokeCommand } from "../../../lib/tauri";
+import { AppStore } from "../../../store/app-store";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { HotkeyEvent, WebWindow } from "../../../types/enums";
@@ -17,6 +18,8 @@ import {
   ClippyPosition,
   Language,
   LANGUAGES,
+  THEMES,
+  ThemeName,
 } from "../../../utils/constants";
 import { Dropdown } from "../../elements/dropdown";
 import { Input } from "../../elements/input";
@@ -67,13 +70,57 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
 
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
-            <FiMoon class="dark:text-white" />
+            <FiMoon class="text-foreground" />
             <h6 class="text-sm">{t("SETTINGS.GENERAL.SWITCH_THEME")}</h6>
           </div>
           <div>
             <DarkMode />
           </div>
         </div>
+
+        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+          <div class="flex items-center space-x-2 truncate">
+            <IoColorPaletteOutline />
+            <h6 class="text-sm">{t("SETTINGS.GENERAL.COLOR_THEME")}</h6>
+          </div>
+
+          <Dropdown
+            items={THEMES.map((value) => ({
+              value,
+              label: msg(
+                `MAIN.THEME.${value.toUpperCase() as Uppercase<ThemeName>}`,
+              ),
+            }))}
+            value={SettingsStore.settings()!.theme || "neutral"}
+            onChange={(theme) => {
+              SettingsStore.updateSettings({
+                ...SettingsStore.settings()!,
+                theme: theme as ThemeName,
+              });
+            }}
+          />
+        </div>
+
+        {/* Native window glass: Windows + macOS only (Linux compositor controls blur). */}
+        <Show when={AppStore.os() !== "linux"}>
+          <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+            <div class="flex items-center space-x-2 truncate">
+              <FiDroplet />
+              <h6 class="text-sm">{t("SETTINGS.GENERAL.GLASS_EFFECT")}</h6>
+            </div>
+            <div>
+              <Toggle
+                checked={SettingsStore.settings()?.glass}
+                onChange={async (glass: boolean) =>
+                  SettingsStore.updateSettings({
+                    ...SettingsStore.settings()!,
+                    glass,
+                  })
+                }
+              />
+            </div>
+          </div>
+        </Show>
 
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">
           <div class="flex items-center space-x-2 truncate">
@@ -103,7 +150,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 {t("SETTINGS.GENERAL.SUPPRESS_HOTKEY_ON_FULLSCREEN")}
               </h6>
             </div>
-            <p class="ml-6 text-xs text-zinc-500 dark:text-zinc-400">
+            <p class="ml-6 text-xs text-muted-foreground">
               {t("SETTINGS.GENERAL.SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO")}
             </p>
           </div>

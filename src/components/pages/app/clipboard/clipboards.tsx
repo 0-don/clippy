@@ -59,7 +59,7 @@ export const Clipboards: Component = () => {
           when={!ClipboardStore.isSearching()}
           fallback={
             <div class="flex h-screen w-full items-center justify-center">
-              <ImSpinner2 class="animate-spin text-4xl opacity-30 dark:text-white" />
+              <ImSpinner2 class="animate-spin text-4xl opacity-30 text-foreground" />
             </div>
           }
         >
@@ -80,13 +80,13 @@ export const Clipboards: Component = () => {
         <Show when={scrollToTop()}>
           <button
             type="button"
-            class="absolute right-4 bottom-5 z-10 rounded-full bg-neutral-600 px-2 py-1 hover:bg-gray-500"
+            class="absolute right-4 bottom-5 z-10 rounded-full bg-secondary px-2 py-1 hover:bg-muted"
             onClick={ClipboardStore.init}
           >
             <div class="relative flex items-center justify-center py-1">
-              <FiArrowUp class="text-xl text-white! dark:text-white!" />
+              <FiArrowUp class="text-xl text-foreground!" />
               <Show when={HotkeyStore.globalHotkeyEvent()}>
-                <div class="absolute top-0 left-0 -mt-3 -ml-3 rounded-xs bg-zinc-600 px-1 text-[12px] font-semibold">
+                <div class="absolute top-0 left-0 -mt-3 -ml-3 rounded-xs bg-card px-1 text-[12px] font-semibold">
                   {
                     HotkeyStore.hotkeys().find(
                       (key) => key.event === HotkeyEvent.ScrollToTop,

@@ -21,19 +21,19 @@ export const Toggle: Component<ToggleProps> = (props) => {
       />
       <div
         class={cn(
-          "relative h-4 w-11 rounded-full peer-focus:outline-hidden after:absolute after:inset-s-0.5 after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-transparent after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-[150%] peer-checked:after:border-transparent peer-checked:rtl:after:-translate-x-full dark:border-gray-600",
-          "dark:bg-opacity-20 peer-checked:bg-indigo-60 bg-gray-200 after:z-40 dark:after:bg-zinc-700",
+          "relative h-4 w-11 rounded-full peer-focus:outline-hidden after:absolute after:inset-s-0.5 after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-transparent after:bg-secondary after:transition-all after:content-[''] peer-checked:after:translate-x-[150%] peer-checked:after:border-transparent peer-checked:rtl:after:-translate-x-full border-border",
+          "dark:bg-opacity-20 peer-checked:bg-primary bg-secondary after:z-40 dark:after:bg-muted",
           props.checked
-            ? "bg-indigo-700 dark:bg-indigo-700"
-            : "dark:bg-dark-light",
+            ? "bg-primary"
+            : "bg-secondary",
           props?.disabled ? "cursor-not-allowed" : "cursor-pointer",
         )}
       >
         <div class="absolute inset-0 z-50 flex items-center justify-between px-1">
           {props.checked ? (
-            <FiCheck class="ml-auto text-sm text-white" />
+            <FiCheck class="ml-auto text-sm text-foreground" />
           ) : (
-            <VsClose class="text-white" />
+            <VsClose class="text-foreground" />
           )}
         </div>
       </div>

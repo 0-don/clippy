@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "Taca prawa"
     },
     "SYNCING": "Synchronizacja",
+    "THEME": {
+      "AMBER": "Bursztynowy",
+      "BLUE": "Niebieski",
+      "EMERALD": "Szmaragdowy",
+      "NEUTRAL": "Neutralny",
+      "ROSE": "Różany",
+      "VIOLET": "Fioletowy"
+    },
     "UNLOCK_CLIPPY": "Odblokuj klips"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "Zmień język",
       "CHANGE_WINDOW_POSITION": "Zmień położenie okna",
+      "COLOR_THEME": "Motyw kolorystyczny",
+      "GLASS_EFFECT": "Efekt szkła",
       "HTML_CLIPBOARD_TOOLTIP": "Podpowiedź schowka HTML",
       "KEYBOARD_SHORTCUT": "Skrót klawiaturowy",
       "START_CLIPPY_ON_STARTUP": "Uruchom Clippy przy starcie systemu",

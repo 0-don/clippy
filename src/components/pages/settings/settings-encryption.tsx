@@ -35,7 +35,7 @@ export const SettingsEncryption: Component<SettingsEncryptionProps> = ({}) => {
       title={t("SETTINGS.ENCRYPT.ENCRYPT_DECRYPT")}
     >
       <div class="px-5 pb-5">
-        <p class="text-sm text-zinc-700 dark:text-zinc-400">
+        <p class="text-sm text-muted-foreground">
           {t("SETTINGS.ENCRYPT.INFO")}
         </p>
         <Show

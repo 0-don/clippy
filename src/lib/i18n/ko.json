@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "트레이 오른쪽"
     },
     "SYNCING": "동기화 중",
+    "THEME": {
+      "AMBER": "앰버",
+      "BLUE": "블루",
+      "EMERALD": "에메랄드",
+      "NEUTRAL": "뉴트럴",
+      "ROSE": "로즈",
+      "VIOLET": "바이올렛"
+    },
     "UNLOCK_CLIPPY": "클리피 잠금 해제"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "언어 변경",
       "CHANGE_WINDOW_POSITION": "창 위치 변경",
+      "COLOR_THEME": "색상 테마",
+      "GLASS_EFFECT": "유리 효과",
       "HTML_CLIPBOARD_TOOLTIP": "HTML 클립보드 툴팁",
       "KEYBOARD_SHORTCUT": "단축키",
       "START_CLIPPY_ON_STARTUP": "시스템 시작 시 Clippy 시작",

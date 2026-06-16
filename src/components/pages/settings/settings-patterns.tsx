@@ -47,19 +47,19 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
       title={t("SETTINGS.PATTERNS.CHANGE_YOUR_TEXT_MATCHES")}
     >
       <div class="flex items-center justify-between gap-2 px-5 pb-5">
-        <p class="text-sm text-zinc-700 dark:text-zinc-400">
+        <p class="text-sm text-muted-foreground">
           {t("SETTINGS.PATTERNS.INFO")}
         </p>
       </div>
       {/* Table Headers */}
       <div class="mb-2 grid grid-cols-[1fr_1fr_auto_auto] gap-2.5 px-5">
-        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">
+        <div class="text-sm font-bold text-muted-foreground">
           {t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}
         </div>
-        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">
+        <div class="text-sm font-bold text-muted-foreground">
           {t("SETTINGS.PATTERNS.SUBSTITUTION")}
         </div>
-        <div class="text-sm font-bold text-zinc-700 dark:text-zinc-400">
+        <div class="text-sm font-bold text-muted-foreground">
           {t("SETTINGS.PATTERNS.ACTIONS")}
         </div>
         <div></div> {/* Empty header for action button */}
@@ -181,7 +181,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                   }
                 />
               </div>
-              <hr class="border-zinc-700" />
+              <hr class="border-border" />
             </div>
           )}
         </Index>

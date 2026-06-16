@@ -39,6 +39,7 @@ export enum InvokeCommand {
   ToggleAutostart = "toggle_autostart",
   ChangeClipboardDbLocation = "change_clipboard_db_location",
   ResetClipboardDbLocation = "reset_clipboard_db_location",
+  GetOs = "get_os",
 
   // Window commands
   OpenNewWindow = "open_new_window",
@@ -142,6 +143,10 @@ export interface TauriInvokeCommands {
   [InvokeCommand.ResetClipboardDbLocation]: {
     args: undefined;
     return: void;
+  };
+  [InvokeCommand.GetOs]: {
+    args: undefined;
+    return: string;
   };
 
   // Window commands

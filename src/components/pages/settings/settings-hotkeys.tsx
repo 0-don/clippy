@@ -23,7 +23,7 @@ export const SettingsHotkeys: Component<SettingsHotkeysProps> = ({}) => {
                 <Shortcut hotkey={hotkey} />
               </div>
               {HotkeyStore.hotkeys().length !== index() + 1 && (
-                <hr class="border-zinc-700" />
+                <hr class="border-border" />
               )}
             </>
           )}

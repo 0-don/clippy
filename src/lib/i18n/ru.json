@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "Лоток правый"
     },
     "SYNCING": "Синхронизация",
+    "THEME": {
+      "AMBER": "Янтарный",
+      "BLUE": "Синий",
+      "EMERALD": "Изумрудный",
+      "NEUTRAL": "Нейтральный",
+      "ROSE": "Розовый",
+      "VIOLET": "Фиолетовый"
+    },
     "UNLOCK_CLIPPY": "Разблокировать клиппи"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "Изменить язык",
       "CHANGE_WINDOW_POSITION": "Изменить положение окна",
+      "COLOR_THEME": "Цветовая тема",
+      "GLASS_EFFECT": "Эффект стекла",
       "HTML_CLIPBOARD_TOOLTIP": "Подсказка буфера обмена HTML",
       "KEYBOARD_SHORTCUT": "Сочетание клавиш",
       "START_CLIPPY_ON_STARTUP": "Запустить Clippy при запуске системы",

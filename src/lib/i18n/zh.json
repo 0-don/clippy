@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "托盘右侧"
     },
     "SYNCING": "同步",
+    "THEME": {
+      "AMBER": "琥珀色",
+      "BLUE": "蓝色",
+      "EMERALD": "翡翠绿",
+      "NEUTRAL": "中性",
+      "ROSE": "玫瑰红",
+      "VIOLET": "紫罗兰"
+    },
     "UNLOCK_CLIPPY": "解锁 clippy"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "改变语言",
       "CHANGE_WINDOW_POSITION": "更改窗口位置",
+      "COLOR_THEME": "颜色主题",
+      "GLASS_EFFECT": "玻璃效果",
       "HTML_CLIPBOARD_TOOLTIP": "HTML 剪贴板工具提示",
       "KEYBOARD_SHORTCUT": "键盘快捷键",
       "START_CLIPPY_ON_STARTUP": "在系统启动时启动 Clippy",

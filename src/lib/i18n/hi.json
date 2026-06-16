@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "ट्रे दायाँ"
     },
     "SYNCING": "सिंक्रनाइज़ किए जा रहे",
+    "THEME": {
+      "AMBER": "अंबर",
+      "BLUE": "नीला",
+      "EMERALD": "पन्ना",
+      "NEUTRAL": "तटस्थ",
+      "ROSE": "गुलाबी",
+      "VIOLET": "बैंगनी"
+    },
     "UNLOCK_CLIPPY": "क्लिप्पी अनलॉक करें"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "भाषा बदलें",
       "CHANGE_WINDOW_POSITION": "विंडो की स्थिति बदलें",
+      "COLOR_THEME": "रंग थीम",
+      "GLASS_EFFECT": "ग्लास प्रभाव",
       "HTML_CLIPBOARD_TOOLTIP": "HTML क्लिपबोर्ड टूलटिप",
       "KEYBOARD_SHORTCUT": "कीबोर्ड शॉर्टकट",
       "START_CLIPPY_ON_STARTUP": "सिस्टम स्टार्टअप पर क्लिप्पी प्रारंभ करें",

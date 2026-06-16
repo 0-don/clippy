@@ -59,7 +59,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
       case ClipboardTextType.Hex:
         return () => (
           <div
-            class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
+            class="h-5 w-5 rounded-md border border-solid border-border"
             style={{
               "background-color": data?.includes("#") ? data : `#${data}`,
             }}
@@ -68,7 +68,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
       case ClipboardTextType.Rgb:
         return () => (
           <div
-            class="h-5 w-5 rounded-md border border-solid border-zinc-400 dark:border-black"
+            class="h-5 w-5 rounded-md border border-solid border-border"
             style={{ "background-color": rgbCompatible(data || "")! }}
           />
         );
@@ -103,7 +103,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
                   {props.data.clipboard.name}
                 </p>
                 <p
-                  class={`w-[calc(100vw-6.5rem)] text-left text-xs text-zinc-500 dark:text-zinc-400 ${
+                  class={`w-[calc(100vw-6.5rem)] text-left text-xs text-muted-foreground ${
                     ClipboardStore.isExpanded(props.data.clipboard.id)
                       ? "max-h-96 overflow-y-auto wrap-break-word whitespace-pre-wrap"
                       : "truncate"
@@ -129,7 +129,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
               </p>
             )}
             <div
-              class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
+              class="text-left text-xs font-thin text-muted-foreground"
               title={new Date(props.data.clipboard.created_at).toLocaleString()}
             >
               {fromNowString()}
@@ -142,7 +142,7 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
         <Tooltip.Portal>
           <Tooltip.Content
             style={{ "max-width": "300px", "max-height": "300px" }}
-            class="truncate rounded-md bg-white p-1 shadow-lg dark:bg-zinc-800"
+            class="truncate rounded-md bg-popover text-popover-foreground p-1 shadow-lg"
           >
             <div innerHTML={props.data.html.data} />
           </Tooltip.Content>

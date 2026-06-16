@@ -25,11 +25,133 @@ pub fn setup_window() {
         get_main_window()
             .set_shadow(false)
             .expect("Failed to set shadow");
+
+        // Apply the persisted glass preference on startup (no-op on Linux).
+        apply_window_effect(get_global_settings().glass);
     }
 
     #[cfg(debug_assertions)]
     {
         get_main_window().open_devtools();
+    }
+}
+
+/// Apply (or clear) the native frosted-glass window effect on the main window
+/// according to `glass`. Platform behavior:
+/// - Windows: Acrylic via window-vibrancy, plus DWM rounded corners on Win11.
+/// - macOS: Liquid Glass on macOS 26+, falling back to vibrancy on older.
+/// - Linux: no-op (blur is controlled by the compositor, not the app).
+///
+/// Runs on the main thread because the native calls manipulate the window/HWND.
+/// Never panics: glass is cosmetic, so failures are logged and swallowed.
+#[cfg(any(windows, target_os = "macos"))]
+pub fn apply_window_effect(glass: bool) {
+    let _ = get_app().run_on_main_thread(move || {
+        let window = get_main_window();
+
+        #[cfg(windows)]
+        apply_windows_effect(&window, glass);
+
+        #[cfg(target_os = "macos")]
+        apply_macos_effect(&window, glass);
+    });
+}
+
+#[cfg(not(any(windows, target_os = "macos")))]
+pub fn apply_window_effect(_glass: bool) {
+    // Linux / other: native glass unsupported.
+}
+
+/// Apply the glass effect to a specific (non-main) webview window, e.g. Settings.
+/// Mirrors `apply_window_effect` but targets the passed window.
+#[cfg(any(windows, target_os = "macos"))]
+pub fn apply_window_effect_to(window: tauri::WebviewWindow, glass: bool) {
+    let _ = get_app().run_on_main_thread(move || {
+        #[cfg(windows)]
+        apply_windows_effect(&window, glass);
+
+        #[cfg(target_os = "macos")]
+        apply_macos_effect(&window, glass);
+    });
+}
+
+#[cfg(not(any(windows, target_os = "macos")))]
+pub fn apply_window_effect_to(_window: tauri::WebviewWindow, _glass: bool) {}
+
+#[cfg(windows)]
+fn apply_windows_effect(window: &tauri::WebviewWindow, glass: bool) {
+    use window_vibrancy::{apply_acrylic, clear_acrylic};
+
+    // Use window-vibrancy's `apply_acrylic` (the older SetWindowCompositionAttribute
+    // path) for the blur. On Windows 11 24H2 the newer DWM system-backdrop API
+    // (DWMSBT_*) does NOT render through WebView2 — it shows black — but acrylic via
+    // this path works (window-vibrancy issue #183). Acrylic also works on Win10.
+    let result = if glass {
+        // Slightly tinted, mostly-transparent acrylic so the wallpaper shows through.
+        apply_acrylic(window, Some((18, 18, 18, 80)))
+    } else {
+        clear_acrylic(window)
+    };
+    if let Err(e) = result {
+        log::warn!(
+            "acrylic effect ({}): {e}",
+            if glass { "apply" } else { "clear" }
+        );
+    }
+
+    // Rounded corners are independent of the backdrop and supported on Win11.
+    if let Ok(hwnd) = window.hwnd() {
+        set_window_corners(hwnd.0 as isize);
+    }
+}
+
+/// Request rounded corners via DWM (Windows 11). Independent of the blur effect.
+#[cfg(windows)]
+fn set_window_corners(hwnd: isize) {
+    use std::ffi::c_void;
+    use windows_sys::Win32::Foundation::HWND;
+    use windows_sys::Win32::Graphics::Dwm::DwmSetWindowAttribute;
+
+    const DWMWA_WINDOW_CORNER_PREFERENCE: u32 = 33;
+    const DWMWCP_ROUND: i32 = 2;
+
+    let hwnd = hwnd as HWND;
+    let corner: i32 = DWMWCP_ROUND;
+
+    unsafe {
+        let r = DwmSetWindowAttribute(
+            hwnd,
+            DWMWA_WINDOW_CORNER_PREFERENCE,
+            &corner as *const i32 as *const c_void,
+            std::mem::size_of::<i32>() as u32,
+        );
+        if r != 0 {
+            log::warn!("DwmSetWindowAttribute corner={r}");
+        }
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn apply_macos_effect(window: &tauri::WebviewWindow, glass: bool) {
+    use window_vibrancy::{
+        apply_liquid_glass, apply_vibrancy, clear_liquid_glass, clear_vibrancy,
+        NSGlassEffectViewStyle, NSVisualEffectMaterial,
+    };
+
+    if glass {
+        // Liquid Glass (macOS 26+). The `Clear` style avoids the focus corner-
+        // misalignment bug (window-vibrancy #198). On older macOS this errors,
+        // so fall back to standard vibrancy.
+        if apply_liquid_glass(window, NSGlassEffectViewStyle::Clear, None, Some(12.0)).is_err() {
+            if let Err(e) =
+                apply_vibrancy(window, NSVisualEffectMaterial::HudWindow, None, None)
+            {
+                log::warn!("vibrancy apply: {e}");
+            }
+        }
+    } else {
+        let _ = clear_liquid_glass(window);
+        let _ = clear_vibrancy(window);
     }
 }
 
@@ -249,12 +371,17 @@ pub async fn create_settings_window(title: Option<String>) {
     .title(title.unwrap_or_else(|| "Settings".to_string()))
     .inner_size(SETTINGS_WINDOW_X as f64, SETTINGS_WINDOW_Y as f64)
     .always_on_top(true)
+    .transparent(true)
     .build()
     .expect("Failed to build window");
 
     window
         .set_size(calculate_logical_size(SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y))
         .expect("Failed to set window size");
+
+    // Match the main window's glass preference so the Settings window is
+    // consistent (frosted when glass is on, opaque otherwise).
+    apply_window_effect_to(window, get_global_settings().glass);
 }
 
 pub async fn open_window(window_name: WebWindow, title: Option<String>) {

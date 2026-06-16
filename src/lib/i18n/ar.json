@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "صينية اليمين"
     },
     "SYNCING": "المزامنة",
+    "THEME": {
+      "AMBER": "كهرماني",
+      "BLUE": "أزرق",
+      "EMERALD": "زمردي",
+      "NEUTRAL": "محايد",
+      "ROSE": "وردي",
+      "VIOLET": "بنفسجي"
+    },
     "UNLOCK_CLIPPY": "فتح القفل"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "تغيير اللغة",
       "CHANGE_WINDOW_POSITION": "تغيير موضع النافذة",
+      "COLOR_THEME": "سمة الألوان",
+      "GLASS_EFFECT": "تأثير الزجاج",
       "HTML_CLIPBOARD_TOOLTIP": "تلميحات حول حافظة HTML",
       "KEYBOARD_SHORTCUT": "اختصار لوحة المفاتيح",
       "START_CLIPPY_ON_STARTUP": "بدء تشغيل Clippy عند بدء تشغيل النظام",

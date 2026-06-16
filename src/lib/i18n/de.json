@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "Ablage rechts"
     },
     "SYNCING": "Synchronisieren",
+    "THEME": {
+      "AMBER": "Bernstein",
+      "BLUE": "Blau",
+      "EMERALD": "Smaragd",
+      "NEUTRAL": "Neutral",
+      "ROSE": "Rosé",
+      "VIOLET": "Violett"
+    },
     "UNLOCK_CLIPPY": "Clippy freischalten"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "Sprache ändern",
       "CHANGE_WINDOW_POSITION": "Fensterposition ändern",
+      "COLOR_THEME": "Farbthema",
+      "GLASS_EFFECT": "Glaseffekt",
       "HTML_CLIPBOARD_TOOLTIP": "HTML-Zwischenablage-Tooltip",
       "KEYBOARD_SHORTCUT": "Tastenkombination",
       "START_CLIPPY_ON_STARTUP": "Starten Sie Clippy beim Systemstart",

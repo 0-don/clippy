@@ -6,6 +6,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(debug_assertions)]
     dotenvy::dotenv().ok();
 
+    // Make WebView2 composite with a transparent background so the native window
+    // glass (Mica/Acrylic) shows through. Recent WebView2 runtimes paint an opaque
+    // backdrop over a transparent window unless this is set, which hides the blur.
+    // Must be set before WebView2 initializes (i.e. before the window is created).
+    // Value is AARRGGBB; alpha MUST be 00 (transparent) or FF (opaque) — other
+    // values fail. "00000000" = fully transparent.
+    #[cfg(windows)]
+    std::env::set_var("WEBVIEW2_DEFAULT_BACKGROUND_COLOR", "00000000");
+
     #[cfg(target_os = "linux")]
     {
         // See: https://github.com/spacedriveapp/spacedrive/issues/1512#issuecomment-1758550164

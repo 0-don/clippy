@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "Bandeja direita"
     },
     "SYNCING": "Sincronizando",
+    "THEME": {
+      "AMBER": "Âmbar",
+      "BLUE": "Azul",
+      "EMERALD": "Esmeralda",
+      "NEUTRAL": "Neutro",
+      "ROSE": "Rosa",
+      "VIOLET": "Violeta"
+    },
     "UNLOCK_CLIPPY": "Desbloquear clippy"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "Alterar idioma",
       "CHANGE_WINDOW_POSITION": "Alterar a posição da janela",
+      "COLOR_THEME": "Tema de cor",
+      "GLASS_EFFECT": "Efeito de vidro",
       "HTML_CLIPBOARD_TOOLTIP": "Dica de ferramenta da área de transferência HTML",
       "KEYBOARD_SHORTCUT": "Atalho de teclado",
       "START_CLIPPY_ON_STARTUP": "Inicie o Clippy no arranque do sistema",

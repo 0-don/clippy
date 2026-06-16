@@ -51,6 +51,10 @@ pub async fn update_settings_db(
 ) -> Result<settings::Model, CommandError> {
     let db = db();
 
+    // Detect a glass toggle so we can re-apply/clear the native window effect live.
+    let glass_changed = get_global_settings().glass != settings.glass;
+    let glass = settings.glass;
+
     let active_model: settings::ActiveModel = settings.into();
 
     let settings = settings::Entity::update(active_model.reset_all())
@@ -58,6 +62,21 @@ pub async fn update_settings_db(
         .await?;
 
     set_global_settings(settings.clone());
+
+    if glass_changed {
+        // Update the main window, and the Settings window too if it's open.
+        crate::service::window::apply_window_effect(glass);
+        #[cfg(any(windows, target_os = "macos"))]
+        {
+            use common::types::enums::WebWindow;
+            use tauri::Manager;
+            if let Some(settings_window) = crate::tao::global::get_app()
+                .get_webview_window(WebWindow::Settings.to_string().as_str())
+            {
+                crate::service::window::apply_window_effect_to(settings_window, glass);
+            }
+        }
+    }
 
     refresh_tray_menu();
 

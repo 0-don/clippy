@@ -79,12 +79,12 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
             <span class="truncate text-sm">
               {data.count} {type}
             </span>
-            <span class="text-xs text-zinc-500">{formatBytes(data.size)}</span>
+            <span class="text-xs text-muted-foreground">{formatBytes(data.size)}</span>
           </span>
         ))}
 
         <div
-          class="text-left text-xs font-thin text-zinc-700 dark:text-zinc-300"
+          class="text-left text-xs font-thin text-muted-foreground"
           title={dayjs.utc(props.data.clipboard.created_at).format()}
         >
           {fromNowString()}

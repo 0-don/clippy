@@ -22,7 +22,7 @@ export const SettingsLimits: Component<SettingsLimitsProps> = ({}) => {
         title={t("SETTINGS.LIMITS.CLIPBOARD_LIMITS")}
       >
         <div class="flex items-center justify-between gap-2 px-5 pb-5">
-          <p class="text-sm text-zinc-700 dark:text-zinc-400">
+          <p class="text-sm text-muted-foreground">
             {t("SETTINGS.LIMITS.IF_SET_TO_ZERO")}
           </p>
         </div>

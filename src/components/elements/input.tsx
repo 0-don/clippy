@@ -38,13 +38,13 @@ export const Input: Component<InputProps> = (props) => {
 
   return (
     <div
-      class={`group dark:border-dark-light dark:bg-dark-light flex items-center justify-between rounded-md border border-gray-300 p-1 px-1.5 text-sm focus-within:border-indigo-500 ${local.class || ""}`}
+      class={`group flex items-center justify-between rounded-md border border-border bg-popover p-1 px-1.5 text-sm focus-within:border-primary ${local.class || ""}`}
     >
       <input
         {...inputProps}
         onInput={onInput}
         class={cn(
-          "w-full appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden dark:text-white",
+          "w-full appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden text-foreground",
           local.class,
         )}
       />

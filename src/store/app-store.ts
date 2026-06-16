@@ -52,21 +52,50 @@ function createAppStore() {
     setTabs((prev) => prev.map((s) => ({ ...s, current: s.id === id })));
   const getCurrentTab = () => tabs().find((s) => s.current)!;
 
-  const darkMode = () =>
-    SettingsStore.settings()?.dark_mode
-      ? document.querySelector("html")?.classList?.add?.("dark")
-      : document.querySelector("html")?.classList?.remove?.("dark");
+  // OS is needed to gate the glass feature (Windows/macOS only). Resolved once.
+  const [os] = createResource(async () => {
+    try {
+      return await invokeCommand(InvokeCommand.GetOs);
+    } catch {
+      return "";
+    }
+  });
+
+  // Apply the full appearance to <html> from the current settings:
+  // - `.dark` class -> light vs dark within the chosen theme
+  // - `data-theme`  -> which named palette
+  // - `data-glass`  -> translucent surfaces for the native window blur
+  //   (gated off on Linux, where native glass is unsupported)
+  const applyAppearance = () => {
+    const settings = SettingsStore.settings();
+    const html = document.querySelector("html");
+    if (!html) return;
+
+    settings?.dark_mode
+      ? html.classList.add("dark")
+      : html.classList.remove("dark");
+
+    html.setAttribute("data-theme", settings?.theme || "neutral");
+
+    os() !== "linux" && settings?.glass
+      ? html.setAttribute("data-glass", "on")
+      : html.removeAttribute("data-glass");
+  };
 
   return {
     locale,
     setLocale,
+    os,
     passwordLock,
     setPasswordLock,
     tabs,
     setTabs,
     changeTab,
     getCurrentTab,
-    darkMode,
+    // Kept the `darkMode` name as the public entry point so existing callers
+    // (settings-store init, dark-mode toggle effect) keep working; it now
+    // applies theme + glass too.
+    darkMode: applyAppearance,
   };
 }
 

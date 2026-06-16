@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "トレイ右"
     },
     "SYNCING": "同期中",
+    "THEME": {
+      "AMBER": "アンバー",
+      "BLUE": "ブルー",
+      "EMERALD": "エメラルド",
+      "NEUTRAL": "ニュートラル",
+      "ROSE": "ローズ",
+      "VIOLET": "バイオレット"
+    },
     "UNLOCK_CLIPPY": "クリッピーのロックを解除"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "言語を変えてください",
       "CHANGE_WINDOW_POSITION": "ウィンドウの位置を変更する",
+      "COLOR_THEME": "カラーテーマ",
+      "GLASS_EFFECT": "ガラス効果",
       "HTML_CLIPBOARD_TOOLTIP": "HTML クリップボード ツールチップ",
       "KEYBOARD_SHORTCUT": "キーボードショートカット",
       "START_CLIPPY_ON_STARTUP": "システム起動時にClippyを起動する",

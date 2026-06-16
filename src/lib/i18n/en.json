@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "Tray right"
     },
     "SYNCING": "Syncing",
+    "THEME": {
+      "AMBER": "Amber",
+      "BLUE": "Blue",
+      "EMERALD": "Emerald",
+      "NEUTRAL": "Neutral",
+      "ROSE": "Rose",
+      "VIOLET": "Violet"
+    },
     "UNLOCK_CLIPPY": "Unlock clippy"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "Change language",
       "CHANGE_WINDOW_POSITION": "Change window position",
+      "COLOR_THEME": "Color theme",
+      "GLASS_EFFECT": "Glass effect",
       "HTML_CLIPBOARD_TOOLTIP": "HTML clipboard tooltip",
       "KEYBOARD_SHORTCUT": "Keyboard shortcut",
       "START_CLIPPY_ON_STARTUP": "Start Clippy on system startup",

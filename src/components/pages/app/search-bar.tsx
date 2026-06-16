@@ -62,19 +62,19 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
 
   return (
     <>
-      <div class="flex items-center dark:bg-zinc-800">
+      <div class="flex items-center bg-card">
         <div class="relative w-full">
           <div class="absolute inset-y-0 left-2 flex items-center">
             <Show
               when={!ClipboardStore.isSearching()}
-              fallback={<ImSpinner2 class="animate-spin opacity-50 dark:text-white" />}
+              fallback={<ImSpinner2 class="animate-spin opacity-50 text-foreground" />}
             >
-              <FiSearch class="opacity-50 dark:text-white" />
+              <FiSearch class="opacity-50 text-foreground" />
             </Show>
           </div>
           <input
             placeholder={t("CLIPBOARD.SEARCH_ENTRIES")}
-            class="dark:border-dark-light dark:bg-dark-light dark:focus:bg-dark-dark w-full border border-gray-300 py-2 pr-2 pl-8 placeholder:text-sm focus:outline-hidden dark:text-white"
+            class="bg-secondary focus:bg-muted w-full border border-border py-2 pr-2 pl-8 placeholder:text-sm focus:outline-hidden text-foreground"
             type="text"
             autofocus
             autocomplete="off"
@@ -88,7 +88,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
           />
           <div class="absolute inset-y-0 right-2 flex items-center">
             <FaRegularImage
-              class={`hover:text-indigo-600 ${showImages() ? "text-indigo-600" : ""}`}
+              class={`hover:text-primary ${showImages() ? "text-primary" : ""}`}
               onClick={() => setShowImages(!showImages())}
             />
           </div>

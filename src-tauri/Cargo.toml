@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.6.22"
+version = "1.6.23"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -39,6 +39,10 @@ tauri-plugin-autostart = "2"
 tauri-plugin-single-instance = "2"
 tauri-plugin-log = "2"
 log = "0"
+
+# Native window glass: acrylic (Win10/old Win11 fallback) + liquid glass/vibrancy (macOS).
+# Win11 22H2+ uses the newer DWM system-backdrop API directly via windows-sys instead.
+window-vibrancy = "0.7"
 global-hotkey = { git = "https://github.com/0-don/global-hotkey", branch = "unified-wayland" } # tauri-plugin-global-hotkey
 
 sea-orm = "1"
@@ -83,7 +87,11 @@ ocr-rs = "2.2.2"
 [target.'cfg(windows)'.dependencies]
 # Attach to the parent terminal's console (if any) so the GUI release build
 # can print logs when launched from a terminal. See attach_parent_console().
-windows-sys = { version = "0.59", features = ["Win32_System_Console", "Win32_Foundation"] }
+windows-sys = { version = "0.59", features = [
+  "Win32_System_Console",
+  "Win32_Foundation",
+  "Win32_Graphics_Dwm",
+] }
 
 [profile.release]
 # panic = "abort"

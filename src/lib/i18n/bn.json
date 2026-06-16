@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "ট্রে ডান"
     },
     "SYNCING": "সিঙ্ক হচ্ছে",
+    "THEME": {
+      "AMBER": "অ্যাম্বার",
+      "BLUE": "নীল",
+      "EMERALD": "পান্না",
+      "NEUTRAL": "নিরপেক্ষ",
+      "ROSE": "গোলাপি",
+      "VIOLET": "বেগুনি"
+    },
     "UNLOCK_CLIPPY": "ক্লিপি আনলক করুন"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "ভাষা পরিবর্তন করুন",
       "CHANGE_WINDOW_POSITION": "জানালার অবস্থান পরিবর্তন করুন",
+      "COLOR_THEME": "রঙের থিম",
+      "GLASS_EFFECT": "গ্লাস ইফেক্ট",
       "HTML_CLIPBOARD_TOOLTIP": "এইচটিএমএল ক্লিপবোর্ড টুলটিপ",
       "KEYBOARD_SHORTCUT": "কীবোর্ড শর্টকাট",
       "START_CLIPPY_ON_STARTUP": "সিস্টেম স্টার্টআপে Clippy শুরু করুন",

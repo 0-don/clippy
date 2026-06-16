@@ -83,7 +83,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div class="relative w-full cursor-pointer">
             <div
               title={databaseUrl()}
-              class="dark:border-dark-light dark:bg-dark-light dark:focus:bg-dark-dark w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-hidden dark:text-white"
+              class="w-full truncate rounded-md border border-border bg-popover px-3 py-0.5 text-left text-sm italic focus:bg-muted focus:outline-hidden text-foreground"
             >
               {databaseUrl()}
             </div>
@@ -128,7 +128,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div class="relative w-full cursor-pointer">
             <div
               title={configUrl()}
-              class="dark:border-dark-light dark:bg-dark-light dark:focus:bg-dark-dark w-full truncate rounded-md border border-gray-300 px-3 py-0.5 text-left text-sm italic focus:outline-hidden dark:text-white"
+              class="w-full truncate rounded-md border border-border bg-popover px-3 py-0.5 text-left text-sm italic focus:bg-muted focus:outline-hidden text-foreground"
             >
               {configUrl()}
             </div>

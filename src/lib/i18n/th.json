@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "ถาดด้านขวา"
     },
     "SYNCING": "การซิงค์",
+    "THEME": {
+      "AMBER": "อำพัน",
+      "BLUE": "น้ำเงิน",
+      "EMERALD": "มรกต",
+      "NEUTRAL": "กลาง",
+      "ROSE": "กุหลาบ",
+      "VIOLET": "ม่วง"
+    },
     "UNLOCK_CLIPPY": "ปลดล็อคคลิปปี้"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "เปลี่ยนภาษา",
       "CHANGE_WINDOW_POSITION": "เปลี่ยนตำแหน่งหน้าต่าง",
+      "COLOR_THEME": "ธีมสี",
+      "GLASS_EFFECT": "เอฟเฟกต์กระจก",
       "HTML_CLIPBOARD_TOOLTIP": "คำแนะนำคลิปบอร์ด HTML",
       "KEYBOARD_SHORTCUT": "แป้นพิมพ์ลัด",
       "START_CLIPPY_ON_STARTUP": "เริ่ม Clippy เมื่อระบบเริ่มต้น",

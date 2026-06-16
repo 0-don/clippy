@@ -20,9 +20,9 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
             <div
               class={`${
                 current
-                  ? "text-black dark:text-white"
-                  : "dark:text-gray-dark text-zinc-600"
-              } relative flex h-6 w-full cursor-pointer items-center justify-center py-5 text-xl select-none hover:text-black dark:hover:text-white`}
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              } relative flex h-6 w-full cursor-pointer items-center justify-center py-5 text-xl select-none hover:text-foreground`}
               title={t(currentHotkey!.name)}
               onClick={() => AppStore.changeTab(id)}
             >
@@ -34,7 +34,7 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
                   HotkeyStore.globalHotkeyEvent()
                 }
               >
-                <div class="absolute -top-0.5 left-1 rounded-xs bg-zinc-800 px-1 py-1 text-xs font-semibold text-white dark:bg-zinc-600">
+                <div class="absolute -top-0.5 left-1 rounded-xs bg-secondary px-1 py-1 text-xs font-semibold text-secondary-foreground">
                   {currentHotkey!.key}
                 </div>
               </Show>

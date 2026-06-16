@@ -111,6 +111,14 @@
       "TRAY_RIGHT": "Tepsi sağ"
     },
     "SYNCING": "Senkronizasyon",
+    "THEME": {
+      "AMBER": "Kehribar",
+      "BLUE": "Mavi",
+      "EMERALD": "Zümrüt",
+      "NEUTRAL": "Nötr",
+      "ROSE": "Gül",
+      "VIOLET": "Mor"
+    },
     "UNLOCK_CLIPPY": "Clippy'nin kilidini aç"
   },
   "SETTINGS": {
@@ -139,6 +147,8 @@
     "GENERAL": {
       "CHANGE_LANGUAGE": "Dili değiştir",
       "CHANGE_WINDOW_POSITION": "Pencere konumunu değiştir",
+      "COLOR_THEME": "Renk teması",
+      "GLASS_EFFECT": "Cam efekti",
       "HTML_CLIPBOARD_TOOLTIP": "HTML panosu araç ipucu",
       "KEYBOARD_SHORTCUT": "Klavye kısayolu",
       "START_CLIPPY_ON_STARTUP": "Sistem başlangıcında Clippy'yi başlatın",

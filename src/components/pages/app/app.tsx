@@ -37,13 +37,13 @@ function App() {
       <Show when={AppStore.passwordLock()}>
         <PasswordLock />
       </Show>
-      <div class="dark:bg-dark flex h-full w-full overflow-hidden bg-white text-black dark:text-white">
-        <div class="dark:bg-dark-light flex w-12 flex-col items-center space-y-3 bg-gray-200 pt-2">
+      <div class="flex h-full w-full overflow-hidden bg-background text-foreground">
+        <div class="flex w-12 flex-col items-center space-y-3 bg-secondary pt-2">
           <AppSidebar />
         </div>
         <div class="flex h-screen min-w-0 flex-1 flex-col">
           <div class="z-10 flex w-full justify-between overflow-visible px-2 py-1">
-            <p class="text-xs font-semibold text-gray-500 uppercase select-none dark:text-white">
+            <p class="text-xs font-semibold text-muted-foreground uppercase select-none">
               {t(AppStore.getCurrentTab().name)}
             </p>
             <Show

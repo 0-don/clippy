@@ -20,19 +20,19 @@
 
 <div align="center">
 
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_x64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_x64-setup.exe">
   <img src="./public/windows.png"> Windows x64
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_arm64-setup.exe">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_arm64-setup.exe">
   Windows ARM64
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_amd64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_amd64.deb">
   <img src="./public/linux.png"> Linux x64 (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy-1.6.22-1.x86_64.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy-1.6.23-1.x86_64.rpm">
   Linux x64 (rpm)
 </a>
 •
@@ -40,23 +40,23 @@
   Linux x64 (pkg.tar.zst)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_amd64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_amd64.AppImage">
   Linux x64 (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_arm64.deb">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_arm64.deb">
   Linux ARM64 (deb)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy-1.6.22-1.aarch64.rpm">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy-1.6.23-1.aarch64.rpm">
   Linux ARM64 (rpm)
 </a>
 •
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_aarch64.AppImage">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_aarch64.AppImage">
   Linux ARM64 (AppImage)
 </a>
 <br>
-<a href="https://github.com/0-don/clippy/releases/download/v1.6.22/clippy_1.6.22_universal.dmg">
+<a href="https://github.com/0-don/clippy/releases/download/v1.6.23/clippy_1.6.23_universal.dmg">
   <img src="./public/apple.png"> macOS (Universal)
 </a>
 <br>
