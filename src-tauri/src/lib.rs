@@ -13,6 +13,19 @@ use tauri_plugin_autostart::MacosLauncher;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default()
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .level(log::LevelFilter::Info)
+                .target(tauri_plugin_log::Target::new(
+                    tauri_plugin_log::TargetKind::Stdout,
+                ))
+                .target(tauri_plugin_log::Target::new(
+                    tauri_plugin_log::TargetKind::LogDir {
+                        file_name: Some("clippy".to_string()),
+                    },
+                ))
+                .build(),
+        )
         .plugin(tauri_plugin_clipboard::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_positioner::init())
