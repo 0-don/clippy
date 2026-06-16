@@ -339,6 +339,9 @@ jobs:
           version: ${{ needs.setup.outputs.version }}
           # release tag is v-prefixed; without this komac queries the bare version and 404s
           release-tag: ${{ needs.setup.outputs.tag_name }}
+          # prior published version had ReleaseNotesUrl; keep it to satisfy winget's
+          # Manifest-Metadata-Consistency check
+          release-notes-url: https://github.com/0-don/clippy/releases/tag/${{ needs.setup.outputs.tag_name }}
           # x64 and arm64 NSIS setup .exe assets from this release
           installers-regex: '_(x64|arm64)-setup\.exe$'
           token: ${{ secrets.GH_PAT }}

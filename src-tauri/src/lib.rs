@@ -20,20 +20,27 @@ pub fn run() {
         default_hook(info);
     }));
 
+    // clear_targets() is required: the plugin enables a Stdout target BY DEFAULT, and on
+    // the Windows GUI release (windows_subsystem="windows") there is no console, so that
+    // default Stdout target aborts logger init and the app exits instantly with no output.
+    // We clear it and add only the file target (plus Stdout in debug, where a console exists).
+    let mut log_builder = tauri_plugin_log::Builder::new()
+        .clear_targets()
+        .level(log::LevelFilter::Info)
+        .target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::LogDir {
+                file_name: Some("clippy".to_string()),
+            },
+        ));
+    #[cfg(debug_assertions)]
+    {
+        log_builder = log_builder.target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::Stdout,
+        ));
+    }
+
     let mut builder = tauri::Builder::default()
-        .plugin(
-            tauri_plugin_log::Builder::new()
-                .level(log::LevelFilter::Info)
-                .target(tauri_plugin_log::Target::new(
-                    tauri_plugin_log::TargetKind::Stdout,
-                ))
-                .target(tauri_plugin_log::Target::new(
-                    tauri_plugin_log::TargetKind::LogDir {
-                        file_name: Some("clippy".to_string()),
-                    },
-                ))
-                .build(),
-        )
+        .plugin(log_builder.build())
         .plugin(tauri_plugin_clipboard::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_positioner::init())

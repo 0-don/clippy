@@ -2,7 +2,7 @@ use super::config::{get_config, get_data_path};
 use super::tao_constants::DB;
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
-use sea_orm::{Database, DbConn};
+use sea_orm::{ConnectOptions, Database, DbConn};
 
 pub async fn init_db() -> Result<(), DbErr> {
     let database_url = if cfg!(debug_assertions) {
@@ -11,7 +11,12 @@ pub async fn init_db() -> Result<(), DbErr> {
         get_prod_database_url()
     };
 
-    let conn = Database::connect(&database_url).await?;
+    // Disable per-statement SQL logging: it floods the log file/console with every
+    // query at Info, which tauri-plugin-log would otherwise capture.
+    let mut opt = ConnectOptions::new(database_url);
+    opt.sqlx_logging(false);
+
+    let conn = Database::connect(opt).await?;
     Migrator::up(&conn, None).await?;
     DB.set(conn)
         .unwrap_or_else(|_| panic!("Database already initialized"));

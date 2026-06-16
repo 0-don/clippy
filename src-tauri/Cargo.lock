@@ -1068,7 +1068,7 @@ dependencies = [
 
 [[package]]
 name = "clippy"
-version = "1.6.19"
+version = "1.6.20"
 dependencies = [
  "base64 0.22.1",
  "chrono",
