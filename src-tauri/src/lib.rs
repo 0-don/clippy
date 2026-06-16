@@ -12,6 +12,14 @@ use tauri_plugin_autostart::MacosLauncher;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Route panics through `log` so tauri-plugin-log writes them to the file too.
+    // Without this, panics only hit stderr, which the Windows GUI release discards.
+    let default_hook = std::panic::take_hook();
+    std::panic::set_hook(Box::new(move |info| {
+        log::error!("panic: {}", info);
+        default_hook(info);
+    }));
+
     let mut builder = tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::new()

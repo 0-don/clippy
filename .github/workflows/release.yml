@@ -332,15 +332,13 @@ jobs:
             exit 0
           }
 
-  publish-winget:
-    needs: [setup, build-tauri]
-    runs-on: windows-latest
-    steps:
       - name: publish to winget
         uses: vedantmgoyal9/winget-releaser@v2
         with:
           identifier: 0-don.clippy
           version: ${{ needs.setup.outputs.version }}
+          # release tag is v-prefixed; without this komac queries the bare version and 404s
+          release-tag: ${{ needs.setup.outputs.tag_name }}
           # x64 and arm64 NSIS setup .exe assets from this release
           installers-regex: '_(x64|arm64)-setup\.exe$'
           token: ${{ secrets.GH_PAT }}
