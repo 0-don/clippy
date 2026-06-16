@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.6.20"
+version = "1.6.21"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -79,6 +79,11 @@ moka = { version = "0", features = ["sync"] }
 
 # ocr
 ocr-rs = "2.2.2"
+
+[target.'cfg(windows)'.dependencies]
+# Attach to the parent terminal's console (if any) so the GUI release build
+# can print logs when launched from a terminal. See attach_parent_console().
+windows-sys = { version = "0.59", features = ["Win32_System_Console", "Win32_Foundation"] }
 
 [profile.release]
 # panic = "abort"

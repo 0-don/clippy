@@ -10,6 +10,24 @@ use commands::{cipher, clipboard, hotkey, settings, sync, window};
 use config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
+/// On the Windows GUI release (`windows_subsystem="windows"`) the process starts
+/// with no console, so stdout/stderr go nowhere. If the app was launched FROM a
+/// terminal, attach to that parent console so our logs become visible there.
+/// When double-clicked there is no parent console and this is a harmless no-op.
+/// Returns true if a console is attached (i.e. it's safe to add a Stdout target).
+#[cfg(windows)]
+fn attach_parent_console() -> bool {
+    use windows_sys::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
+    // AttachConsole returns 0 (FALSE) when there is no parent console to attach to.
+    unsafe { AttachConsole(ATTACH_PARENT_PROCESS) != 0 }
+}
+
+#[cfg(not(windows))]
+fn attach_parent_console() -> bool {
+    // Other platforms keep their stdout when launched from a terminal.
+    true
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Route panics through `log` so tauri-plugin-log writes them to the file too.
@@ -20,10 +38,15 @@ pub fn run() {
         default_hook(info);
     }));
 
-    // clear_targets() is required: the plugin enables a Stdout target BY DEFAULT, and on
-    // the Windows GUI release (windows_subsystem="windows") there is no console, so that
-    // default Stdout target aborts logger init and the app exits instantly with no output.
-    // We clear it and add only the file target (plus Stdout in debug, where a console exists).
+    // Decide whether stdout logging is safe. A console exists when running a debug
+    // build, on non-Windows, or when a Windows GUI release was launched from a
+    // terminal (attach_parent_console succeeds). Without a console, adding the
+    // plugin's Stdout target aborts logger init and the app exits instantly.
+    let has_console = cfg!(debug_assertions) || attach_parent_console();
+
+    // clear_targets() is required: the plugin enables a Stdout target BY DEFAULT,
+    // which is unsafe on a console-less Windows GUI release. We start from a clean
+    // slate with the file target, then add Stdout only when a console is present.
     let mut log_builder = tauri_plugin_log::Builder::new()
         .clear_targets()
         .level(log::LevelFilter::Info)
@@ -32,8 +55,7 @@ pub fn run() {
                 file_name: Some("clippy".to_string()),
             },
         ));
-    #[cfg(debug_assertions)]
-    {
+    if has_console {
         log_builder = log_builder.target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ));
