@@ -333,7 +333,9 @@ jobs:
           }
 
       - name: publish to winget
-        uses: vedantmgoyal9/winget-releaser@v2
+        # @main, not @v2: the v2 tag predates the release-notes-url input and silently
+        # ignores it, so ReleaseNotesUrl was missing from every manifest.
+        uses: vedantmgoyal9/winget-releaser@main
         with:
           identifier: 0-don.clippy
           version: ${{ needs.setup.outputs.version }}
