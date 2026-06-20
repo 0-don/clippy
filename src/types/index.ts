@@ -162,6 +162,8 @@ export type Settings = {
   suppress_hotkey_on_fullscreen: boolean;
   theme: ThemeName;
   glass: boolean;
+  glass_opacity: number;
+  glass_grain: number;
 };
 
 export type TextMatcher = {

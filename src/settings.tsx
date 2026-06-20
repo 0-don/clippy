@@ -26,7 +26,7 @@ const Settings = () => {
   });
 
   return (
-    <div class="absolute flex h-full w-full flex-col overflow-x-hidden bg-background text-foreground">
+    <div class="glass-surface absolute flex h-full w-full flex-col overflow-x-hidden bg-background text-foreground">
       <Tabs />
       <div class="px-5 pt-5 text-foreground">
         <Show

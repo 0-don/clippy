@@ -37,7 +37,7 @@ function App() {
       <Show when={AppStore.passwordLock()}>
         <PasswordLock />
       </Show>
-      <div class="flex h-full w-full overflow-hidden bg-background text-foreground">
+      <div class="glass-surface flex h-full w-full overflow-hidden bg-background text-foreground">
         <div class="flex w-12 flex-col items-center space-y-3 bg-secondary pt-2">
           <AppSidebar />
         </div>

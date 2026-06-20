@@ -82,19 +82,22 @@ pub fn apply_window_effect_to(_window: tauri::WebviewWindow, _glass: bool) {}
 fn apply_windows_effect(window: &tauri::WebviewWindow, glass: bool) {
     use window_vibrancy::{apply_acrylic, clear_acrylic};
 
-    // Use window-vibrancy's `apply_acrylic` (the older SetWindowCompositionAttribute
-    // path) for the blur. On Windows 11 24H2 the newer DWM system-backdrop API
-    // (DWMSBT_*) does NOT render through WebView2 — it shows black — but acrylic via
-    // this path works (window-vibrancy issue #183). Acrylic also works on Win10.
+    // Native Acrylic provides the desktop BLUR — CSS backdrop-filter can't reach
+    // desktop pixels through a transparent window, so the OS must do it. The tint
+    // here is just a fixed neutral body for the blur; it renders BEHIND the webview,
+    // and the webview's CSS surface (which the user actually sees) layers its own
+    // themed tint on top. So the "Glass tint" SLIDER drives the CSS surface alpha,
+    // NOT this native tint — driving the native tint looked like a no-op precisely
+    // because the CSS surface covers it. Apply once with a low fixed tint and leave
+    // it; the slider works entirely in CSS.
     let result = if glass {
-        // Slightly tinted, mostly-transparent acrylic so the wallpaper shows through.
-        apply_acrylic(window, Some((18, 18, 18, 80)))
+        apply_acrylic(window, Some((18, 18, 18, 60)))
     } else {
         clear_acrylic(window)
     };
     if let Err(e) = result {
         log::warn!(
-            "acrylic effect ({}): {e}",
+            "acrylic {} : {e}",
             if glass { "apply" } else { "clear" }
         );
     }
@@ -133,26 +136,15 @@ fn set_window_corners(hwnd: isize) {
 
 #[cfg(target_os = "macos")]
 fn apply_macos_effect(window: &tauri::WebviewWindow, glass: bool) {
-    use window_vibrancy::{
-        apply_liquid_glass, apply_vibrancy, clear_liquid_glass, clear_vibrancy,
-        NSGlassEffectViewStyle, NSVisualEffectMaterial,
-    };
+    use window_vibrancy::{clear_liquid_glass, clear_vibrancy};
 
-    if glass {
-        // Liquid Glass (macOS 26+). The `Clear` style avoids the focus corner-
-        // misalignment bug (window-vibrancy #198). On older macOS this errors,
-        // so fall back to standard vibrancy.
-        if apply_liquid_glass(window, NSGlassEffectViewStyle::Clear, None, Some(12.0)).is_err() {
-            if let Err(e) =
-                apply_vibrancy(window, NSVisualEffectMaterial::HudWindow, None, None)
-            {
-                log::warn!("vibrancy apply: {e}");
-            }
-        }
-    } else {
-        let _ = clear_liquid_glass(window);
-        let _ = clear_vibrancy(window);
-    }
+    // "Glass" here means CLEAR glass: a genuinely transparent window with the
+    // desktop showing through sharply. Vibrancy/Liquid Glass both add a frosted
+    // material, which is the opposite of see-through, so we never apply them —
+    // the transparent window + near-zero CSS surface opacity gives the clear pane.
+    let _ = clear_liquid_glass(window);
+    let _ = clear_vibrancy(window);
+    let _ = glass; // backdrop is CSS-driven now; native material is never applied
 }
 
 pub fn toggle_main_window() {

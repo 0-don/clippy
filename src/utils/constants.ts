@@ -99,6 +99,7 @@ export const CLIPPY_POSITIONS = [
 export const THEMES = [
   "neutral",
   "rose",
+  "pink",
   "blue",
   "emerald",
   "violet",

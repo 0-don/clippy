@@ -152,19 +152,19 @@ body {
   --ring: oklch(0.55 0.22 16);
 }
 .dark[data-theme="rose"] {
-  --background: oklch(0.225 0.03 12);
+  --background: oklch(0.23 0.1 12);
   --foreground: oklch(0.95 0.02 12);
-  --card: oklch(0.275 0.038 12);
+  --card: oklch(0.28 0.11 12);
   --card-foreground: oklch(0.95 0.02 12);
-  --popover: oklch(0.275 0.038 12);
+  --popover: oklch(0.28 0.11 12);
   --popover-foreground: oklch(0.95 0.02 12);
   --primary: oklch(0.62 0.22 16);
   --primary-foreground: oklch(0.99 0.01 12);
-  --secondary: oklch(0.33 0.045 12);
+  --secondary: oklch(0.34 0.12 12);
   --secondary-foreground: oklch(0.95 0.02 12);
-  --muted: oklch(0.34 0.045 12);
-  --muted-foreground: oklch(0.74 0.04 12);
-  --accent: oklch(0.37 0.06 12);
+  --muted: oklch(0.35 0.12 12);
+  --muted-foreground: oklch(0.78 0.06 12);
+  --accent: oklch(0.39 0.14 12);
   --accent-foreground: oklch(0.95 0.02 12);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
@@ -194,19 +194,19 @@ body {
   --ring: oklch(0.52 0.22 262);
 }
 .dark[data-theme="blue"] {
-  --background: oklch(0.22 0.03 262);
+  --background: oklch(0.22 0.1 262);
   --foreground: oklch(0.95 0.015 262);
-  --card: oklch(0.27 0.04 262);
+  --card: oklch(0.27 0.11 262);
   --card-foreground: oklch(0.95 0.015 262);
-  --popover: oklch(0.27 0.04 262);
+  --popover: oklch(0.27 0.11 262);
   --popover-foreground: oklch(0.95 0.015 262);
   --primary: oklch(0.62 0.2 262);
   --primary-foreground: oklch(0.99 0.01 262);
-  --secondary: oklch(0.32 0.045 262);
+  --secondary: oklch(0.32 0.12 262);
   --secondary-foreground: oklch(0.95 0.015 262);
-  --muted: oklch(0.33 0.045 262);
-  --muted-foreground: oklch(0.74 0.04 262);
-  --accent: oklch(0.36 0.06 262);
+  --muted: oklch(0.33 0.12 262);
+  --muted-foreground: oklch(0.78 0.06 262);
+  --accent: oklch(0.36 0.14 262);
   --accent-foreground: oklch(0.95 0.015 262);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
@@ -236,19 +236,19 @@ body {
   --ring: oklch(0.52 0.13 164);
 }
 .dark[data-theme="emerald"] {
-  --background: oklch(0.215 0.03 164);
+  --background: oklch(0.215 0.08 164);
   --foreground: oklch(0.95 0.015 164);
-  --card: oklch(0.265 0.04 164);
+  --card: oklch(0.265 0.09 164);
   --card-foreground: oklch(0.95 0.015 164);
-  --popover: oklch(0.265 0.04 164);
+  --popover: oklch(0.265 0.09 164);
   --popover-foreground: oklch(0.95 0.015 164);
   --primary: oklch(0.66 0.15 164);
   --primary-foreground: oklch(0.2 0.05 164);
-  --secondary: oklch(0.31 0.045 164);
+  --secondary: oklch(0.31 0.1 164);
   --secondary-foreground: oklch(0.95 0.015 164);
-  --muted: oklch(0.32 0.045 164);
-  --muted-foreground: oklch(0.74 0.04 164);
-  --accent: oklch(0.35 0.06 164);
+  --muted: oklch(0.32 0.1 164);
+  --muted-foreground: oklch(0.78 0.06 164);
+  --accent: oklch(0.35 0.11 164);
   --accent-foreground: oklch(0.95 0.015 164);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
@@ -278,19 +278,19 @@ body {
   --ring: oklch(0.52 0.22 300);
 }
 .dark[data-theme="violet"] {
-  --background: oklch(0.22 0.03 300);
+  --background: oklch(0.23 0.1 300);
   --foreground: oklch(0.95 0.015 300);
-  --card: oklch(0.27 0.04 300);
+  --card: oklch(0.28 0.11 300);
   --card-foreground: oklch(0.95 0.015 300);
-  --popover: oklch(0.27 0.04 300);
+  --popover: oklch(0.28 0.11 300);
   --popover-foreground: oklch(0.95 0.015 300);
   --primary: oklch(0.62 0.21 300);
   --primary-foreground: oklch(0.99 0.01 300);
-  --secondary: oklch(0.32 0.045 300);
+  --secondary: oklch(0.33 0.12 300);
   --secondary-foreground: oklch(0.95 0.015 300);
-  --muted: oklch(0.33 0.045 300);
-  --muted-foreground: oklch(0.74 0.04 300);
-  --accent: oklch(0.36 0.06 300);
+  --muted: oklch(0.34 0.12 300);
+  --muted-foreground: oklch(0.78 0.06 300);
+  --accent: oklch(0.38 0.14 300);
   --accent-foreground: oklch(0.95 0.015 300);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
@@ -320,19 +320,19 @@ body {
   --ring: oklch(0.62 0.16 60);
 }
 .dark[data-theme="amber"] {
-  --background: oklch(0.225 0.025 70);
+  --background: oklch(0.235 0.07 70);
   --foreground: oklch(0.95 0.02 80);
-  --card: oklch(0.275 0.032 70);
+  --card: oklch(0.285 0.08 70);
   --card-foreground: oklch(0.95 0.02 80);
-  --popover: oklch(0.275 0.032 70);
+  --popover: oklch(0.285 0.08 70);
   --popover-foreground: oklch(0.95 0.02 80);
   --primary: oklch(0.77 0.16 75);
   --primary-foreground: oklch(0.25 0.06 60);
-  --secondary: oklch(0.33 0.04 70);
+  --secondary: oklch(0.34 0.09 70);
   --secondary-foreground: oklch(0.95 0.02 80);
-  --muted: oklch(0.34 0.04 70);
-  --muted-foreground: oklch(0.75 0.04 80);
-  --accent: oklch(0.37 0.05 70);
+  --muted: oklch(0.35 0.09 70);
+  --muted-foreground: oklch(0.78 0.06 80);
+  --accent: oklch(0.38 0.1 70);
   --accent-foreground: oklch(0.95 0.02 80);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
@@ -340,29 +340,77 @@ body {
   --ring: oklch(0.77 0.16 75);
 }
 
-/* Glass: lower the surface alphas so the @theme color-mix makes surfaces
-   translucent and the native acrylic blur shows through (like the Windows
-   context menu). These are dedicated alpha vars (not the theme color vars), so
-   there's no specificity conflict with the theme blocks and no circular var
-   reference. Text/border tokens stay fully opaque for readability.
+/* ============================ PINK (hue ~350, Pink Panther) ============= */
+/* Vivid hot magenta-pink: high chroma on the primary/accent so it pops like the
+   Pink Panther, while surfaces keep a lighter tinted hot-pink cast. */
+[data-theme="pink"] {
+  --background: oklch(0.985 0.022 350);
+  --foreground: oklch(0.34 0.1 350);
+  --card: oklch(0.975 0.035 350);
+  --card-foreground: oklch(0.34 0.1 350);
+  --popover: oklch(0.98 0.03 350);
+  --popover-foreground: oklch(0.34 0.1 350);
+  --primary: oklch(0.66 0.29 350);
+  --primary-foreground: oklch(0.99 0.01 350);
+  --secondary: oklch(0.93 0.06 350);
+  --secondary-foreground: oklch(0.4 0.12 350);
+  --muted: oklch(0.94 0.05 350);
+  --muted-foreground: oklch(0.56 0.14 350);
+  --accent: oklch(0.9 0.1 350);
+  --accent-foreground: oklch(0.4 0.12 350);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.89 0.06 350);
+  --input: oklch(0.9 0.06 350);
+  --ring: oklch(0.66 0.29 350);
+}
+.dark[data-theme="pink"] {
+  --background: oklch(0.24 0.11 350);
+  --foreground: oklch(0.97 0.03 350);
+  --card: oklch(0.29 0.13 350);
+  --card-foreground: oklch(0.97 0.03 350);
+  --popover: oklch(0.29 0.13 350);
+  --popover-foreground: oklch(0.97 0.03 350);
+  --primary: oklch(0.74 0.27 350);
+  --primary-foreground: oklch(0.18 0.08 350);
+  --secondary: oklch(0.35 0.14 350);
+  --secondary-foreground: oklch(0.97 0.03 350);
+  --muted: oklch(0.36 0.14 350);
+  --muted-foreground: oklch(0.85 0.08 350);
+  --accent: oklch(0.42 0.17 350);
+  --accent-foreground: oklch(0.97 0.03 350);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.74 0.27 350);
+}
 
-   Light themes use much HIGHER alphas: their surfaces are near-white, so going
-   too transparent lets the blurred wallpaper oversaturate them (unreadable hot
-   pink/colour wash). Dark themes can be more transparent and still read well. */
+/* WHY the tint must be CSS, not native: the native acrylic renders BEHIND the
+   webview, but our CSS surface paints ON TOP of it — so the on-screen tint you
+   actually see is THIS CSS layer, not the native one. (Dragging the native tint
+   alpha looked like it did nothing because this layer covered it.) So the native
+   acrylic provides the BLUR, and the "Glass tint" slider (--glass-opacity, set on
+   <html>) drives THESE surface alphas, which are what's visibly on screen.
+
+   Dark: light text reads over the blur even when thin, so floor low (~15% at 0). */
 [data-glass="on"] {
-  --glass-surface-alpha: 12%;
-  --glass-card-alpha: 18%;
-  --glass-popover-alpha: 30%;
-  --glass-secondary-alpha: 15%;
-  --glass-muted-alpha: 22%;
+  --glass-opacity: 0.55; /* fallback; <html> overrides live from the slider */
+
+  --glass-surface-alpha: clamp(0%, calc(15% + var(--glass-opacity) * 80%), 100%);
+  --glass-secondary-alpha: clamp(0%, calc(18% + var(--glass-opacity) * 79%), 100%);
+  --glass-card-alpha: clamp(0%, calc(26% + var(--glass-opacity) * 72%), 100%);
+  --glass-muted-alpha: clamp(0%, calc(22% + var(--glass-opacity) * 76%), 100%);
+  --glass-popover-alpha: clamp(0%, calc(40% + var(--glass-opacity) * 60%), 100%);
 }
+/* Light themes are near-white with DARK text: a higher floor so a dark wallpaper
+   bleeding through the thin end can't drop contrast and break readability. */
 [data-glass="on"]:not(.dark) {
-  --glass-surface-alpha: 70%;
-  --glass-card-alpha: 75%;
-  --glass-popover-alpha: 85%;
-  --glass-secondary-alpha: 72%;
-  --glass-muted-alpha: 75%;
+  --glass-surface-alpha: clamp(0%, calc(50% + var(--glass-opacity) * 50%), 100%);
+  --glass-secondary-alpha: clamp(0%, calc(53% + var(--glass-opacity) * 47%), 100%);
+  --glass-card-alpha: clamp(0%, calc(60% + var(--glass-opacity) * 40%), 100%);
+  --glass-muted-alpha: clamp(0%, calc(56% + var(--glass-opacity) * 44%), 100%);
+  --glass-popover-alpha: clamp(0%, calc(70% + var(--glass-opacity) * 30%), 100%);
 }
+
 
 /** @type {import('tailwindcss').Config} */
 

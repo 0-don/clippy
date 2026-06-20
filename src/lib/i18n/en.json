@@ -116,6 +116,7 @@
       "BLUE": "Blue",
       "EMERALD": "Emerald",
       "NEUTRAL": "Neutral",
+      "PINK": "Pink",
       "ROSE": "Rose",
       "VIOLET": "Violet"
     },
@@ -149,6 +150,8 @@
       "CHANGE_WINDOW_POSITION": "Change window position",
       "COLOR_THEME": "Color theme",
       "GLASS_EFFECT": "Glass effect",
+      "GLASS_OPACITY": "Glass tint",
+      "GLASS_GRAIN": "Glass frost",
       "HTML_CLIPBOARD_TOOLTIP": "HTML clipboard tooltip",
       "KEYBOARD_SHORTCUT": "Keyboard shortcut",
       "START_CLIPPY_ON_STARTUP": "Start Clippy on system startup",

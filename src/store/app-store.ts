@@ -80,6 +80,11 @@ function createAppStore() {
     os() !== "linux" && settings?.glass
       ? html.setAttribute("data-glass", "on")
       : html.removeAttribute("data-glass");
+
+    // Glass tint: push the slider value (0..1) onto <html> as a CSS var. styles.css
+    // derives the surface alphas from it via calc(), so dragging the slider restyles
+    // the glass live. Fall back to the DB default if the setting is missing.
+    html.style.setProperty("--glass-opacity", `${settings?.glass_opacity ?? 0.55}`);
   };
 
   return {

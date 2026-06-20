@@ -1,16 +1,17 @@
 import { CgDisplayFlex } from "solid-icons/cg";
-import { FiDroplet, FiMoon } from "solid-icons/fi";
+import { FiDroplet, FiMoon, FiSliders } from "solid-icons/fi";
 import { HiOutlineWindow, HiSolidCog8Tooth } from "solid-icons/hi";
 import { IoColorPaletteOutline, IoLanguageOutline } from "solid-icons/io";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { TbOutlineMaximize, TbOutlineTooltip } from "solid-icons/tb";
 import { VsRocket } from "solid-icons/vs";
-import { Component, Show } from "solid-js";
+import { Component, onCleanup, Show } from "solid-js";
 import { msg } from "../../../lib/i18n";
 import { invokeCommand } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
+import { Settings } from "../../../types";
 import { HotkeyEvent, WebWindow } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import {
@@ -33,6 +34,20 @@ interface SettingsGeneralProps {}
 
 export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
   const { t } = useLanguage();
+
+  // Glass sliders: preview instantly (setSettings, no IO), persist once on pause.
+  let glassPersistTimer: ReturnType<typeof setTimeout> | undefined;
+  const onGlassSlide = (patch: Partial<Settings>) => {
+    const next = { ...SettingsStore.settings()!, ...patch };
+    SettingsStore.setSettings(next); // live CSS-var preview via the dark-mode effect
+    clearTimeout(glassPersistTimer);
+    glassPersistTimer = setTimeout(
+      () => SettingsStore.updateSettings(next),
+      400,
+    );
+  };
+
+  onCleanup(() => clearTimeout(glassPersistTimer));
 
   return (
     <Show when={SettingsStore.settings()}>
@@ -120,6 +135,36 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
               />
             </div>
           </div>
+
+          {/* Glass tint: only relevant while glass is on. 0..1, drives the CSS
+              surface alpha live (applyAppearance reacts to the settings signal). On
+              drag we setSettings() for an instant preview with NO backend call, then
+              persist once (debounced) on pause — otherwise every pixel of the drag
+              would hammer the DB + autostart toggle. */}
+          <Show when={SettingsStore.settings()?.glass}>
+            <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+              <div class="flex items-center space-x-2 truncate">
+                <FiSliders />
+                <h6 class="text-sm">{t("SETTINGS.GENERAL.GLASS_OPACITY")}</h6>
+              </div>
+              <div class="flex items-center space-x-2">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  class="accent-primary"
+                  value={SettingsStore.settings()!.glass_opacity}
+                  onInput={(e) =>
+                    onGlassSlide({ glass_opacity: Number(e.currentTarget.value) })
+                  }
+                />
+                <span class="w-9 text-right text-xs text-muted-foreground tabular-nums">
+                  {Math.round(SettingsStore.settings()!.glass_opacity * 100)}%
+                </span>
+              </div>
+            </div>
+          </Show>
         </Show>
 
         <div class="flex items-center justify-between space-x-2 px-5 pb-5">

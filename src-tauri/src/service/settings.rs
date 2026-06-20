@@ -51,7 +51,9 @@ pub async fn update_settings_db(
 ) -> Result<settings::Model, CommandError> {
     let db = db();
 
-    // Detect a glass toggle so we can re-apply/clear the native window effect live.
+    // Re-apply the native window effect only on a glass toggle. The tint/opacity is
+    // done in CSS (it layers over the native blur — see styles.css/window.rs), so the
+    // tint slider needs no native re-apply; the native acrylic is just the blur body.
     let glass_changed = get_global_settings().glass != settings.glass;
     let glass = settings.glass;
 

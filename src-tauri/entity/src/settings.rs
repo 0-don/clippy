@@ -37,6 +37,8 @@ pub struct Model {
     pub suppress_hotkey_on_fullscreen: bool,
     pub theme: String,
     pub glass: bool,
+    pub glass_opacity: f32,
+    pub glass_grain: f32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -62,6 +64,8 @@ pub enum Column {
     SuppressHotkeyOnFullscreen,
     Theme,
     Glass,
+    GlassOpacity,
+    GlassGrain,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -104,6 +108,8 @@ impl ColumnTrait for Column {
             Self::SuppressHotkeyOnFullscreen => ColumnType::Boolean.def(),
             Self::Theme => ColumnType::String(StringLen::None).def(),
             Self::Glass => ColumnType::Boolean.def(),
+            Self::GlassOpacity => ColumnType::Float.def(),
+            Self::GlassGrain => ColumnType::Float.def(),
         }
     }
 }
