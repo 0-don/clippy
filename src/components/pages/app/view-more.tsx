@@ -60,11 +60,11 @@ export const ViewMore: Component<ViewMoreProps> = ({}) => {
       )}
       {/* Settings */}
       {createButton("MAIN.HOTKEY.SETTINGS", () =>
-        SettingsStore.openWindow(WebWindow.Settings, t("SETTINGS.SETTINGS")),
+        SettingsStore.openWindow(WebWindow.Settings),
       )}
       {/* About */}
       {createButton("MAIN.HOTKEY.ABOUT", () =>
-        SettingsStore.openWindow(WebWindow.About, t("ABOUT.ABOUT")),
+        SettingsStore.openWindow(WebWindow.About),
       )}
       {/* Exit */}
       {createButton("MAIN.HOTKEY.EXIT", SettingsStore.exitApp)}

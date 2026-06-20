@@ -280,7 +280,6 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
               });
               await invokeCommand(InvokeCommand.OpenNewWindow, {
                 windowName: WebWindow.Settings,
-                title: "Settings",
               });
             }}
           />

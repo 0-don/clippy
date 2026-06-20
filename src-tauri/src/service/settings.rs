@@ -4,7 +4,7 @@ use super::decrypt::decrypt_all_clipboards;
 use super::sync::upsert_settings_sync;
 use crate::config::tray::refresh_tray_menu;
 use crate::prelude::*;
-use crate::service::window::get_monitor_scale_factor;
+use crate::service::window::{get_monitor_scale_factor, refresh_window_titles};
 use crate::tao::connection::db;
 use crate::tao::global::get_app;
 use common::io::language::get_system_language;
@@ -81,6 +81,7 @@ pub async fn update_settings_db(
     }
 
     refresh_tray_menu();
+    refresh_window_titles();
 
     upsert_settings_sync(&settings, false).await?;
 

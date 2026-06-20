@@ -75,8 +75,8 @@ function createSettingsStore() {
   const syncAuthenticateToggle = async () =>
     invokeCommand(InvokeCommand.SyncAuthenticateToggle);
 
-  const openWindow = async (windowName: WebWindow, title: string) =>
-    invokeCommand(InvokeCommand.OpenNewWindow, { windowName, title });
+  const openWindow = async (windowName: WebWindow) =>
+    invokeCommand(InvokeCommand.OpenNewWindow, { windowName });
 
   const exitApp = async () => invokeCommand(InvokeCommand.ExitApp);
 

@@ -115,6 +115,94 @@ impl Language {
     }
 }
 
+pub struct WindowLabels {
+    pub settings: &'static str,
+    pub about: &'static str,
+}
+
+impl Language {
+    pub fn window_labels(&self) -> WindowLabels {
+        match self {
+            Language::English => WindowLabels {
+                settings: "Settings",
+                about: "About",
+            },
+            Language::Mandarin => WindowLabels {
+                settings: "设置",
+                about: "关于",
+            },
+            Language::Hindi => WindowLabels {
+                settings: "समायोजन",
+                about: "के बारे में",
+            },
+            Language::Spanish => WindowLabels {
+                settings: "Ajustes",
+                about: "Acerca de",
+            },
+            Language::French => WindowLabels {
+                settings: "Paramètres",
+                about: "À propos",
+            },
+            Language::Arabic => WindowLabels {
+                settings: "إعدادات",
+                about: "عن",
+            },
+            Language::Bengali => WindowLabels {
+                settings: "সেটিংস",
+                about: "সম্পর্কে",
+            },
+            Language::Portuguese => WindowLabels {
+                settings: "Configurações",
+                about: "Sobre",
+            },
+            Language::Russian => WindowLabels {
+                settings: "Настройки",
+                about: "О",
+            },
+            Language::Urdu => WindowLabels {
+                settings: "ترتیبات",
+                about: "کے بارے میں",
+            },
+            Language::Japanese => WindowLabels {
+                settings: "設定",
+                about: "について",
+            },
+            Language::German => WindowLabels {
+                settings: "Einstellungen",
+                about: "Über",
+            },
+            Language::Korean => WindowLabels {
+                settings: "설정",
+                about: "에 대한",
+            },
+            Language::Vietnamese => WindowLabels {
+                settings: "Cài đặt",
+                about: "Về",
+            },
+            Language::Turkish => WindowLabels {
+                settings: "Ayarlar",
+                about: "Hakkında",
+            },
+            Language::Italian => WindowLabels {
+                settings: "Impostazioni",
+                about: "Info",
+            },
+            Language::Thai => WindowLabels {
+                settings: "การตั้งค่า",
+                about: "เกี่ยวกับ",
+            },
+            Language::Polish => WindowLabels {
+                settings: "Ustawienia",
+                about: "O",
+            },
+            Language::Dutch => WindowLabels {
+                settings: "Instellingen",
+                about: "Over",
+            },
+        }
+    }
+}
+
 pub fn get_system_language() -> Language {
     if cfg!(target_os = "linux") {
         std::env::var("LANG")

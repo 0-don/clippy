@@ -8,7 +8,7 @@ use common::constants::{
     ABOUT_WINDOW_X, ABOUT_WINDOW_Y, MAIN_WINDOW_X, MAIN_WINDOW_Y, MAX_IMAGE_DIMENSIONS,
     SETTINGS_WINDOW_X, SETTINGS_WINDOW_Y,
 };
-use common::types::enums::{ClippyPosition, HotkeyEvent, ListenEvent, WebWindow};
+use common::types::enums::{ClippyPosition, HotkeyEvent, Language, ListenEvent, WebWindow};
 use std::env;
 use std::process::Command;
 use tauri::{Emitter, LogicalSize, Manager, WebviewUrl};
@@ -320,6 +320,27 @@ pub fn calculate_thumbnail_dimensions(width: u32, height: u32) -> (u32, u32) {
     }
 }
 
+fn current_window_title(window: WebWindow) -> String {
+    let lang = Language::from_iso_code(&get_global_settings().language);
+    let labels = lang.window_labels();
+    match window {
+        WebWindow::About => labels.about,
+        WebWindow::Settings => labels.settings,
+        _ => return window.to_string(),
+    }
+    .to_string()
+}
+
+/// Retitle any open Settings/About windows after a language change.
+pub fn refresh_window_titles() {
+    let app = get_app();
+    for window in [WebWindow::Settings, WebWindow::About] {
+        if let Some(w) = app.get_webview_window(window.to_string().as_str()) {
+            w.set_title(&current_window_title(window)).ok();
+        }
+    }
+}
+
 pub async fn create_about_window(title: Option<String>) {
     let app = get_app();
 
@@ -335,7 +356,7 @@ pub async fn create_about_window(title: Option<String>) {
         WebWindow::About.to_string().as_str(),
         WebviewUrl::App("pages/about.html".into()),
     )
-    .title(title.unwrap_or_else(|| "About".to_string()))
+    .title(title.unwrap_or_else(|| current_window_title(WebWindow::About)))
     .inner_size(ABOUT_WINDOW_X as f64, ABOUT_WINDOW_Y as f64)
     .always_on_top(true)
     .build()
@@ -360,7 +381,7 @@ pub async fn create_settings_window(title: Option<String>) {
         WebWindow::Settings.to_string().as_str(),
         WebviewUrl::App("pages/settings.html".into()),
     )
-    .title(title.unwrap_or_else(|| "Settings".to_string()))
+    .title(title.unwrap_or_else(|| current_window_title(WebWindow::Settings)))
     .inner_size(SETTINGS_WINDOW_X as f64, SETTINGS_WINDOW_Y as f64)
     .always_on_top(true)
     .transparent(true)

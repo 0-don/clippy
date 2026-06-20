@@ -39,7 +39,7 @@ const About = () => {
             url: "https://github.com/0-don/clippy",
           })
         }
-        class="inline-flex w-32 items-center rounded-sm border border-border bg-card px-2.5 py-1.5 text-xs font-bold text-foreground! shadow-xs hover:bg-muted focus:ring-2 focus:ring-offset-2 focus:outline-hidden"
+        class="inline-flex w-32 items-center justify-center rounded-sm border border-border bg-card px-2.5 py-1.5 text-xs font-bold text-foreground! shadow-xs hover:bg-muted focus:ring-2 focus:ring-offset-2 focus:outline-hidden"
       >
         {t("ABOUT.OFFICIAL_WEBSITE")}
       </a>
