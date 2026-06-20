@@ -1,6 +1,6 @@
 {
   "ABOUT": {
-    "ABOUT": "Info",
+    "ABOUT": "Info programma",
     "COPYRIGHT": "Copyright(C) DC. Tutti i diritti riservati.",
     "DEVELOPED_BY": "Sviluppato da 0-don con Tauri.",
     "NO_UPDATES_CURRENTLY_AVAILABLE": "Questa versione è aggiornata",
@@ -150,6 +150,8 @@
       "CHANGE_WINDOW_POSITION": "Modifica posizione finestra",
       "COLOR_THEME": "Tema colore",
       "GLASS_EFFECT": "Effetto vetro",
+      "GLASS_OPACITY": "Tinta vetro",
+      "GLASS_GRAIN": "Gel vetro",
       "HTML_CLIPBOARD_TOOLTIP": "Suggerimenti appunti HTML",
       "KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
       "START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",
