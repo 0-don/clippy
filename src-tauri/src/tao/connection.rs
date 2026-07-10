@@ -3,6 +3,7 @@ use super::tao_constants::DB;
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
 use sea_orm::{ConnectOptions, Database, DbConn};
+use std::time::Duration;
 
 pub async fn init_db() -> Result<(), DbErr> {
     let database_url = if cfg!(debug_assertions) {
@@ -32,11 +33,19 @@ pub async fn init_db() -> Result<(), DbErr> {
 }
 
 async fn connect_and_migrate(database_url: &str) -> Result<DbConn, DbErr> {
+    let mut opt = ConnectOptions::new(database_url.to_owned());
     // Disable per-statement SQL logging: it floods the log file/console with every
     // query at Info, which tauri-plugin-log would otherwise capture.
-    let mut opt = ConnectOptions::new(database_url.to_owned());
-    opt.sqlx_logging(false);
+    opt.sqlx_logging(false)
+        // SQLite is single-writer; a small pool avoids writers fighting for the file
+        // lock. acquire_timeout lets callers wait for a free connection instead of the
+        // pool erroring out (which surfaced as "db connection" crashes in search/decrypt
+        // when the sync loop ran concurrently).
+        .max_connections(4)
+        .acquire_timeout(Duration::from_secs(10));
 
+    // WAL / busy_timeout / foreign_keys are set as URL params (SQLITE_PARAMS) so every
+    // pooled connection gets them, not just the first.
     let conn = Database::connect(opt).await?;
     Migrator::up(&conn, None).await?;
     Ok(conn)
@@ -92,6 +101,12 @@ pub fn db() -> &'static DbConn {
     DB.get().expect("Database not initialized")
 }
 
+/// SQLite connection params applied to EVERY pooled connection (sqlx reads these from
+/// the URL query, unlike a one-off PRAGMA which only affects the connection it runs on).
+/// WAL: readers don't block writers. busy_timeout: wait on a lock instead of instant
+/// SQLITE_BUSY. foreign_keys: keep the schema's cascade deletes.
+const SQLITE_PARAMS: &str = "mode=rwc&journal_mode=WAL&busy_timeout=5000&foreign_keys=on";
+
 fn get_prod_database_url() -> String {
     let data_path = get_data_path();
 
@@ -100,15 +115,15 @@ fn get_prod_database_url() -> String {
 
     let config: Config = serde_json::from_str(&json).expect("Failed to parse config file");
 
-    format!("sqlite://{}?mode=rwc", config.db)
+    format!("sqlite://{}?{}", config.db, SQLITE_PARAMS)
 }
 
 fn get_debug_database_url() -> String {
     let (config, data_path) = get_config();
 
     if config.db != data_path.db_file_path {
-        format!("sqlite://{}?mode=rwc", config.db)
+        format!("sqlite://{}?{}", config.db, SQLITE_PARAMS)
     } else {
-        format!("sqlite://../{}?mode=rwc", DB_NAME)
+        format!("sqlite://../{}?{}", DB_NAME, SQLITE_PARAMS)
     }
 }
