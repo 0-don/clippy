@@ -2,7 +2,9 @@ use super::config::{get_config, get_data_path};
 use super::tao_constants::DB;
 use common::{constants::DB_NAME, types::types::Config};
 use migration::{DbErr, Migrator, MigratorTrait};
-use sea_orm::{ConnectOptions, Database, DbConn};
+use sea_orm::sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePoolOptions};
+use sea_orm::sqlx::ConnectOptions as SqlxConnectOptions;
+use sea_orm::{DbConn, SqlxSqliteConnector};
 use std::time::Duration;
 
 pub async fn init_db() -> Result<(), DbErr> {
@@ -33,20 +35,30 @@ pub async fn init_db() -> Result<(), DbErr> {
 }
 
 async fn connect_and_migrate(database_url: &str) -> Result<DbConn, DbErr> {
-    let mut opt = ConnectOptions::new(database_url.to_owned());
-    // Disable per-statement SQL logging: it floods the log file/console with every
-    // query at Info, which tauri-plugin-log would otherwise capture.
-    opt.sqlx_logging(false)
-        // SQLite is single-writer; a small pool avoids writers fighting for the file
-        // lock. acquire_timeout lets callers wait for a free connection instead of the
-        // pool erroring out (which surfaced as "db connection" crashes in search/decrypt
-        // when the sync loop ran concurrently).
-        .max_connections(4)
-        .acquire_timeout(Duration::from_secs(10));
+    // sqlx only accepts mode/cache/immutable/vfs as URL query params; pragmas like
+    // journal_mode MUST be set via SqliteConnectOptions (applied to every pooled
+    // connection) or connect errors with "unknown query parameter".
+    let opt = database_url
+        .parse::<SqliteConnectOptions>()
+        .map_err(|e| DbErr::Conn(sea_orm::RuntimeErr::Internal(e.to_string())))?
+        // WAL: readers don't block writers, which kept connections pinned long enough
+        // to starve the pool (ConnectionAcquire(Timeout) panics on clipboard insert).
+        // busy_timeout(5s) + foreign_keys(on) are sqlx defaults, WAL is not.
+        .journal_mode(SqliteJournalMode::Wal)
+        .busy_timeout(Duration::from_secs(5))
+        // Statement logging floods the log file with every query otherwise.
+        .disable_statement_logging();
 
-    // WAL / busy_timeout / foreign_keys are set as URL params (SQLITE_PARAMS) so every
-    // pooled connection gets them, not just the first.
-    let conn = Database::connect(opt).await?;
+    // Small pool: SQLite is single-writer, but >1 connection stops one long-running
+    // reader (sync loop, search scan) from starving clipboard inserts.
+    let pool = SqlitePoolOptions::new()
+        .max_connections(4)
+        .acquire_timeout(Duration::from_secs(10))
+        .connect_with(opt)
+        .await
+        .map_err(|e| DbErr::Conn(sea_orm::RuntimeErr::SqlxError(e)))?;
+
+    let conn = SqlxSqliteConnector::from_sqlx_sqlite_pool(pool);
     Migrator::up(&conn, None).await?;
     Ok(conn)
 }
@@ -101,11 +113,9 @@ pub fn db() -> &'static DbConn {
     DB.get().expect("Database not initialized")
 }
 
-/// SQLite connection params applied to EVERY pooled connection (sqlx reads these from
-/// the URL query, unlike a one-off PRAGMA which only affects the connection it runs on).
-/// WAL: readers don't block writers. busy_timeout: wait on a lock instead of instant
-/// SQLITE_BUSY. foreign_keys: keep the schema's cascade deletes.
-const SQLITE_PARAMS: &str = "mode=rwc&journal_mode=WAL&busy_timeout=5000&foreign_keys=on";
+/// Only mode/cache/immutable/vfs are valid sqlx URL params. Pragmas (WAL etc.) are set
+/// in connect_and_migrate via SqliteConnectOptions; putting them here makes connect fail.
+const SQLITE_PARAMS: &str = "mode=rwc";
 
 fn get_prod_database_url() -> String {
     let data_path = get_data_path();
