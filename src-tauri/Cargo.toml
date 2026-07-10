@@ -12,7 +12,7 @@ edition = "2021"
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "tauri_app_lib"
-crasdate-type = ["staticlib", "cdylib", "rlib"]
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [workspace]
 members = [".", "migration", "entity", "common"]

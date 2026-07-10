@@ -115,7 +115,7 @@ fn set_window_corners(hwnd: isize) {
     use windows_sys::Win32::Foundation::HWND;
     use windows_sys::Win32::Graphics::Dwm::DwmSetWindowAttribute;
 
-    const DWMWA_WINDOW_CORNER_PREFERENCE: u32 = 33;
+    const DWMWA_WINDOW_CORNER_PREFERENCE: i32 = 33;
     const DWMWCP_ROUND: i32 = 2;
 
     let hwnd = hwnd as HWND;

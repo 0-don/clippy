@@ -21,3 +21,4 @@ token.json
 .env
 test.json
 .mcp.json
+clippy.sqlite*
