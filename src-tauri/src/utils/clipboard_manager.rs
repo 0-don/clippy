@@ -120,10 +120,16 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 }
             }
 
-            // insert default not encrypted clipboard
-            let clipboard = insert_clipboard_dbo(manager)
-                .await
-                .expect("Failed to insert");
+            // insert default not encrypted clipboard. Do NOT panic on failure: a
+            // transient DB error (e.g. pool acquire timeout under contention) must not
+            // crash the whole app - just log and skip storing this one clipboard.
+            let clipboard = match insert_clipboard_dbo(manager).await {
+                Ok(clipboard) => clipboard,
+                Err(e) => {
+                    log::error!("Failed to insert clipboard: {e:?}");
+                    return;
+                }
+            };
 
             // Run OCR in background for image clipboards
             if let Some(ref image) = clipboard.image {
@@ -155,11 +161,14 @@ impl ClipboardManagerExt for FullClipboardDbo {
                 });
             }
 
-            // If encryption is enabled and key is set, encrypt clipboard before upsert
+            // If encryption is enabled and key is set, encrypt clipboard before upsert.
+            // Log instead of panicking on a transient DB error so a failed encrypt-upsert
+            // can't crash the app.
             if settings.encryption && is_encryption_key_set() {
-                upsert_clipboard_dto(encrypt_clipboard(clipboard.clone()))
-                    .await
-                    .expect("Failed to upsert");
+                if let Err(e) = upsert_clipboard_dto(encrypt_clipboard(clipboard.clone())).await {
+                    log::error!("Failed to upsert encrypted clipboard: {e:?}");
+                    return;
+                }
             }
 
             if let Some(mut cached) = get_cache().get(CACHE_KEY) {
