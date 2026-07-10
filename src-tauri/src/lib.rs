@@ -47,9 +47,17 @@ pub fn run() {
     // clear_targets() is required: the plugin enables a Stdout target BY DEFAULT,
     // which is unsafe on a console-less Windows GUI release. We start from a clean
     // slate with the file target, then add Stdout only when a console is present.
+    //
+    // Retention: the file target appends across restarts (default), so history
+    // survives. It rolls to a timestamped archive when it passes max_file_size, and
+    // KeepSome keeps the most recent archives (~a month of crash history) instead of
+    // discarding them, then prunes older ones so the dir doesn't grow unbounded.
     let mut log_builder = tauri_plugin_log::Builder::new()
         .clear_targets()
         .level(log::LevelFilter::Info)
+        .max_file_size(10 * 1024 * 1024) // 10 MB per file before it rolls
+        .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepSome(30))
+        .timezone_strategy(tauri_plugin_log::TimezoneStrategy::UseLocal)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::LogDir {
                 file_name: Some("clippy".to_string()),
