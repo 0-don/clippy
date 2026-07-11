@@ -136,13 +136,12 @@ fn set_window_corners(hwnd: isize) {
 
 #[cfg(target_os = "macos")]
 fn apply_macos_effect(window: &tauri::WebviewWindow, glass: bool) {
-    use window_vibrancy::{clear_liquid_glass, clear_vibrancy};
+    use window_vibrancy::clear_vibrancy;
 
     // "Glass" here means CLEAR glass: a genuinely transparent window with the
-    // desktop showing through sharply. Vibrancy/Liquid Glass both add a frosted
-    // material, which is the opposite of see-through, so we never apply them —
-    // the transparent window + near-zero CSS surface opacity gives the clear pane.
-    let _ = clear_liquid_glass(window);
+    // desktop showing through sharply. Vibrancy adds a frosted material, which is
+    // the opposite of see-through, so we never apply it — the transparent window
+    // + near-zero CSS surface opacity gives the clear pane.
     let _ = clear_vibrancy(window);
     let _ = glass; // backdrop is CSS-driven now; native material is never applied
 }
