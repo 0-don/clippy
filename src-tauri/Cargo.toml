@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.6.32"
+version = "1.6.33"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -43,7 +43,7 @@ log = "0"
 # Native window glass: acrylic on Windows (10 + 11, incl. 24H2 where the newer
 # DWM system-backdrop API doesn't render through WebView2) + liquid glass/vibrancy
 # on macOS. Rounded corners on Win11 are set separately via windows-sys DWM.
-window-vibrancy = "0"
+window-vibrancy = "0.6"
 global-hotkey = { git = "https://github.com/0-don/global-hotkey", branch = "unified-wayland" } # tauri-plugin-global-hotkey
 
 sea-orm = "1"
