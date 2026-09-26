@@ -15,19 +15,14 @@ export const Clipboards: Component = () => {
   const [scrollToTop, setScrollToTop] = createSignal(false);
 
   const onScroll = async () => {
-    if (!ClipboardStore.clipboardRef()) return;
+    const ref = ClipboardStore.clipboardRef();
+    if (!ref) return;
 
-    const bottom =
-      ClipboardStore.clipboardRef() &&
-      ClipboardStore.clipboardRef()!.scrollHeight -
-        ClipboardStore.clipboardRef()!.scrollTop ===
-        ClipboardStore.clipboardRef()!.clientHeight;
+    const bottom = ref.scrollHeight - ref.scrollTop - ref.clientHeight < 50;
 
-    ClipboardStore.clipboardRef()!.scrollTop !== 0
-      ? setScrollToTop(true)
-      : setScrollToTop(false);
+    ref.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false);
 
-    if (bottom && ClipboardStore.hasMore()) {
+    if (bottom && ClipboardStore.hasMore() && !ClipboardStore.isSearching()) {
       ClipboardStore.setWhere((prev) => ({
         ...prev,
         cursor: ClipboardStore.clipboards().length,
