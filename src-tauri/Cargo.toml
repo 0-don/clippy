@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.7.3"
+version = "1.7.4"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -97,14 +97,14 @@ ocr-rs = "2"
 x11rb = "0"
 # Not used directly: enables the StatusNotifierItem backend on the tray-icon
 # that tauri pulls in, so the tray reports left clicks.
-tray-icon = { version = "0", features = ["linux-ksni"] }
+tray-icon = { version = "0", features = ["ksni"] }
 
 [target.'cfg(windows)'.dependencies]
 # Attach to the parent terminal's console (if any) so the GUI release build
 # can print logs when launched from a terminal. See attach_parent_console().
 # Pinned: HWND became a pointer in 0.60, and "0" resolves back to a release
 # where it is still an isize, so `is_null` does not exist.
-windows-sys = { version = "0.61", features = [
+windows-sys = { version = "0", features = [
   "Win32_System_Console",
   "Win32_Foundation",
   "Win32_Graphics_Dwm",
@@ -127,15 +127,6 @@ objc2-app-kit = { version = "0", default-features = false, features = [
 objc2-foundation = { version = "0", default-features = false, features = [
   "std",
 ] }
-
-# tray-icon's default Linux backend goes through libappindicator, which never
-# implemented the StatusNotifierItem Activate method, so left clicks on the tray
-# icon are never reported. These branches serve the protocol directly instead.
-# Upstream: tauri-apps/tray-icon#201, which keeps menu state in sync with muda
-# rather than snapshotting it. Drop this once it lands.
-[patch.crates-io]
-tray-icon = { git = "https://github.com/0-don/tray-icon", branch = "ksni-compat" }
-muda = { git = "https://github.com/dfaust/muda", branch = "ksni" }
 
 [profile.release]
 # panic = "abort"

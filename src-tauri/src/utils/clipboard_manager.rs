@@ -1,10 +1,10 @@
 use crate::prelude::*;
 use crate::service::cipher::is_encryption_key_set;
-use crate::service::clipboard::{init_clipboards, new_clipboard_event, upsert_clipboard_dto};
+use crate::service::clipboard::{new_clipboard_event, upsert_clipboard_dto};
 use crate::service::encrypt::encrypt_clipboard;
 use crate::service::settings::get_global_settings;
 use crate::service::{
-    clipboard::{bump_clipboard_timestamp, get_recent_clipboards_db, insert_clipboard_dbo},
+    clipboard::{get_recent_clipboards_db, insert_clipboard_dbo},
     window::calculate_thumbnail_dimensions,
 };
 use crate::tao::connection::db;
@@ -109,11 +109,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
 
         let content_changed = manager.apply_text_matchers();
 
-        // Check for duplicates in recent clipboard history
-        if let Some(existing_id) = manager.check_if_duplicate().await {
-            // Bump existing entry to the top instead of creating a duplicate
-            let _ = bump_clipboard_timestamp(existing_id).await;
-            init_clipboards();
+        if manager.check_if_duplicate().await.is_some() {
             return;
         }
 
@@ -194,7 +190,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
     }
 
     async fn check_if_duplicate(&mut self) -> Option<Uuid> {
-        let recent = get_recent_clipboards_db(10).await.ok()?;
+        let recent = get_recent_clipboards_db(1).await.ok()?;
         let curr_types = ClipboardType::from_json_value(&self.clipboard_model.types.as_ref())?;
 
         for entry in recent {

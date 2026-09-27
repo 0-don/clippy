@@ -338,16 +338,6 @@ pub async fn get_recent_clipboards_db(limit: u64) -> Result<Vec<FullClipboardDto
     Ok(dtos)
 }
 
-pub async fn bump_clipboard_timestamp(id: Uuid) -> Result<(), DbErr> {
-    let new_id = Uuid::now_v7();
-    clipboard::Entity::update_many()
-        .col_expr(clipboard::Column::Id, sea_orm::sea_query::Expr::value(new_id))
-        .filter(clipboard::Column::Id.eq(id))
-        .exec(db())
-        .await?;
-    Ok(())
-}
-
 pub async fn get_all_clipboards_db() -> Result<Vec<FullClipboardDto>, DbErr> {
     let db = db();
     let clipboards = clipboard::Entity::find()
