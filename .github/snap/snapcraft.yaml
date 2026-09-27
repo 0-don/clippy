@@ -9,6 +9,7 @@ description: |
 grade: stable
 confinement: strict
 base: core22
+icon: src-tauri/icons/icon.png
 architectures:
   - build-on: amd64
 
