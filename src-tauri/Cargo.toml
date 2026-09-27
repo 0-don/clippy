@@ -97,7 +97,7 @@ ocr-rs = "2"
 x11rb = "0"
 # Not used directly: enables the StatusNotifierItem backend on the tray-icon
 # that tauri pulls in, so the tray reports left clicks.
-tray-icon = { version = "0", features = ["ksni"] }
+tray-icon = { version = "0", default-features = false, features = ["ksni"] }
 
 [target.'cfg(windows)'.dependencies]
 # Attach to the parent terminal's console (if any) so the GUI release build
