@@ -68,6 +68,8 @@
     "KEYS": {
       "ALT": "Alt",
       "CTRL": "Ctrl",
+      "PRESS_KEYS": "اضغط على المفاتيح",
+      "RECORD": "تسجيل",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",

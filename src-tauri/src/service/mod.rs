@@ -4,6 +4,7 @@ pub mod decrypt;
 pub mod encrypt;
 pub mod hotkey;
 pub mod keyboard;
+pub mod keyboard_layout;
 pub mod settings;
 pub mod sync;
 pub mod target_window;

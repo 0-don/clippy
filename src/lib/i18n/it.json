@@ -68,6 +68,8 @@
     "KEYS": {
       "ALT": "Alt",
       "CTRL": "Ctrl",
+      "PRESS_KEYS": "Premi i tasti",
+      "RECORD": "Registra",
       "SHIFT": "Maiusc",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",

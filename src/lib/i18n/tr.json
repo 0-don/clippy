@@ -68,6 +68,8 @@
     "KEYS": {
       "ALT": "Alt",
       "CTRL": "Ctrl",
+      "PRESS_KEYS": "Tuşlara basın",
+      "RECORD": "Kaydet",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",

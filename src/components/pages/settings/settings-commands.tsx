@@ -17,15 +17,14 @@ import {
   COMMAND_OS,
   COMMAND_OUTPUTS,
   CommandOs,
-  GLOBAL_SHORTCUT_KEYS,
 } from "../../../utils/constants";
 import { Button } from "../../elements/button";
-import { CheckBox } from "../../elements/checkbox";
 import { Dropdown } from "../../elements/dropdown";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { useLanguage } from "../../provider/language-provider";
+import { HotkeyRecorder } from "../../utils/hotkey-recorder";
 
 const INTERPRETERS = [
   "sh",
@@ -49,12 +48,6 @@ const OUTPUT_LABELS: Record<CustomCommand["output"], DictionaryKey> = {
   ignore: "SETTINGS.COMMANDS.OUTPUT_IGNORE",
   copy: "SETTINGS.COMMANDS.OUTPUT_COPY",
   paste: "SETTINGS.COMMANDS.OUTPUT_PASTE",
-};
-
-const SUPER_LABELS: Record<CommandOs, DictionaryKey> = {
-  linux: "MAIN.KEYS.SUPER_LINUX",
-  windows: "MAIN.KEYS.SUPER_WIN",
-  macos: "MAIN.KEYS.SUPER_MAC",
 };
 
 const emptyScript = (): CommandScript => ({ interpreter: "", script: "" });
@@ -221,33 +214,10 @@ const CommandEditor: Component<CommandEditorProps> = (props) => {
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5 text-sm">
-        <CheckBox
-          label={t("MAIN.KEYS.CTRL")}
-          checked={props.command().ctrl}
-          onChange={(ctrl) => update({ ctrl })}
-        />
-        <CheckBox
-          label={t("MAIN.KEYS.ALT")}
-          checked={props.command().alt}
-          onChange={(alt) => update({ alt })}
-        />
-        <CheckBox
-          label={t("MAIN.KEYS.SHIFT")}
-          checked={props.command().shift}
-          onChange={(shift) => update({ shift })}
-        />
-        <CheckBox
-          label={t(SUPER_LABELS[currentOs()])}
-          checked={props.command().super_key}
-          onChange={(super_key) => update({ super_key })}
-        />
-        <Dropdown
-          items={GLOBAL_SHORTCUT_KEYS.map((key) => ({
-            value: key,
-            label: key,
-          }))}
-          value={props.command().key}
-          onChange={(key) => update({ key })}
+        <HotkeyRecorder
+          value={props.command()}
+          onRecord={(hotkey) => update(hotkey)}
+          onClear={() => update({ key: "none" })}
         />
         <Dropdown
           className="ml-auto"

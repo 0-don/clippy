@@ -35,6 +35,7 @@ export enum InvokeCommand {
   GetHotkeys = "get_hotkeys",
   UpdateHotkey = "update_hotkey",
   StopHotkeys = "stop_hotkeys",
+  GetKeyboardLayout = "get_keyboard_layout",
 
   // Settings commands
   GetSettings = "get_settings",
@@ -131,6 +132,10 @@ export interface TauriInvokeCommands {
   [InvokeCommand.StopHotkeys]: {
     args: undefined;
     return: void;
+  };
+  [InvokeCommand.GetKeyboardLayout]: {
+    args: undefined;
+    return: Record<string, string>;
   };
 
   // Settings commands

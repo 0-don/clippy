@@ -107,6 +107,7 @@ pub fn run() {
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
             hotkey::stop_hotkeys,
+            hotkey::get_keyboard_layout,
             //
             settings::get_settings,
             settings::update_settings,

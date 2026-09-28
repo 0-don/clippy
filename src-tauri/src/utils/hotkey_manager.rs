@@ -302,20 +302,11 @@ pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, super_key: bool, key: 
 }
 
 fn format_key_for_parsing(key: &str) -> String {
-    if key.len() >= 2 && (key.starts_with('F') || key.starts_with('f')) {
-        if let Ok(number) = key[1..].parse::<u32>() {
-            if number >= 1 && number <= 24 {
-                // Adjust the range if necessary
-                return key.to_uppercase(); // This is a function key like F1, F2, ..., F24
-            }
-        }
-    }
-
-    match key.chars().next().unwrap_or_default() {
-        '0'..='9' => format!("Digit{}", key), // For digits
-        'A'..='Z' | 'a'..='z' => format!("Key{}", key.to_uppercase()), // For letters
-        // Add additional cases here for other key types like F1-F12
-        // ...
-        _ => key.to_uppercase(), // Default case for other keys
+    let mut chars = key.chars();
+    match (chars.next(), chars.next()) {
+        (Some(c @ '0'..='9'), None) => format!("Digit{c}"),
+        (Some(c), None) if c.is_ascii_alphabetic() => format!("Key{}", c.to_ascii_uppercase()),
+        // Named keys (F13, ArrowUp, NumpadAdd, MediaPlayPause) are parsed by name.
+        _ => key.to_uppercase(),
     }
 }

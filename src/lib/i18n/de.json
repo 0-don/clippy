@@ -68,6 +68,8 @@
     "KEYS": {
       "ALT": "Alt",
       "CTRL": "Strg",
+      "PRESS_KEYS": "Tasten drücken",
+      "RECORD": "Aufnehmen",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
