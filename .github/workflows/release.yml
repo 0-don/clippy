@@ -188,13 +188,17 @@ jobs:
           echo "DMG_SHA256=$(sha256sum /tmp/clippy.dmg | awk '{print $1}')" >> $GITHUB_ENV
           echo "EXE_SHA256=$(sha256sum /tmp/clippy-setup.exe | awk '{print $1}')" >> $GITHUB_ENV
 
+      # The AUR's SSH endpoint drops connections from CI runners now and then;
+      # that must not skip the other stores below.
       - name: publish to AUR
+        continue-on-error: true
         run: |
           # & and | are special in a sed replacement, so the description is escaped.
           DESC_SED=$(printf '%s' "$DESC" | sed -e 's/[&|\\]/\\&/g')
           render() { sed -e "s|{{NAME}}|${NAME}|g" -e "s|{{VERSION}}|${VERSION}|g" -e "s|{{DESCRIPTION}}|${DESC_SED}|g" -e "s|{{LICENSE}}|${LICENSE}|g" "$@"; }
-          export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur"
-          git clone ssh://aur@aur.archlinux.org/${NAME}-rs-bin.git /tmp/aur-pkg
+          retry() { for i in 1 2 3 4 5; do "$@" && return 0; echo "attempt $i failed, retrying in $((i * 20))s"; sleep $((i * 20)); done; return 1; }
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur -o ConnectTimeout=20"
+          retry git clone ssh://aur@aur.archlinux.org/${NAME}-rs-bin.git /tmp/aur-pkg
           cd /tmp/aur-pkg
 
           render -e "s|{{SHA256}}|${DEB_SHA256}|g" \
@@ -210,7 +214,8 @@ jobs:
           cp /tmp/pkgbuild-work/.SRCINFO .
 
           git add PKGBUILD .SRCINFO
-          git diff --cached --quiet || git commit -m "Update to ${VERSION}" && git push
+          git diff --cached --quiet || git commit -m "Update to ${VERSION}"
+          retry git push
 
       - name: update homebrew cask
         run: |
