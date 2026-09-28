@@ -102,6 +102,10 @@ nix-env -iA nixpkgs.clippy-clipboard
   - Image support with thumbnails
   - Image OCR: automatic text extraction from copied images (100+ languages), making them searchable
   - File support with metadata
+- **Commands:**
+  - Bind a hotkey to your own script (sh, bash, Python, PowerShell and more)
+  - Clipboard text passed on stdin and as `CLIPPY_TEXT`, output copied or pasted back
+  - One script per operating system, synced between devices
 - **Smart clipboard features:**
   - Type out clipboard content (where pasting isn't allowed) **ctrl+b**
   - Smart search for links, colors, images, hex codes etc.

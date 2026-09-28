@@ -41,6 +41,10 @@ Clippy allows you to:
 
 Navigate to `Settings > Hotkeys` within Clippy to customize bindings.
 
+## Commands
+
+Hotkeys can also run your own scripts on the clipboard, for example to reformat text or control another app. See [Commands](/features/commands).
+
 ## Tips
 
 - Use `R`, `T`, and `H` to quickly filter your clipboard history by relevance.

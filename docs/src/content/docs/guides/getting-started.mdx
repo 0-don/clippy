@@ -82,7 +82,7 @@ nix-env -iA nixpkgs.clippy-clipboard              # Nix
 #### Cloud Sync
 
 1. **Setup**
-   - Go to Settings → Sync
+   - Go to Settings > Backup
    - Click "Connect Google Drive"
    - Follow the authentication process
 
@@ -94,7 +94,7 @@ nix-env -iA nixpkgs.clippy-clipboard              # Nix
 #### Security Features
 
 1. **Encryption**
-   - Enable encryption in Settings → Security
+   - Enable encryption in Settings > Encryption
    - Set a strong password
    - Choose what content to encrypt
 
@@ -104,6 +104,10 @@ nix-env -iA nixpkgs.clippy-clipboard              # Nix
    - Choose database location
 
 ### Customization
+
+Settings are grouped in the sidebar: General, Backup, Encryption, History, Hotkeys, Patterns, Commands and Limits.
+
+![Clippy settings](/features/settings.webp)
 
 #### Interface
 
@@ -124,15 +128,19 @@ nix-env -iA nixpkgs.clippy-clipboard              # Nix
    - Type Out: `Ctrl+B`
 
 2. **Custom Hotkeys**
-   - Go to Settings → Hotkeys
+   - Go to Settings > Hotkeys
    - Click any function to set custom shortcut
    - Use "Clear" to reset to default
+
+3. **Commands**
+   - Go to Settings > Commands
+   - Bind a hotkey to your own script, see [Commands](/features/commands)
 
 ### System Integration
 
 #### Autostart
 
-- Enable in Settings → General
+- Enable in Settings > General
 - Clippy will start automatically with your system
 
 #### System Tray

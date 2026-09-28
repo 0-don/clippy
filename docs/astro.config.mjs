@@ -46,6 +46,7 @@ export default defineConfig({
                   slug: "features/clipboard-history",
                 },
                 { label: "Global Hotkeys", slug: "features/hotkeys" },
+                { label: "Commands", slug: "features/commands" },
                 { label: "Cloud Sync", slug: "features/cloud-sync" },
                 { label: "File Support", slug: "features/file-support" },
               ],
