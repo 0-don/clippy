@@ -78,6 +78,19 @@ pub async fn paste_on_select(clipboard_id: Uuid) {
     }
 }
 
+/// Pastes the clipboard into the focused window, for text produced by a command hotkey.
+pub async fn paste_into_active_window() {
+    if get_main_window().is_visible().unwrap_or(false) {
+        hide_for_paste();
+        if !wait_for_target_focus().await {
+            return;
+        }
+    }
+
+    wait_for_modifiers_released().await;
+    send_paste_chord();
+}
+
 /// Waits for the user to let go of any modifier they are still holding.
 ///
 /// Selection is usually driven by a global hotkey, so Ctrl or Super is often

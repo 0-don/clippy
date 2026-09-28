@@ -120,3 +120,68 @@ impl TextMatcher {
         }
     }
 }
+
+pub const COMMAND_EVENT_PREFIX: &str = "command:";
+
+#[derive(PartialEq, Eq, Serialize, Deserialize, Debug, Clone, Default)]
+#[serde(default)]
+pub struct CommandScript {
+    pub interpreter: String,
+    pub script: String,
+}
+
+/// One script per OS, because commands sync between machines running different systems.
+#[derive(PartialEq, Eq, Serialize, Deserialize, Debug, Clone, Default)]
+#[serde(default)]
+pub struct CommandScripts {
+    pub linux: CommandScript,
+    pub windows: CommandScript,
+    pub macos: CommandScript,
+}
+
+impl CommandScripts {
+    pub fn current(&self) -> &CommandScript {
+        if cfg!(target_os = "windows") {
+            &self.windows
+        } else if cfg!(target_os = "macos") {
+            &self.macos
+        } else {
+            &self.linux
+        }
+    }
+}
+
+#[derive(PartialEq, Eq, Serialize, Deserialize, Debug, Clone, Default)]
+#[serde(default)]
+pub struct CustomCommand {
+    pub id: String,
+    pub name: String,
+    pub enabled: bool,
+    pub ctrl: bool,
+    pub alt: bool,
+    pub shift: bool,
+    pub super_key: bool,
+    pub key: String,
+    pub output: String,
+    pub scripts: CommandScripts,
+}
+
+impl CustomCommand {
+    pub fn from_json_value(value: &JsonValue) -> Vec<Self> {
+        match value {
+            JsonValue::Array(arr) => serde_json::from_value(json!(arr)).unwrap_or_else(|_| vec![]),
+            _ => vec![],
+        }
+    }
+
+    pub fn hotkey_event(&self) -> String {
+        format!("{COMMAND_EVENT_PREFIX}{}", self.id)
+    }
+
+    pub fn has_hotkey(&self) -> bool {
+        self.enabled
+            && !self.key.is_empty()
+            && !self.key.eq_ignore_ascii_case("none")
+            && !self.scripts.current().script.trim().is_empty()
+    }
+}

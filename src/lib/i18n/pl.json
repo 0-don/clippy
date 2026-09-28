@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Ile schowków powinno być synchronizowanych?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
     },
+    "COMMANDS": {
+      "ADD": "Dodaj polecenie",
+      "HOTKEY_IN_USE": "Ten skrót jest już używany",
+      "INFO": "Każde polecenie uruchamia skrypt dla bieżącego systemu operacyjnego. Tekst ze schowka jest przekazywany przez stdin i w zmiennej CLIPPY_TEXT. Polecenia są synchronizowane między Twoimi urządzeniami.",
+      "INTERPRETER": "Interpreter",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Nazwa",
+      "NO_OUTPUT": "Zakończono bez wyniku",
+      "OUTPUT_COPY": "Kopiuj wynik",
+      "OUTPUT_IGNORE": "Ignoruj wynik",
+      "OUTPUT_PASTE": "Wklej wynik",
+      "REMOVE": "Usuń",
+      "SCRIPT": "Skrypt",
+      "TEST": "Testuj",
+      "TEST_OTHER_OS": "Skrypty dla innego systemu można przetestować tylko w tym systemie",
+      "TITLE": "Uruchamiaj polecenia skrótami klawiszowymi",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Potwierdź hasło",
       "DECRYPT": "Odszyfruj wszystkie schowki",
@@ -206,6 +225,7 @@
     "SETTINGS": "Ustawienia",
     "TAB": {
       "BACKUP": "Kopia zapasowa",
+      "COMMANDS": "Polecenia",
       "ENCRYPTION": "Szyfrowanie",
       "GENERAL": "Ogólny",
       "HISTORY": "Historia",

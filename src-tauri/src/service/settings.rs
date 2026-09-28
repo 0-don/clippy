@@ -7,9 +7,10 @@ use crate::prelude::*;
 use crate::service::window::{get_monitor_scale_factor, refresh_window_titles};
 use crate::tao::connection::db;
 use crate::tao::global::get_app;
+use crate::utils::hotkey_manager::reload_global_hotkeys;
 use common::io::language::get_system_language;
 use common::types::enums::{ListenEvent, PasswordAction};
-use common::types::types::{CommandError, TextMatcher};
+use common::types::types::{CommandError, CustomCommand, TextMatcher};
 use entity::settings;
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::json;
@@ -156,6 +157,28 @@ pub async fn update_settings_text_matchers(
     Ok(text_matchers)
 }
 
+pub async fn update_settings_commands(
+    commands: Vec<CustomCommand>,
+) -> Result<Vec<CustomCommand>, CommandError> {
+    let mut settings = get_global_settings();
+
+    settings.commands = json!(commands);
+
+    let active_model: settings::ActiveModel = settings.into();
+
+    let settings = settings::Entity::update(active_model.reset_all())
+        .exec(db())
+        .await?;
+
+    set_global_settings(settings.clone());
+
+    init_settings_window();
+
+    upsert_settings_sync(&settings, false).await?;
+
+    Ok(commands)
+}
+
 pub async fn update_settings_from_sync(
     remote_settings: HashMap<String, serde_json::Value>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -240,8 +263,14 @@ pub async fn update_settings_from_sync(
             .exec(db)
             .await?;
 
+        let commands_changed = settings.commands != current_settings.commands;
+
         // Update global settings
         set_global_settings(settings);
+
+        if commands_changed {
+            reload_global_hotkeys().await;
+        }
 
         // Notify UI of settings change
         init_settings_window();

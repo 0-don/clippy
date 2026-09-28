@@ -1,13 +1,14 @@
 import { onMount } from "solid-js";
 import { Show, render } from "solid-js/web";
 import { SettingsBackup } from "./components/pages/settings/settings-backup";
+import { SettingsCommands } from "./components/pages/settings/settings-commands";
 import { SettingsEncryption } from "./components/pages/settings/settings-encryption";
 import { SettingsGeneral } from "./components/pages/settings/settings-general";
 import { SettingsHistory } from "./components/pages/settings/settings-history";
 import { SettingsHotkeys } from "./components/pages/settings/settings-hotkeys";
 import { SettingsLimits } from "./components/pages/settings/settings-limits";
 import { SettingsPatterns } from "./components/pages/settings/settings-patterns";
-import { Tabs } from "./components/pages/settings/settings-tabs";
+import { SettingsSidebar } from "./components/navigation/settings-sidebar";
 import LanguageProvider from "./components/provider/language-provider";
 import { listenEvent } from "./lib/tauri";
 import { HotkeyStore } from "./store/hotkey-store";
@@ -26,9 +27,9 @@ const Settings = () => {
   });
 
   return (
-    <div class="glass-surface absolute flex h-full w-full flex-col overflow-x-hidden bg-background text-foreground">
-      <Tabs />
-      <div class="px-5 pt-5 text-foreground">
+    <div class="glass-surface bg-background text-foreground absolute flex h-full w-full overflow-hidden">
+      <SettingsSidebar />
+      <div class="text-foreground min-w-0 flex-1 overflow-y-auto px-5 pt-5">
         <Show
           when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.GENERAL"}
         >
@@ -65,6 +66,12 @@ const Settings = () => {
           when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.PATTERNS"}
         >
           <SettingsPatterns />
+        </Show>
+
+        <Show
+          when={SettingsStore.getCurrentTab()?.name === "SETTINGS.TAB.COMMANDS"}
+        >
+          <SettingsCommands />
         </Show>
 
         <Show

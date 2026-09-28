@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "¿Cuántos portapapeles se deben sincronizar?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
     },
+    "COMMANDS": {
+      "ADD": "Añadir comando",
+      "HOTKEY_IN_USE": "Este atajo ya está en uso",
+      "INFO": "Cada comando ejecuta el script del sistema operativo en el que se encuentra. El texto del portapapeles se pasa por stdin y en la variable CLIPPY_TEXT. Los comandos se sincronizan entre tus dispositivos.",
+      "INTERPRETER": "Intérprete",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Nombre",
+      "NO_OUTPUT": "Finalizado sin salida",
+      "OUTPUT_COPY": "Copiar salida",
+      "OUTPUT_IGNORE": "Ignorar salida",
+      "OUTPUT_PASTE": "Pegar salida",
+      "REMOVE": "Eliminar",
+      "SCRIPT": "Script",
+      "TEST": "Probar",
+      "TEST_OTHER_OS": "Los scripts de otro sistema solo se pueden probar allí",
+      "TITLE": "Ejecutar comandos con atajos de teclado",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Confirmar Contraseña",
       "DECRYPT": "Descifrar todos los portapapeles",
@@ -206,6 +225,7 @@
     "SETTINGS": "Ajustes",
     "TAB": {
       "BACKUP": "Respaldo",
+      "COMMANDS": "Comandos",
       "ENCRYPTION": "Cifrado",
       "GENERAL": "General",
       "HISTORY": "Historia",

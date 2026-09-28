@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.7.5"
+version = "1.7.6"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -38,6 +38,7 @@ tauri-plugin-opener = "2"
 tauri-plugin-autostart = "2"
 tauri-plugin-single-instance = "2"
 tauri-plugin-log = "2"
+tauri-plugin-notification = "2"
 log = "0"
 
 # Native window glass: acrylic on Windows (10 + 11, incl. 24H2 where the newer

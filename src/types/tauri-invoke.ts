@@ -2,6 +2,7 @@ import {
   ClipboardResponse,
   ClipboardWhere,
   ClipboardWithRelations,
+  CustomCommand,
   DatabaseInfo,
   DecryptEvent,
   Hotkey,
@@ -39,6 +40,8 @@ export enum InvokeCommand {
   GetSettings = "get_settings",
   UpdateSettings = "update_settings",
   ChangeSettingsTextMatchers = "change_settings_text_matchers",
+  ChangeSettingsCommands = "change_settings_commands",
+  RunCustomCommand = "run_custom_command",
   ToggleAutostart = "toggle_autostart",
   ChangeClipboardDbLocation = "change_clipboard_db_location",
   ResetClipboardDbLocation = "reset_clipboard_db_location",
@@ -142,6 +145,14 @@ export interface TauriInvokeCommands {
   [InvokeCommand.ChangeSettingsTextMatchers]: {
     args: { textMatchers: TextMatcher[] };
     return: TextMatcher[];
+  };
+  [InvokeCommand.ChangeSettingsCommands]: {
+    args: { commands: CustomCommand[] };
+    return: CustomCommand[];
+  };
+  [InvokeCommand.RunCustomCommand]: {
+    args: { command: CustomCommand };
+    return: string;
   };
   [InvokeCommand.ToggleAutostart]: {
     args: undefined;

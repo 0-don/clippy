@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Quantas áreas de transferência devem ser sincronizadas?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
     },
+    "COMMANDS": {
+      "ADD": "Adicionar comando",
+      "HOTKEY_IN_USE": "Este atalho já está em uso",
+      "INFO": "Cada comando executa o script do sistema operativo em que está. O texto da área de transferência é passado por stdin e na variável CLIPPY_TEXT. Os comandos são sincronizados entre os seus dispositivos.",
+      "INTERPRETER": "Interpretador",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Nome",
+      "NO_OUTPUT": "Concluído sem saída",
+      "OUTPUT_COPY": "Copiar saída",
+      "OUTPUT_IGNORE": "Ignorar saída",
+      "OUTPUT_PASTE": "Colar saída",
+      "REMOVE": "Remover",
+      "SCRIPT": "Script",
+      "TEST": "Testar",
+      "TEST_OTHER_OS": "Scripts de outro sistema só podem ser testados nesse sistema",
+      "TITLE": "Executar comandos com atalhos",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Confirme a sua senha",
       "DECRYPT": "Descriptografar todas as áreas de transferência",
@@ -206,6 +225,7 @@
     "SETTINGS": "Configurações",
     "TAB": {
       "BACKUP": "Backup",
+      "COMMANDS": "Comandos",
       "ENCRYPTION": "Criptografia",
       "GENERAL": "Em geral",
       "HISTORY": "História",

@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "How many clipboards should be synced?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
     },
+    "COMMANDS": {
+      "ADD": "Add command",
+      "HOTKEY_IN_USE": "This hotkey is already in use",
+      "INFO": "Each command runs the script for the operating system it is on. The clipboard text is passed on stdin and in the CLIPPY_TEXT variable. Commands sync between your devices.",
+      "INTERPRETER": "Interpreter",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Name",
+      "NO_OUTPUT": "Finished without output",
+      "OUTPUT_COPY": "Copy output",
+      "OUTPUT_IGNORE": "Ignore output",
+      "OUTPUT_PASTE": "Paste output",
+      "REMOVE": "Remove",
+      "SCRIPT": "Script",
+      "TEST": "Test",
+      "TEST_OTHER_OS": "Scripts for another system can only be tested there",
+      "TITLE": "Run commands with hotkeys",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Confirm Password",
       "DECRYPT": "Decrypt all clipboards",
@@ -208,6 +227,7 @@
     "SETTINGS": "Settings",
     "TAB": {
       "BACKUP": "Backup",
+      "COMMANDS": "Commands",
       "ENCRYPTION": "Encryption",
       "GENERAL": "General",
       "HISTORY": "History",

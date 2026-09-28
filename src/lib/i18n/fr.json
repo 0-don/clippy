@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Combien de presse-papiers doivent être synchronisés ?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
     },
+    "COMMANDS": {
+      "ADD": "Ajouter une commande",
+      "HOTKEY_IN_USE": "Ce raccourci est déjà utilisé",
+      "INFO": "Chaque commande exécute le script du système d'exploitation sur lequel elle se trouve. Le texte du presse-papiers est transmis sur stdin et dans la variable CLIPPY_TEXT. Les commandes sont synchronisées entre vos appareils.",
+      "INTERPRETER": "Interpréteur",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Nom",
+      "NO_OUTPUT": "Terminé sans sortie",
+      "OUTPUT_COPY": "Copier la sortie",
+      "OUTPUT_IGNORE": "Ignorer la sortie",
+      "OUTPUT_PASTE": "Coller la sortie",
+      "REMOVE": "Supprimer",
+      "SCRIPT": "Script",
+      "TEST": "Tester",
+      "TEST_OTHER_OS": "Les scripts d'un autre système ne peuvent être testés que sur celui-ci",
+      "TITLE": "Exécuter des commandes avec des raccourcis",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Confirmez le mot de passe",
       "DECRYPT": "Décrypter tous les presse-papiers",
@@ -206,6 +225,7 @@
     "SETTINGS": "Paramètres",
     "TAB": {
       "BACKUP": "Sauvegarde",
+      "COMMANDS": "Commandes",
       "ENCRYPTION": "Chiffrement",
       "GENERAL": "Général",
       "HISTORY": "Histoire",

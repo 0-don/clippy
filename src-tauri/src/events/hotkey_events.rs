@@ -1,6 +1,7 @@
 use crate::commands::sync::sync_authenticate_toggle;
 use crate::prelude::*;
 use crate::service::clipboard::init_clipboards;
+use crate::service::custom_command::{find_command, run_command_hotkey};
 use crate::service::settings::get_global_settings;
 use crate::service::window::open_window;
 use crate::tao::global::{
@@ -74,12 +75,18 @@ pub fn setup_hotkey_listener() {
                 break;
             }
 
-            std::thread::sleep(Duration::from_millis(10));
+            tokio::time::sleep(Duration::from_millis(10)).await;
         }
     });
 }
 
 pub async fn parse_hotkey_event(key: &Key) {
+    // Spawned so a slow script never stalls the hotkey loop.
+    if let Some(command) = find_command(&key.event) {
+        tauri::async_runtime::spawn(run_command_hotkey(command));
+        return;
+    }
+
     let event = HotkeyEvent::iter().find(|variant| variant.to_string() == key.event);
 
     printlog!("event: {:?}", event);

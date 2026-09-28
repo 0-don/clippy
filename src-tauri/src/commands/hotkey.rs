@@ -1,7 +1,6 @@
 use crate::{
-    prelude::*,
     service::hotkey::{get_all_hotkeys_db, init_hotkey_window, update_hotkey_db},
-    utils::hotkey_manager::{register_hotkeys, unregister_hotkeys, upsert_hotkeys_in_store},
+    utils::hotkey_manager::{reload_global_hotkeys, unregister_hotkeys},
 };
 use common::types::types::CommandError;
 use entity::hotkey::Model;
@@ -13,17 +12,11 @@ pub async fn get_hotkeys() -> Result<Vec<Model>, CommandError> {
 
 #[tauri::command]
 pub async fn update_hotkey(hotkey: Model) {
-    unregister_hotkeys(true);
-
     update_hotkey_db(hotkey)
         .await
         .expect("Failed to update hotkey");
 
-    if let Err(e) = upsert_hotkeys_in_store().await {
-        printlog!("Failed to upsert hotkeys in store: {:?}", e);
-    }
-
-    register_hotkeys(true);
+    reload_global_hotkeys().await;
 
     init_hotkey_window();
 }

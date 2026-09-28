@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Cần đồng bộ bao nhiêu bảng tạm?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"
     },
+    "COMMANDS": {
+      "ADD": "Thêm lệnh",
+      "HOTKEY_IN_USE": "Phím tắt này đã được sử dụng",
+      "INFO": "Mỗi lệnh chạy tập lệnh của hệ điều hành hiện tại. Văn bản trong bộ nhớ tạm được truyền qua stdin và trong biến CLIPPY_TEXT. Các lệnh được đồng bộ giữa các thiết bị của bạn.",
+      "INTERPRETER": "Trình thông dịch",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Tên",
+      "NO_OUTPUT": "Hoàn tất, không có kết quả",
+      "OUTPUT_COPY": "Sao chép kết quả",
+      "OUTPUT_IGNORE": "Bỏ qua kết quả",
+      "OUTPUT_PASTE": "Dán kết quả",
+      "REMOVE": "Xóa",
+      "SCRIPT": "Tập lệnh",
+      "TEST": "Thử",
+      "TEST_OTHER_OS": "Tập lệnh cho hệ điều hành khác chỉ có thể thử trên hệ điều hành đó",
+      "TITLE": "Chạy lệnh bằng phím tắt",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Xác nhận mật khẩu",
       "DECRYPT": "Giải mã tất cả các clipboard",
@@ -206,6 +225,7 @@
     "SETTINGS": "Cài đặt",
     "TAB": {
       "BACKUP": "Hỗ trợ",
+      "COMMANDS": "Lệnh",
       "ENCRYPTION": "Mã hóa",
       "GENERAL": "Tổng quan",
       "HISTORY": "Lịch sử",

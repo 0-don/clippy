@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Kaç panonun senkronize edilmesi gerekiyor?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
     },
+    "COMMANDS": {
+      "ADD": "Komut ekle",
+      "HOTKEY_IN_USE": "Bu kısayol zaten kullanılıyor",
+      "INFO": "Her komut, bulunduğu işletim sisteminin betiğini çalıştırır. Pano metni stdin üzerinden ve CLIPPY_TEXT değişkeninde iletilir. Komutlar cihazların arasında eşitlenir.",
+      "INTERPRETER": "Yorumlayıcı",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Ad",
+      "NO_OUTPUT": "Çıktı olmadan tamamlandı",
+      "OUTPUT_COPY": "Çıktıyı kopyala",
+      "OUTPUT_IGNORE": "Çıktıyı yok say",
+      "OUTPUT_PASTE": "Çıktıyı yapıştır",
+      "REMOVE": "Kaldır",
+      "SCRIPT": "Betik",
+      "TEST": "Test et",
+      "TEST_OTHER_OS": "Başka bir sistemin betikleri yalnızca o sistemde test edilebilir",
+      "TITLE": "Kısayollarla komut çalıştır",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Şifreyi Onayla",
       "DECRYPT": "Tüm panoları şifresini çöz",
@@ -206,6 +225,7 @@
     "SETTINGS": "Ayarlar",
     "TAB": {
       "BACKUP": "Yedekleme",
+      "COMMANDS": "Komutlar",
       "ENCRYPTION": "Şifreleme",
       "GENERAL": "Genel",
       "HISTORY": "Tarih",

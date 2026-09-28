@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
     },
+    "COMMANDS": {
+      "ADD": "Aggiungi comando",
+      "HOTKEY_IN_USE": "Questa scorciatoia è già in uso",
+      "INFO": "Ogni comando esegue lo script del sistema operativo su cui si trova. Il testo degli appunti viene passato su stdin e nella variabile CLIPPY_TEXT. I comandi vengono sincronizzati tra i tuoi dispositivi.",
+      "INTERPRETER": "Interprete",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Nome",
+      "NO_OUTPUT": "Terminato senza output",
+      "OUTPUT_COPY": "Copia output",
+      "OUTPUT_IGNORE": "Ignora output",
+      "OUTPUT_PASTE": "Incolla output",
+      "REMOVE": "Rimuovi",
+      "SCRIPT": "Script",
+      "TEST": "Prova",
+      "TEST_OTHER_OS": "Gli script di un altro sistema si possono provare solo su quel sistema",
+      "TITLE": "Esegui comandi con scorciatoie",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Conferma password",
       "DECRYPT": "Decripta tutti gli appunti",
@@ -208,6 +227,7 @@
     "SETTINGS": "Impostazioni",
     "TAB": {
       "BACKUP": "Backup",
+      "COMMANDS": "Comandi",
       "ENCRYPTION": "Criptazione",
       "GENERAL": "Generale",
       "HISTORY": "Cronologia",

@@ -66,6 +66,28 @@ impl PasteOnSelect {
 
 #[derive(DeriveIden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
+pub enum CommandOutput {
+    #[sea_orm(iden = "ignore")]
+    Ignore,
+    #[sea_orm(iden = "copy")]
+    Copy,
+    #[sea_orm(iden = "paste")]
+    Paste,
+}
+
+impl CommandOutput {
+    /// Unknown modes from a newer synced client do nothing rather than send keystrokes.
+    pub fn from_setting(value: &str) -> Self {
+        match value {
+            "copy" => Self::Copy,
+            "paste" => Self::Paste,
+            _ => Self::Ignore,
+        }
+    }
+}
+
+#[derive(DeriveIden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum SyncProviderType {
     #[sea_orm(iden = "google_drive")]
     GoogleDrive,

@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "应该同步多少个剪贴板？",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"
     },
+    "COMMANDS": {
+      "ADD": "添加命令",
+      "HOTKEY_IN_USE": "此快捷键已被使用",
+      "INFO": "每个命令都会运行当前操作系统对应的脚本。剪贴板文本通过 stdin 和 CLIPPY_TEXT 变量传入。命令会在你的设备之间同步。",
+      "INTERPRETER": "解释器",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "名称",
+      "NO_OUTPUT": "已完成，无输出",
+      "OUTPUT_COPY": "复制输出",
+      "OUTPUT_IGNORE": "忽略输出",
+      "OUTPUT_PASTE": "粘贴输出",
+      "REMOVE": "删除",
+      "SCRIPT": "脚本",
+      "TEST": "测试",
+      "TEST_OTHER_OS": "其他系统的脚本只能在该系统上测试",
+      "TITLE": "使用快捷键运行命令",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "确认密码",
       "DECRYPT": "解密所有剪贴板",
@@ -206,6 +225,7 @@
     "SETTINGS": "设置",
     "TAB": {
       "BACKUP": "备份",
+      "COMMANDS": "命令",
       "ENCRYPTION": "加密",
       "GENERAL": "一般的",
       "HISTORY": "历史",

@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "كم عدد الحافظات التي يجب مزامنتها؟",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"
     },
+    "COMMANDS": {
+      "ADD": "إضافة أمر",
+      "HOTKEY_IN_USE": "هذا الاختصار مستخدم بالفعل",
+      "INFO": "يشغّل كل أمر السكربت الخاص بنظام التشغيل الحالي. يُمرَّر نص الحافظة عبر stdin وفي المتغير CLIPPY_TEXT. تتم مزامنة الأوامر بين أجهزتك.",
+      "INTERPRETER": "المفسّر",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "الاسم",
+      "NO_OUTPUT": "انتهى دون مخرجات",
+      "OUTPUT_COPY": "نسخ المخرجات",
+      "OUTPUT_IGNORE": "تجاهل المخرجات",
+      "OUTPUT_PASTE": "لصق المخرجات",
+      "REMOVE": "إزالة",
+      "SCRIPT": "السكربت",
+      "TEST": "اختبار",
+      "TEST_OTHER_OS": "لا يمكن اختبار سكربتات نظام آخر إلا على ذلك النظام",
+      "TITLE": "تشغيل الأوامر باختصارات لوحة المفاتيح",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
       "DECRYPT": "فك تشفير جميع الحافظات",
@@ -206,6 +225,7 @@
     "SETTINGS": "إعدادات",
     "TAB": {
       "BACKUP": "دعم",
+      "COMMANDS": "الأوامر",
       "ENCRYPTION": "التشفير",
       "GENERAL": "عام",
       "HISTORY": "تاريخ",

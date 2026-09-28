@@ -1,5 +1,6 @@
 use crate::prelude::*;
 use crate::service::hotkey::get_all_hotkeys_db;
+use crate::service::settings::get_global_settings;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::tao::global::get_app;
 use crate::tao::global::{
@@ -8,7 +9,10 @@ use crate::tao::global::{
 };
 use common::{
     constants::GLOBAL_EVENTS,
-    types::{hotkey::SafeHotKeyManager, types::Key},
+    types::{
+        hotkey::SafeHotKeyManager,
+        types::{CustomCommand, Key},
+    },
 };
 use global_hotkey::{hotkey::HotKey, GlobalHotKeyManager};
 
@@ -220,7 +224,63 @@ pub async fn upsert_hotkeys_in_store() -> Result<(), Box<dyn std::error::Error>>
         }
     }
 
+    // Commands are global so they work while Clippy is hidden; a clashing combo keeps the built-in one.
+    for command in CustomCommand::from_json_value(&get_global_settings().commands) {
+        if !command.has_hotkey() {
+            continue;
+        }
+
+        let hotkey_str = parse_shortcut(
+            command.ctrl,
+            command.alt,
+            command.shift,
+            command.super_key,
+            &format_key_for_parsing(&command.key.to_uppercase()),
+        );
+        let Ok(key) = hotkey_str.parse::<HotKey>() else {
+            printlog!(
+                "command {:?} has an invalid hotkey: {hotkey_str}",
+                command.name
+            );
+            continue;
+        };
+
+        let taken = get_global_hotkey_store().contains_key(&key.id())
+            || get_window_hotkey_store().contains_key(&key.id());
+        if taken {
+            printlog!(
+                "command {:?} hotkey {hotkey_str} is already in use",
+                command.name
+            );
+            continue;
+        }
+
+        insert_global_hotkey_into_store(Key {
+            id: key.id(),
+            state: false,
+            is_global: true,
+            event: command.hotkey_event(),
+            key_str: hotkey_str,
+            ctrl: command.ctrl,
+            alt: command.alt,
+            shift: command.shift,
+            super_key: command.super_key,
+            key: command.key,
+            hotkey: key,
+        });
+    }
+
     Ok(())
+}
+
+pub async fn reload_global_hotkeys() {
+    unregister_hotkeys(true);
+
+    if let Err(e) = upsert_hotkeys_in_store().await {
+        printlog!("Failed to upsert hotkeys in store: {:?}", e);
+    }
+
+    register_hotkeys(true);
 }
 
 pub fn parse_shortcut(ctrl: bool, alt: bool, shift: bool, super_key: bool, key: &str) -> String {

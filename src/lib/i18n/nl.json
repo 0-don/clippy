@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Hoeveel klemborden moeten er worden gesynchroniseerd?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
     },
+    "COMMANDS": {
+      "ADD": "Opdracht toevoegen",
+      "HOTKEY_IN_USE": "Deze sneltoets is al in gebruik",
+      "INFO": "Elke opdracht voert het script uit voor het besturingssysteem waarop deze draait. De klembordtekst wordt doorgegeven via stdin en in de variabele CLIPPY_TEXT. Opdrachten worden gesynchroniseerd tussen je apparaten.",
+      "INTERPRETER": "Interpreter",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Naam",
+      "NO_OUTPUT": "Voltooid zonder uitvoer",
+      "OUTPUT_COPY": "Uitvoer kopiëren",
+      "OUTPUT_IGNORE": "Uitvoer negeren",
+      "OUTPUT_PASTE": "Uitvoer plakken",
+      "REMOVE": "Verwijderen",
+      "SCRIPT": "Script",
+      "TEST": "Testen",
+      "TEST_OTHER_OS": "Scripts voor een ander systeem kunnen alleen daar getest worden",
+      "TITLE": "Opdrachten uitvoeren met sneltoetsen",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Bevestig wachtwoord",
       "DECRYPT": "Alle klemborden decoderen",
@@ -206,6 +225,7 @@
     "SETTINGS": "Instellingen",
     "TAB": {
       "BACKUP": "Back-up",
+      "COMMANDS": "Opdrachten",
       "ENCRYPTION": "Encryptie",
       "GENERAL": "Algemeen",
       "HISTORY": "Geschiedenis",

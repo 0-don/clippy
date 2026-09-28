@@ -142,6 +142,25 @@
       "SYNC_LIMIT": "Wie viele Zwischenablagen sollen synchronisiert werden?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"
     },
+    "COMMANDS": {
+      "ADD": "Befehl hinzufügen",
+      "HOTKEY_IN_USE": "Dieses Tastenkürzel wird bereits verwendet",
+      "INFO": "Jeder Befehl führt das Skript für das aktuelle Betriebssystem aus. Der Text aus der Zwischenablage wird über stdin und in der Variable CLIPPY_TEXT übergeben. Befehle werden zwischen deinen Geräten synchronisiert.",
+      "INTERPRETER": "Interpreter",
+      "LINUX": "Linux",
+      "MACOS": "macOS",
+      "NAME": "Name",
+      "NO_OUTPUT": "Ohne Ausgabe beendet",
+      "OUTPUT_COPY": "Ausgabe kopieren",
+      "OUTPUT_IGNORE": "Ausgabe ignorieren",
+      "OUTPUT_PASTE": "Ausgabe einfügen",
+      "REMOVE": "Entfernen",
+      "SCRIPT": "Skript",
+      "TEST": "Testen",
+      "TEST_OTHER_OS": "Skripte für ein anderes System können nur dort getestet werden",
+      "TITLE": "Befehle per Tastenkürzel ausführen",
+      "WINDOWS": "Windows"
+    },
     "ENCRYPT": {
       "CONFIRM_PASSWORD": "Bestätige das Passwort",
       "DECRYPT": "Alle Zwischenablagen entschlüsseln",
@@ -206,6 +225,7 @@
     "SETTINGS": "Einstellungen",
     "TAB": {
       "BACKUP": "Sicherung",
+      "COMMANDS": "Befehle",
       "ENCRYPTION": "Verschlüsselung",
       "GENERAL": "Allgemein",
       "HISTORY": "Geschichte",

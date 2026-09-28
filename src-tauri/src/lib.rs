@@ -6,7 +6,7 @@ mod service;
 mod tao;
 mod utils;
 
-use commands::{cipher, clipboard, hotkey, settings, sync, window};
+use commands::{cipher, clipboard, custom_command, hotkey, settings, sync, window};
 use config::setup;
 use tauri_plugin_autostart::MacosLauncher;
 
@@ -79,6 +79,7 @@ pub fn run() {
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
             None,
@@ -114,6 +115,9 @@ pub fn run() {
             settings::change_clipboard_db_location,
             settings::reset_clipboard_db_location,
             settings::get_os,
+            //
+            custom_command::change_settings_commands,
+            custom_command::run_custom_command,
             //
             window::open_new_window,
             window::open_browser_url,

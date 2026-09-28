@@ -1,4 +1,5 @@
 pub mod clipboard;
+pub mod custom_command;
 pub mod decrypt;
 pub mod encrypt;
 pub mod hotkey;

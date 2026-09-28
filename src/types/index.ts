@@ -2,6 +2,8 @@ import { IconTypes } from "solid-icons";
 import { DictionaryKey } from "../lib/i18n";
 import {
   ClippyPosition,
+  CommandOs,
+  CommandOutput,
   Language,
   PasteOnSelect,
   SettingsTabName,
@@ -169,6 +171,27 @@ export type Settings = {
   // Owned by the backend portal session; present so updateSettings round-trips
   // it instead of clearing it.
   paste_restore_token: string | null;
+  commands: CustomCommand[];
+};
+
+export type CommandScript = {
+  interpreter: string;
+  script: string;
+};
+
+export type CommandScripts = Record<CommandOs, CommandScript>;
+
+export type CustomCommand = {
+  id: string;
+  name: string;
+  enabled: boolean;
+  ctrl: boolean;
+  alt: boolean;
+  shift: boolean;
+  super_key: boolean;
+  key: string;
+  output: CommandOutput;
+  scripts: CommandScripts;
 };
 
 export type TextMatcher = {
