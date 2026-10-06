@@ -9,12 +9,16 @@ use std::{collections::HashMap, sync::MutexGuard, time::Duration};
 use tauri::{AppHandle, WebviewWindow};
 use tokio::sync::oneshot;
 
-pub fn get_main_window() -> MutexGuard<'static, WebviewWindow> {
+/// Returns a cloned handle so no lock is held across window calls. Getters
+/// block on the main thread, and the main thread's window event handler calls
+/// this too, so holding the guard there deadlocks the app.
+pub fn get_main_window() -> WebviewWindow {
     MAIN_WINDOW
         .get()
         .expect("MAIN_WINDOW not initialized")
         .lock()
         .unwrap_or_else(|e| e.into_inner())
+        .clone()
 }
 
 pub fn get_global_hotkey_manager() -> MutexGuard<'static, SafeHotKeyManager> {
