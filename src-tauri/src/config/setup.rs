@@ -23,7 +23,10 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'st
 
     setup_settings();
     setup_window();
-    setup_system_tray()?;
+    // Cinnamon and others ship no StatusNotifierWatcher; the hotkey still opens the window.
+    if let Err(e) = setup_system_tray() {
+        eprintln!("Failed to setup system tray: {}", e);
+    }
 
     setup_clipboard_listener();
     setup_hotkey_listener();
