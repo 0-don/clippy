@@ -184,6 +184,8 @@
       "GLASS_GRAIN": "Gel vetro",
       "HTML_CLIPBOARD_TOOLTIP": "Suggerimenti appunti HTML",
       "KEYBOARD_SHORTCUT": "Scorciatoia tastiera",
+      "OCR": "Riconoscimento del testo nelle immagini",
+      "OCR_INFO": "Estrae il testo dalle immagini copiate per poterle cercare",
       "PASTE_ON_SELECT": "Incolla alla selezione",
       "PASTE_ON_SELECT_INFO": "Incolla la voce nella finestra precedentemente attiva. I terminali potrebbero richiedere la modalità digitazione.",
       "START_CLIPPY_ON_STARTUP": "Esegui Clippy all'avvio del sistema",

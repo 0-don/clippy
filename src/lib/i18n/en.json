@@ -184,6 +184,8 @@
       "GLASS_GRAIN": "Glass frost",
       "HTML_CLIPBOARD_TOOLTIP": "HTML clipboard tooltip",
       "KEYBOARD_SHORTCUT": "Keyboard shortcut",
+      "OCR": "Image text recognition",
+      "OCR_INFO": "Extracts text from copied images so you can search them",
       "PASTE_ON_SELECT": "Paste on select",
       "PASTE_ON_SELECT_INFO": "Pastes the entry into the previously focused window. Terminals may need typing mode.",
       "START_CLIPPY_ON_STARTUP": "Start Clippy on system startup",

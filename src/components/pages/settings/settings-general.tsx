@@ -3,7 +3,11 @@ import { FiDroplet, FiMoon, FiSliders } from "solid-icons/fi";
 import { HiOutlineWindow, HiSolidCog8Tooth } from "solid-icons/hi";
 import { IoColorPaletteOutline, IoLanguageOutline } from "solid-icons/io";
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
-import { TbOutlineMaximize, TbOutlineTooltip } from "solid-icons/tb";
+import {
+  TbOutlineMaximize,
+  TbOutlineTextRecognition,
+  TbOutlineTooltip,
+} from "solid-icons/tb";
 import { VsRocket } from "solid-icons/vs";
 import { Component, onCleanup, Show } from "solid-js";
 import { msg } from "../../../lib/i18n";
@@ -208,6 +212,29 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 SettingsStore.updateSettings({
                   ...SettingsStore.settings()!,
                   suppress_hotkey_on_fullscreen,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+          <div class="flex flex-col truncate">
+            <div class="flex items-center space-x-2">
+              <TbOutlineTextRecognition />
+              <h6 class="text-sm">{t("SETTINGS.GENERAL.OCR")}</h6>
+            </div>
+            <p class="ml-6 text-xs text-muted-foreground">
+              {t("SETTINGS.GENERAL.OCR_INFO")}
+            </p>
+          </div>
+          <div>
+            <Toggle
+              checked={SettingsStore.settings()?.ocr}
+              onChange={async (ocr: boolean) =>
+                SettingsStore.updateSettings({
+                  ...SettingsStore.settings()!,
+                  ocr,
                 })
               }
             />

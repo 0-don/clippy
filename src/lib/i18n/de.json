@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Glaseffekt",
       "HTML_CLIPBOARD_TOOLTIP": "HTML-Zwischenablage-Tooltip",
       "KEYBOARD_SHORTCUT": "Tastenkombination",
+      "OCR": "Texterkennung in Bildern",
+      "OCR_INFO": "Erkennt Text in kopierten Bildern und macht sie durchsuchbar",
       "PASTE_ON_SELECT": "Beim Auswählen einfügen",
       "PASTE_ON_SELECT_INFO": "Fügt den Eintrag in das zuvor fokussierte Fenster ein. Terminals benötigen möglicherweise den Tippmodus.",
       "START_CLIPPY_ON_STARTUP": "Starten Sie Clippy beim Systemstart",

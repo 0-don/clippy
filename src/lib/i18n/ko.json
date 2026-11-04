@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "유리 효과",
       "HTML_CLIPBOARD_TOOLTIP": "HTML 클립보드 툴팁",
       "KEYBOARD_SHORTCUT": "단축키",
+      "OCR": "이미지 텍스트 인식",
+      "OCR_INFO": "복사한 이미지에서 텍스트를 추출하여 검색할 수 있게 합니다",
       "PASTE_ON_SELECT": "선택 시 붙여넣기",
       "PASTE_ON_SELECT_INFO": "이전에 포커스된 창에 항목을 붙여넣습니다. 터미널에서는 입력 모드가 필요할 수 있습니다.",
       "START_CLIPPY_ON_STARTUP": "시스템 시작 시 Clippy 시작",

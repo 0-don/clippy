@@ -172,6 +172,7 @@ export type Settings = {
   // it instead of clearing it.
   paste_restore_token: string | null;
   commands: CustomCommand[];
+  ocr: boolean;
 };
 
 export type CommandScript = {

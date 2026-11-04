@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "玻璃效果",
       "HTML_CLIPBOARD_TOOLTIP": "HTML 剪贴板工具提示",
       "KEYBOARD_SHORTCUT": "键盘快捷键",
+      "OCR": "图片文字识别",
+      "OCR_INFO": "从复制的图片中提取文字，以便搜索",
       "PASTE_ON_SELECT": "选择时粘贴",
       "PASTE_ON_SELECT_INFO": "将条目粘贴到先前聚焦的窗口。终端可能需要输入模式。",
       "START_CLIPPY_ON_STARTUP": "在系统启动时启动 Clippy",

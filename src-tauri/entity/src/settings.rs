@@ -42,6 +42,7 @@ pub struct Model {
     pub paste_on_select: String,
     pub paste_restore_token: Option<String>,
     pub commands: Json,
+    pub ocr: bool,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -72,6 +73,7 @@ pub enum Column {
     PasteOnSelect,
     PasteRestoreToken,
     Commands,
+    Ocr,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -119,6 +121,7 @@ impl ColumnTrait for Column {
             Self::PasteOnSelect => ColumnType::String(StringLen::None).def(),
             Self::PasteRestoreToken => ColumnType::String(StringLen::None).def().nullable(),
             Self::Commands => ColumnType::Json.def(),
+            Self::Ocr => ColumnType::Boolean.def(),
         }
     }
 }

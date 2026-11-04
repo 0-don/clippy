@@ -139,7 +139,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
             };
 
             // Run OCR in background for image clipboards
-            if let Some(ref image) = clipboard.image {
+            if let Some(image) = clipboard.image.as_ref().filter(|_| settings.ocr) {
                 let image_data = image.data.clone();
                 let clipboard_id = clipboard.clipboard.id;
                 let should_encrypt = settings.encryption && is_encryption_key_set();

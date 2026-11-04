@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Efeito de vidro",
       "HTML_CLIPBOARD_TOOLTIP": "Dica de ferramenta da área de transferência HTML",
       "KEYBOARD_SHORTCUT": "Atalho de teclado",
+      "OCR": "Reconhecimento de texto em imagens",
+      "OCR_INFO": "Extrai o texto das imagens copiadas para que possam ser pesquisadas",
       "PASTE_ON_SELECT": "Colar ao selecionar",
       "PASTE_ON_SELECT_INFO": "Cola a entrada na janela anteriormente focada. Os terminais podem precisar do modo de digitação.",
       "START_CLIPPY_ON_STARTUP": "Inicie o Clippy no arranque do sistema",

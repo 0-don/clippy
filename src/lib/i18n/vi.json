@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Hiệu ứng kính",
       "HTML_CLIPBOARD_TOOLTIP": "Công cụ chú giải clipboard HTML",
       "KEYBOARD_SHORTCUT": "Phím tắt",
+      "OCR": "Nhận dạng văn bản trong hình ảnh",
+      "OCR_INFO": "Trích xuất văn bản từ hình ảnh đã sao chép để có thể tìm kiếm",
       "PASTE_ON_SELECT": "Dán khi chọn",
       "PASTE_ON_SELECT_INFO": "Dán mục vào cửa sổ được lấy nét trước đó. Cửa sổ dòng lệnh có thể cần chế độ gõ.",
       "START_CLIPPY_ON_STARTUP": "Khởi động Clippy khi khởi động hệ thống",

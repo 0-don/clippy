@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Efecto de vidrio",
       "HTML_CLIPBOARD_TOOLTIP": "Información sobre herramientas del portapapeles HTML",
       "KEYBOARD_SHORTCUT": "Atajo de teclado",
+      "OCR": "Reconocimiento de texto en imágenes",
+      "OCR_INFO": "Extrae el texto de las imágenes copiadas para poder buscarlas",
       "PASTE_ON_SELECT": "Pegar al seleccionar",
       "PASTE_ON_SELECT_INFO": "Pega la entrada en la ventana enfocada anteriormente. Puede que las terminales necesiten el modo de escritura.",
       "START_CLIPPY_ON_STARTUP": "Iniciar Clippy al iniciar el sistema",

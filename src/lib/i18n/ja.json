@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "ガラス効果",
       "HTML_CLIPBOARD_TOOLTIP": "HTML クリップボード ツールチップ",
       "KEYBOARD_SHORTCUT": "キーボードショートカット",
+      "OCR": "画像の文字認識",
+      "OCR_INFO": "コピーした画像からテキストを抽出し、検索できるようにします",
       "PASTE_ON_SELECT": "選択時に貼り付け",
       "PASTE_ON_SELECT_INFO": "直前にフォーカスされていたウィンドウに項目を貼り付けます。ターミナルでは入力モードが必要な場合があります。",
       "START_CLIPPY_ON_STARTUP": "システム起動時にClippyを起動する",

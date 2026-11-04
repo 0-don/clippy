@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Cam efekti",
       "HTML_CLIPBOARD_TOOLTIP": "HTML panosu araç ipucu",
       "KEYBOARD_SHORTCUT": "Klavye kısayolu",
+      "OCR": "Görsellerde metin tanıma",
+      "OCR_INFO": "Kopyalanan görsellerdeki metni çıkararak aranabilir hale getirir",
       "PASTE_ON_SELECT": "Seçildiğinde yapıştır",
       "PASTE_ON_SELECT_INFO": "Girdiyi daha önce odaklanmış pencereye yapıştırır. Terminaller yazma modu gerektirebilir.",
       "START_CLIPPY_ON_STARTUP": "Sistem başlangıcında Clippy'yi başlatın",

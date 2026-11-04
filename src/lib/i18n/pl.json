@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Efekt szkła",
       "HTML_CLIPBOARD_TOOLTIP": "Podpowiedź schowka HTML",
       "KEYBOARD_SHORTCUT": "Skrót klawiaturowy",
+      "OCR": "Rozpoznawanie tekstu na obrazach",
+      "OCR_INFO": "Wyodrębnia tekst z kopiowanych obrazów, aby można je było wyszukiwać",
       "PASTE_ON_SELECT": "Wklej przy wyborze",
       "PASTE_ON_SELECT_INFO": "Wkleja wpis do poprzednio aktywnego okna. Terminale mogą wymagać trybu pisania.",
       "START_CLIPPY_ON_STARTUP": "Uruchom Clippy przy starcie systemu",

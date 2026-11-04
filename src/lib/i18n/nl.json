@@ -182,6 +182,8 @@
       "GLASS_EFFECT": "Glaseffect",
       "HTML_CLIPBOARD_TOOLTIP": "HTML-klembord-tooltip",
       "KEYBOARD_SHORTCUT": "Sneltoets",
+      "OCR": "Tekstherkenning in afbeeldingen",
+      "OCR_INFO": "Haalt tekst uit gekopieerde afbeeldingen zodat je ze kunt doorzoeken",
       "PASTE_ON_SELECT": "Plakken bij selecteren",
       "PASTE_ON_SELECT_INFO": "Plakt het item in het eerder actieve venster. Terminals hebben mogelijk de typmodus nodig.",
       "START_CLIPPY_ON_STARTUP": "Start Clippy bij het opstarten van het systeem",
