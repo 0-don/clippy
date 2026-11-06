@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Konumu değiştir",
       "CONFIG_LOCATION": "Yapılandırma konumu",
       "DATABASE_LOCATION": "Veritabanı konumu",
+      "DEVICES": "Cihazlar",
       "DISCONNECT": "Bağlantıyı kes",
+      "LAST_SEEN": "son görülme {{time}}",
       "OPEN": "Açık",
       "RECONNECT": "Yeniden bağlan",
       "RESET_LOCATION": "Konumu sıfırla",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Son senkronizasyon: {{time}}",
       "SYNC": "Senkronizasyon",
       "SYNC_LIMIT": "Kaç panonun senkronize edilmesi gerekiyor?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et",
+      "THIS_DEVICE": "bu cihaz"
     },
     "COMMANDS": {
       "ADD": "Komut ekle",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Çıktıyı yok say",
       "OUTPUT_PASTE": "Çıktıyı yapıştır",
       "REMOVE": "Kaldır",
+      "RUN_ON_ALL": "Tüm cihazlarda çalıştır",
+      "RUN_ON_LOCAL": "Bu cihazda çalıştır",
+      "RUN_ON_OTHERS": "Diğer cihazlarda çalıştır",
       "SCRIPT": "Betik",
       "TEST": "Test et",
       "TEST_OTHER_OS": "Başka bir sistemin betikleri yalnızca o sistemde test edilebilir",

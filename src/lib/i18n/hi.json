@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "स्थान बदलें",
       "CONFIG_LOCATION": "कॉन्फ़िगरेशन स्थान",
       "DATABASE_LOCATION": "डेटाबेस स्थान",
+      "DEVICES": "डिवाइस",
       "DISCONNECT": "डिस्कनेक्ट करें",
+      "LAST_SEEN": "अंतिम बार देखा गया {{time}}",
       "OPEN": "खुला",
       "RECONNECT": "फिर से कनेक्ट करें",
       "RESET_LOCATION": "स्थान रीसेट करें",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "पिछला सिंक: {{time}}",
       "SYNC": "साथ-साथ करना",
       "SYNC_LIMIT": "कितने क्लिपबोर्ड को सिंक किया जाना चाहिए?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें",
+      "THIS_DEVICE": "यह डिवाइस"
     },
     "COMMANDS": {
       "ADD": "कमांड जोड़ें",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "आउटपुट अनदेखा करें",
       "OUTPUT_PASTE": "आउटपुट पेस्ट करें",
       "REMOVE": "हटाएँ",
+      "RUN_ON_ALL": "सभी डिवाइस पर चलाएँ",
+      "RUN_ON_LOCAL": "इस डिवाइस पर चलाएँ",
+      "RUN_ON_OTHERS": "अन्य डिवाइस पर चलाएँ",
       "SCRIPT": "स्क्रिप्ट",
       "TEST": "टेस्ट करें",
       "TEST_OTHER_OS": "दूसरे सिस्टम की स्क्रिप्ट केवल उसी सिस्टम पर टेस्ट की जा सकती है",

@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Cambiar ubicación",
       "CONFIG_LOCATION": "Ubicación de configuración",
       "DATABASE_LOCATION": "Ubicación de la base de datos",
+      "DEVICES": "Dispositivos",
       "DISCONNECT": "Desconectar",
+      "LAST_SEEN": "visto por última vez {{time}}",
       "OPEN": "Abierto",
       "RECONNECT": "Reconectar",
       "RESET_LOCATION": "Restablecer ubicación",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Última sincronización: {{time}}",
       "SYNC": "Sincronizar",
       "SYNC_LIMIT": "¿Cuántos portapapeles se deben sincronizar?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles",
+      "THIS_DEVICE": "este dispositivo"
     },
     "COMMANDS": {
       "ADD": "Añadir comando",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ignorar salida",
       "OUTPUT_PASTE": "Pegar salida",
       "REMOVE": "Eliminar",
+      "RUN_ON_ALL": "Ejecutar en todos los dispositivos",
+      "RUN_ON_LOCAL": "Ejecutar en este dispositivo",
+      "RUN_ON_OTHERS": "Ejecutar en otros dispositivos",
       "SCRIPT": "Script",
       "TEST": "Probar",
       "TEST_OTHER_OS": "Los scripts de otro sistema solo se pueden probar allí",

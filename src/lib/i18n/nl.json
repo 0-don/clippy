@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Locatie wijzigen",
       "CONFIG_LOCATION": "Configuratielocatie",
       "DATABASE_LOCATION": "Locatie van de database",
+      "DEVICES": "Apparaten",
       "DISCONNECT": "Ontkoppelen",
+      "LAST_SEEN": "laatst gezien {{time}}",
       "OPEN": "Open",
       "RECONNECT": "Opnieuw verbinden",
       "RESET_LOCATION": "Locatie resetten",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Laatst gesynchroniseerd: {{time}}",
       "SYNC": "Synchroniseren",
       "SYNC_LIMIT": "Hoeveel klemborden moeten er worden gesynchroniseerd?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren",
+      "THIS_DEVICE": "dit apparaat"
     },
     "COMMANDS": {
       "ADD": "Opdracht toevoegen",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Uitvoer negeren",
       "OUTPUT_PASTE": "Uitvoer plakken",
       "REMOVE": "Verwijderen",
+      "RUN_ON_ALL": "Uitvoeren op alle apparaten",
+      "RUN_ON_LOCAL": "Uitvoeren op dit apparaat",
+      "RUN_ON_OTHERS": "Uitvoeren op andere apparaten",
       "SCRIPT": "Script",
       "TEST": "Testen",
       "TEST_OTHER_OS": "Scripts voor een ander systeem kunnen alleen daar getest worden",

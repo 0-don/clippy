@@ -176,7 +176,10 @@ pub async fn sync_disconnect() -> Result<(), CommandError> {
     update_settings_synchronize_db(false).await?;
 
     SYNC_PROVIDER_GENERATION.fetch_add(1, Ordering::SeqCst);
-    SYNC_PROVIDER.lock().await.take();
+    if let Some(provider) = SYNC_PROVIDER.lock().await.take() {
+        provider.remove_device(&super::p2p::device_id()).await;
+    }
+    super::p2p::set_devices(Vec::new());
 
     let token_path = std::path::Path::new(&get_data_path().config_path).join(TOKEN_NAME);
     if token_path.exists() {

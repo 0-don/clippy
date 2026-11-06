@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "เปลี่ยนตำแหน่ง",
       "CONFIG_LOCATION": "กำหนดค่าตำแหน่ง",
       "DATABASE_LOCATION": "ตำแหน่งที่ตั้งฐานข้อมูล",
+      "DEVICES": "อุปกรณ์",
       "DISCONNECT": "ยกเลิกการเชื่อมต่อ",
+      "LAST_SEEN": "เห็นล่าสุด {{time}}",
       "OPEN": "เปิด",
       "RECONNECT": "เชื่อมต่อใหม่",
       "RESET_LOCATION": "รีเซ็ตตำแหน่ง",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "ซิงค์ล่าสุด: {{time}}",
       "SYNC": "การซิงค์",
       "SYNC_LIMIT": "จะต้องซิงค์คลิปบอร์ดกี่อัน?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด",
+      "THIS_DEVICE": "อุปกรณ์นี้"
     },
     "COMMANDS": {
       "ADD": "เพิ่มคำสั่ง",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "ละเว้นผลลัพธ์",
       "OUTPUT_PASTE": "วางผลลัพธ์",
       "REMOVE": "ลบ",
+      "RUN_ON_ALL": "เรียกใช้บนทุกอุปกรณ์",
+      "RUN_ON_LOCAL": "เรียกใช้บนอุปกรณ์นี้",
+      "RUN_ON_OTHERS": "เรียกใช้บนอุปกรณ์อื่น",
       "SCRIPT": "สคริปต์",
       "TEST": "ทดสอบ",
       "TEST_OTHER_OS": "สคริปต์ของระบบอื่นทดสอบได้เฉพาะบนระบบนั้น",

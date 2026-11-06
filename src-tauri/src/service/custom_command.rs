@@ -1,7 +1,10 @@
-use super::{keyboard::paste_into_active_window, settings::get_global_settings};
+use super::{
+    keyboard::paste_into_active_window, p2p::send_command_to_others,
+    settings::get_global_settings,
+};
 use crate::{prelude::*, tao::global::get_app};
 use common::types::{
-    enums::CommandOutput,
+    enums::{CommandOutput, CommandTarget},
     types::{CustomCommand, COMMAND_EVENT_PREFIX},
 };
 use std::{path::Path, process::Stdio, time::Duration};
@@ -26,14 +29,50 @@ pub fn find_command(event: &str) -> Option<CustomCommand> {
 }
 
 pub async fn run_command_hotkey(command: CustomCommand) {
-    match run_command(&command).await {
-        Ok(stdout) => apply_output(&command, &stdout).await,
+    let target = CommandTarget::from_setting(&command.target);
+    if target != CommandTarget::Local {
+        let text = read_clipboard_text();
+        tauri::async_runtime::spawn(send_command_to_others(command.id.clone(), text));
+    }
+    if target != CommandTarget::Others {
+        run_and_apply(&command, read_clipboard_text()).await;
+    }
+}
+
+/// Runs this device's copy of a command another device triggered, with that device's
+/// clipboard text. Only the id travels, so a peer can never supply the script.
+pub async fn run_remote_command(command_id: String, text: String) {
+    let Some(command) = CustomCommand::from_json_value(&get_global_settings().commands)
+        .into_iter()
+        .find(|command| command.id == command_id && command.enabled)
+    else {
+        printlog!("p2p: no enabled command {}", command_id);
+        return;
+    };
+    printlog!("p2p: running remote command {}", command.name);
+    run_and_apply(&command, text).await;
+}
+
+async fn run_and_apply(command: &CustomCommand, input: String) {
+    match run_command_with_input(command, input).await {
+        Ok(stdout) => apply_output(command, &stdout).await,
         Err(error) => notify_failure(&command.name, &error),
     }
 }
 
+fn read_clipboard_text() -> String {
+    get_app()
+        .state::<Clipboard>()
+        .read_text()
+        .unwrap_or_default()
+}
+
 /// Runs the script for this OS with the clipboard text on stdin and in `CLIPPY_TEXT`.
 pub async fn run_command(command: &CustomCommand) -> Result<String, String> {
+    run_command_with_input(command, read_clipboard_text()).await
+}
+
+async fn run_command_with_input(command: &CustomCommand, input: String) -> Result<String, String> {
     let script = command.scripts.current();
     let (program, args, extension) = resolve_interpreter(&script.interpreter);
 
@@ -51,10 +90,6 @@ pub async fn run_command(command: &CustomCommand) -> Result<String, String> {
         .await
         .map_err(|e| e.to_string())?;
 
-    let input = get_app()
-        .state::<Clipboard>()
-        .read_text()
-        .unwrap_or_default();
     let result = execute(&program, &args, &path, input).await;
 
     let _ = tokio::fs::remove_file(&path).await;

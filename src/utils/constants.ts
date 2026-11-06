@@ -54,6 +54,7 @@ export type Language = (typeof LANGUAGES)[number];
 export type ClippyPosition = (typeof CLIPPY_POSITIONS)[number];
 export type PasteOnSelect = (typeof PASTE_ON_SELECT_MODES)[number];
 export type CommandOutput = (typeof COMMAND_OUTPUTS)[number];
+export type CommandTarget = (typeof COMMAND_TARGETS)[number];
 export type CommandOs = (typeof COMMAND_OS)[number];
 export type GlobalShortcutKeys = (typeof GLOBAL_SHORTCUT_KEYS)[number];
 
@@ -82,6 +83,8 @@ export const LANGUAGES = [
 export const PASTE_ON_SELECT_MODES = ["off", "paste", "type"] as const;
 
 export const COMMAND_OUTPUTS = ["ignore", "copy", "paste"] as const;
+
+export const COMMAND_TARGETS = ["local", "all", "others"] as const;
 
 // Values of std::env::consts::OS, which is what the backend matches scripts on.
 export const COMMAND_OS = ["linux", "windows", "macos"] as const;

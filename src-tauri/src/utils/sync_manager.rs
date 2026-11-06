@@ -5,10 +5,29 @@ use crate::service::{
     clipboard::{get_clipboard_uuids_db, get_latest_syncable_cliboards_db, upsert_clipboard_dto},
     sync::{get_sync_provider, get_sync_status, update_sync_status},
 };
-use common::types::sync::SyncState;
+use crate::service::p2p;
+use common::types::sync::{SyncProvider, SyncState};
+use std::sync::atomic::{AtomicI64, Ordering};
 use sea_orm::prelude::Uuid;
 use std::time::Duration;
 use tokio::{task::JoinHandle, time};
+
+/// Re-published this often so other devices can show when it was last online.
+const DEVICE_PUBLISH_INTERVAL_SECS: i64 = 300;
+static LAST_DEVICE_PUBLISH: AtomicI64 = AtomicI64::new(0);
+
+async fn refresh_devices(provider: &dyn SyncProvider) {
+    let now = chrono::Utc::now().timestamp();
+    if now - LAST_DEVICE_PUBLISH.load(Ordering::Relaxed) >= DEVICE_PUBLISH_INTERVAL_SECS {
+        match provider.upsert_device(&p2p::this_device()).await {
+            Ok(()) => LAST_DEVICE_PUBLISH.store(now, Ordering::Relaxed),
+            Err(e) => printlog!("p2p: failed to publish device: {:?}", e),
+        }
+    }
+    if let Ok(devices) = provider.list_devices().await {
+        p2p::set_devices(devices);
+    }
+}
 
 pub struct SyncManager {
     job_handle: Option<JoinHandle<()>>,
@@ -34,6 +53,8 @@ impl SyncManager {
             let email = provider.account_email().await;
             update_sync_status(|status| status.email = email);
         }
+
+        refresh_devices(provider.as_ref()).await;
 
         {
             let settings = provider.get_settings().await?;

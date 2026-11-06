@@ -1,5 +1,6 @@
 use crate::{
     service::{
+        p2p,
         settings::{get_global_settings, init_settings_window, set_global_settings},
         sync::{
             get_sync_provider, get_sync_status, sync_disconnect as disconnect,
@@ -8,13 +9,30 @@ use crate::{
     },
     tao::connection::db,
 };
-use common::types::{sync::SyncStatus, types::CommandError};
+use common::types::{
+    sync::{DeviceInfo, SyncStatus},
+    types::CommandError,
+};
 use entity::settings::{self, ActiveModel};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
     Ok(sync_toggle().await?)
+}
+
+#[derive(serde::Serialize)]
+pub struct Devices {
+    this_device: String,
+    devices: Vec<DeviceInfo>,
+}
+
+#[tauri::command]
+pub fn get_devices() -> Devices {
+    Devices {
+        this_device: p2p::device_id(),
+        devices: p2p::devices(),
+    }
 }
 
 #[tauri::command]

@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Change location",
       "CONFIG_LOCATION": "Config location",
       "DATABASE_LOCATION": "Database location",
+      "DEVICES": "Devices",
       "DISCONNECT": "Disconnect",
+      "LAST_SEEN": "last seen {{time}}",
       "OPEN": "Open",
       "RECONNECT": "Reconnect",
       "RESET_LOCATION": "Reset location",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Last synced {{time}}",
       "SYNC": "Sync",
       "SYNC_LIMIT": "How many clipboards should be synced?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history",
+      "THIS_DEVICE": "this device"
     },
     "COMMANDS": {
       "ADD": "Add command",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ignore output",
       "OUTPUT_PASTE": "Paste output",
       "REMOVE": "Remove",
+      "RUN_ON_ALL": "Run on all devices",
+      "RUN_ON_LOCAL": "Run on this device",
+      "RUN_ON_OTHERS": "Run on other devices",
       "SCRIPT": "Script",
       "TEST": "Test",
       "TEST_OTHER_OS": "Scripts for another system can only be tested there",

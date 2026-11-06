@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Changer d'emplacement",
       "CONFIG_LOCATION": "Emplacement de la configuration",
       "DATABASE_LOCATION": "Emplacement de la base de données",
+      "DEVICES": "Appareils",
       "DISCONNECT": "Déconnecter",
+      "LAST_SEEN": "vu pour la dernière fois {{time}}",
       "OPEN": "Ouvrir",
       "RECONNECT": "Reconnecter",
       "RESET_LOCATION": "Réinitialiser l'emplacement",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Dernière synchronisation : {{time}}",
       "SYNC": "Synchroniser",
       "SYNC_LIMIT": "Combien de presse-papiers doivent être synchronisés ?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchroniser l'historique du presse-papiers",
+      "THIS_DEVICE": "cet appareil"
     },
     "COMMANDS": {
       "ADD": "Ajouter une commande",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ignorer la sortie",
       "OUTPUT_PASTE": "Coller la sortie",
       "REMOVE": "Supprimer",
+      "RUN_ON_ALL": "Exécuter sur tous les appareils",
+      "RUN_ON_LOCAL": "Exécuter sur cet appareil",
+      "RUN_ON_OTHERS": "Exécuter sur les autres appareils",
       "SCRIPT": "Script",
       "TEST": "Tester",
       "TEST_OTHER_OS": "Les scripts d'un autre système ne peuvent être testés que sur celui-ci",

@@ -7,12 +7,12 @@ use crate::{
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
-    constants::{BACKUP_FILE_PREFIX, BACKUP_SETTINGS_PREFIX, TOKEN_NAME},
+    constants::{BACKUP_FILE_PREFIX, BACKUP_SETTINGS_PREFIX, DEVICE_FILE_PREFIX, TOKEN_NAME},
     printlog,
     types::{
         enums::ListenEvent,
         orm_query::FullClipboardDto,
-        sync::{Clippy, GoogleDriveProvider, SyncProvider},
+        sync::{Clippy, DeviceInfo, GoogleDriveProvider, SyncProvider},
         types::{CommandError, Progress},
     },
 };
@@ -227,6 +227,22 @@ impl GoogleDriveProviderImpl {
         Ok(file_list.files.unwrap_or_default())
     }
 
+    async fn list_device_files(&self) -> Result<Vec<File>, Box<dyn std::error::Error>> {
+        let (_, file_list) = self
+            .0
+            .hub
+            .files()
+            .list()
+            .q(&format!("name contains '{}'", DEVICE_FILE_PREFIX))
+            .spaces("appDataFolder")
+            .param("fields", "files(id,name)")
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
+            .await?;
+
+        Ok(file_list.files.unwrap_or_default())
+    }
+
     async fn find_settings_file(&self) -> Result<Option<File>, Box<dyn std::error::Error>> {
         Ok(self.list_settings_files().await?.into_iter().next())
     }
@@ -234,6 +250,84 @@ impl GoogleDriveProviderImpl {
 
 #[async_trait::async_trait]
 impl SyncProvider for GoogleDriveProviderImpl {
+    async fn upsert_device(&self, device: &DeviceInfo) -> Result<(), Box<dyn std::error::Error>> {
+        let name = format!("{}{}.json", DEVICE_FILE_PREFIX, device.id);
+        let content = serde_json::to_string(device)?;
+        let existing = self
+            .list_device_files()
+            .await?
+            .into_iter()
+            .find(|file| file.name.as_deref() == Some(name.as_str()))
+            .and_then(|file| file.id);
+
+        match existing {
+            Some(id) => {
+                self.0
+                    .hub
+                    .files()
+                    .update(File::default(), &id)
+                    .add_scope(Scope::Appdata.as_ref())
+                    .upload(Cursor::new(content), "application/json".parse()?)
+                    .await?;
+            }
+            None => {
+                let file = File {
+                    name: Some(name),
+                    mime_type: Some("application/json".into()),
+                    parents: Some(vec!["appDataFolder".into()]),
+                    ..Default::default()
+                };
+                self.0
+                    .hub
+                    .files()
+                    .create(file)
+                    .add_scope(Scope::Appdata.as_ref())
+                    .upload(Cursor::new(content), "application/json".parse()?)
+                    .await?;
+            }
+        }
+        Ok(())
+    }
+
+    async fn list_devices(&self) -> Result<Vec<DeviceInfo>, Box<dyn std::error::Error>> {
+        let files = self.list_device_files().await?;
+        let mut devices = Vec::new();
+        for file in files {
+            let Some(id) = file.id else { continue };
+            let (mut response, _) = self
+                .0
+                .hub
+                .files()
+                .get(&id)
+                .param("alt", "media")
+                .add_scope(Scope::Appdata.as_ref())
+                .doit()
+                .await?;
+            let body = response.body_mut().collect().await?.to_bytes();
+            if let Ok(device) = serde_json::from_slice::<DeviceInfo>(&body) {
+                devices.push(device);
+            }
+        }
+        Ok(devices)
+    }
+
+    async fn remove_device(&self, id: &str) {
+        let name = format!("{}{}.json", DEVICE_FILE_PREFIX, id);
+        let Ok(files) = self.list_device_files().await else { return };
+        for file in files.into_iter().filter(|f| f.name.as_deref() == Some(name.as_str())) {
+            if let Some(file_id) = file.id {
+                self.0
+                    .hub
+                    .files()
+                    .delete(&file_id)
+                    .add_scope(Scope::Appdata.as_ref())
+                    .doit()
+                    .await
+                    .ok();
+            }
+        }
+    }
+
     async fn account_email(&self) -> Option<String> {
         let (_, about) = self
             .0

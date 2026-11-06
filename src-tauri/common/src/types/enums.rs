@@ -88,6 +88,28 @@ impl CommandOutput {
 
 #[derive(DeriveIden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "lowercase")]
+pub enum CommandTarget {
+    #[sea_orm(iden = "local")]
+    Local,
+    #[sea_orm(iden = "all")]
+    All,
+    #[sea_orm(iden = "others")]
+    Others,
+}
+
+impl CommandTarget {
+    /// Commands synced from clients without this field run only where pressed.
+    pub fn from_setting(value: &str) -> Self {
+        match value {
+            "all" => Self::All,
+            "others" => Self::Others,
+            _ => Self::Local,
+        }
+    }
+}
+
+#[derive(DeriveIden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "lowercase")]
 pub enum SyncProviderType {
     #[sea_orm(iden = "google_drive")]
     GoogleDrive,

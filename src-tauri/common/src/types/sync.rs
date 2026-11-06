@@ -34,9 +34,24 @@ pub struct SyncStatus {
     pub error: Option<String>,
 }
 
+/// One device signed in to the same sync account, published by the device itself.
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct DeviceInfo {
+    pub id: String,
+    pub name: String,
+    pub os: String,
+    pub last_seen: i64,
+}
+
 #[async_trait::async_trait]
 pub trait SyncProvider: Send + Sync {
     async fn account_email(&self) -> Option<String>;
+
+    async fn upsert_device(&self, device: &DeviceInfo) -> Result<(), Box<dyn std::error::Error>>;
+
+    async fn list_devices(&self) -> Result<Vec<DeviceInfo>, Box<dyn std::error::Error>>;
+
+    async fn remove_device(&self, id: &str);
 
     async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>>;
 

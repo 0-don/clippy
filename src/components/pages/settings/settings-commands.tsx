@@ -16,7 +16,9 @@ import { InvokeCommand } from "../../../types/tauri-invoke";
 import {
   COMMAND_OS,
   COMMAND_OUTPUTS,
+  COMMAND_TARGETS,
   CommandOs,
+  CommandTarget,
 } from "../../../utils/constants";
 import { Button } from "../../elements/button";
 import { Dropdown } from "../../elements/dropdown";
@@ -42,6 +44,12 @@ const OS_LABELS: Record<CommandOs, DictionaryKey> = {
   linux: "SETTINGS.COMMANDS.LINUX",
   windows: "SETTINGS.COMMANDS.WINDOWS",
   macos: "SETTINGS.COMMANDS.MACOS",
+};
+
+const TARGET_LABELS: Record<CommandTarget, DictionaryKey> = {
+  local: "SETTINGS.COMMANDS.RUN_ON_LOCAL",
+  all: "SETTINGS.COMMANDS.RUN_ON_ALL",
+  others: "SETTINGS.COMMANDS.RUN_ON_OTHERS",
 };
 
 const OUTPUT_LABELS: Record<CustomCommand["output"], DictionaryKey> = {
@@ -98,6 +106,7 @@ export const SettingsCommands: Component = () => {
         super_key: false,
         key: "none",
         output: "ignore",
+        target: "local",
         scripts: {
           linux: emptyScript(),
           windows: emptyScript(),
@@ -219,20 +228,37 @@ const CommandEditor: Component<CommandEditorProps> = (props) => {
           onRecord={(hotkey) => update(hotkey)}
           onClear={() => update({ key: "none" })}
         />
-        <Dropdown
-          className="ml-auto"
-          items={COMMAND_OUTPUTS.map((output) => ({
-            value: output,
-            label: OUTPUT_LABELS[output],
-          }))}
-          value={props.command().output}
-          onChange={(output) =>
-            update({
-              output:
-                COMMAND_OUTPUTS.find((mode) => mode === output) ?? "ignore",
-            })
-          }
-        />
+        <div class="ml-auto flex flex-wrap justify-end gap-2.5">
+          <Dropdown
+            items={COMMAND_TARGETS.map((target) => ({
+              value: target,
+              label: TARGET_LABELS[target],
+            }))}
+            value={
+              COMMAND_TARGETS.find((target) => target === props.command().target) ??
+              "local"
+            }
+            onChange={(target) =>
+              update({
+                target:
+                  COMMAND_TARGETS.find((mode) => mode === target) ?? "local",
+              })
+            }
+          />
+          <Dropdown
+            items={COMMAND_OUTPUTS.map((output) => ({
+              value: output,
+              label: OUTPUT_LABELS[output],
+            }))}
+            value={props.command().output}
+            onChange={(output) =>
+              update({
+                output:
+                  COMMAND_OUTPUTS.find((mode) => mode === output) ?? "ignore",
+              })
+            }
+          />
+        </div>
       </div>
       <Show when={hotkeyInUse(props.command())}>
         <p class="text-sm text-red-500">

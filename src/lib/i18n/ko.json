@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "위치 변경",
       "CONFIG_LOCATION": "구성 위치",
       "DATABASE_LOCATION": "데이터베이스 위치",
+      "DEVICES": "기기",
       "DISCONNECT": "연결 해제",
+      "LAST_SEEN": "마지막 확인: {{time}}",
       "OPEN": "열려 있는",
       "RECONNECT": "다시 연결",
       "RESET_LOCATION": "위치 재설정",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "마지막 동기화: {{time}}",
       "SYNC": "동조",
       "SYNC_LIMIT": "몇 개의 클립보드를 동기화해야 하나요?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화",
+      "THIS_DEVICE": "이 기기"
     },
     "COMMANDS": {
       "ADD": "명령 추가",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "출력 무시",
       "OUTPUT_PASTE": "출력 붙여넣기",
       "REMOVE": "삭제",
+      "RUN_ON_ALL": "모든 기기에서 실행",
+      "RUN_ON_LOCAL": "이 기기에서 실행",
+      "RUN_ON_OTHERS": "다른 기기에서 실행",
       "SCRIPT": "스크립트",
       "TEST": "테스트",
       "TEST_OTHER_OS": "다른 운영 체제용 스크립트는 해당 운영 체제에서만 테스트할 수 있습니다",

@@ -133,6 +133,7 @@ pub fn run() {
             sync::sync_authenticate_toggle,
             sync::sync_limit_change,
             sync::sync_status,
+            sync::get_devices,
             sync::sync_disconnect,
             sync::sync_reconnect,
             //

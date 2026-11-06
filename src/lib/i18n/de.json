@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Standort ändern",
       "CONFIG_LOCATION": "Konfigurationsort",
       "DATABASE_LOCATION": "Datenbankstandort",
+      "DEVICES": "Geräte",
       "DISCONNECT": "Trennen",
+      "LAST_SEEN": "zuletzt gesehen {{time}}",
       "OPEN": "Offen",
       "RECONNECT": "Neu verbinden",
       "RESET_LOCATION": "Standort zurücksetzen",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Zuletzt synchronisiert: {{time}}",
       "SYNC": "Synchronisieren",
       "SYNC_LIMIT": "Wie viele Zwischenablagen sollen synchronisiert werden?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren",
+      "THIS_DEVICE": "dieses Gerät"
     },
     "COMMANDS": {
       "ADD": "Befehl hinzufügen",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ausgabe ignorieren",
       "OUTPUT_PASTE": "Ausgabe einfügen",
       "REMOVE": "Entfernen",
+      "RUN_ON_ALL": "Auf allen Geräten ausführen",
+      "RUN_ON_LOCAL": "Auf diesem Gerät ausführen",
+      "RUN_ON_OTHERS": "Auf anderen Geräten ausführen",
       "SCRIPT": "Skript",
       "TEST": "Testen",
       "TEST_OTHER_OS": "Skripte für ein anderes System können nur dort getestet werden",

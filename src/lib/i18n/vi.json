@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Thay đổi vị trí",
       "CONFIG_LOCATION": "Vị trí cấu hình",
       "DATABASE_LOCATION": "Vị trí cơ sở dữ liệu",
+      "DEVICES": "Thiết bị",
       "DISCONNECT": "Ngắt kết nối",
+      "LAST_SEEN": "hoạt động lần cuối {{time}}",
       "OPEN": "Mở",
       "RECONNECT": "Kết nối lại",
       "RESET_LOCATION": "Đặt lại vị trí",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Đồng bộ lần cuối: {{time}}",
       "SYNC": "Đồng bộ",
       "SYNC_LIMIT": "Cần đồng bộ bao nhiêu bảng tạm?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard",
+      "THIS_DEVICE": "thiết bị này"
     },
     "COMMANDS": {
       "ADD": "Thêm lệnh",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Bỏ qua kết quả",
       "OUTPUT_PASTE": "Dán kết quả",
       "REMOVE": "Xóa",
+      "RUN_ON_ALL": "Chạy trên tất cả thiết bị",
+      "RUN_ON_LOCAL": "Chạy trên thiết bị này",
+      "RUN_ON_OTHERS": "Chạy trên các thiết bị khác",
       "SCRIPT": "Tập lệnh",
       "TEST": "Thử",
       "TEST_OTHER_OS": "Tập lệnh cho hệ điều hành khác chỉ có thể thử trên hệ điều hành đó",

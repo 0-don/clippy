@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Cambia posizione",
       "CONFIG_LOCATION": "Percorso configurazione",
       "DATABASE_LOCATION": "Percorso database",
+      "DEVICES": "Dispositivi",
       "DISCONNECT": "Disconnetti",
+      "LAST_SEEN": "visto l'ultima volta {{time}}",
       "OPEN": "Apri",
       "RECONNECT": "Riconnetti",
       "RESET_LOCATION": "Reimposta posizione",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Ultima sincronizzazione: {{time}}",
       "SYNC": "Sincronizza",
       "SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti",
+      "THIS_DEVICE": "questo dispositivo"
     },
     "COMMANDS": {
       "ADD": "Aggiungi comando",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ignora output",
       "OUTPUT_PASTE": "Incolla output",
       "REMOVE": "Rimuovi",
+      "RUN_ON_ALL": "Esegui su tutti i dispositivi",
+      "RUN_ON_LOCAL": "Esegui su questo dispositivo",
+      "RUN_ON_OTHERS": "Esegui sugli altri dispositivi",
       "SCRIPT": "Script",
       "TEST": "Prova",
       "TEST_OTHER_OS": "Gli script di un altro sistema si possono provare solo su quel sistema",

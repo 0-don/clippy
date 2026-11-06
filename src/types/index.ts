@@ -4,6 +4,7 @@ import {
   ClippyPosition,
   CommandOs,
   CommandOutput,
+  CommandTarget,
   Language,
   PasteOnSelect,
   SettingsTabName,
@@ -192,6 +193,8 @@ export type CustomCommand = {
   super_key: boolean;
   key: string;
   output: CommandOutput;
+  // Empty on commands synced from versions without remote run.
+  target: CommandTarget | "";
   scripts: CommandScripts;
 };
 
@@ -213,4 +216,16 @@ export type SyncStatus = {
   email: string | null;
   last_synced_at: number | null;
   error: string | null;
+};
+
+export type DeviceInfo = {
+  id: string;
+  name: string;
+  os: string;
+  last_seen: number;
+};
+
+export type Devices = {
+  this_device: string;
+  devices: DeviceInfo[];
 };

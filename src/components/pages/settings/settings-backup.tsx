@@ -5,6 +5,7 @@ import { SiSqlite } from "solid-icons/si";
 import {
   TbOutlineCloud,
   TbOutlineDatabaseStar,
+  TbOutlineDevices,
   TbOutlineExchange,
   TbOutlineMail,
   TbOutlineNumbers,
@@ -15,6 +16,7 @@ import {
   Component,
   createResource,
   createSignal,
+  For,
   onCleanup,
   onMount,
   Show,
@@ -23,7 +25,7 @@ import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation, HotkeyEvent } from "../../../types/enums";
-import { SyncStatus } from "../../../types";
+import { Devices, SyncStatus } from "../../../types";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { ListenEvent } from "../../../types/tauri-listen";
 import { MAX_SYNC_LIMIT } from "../../../utils/constants";
@@ -45,28 +47,39 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
     invokeCommand(InvokeCommand.GetConfigPath),
   );
   const [syncStatus, setSyncStatus] = createSignal<SyncStatus>();
+  const [devices, setDevices] = createSignal<Devices>();
+  const loadDevices = async () =>
+    setDevices(await invokeCommand(InvokeCommand.GetDevices));
   const [now, setNow] = createSignal(Date.now());
 
   onMount(async () => {
     setSyncStatus(await invokeCommand(InvokeCommand.SyncStatus));
+    await loadDevices();
   });
-  const unlisten = listenEvent(ListenEvent.SyncStatus, setSyncStatus);
+  const unlisten = listenEvent(ListenEvent.SyncStatus, (status) => {
+    setSyncStatus(status);
+    void loadDevices();
+  });
   const clock = setInterval(() => setNow(Date.now()), 30_000);
   onCleanup(() => {
     clearInterval(clock);
     void unlisten.then((stop) => stop());
   });
 
+  const fromNow = (unixSeconds: number) => {
+    now();
+    return dayjs
+      .unix(unixSeconds)
+      .locale(SettingsStore.settings()?.language || "en")
+      .fromNow();
+  };
+
   const statusText = () => {
     const status = syncStatus();
     switch (status?.state) {
       case "synced":
-        now();
         return t("SETTINGS.BACKUP.STATUS_SYNCED", {
-          time: dayjs
-            .unix(status.last_synced_at ?? 0)
-            .locale(SettingsStore.settings()?.language || "en")
-            .fromNow(),
+          time: fromNow(status.last_synced_at ?? 0),
         });
       case "auth_error":
         return t("SETTINGS.BACKUP.STATUS_AUTH_ERROR");
@@ -150,6 +163,32 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               />
             </div>
           </div>
+
+          <Show when={devices()?.devices.length}>
+            <div class="flex flex-col gap-1.5 px-5 pb-5">
+              <div class="flex items-center space-x-2">
+                <TbOutlineDevices />
+                <h6 class="text-sm">{t("SETTINGS.BACKUP.DEVICES")}</h6>
+              </div>
+              <For each={devices()!.devices}>
+                {(device) => (
+                  <div class="ml-6 flex items-center justify-between gap-2 text-xs">
+                    <span class="truncate">
+                      {device.name}{" "}
+                      <span class="text-muted-foreground">({device.os})</span>
+                    </span>
+                    <span class="shrink-0 text-muted-foreground">
+                      {device.id === devices()!.this_device
+                        ? t("SETTINGS.BACKUP.THIS_DEVICE")
+                        : t("SETTINGS.BACKUP.LAST_SEEN", {
+                            time: fromNow(device.last_seen),
+                          })}
+                    </span>
+                  </div>
+                )}
+              </For>
+            </div>
+          </Show>
 
           <div class="flex items-center justify-between space-x-2 px-5 pb-5">
             <div class="flex items-center space-x-2 truncate">

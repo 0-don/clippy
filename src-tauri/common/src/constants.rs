@@ -17,6 +17,8 @@ pub static ENCRYPTION_MAGIC_STRING: &str = "clippy";
 
 pub static BACKUP_SETTINGS_PREFIX: &str = "settings";
 pub static BACKUP_FILE_PREFIX: &str = "clippy";
+pub static DEVICE_FILE_PREFIX: &str = "device_";
+pub static DEVICE_KEY_NAME: &str = "device.key";
 pub static BACKDUP_DATE_FORMAT: &str = "%Y%m%d%H%M%S";
 
 pub static MAIN_WINDOW_X: i32 = 375;

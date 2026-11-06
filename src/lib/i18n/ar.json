@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "تغيير الموقع",
       "CONFIG_LOCATION": "موقع التكوين",
       "DATABASE_LOCATION": "موقع قاعدة البيانات",
+      "DEVICES": "الأجهزة",
       "DISCONNECT": "قطع الاتصال",
+      "LAST_SEEN": "آخر ظهور {{time}}",
       "OPEN": "يفتح",
       "RECONNECT": "إعادة الاتصال",
       "RESET_LOCATION": "إعادة تعيين الموقع",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "آخر مزامنة: {{time}}",
       "SYNC": "المزامنة",
       "SYNC_LIMIT": "كم عدد الحافظات التي يجب مزامنتها؟",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة",
+      "THIS_DEVICE": "هذا الجهاز"
     },
     "COMMANDS": {
       "ADD": "إضافة أمر",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "تجاهل المخرجات",
       "OUTPUT_PASTE": "لصق المخرجات",
       "REMOVE": "إزالة",
+      "RUN_ON_ALL": "تشغيل على كل الأجهزة",
+      "RUN_ON_LOCAL": "تشغيل على هذا الجهاز",
+      "RUN_ON_OTHERS": "تشغيل على الأجهزة الأخرى",
       "SCRIPT": "السكربت",
       "TEST": "اختبار",
       "TEST_OTHER_OS": "لا يمكن اختبار سكربتات نظام آخر إلا على ذلك النظام",

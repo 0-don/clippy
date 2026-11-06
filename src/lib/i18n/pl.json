@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Zmień lokalizację",
       "CONFIG_LOCATION": "Lokalizacja konfiguracji",
       "DATABASE_LOCATION": "Lokalizacja bazy danych",
+      "DEVICES": "Urządzenia",
       "DISCONNECT": "Rozłącz",
+      "LAST_SEEN": "ostatnio widziane {{time}}",
       "OPEN": "Otwarty",
       "RECONNECT": "Połącz ponownie",
       "RESET_LOCATION": "Zresetuj lokalizację",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Ostatnia synchronizacja: {{time}}",
       "SYNC": "Synchronizacja",
       "SYNC_LIMIT": "Ile schowków powinno być synchronizowanych?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka",
+      "THIS_DEVICE": "to urządzenie"
     },
     "COMMANDS": {
       "ADD": "Dodaj polecenie",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ignoruj wynik",
       "OUTPUT_PASTE": "Wklej wynik",
       "REMOVE": "Usuń",
+      "RUN_ON_ALL": "Uruchom na wszystkich urządzeniach",
+      "RUN_ON_LOCAL": "Uruchom na tym urządzeniu",
+      "RUN_ON_OTHERS": "Uruchom na innych urządzeniach",
       "SCRIPT": "Skrypt",
       "TEST": "Testuj",
       "TEST_OTHER_OS": "Skrypty dla innego systemu można przetestować tylko w tym systemie",

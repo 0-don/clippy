@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "更改位置",
       "CONFIG_LOCATION": "配置位置",
       "DATABASE_LOCATION": "数据库位置",
+      "DEVICES": "设备",
       "DISCONNECT": "断开连接",
+      "LAST_SEEN": "上次在线：{{time}}",
       "OPEN": "打开",
       "RECONNECT": "重新连接",
       "RESET_LOCATION": "重置位置",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "上次同步：{{time}}",
       "SYNC": "同步",
       "SYNC_LIMIT": "应该同步多少个剪贴板？",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录",
+      "THIS_DEVICE": "此设备"
     },
     "COMMANDS": {
       "ADD": "添加命令",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "忽略输出",
       "OUTPUT_PASTE": "粘贴输出",
       "REMOVE": "删除",
+      "RUN_ON_ALL": "在所有设备上运行",
+      "RUN_ON_LOCAL": "在此设备上运行",
+      "RUN_ON_OTHERS": "在其他设备上运行",
       "SCRIPT": "脚本",
       "TEST": "测试",
       "TEST_OTHER_OS": "针对其他系统的脚本只能在那里测试",

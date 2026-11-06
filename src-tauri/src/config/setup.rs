@@ -5,8 +5,8 @@ use crate::{
         window_events::setup_window_event_listener,
     },
     service::{
-        cipher::init_encryption_password_lock, settings::setup_settings, sync::setup_sync_interval,
-        window::setup_window,
+        cipher::init_encryption_password_lock, p2p::setup_p2p, settings::setup_settings,
+        sync::setup_sync_interval, window::setup_window,
     },
     tao::{config::setup_config, connection::init_db, tao_constants::setup_globals},
 };
@@ -32,6 +32,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'st
     setup_hotkey_listener();
     setup_window_event_listener();
     setup_sync_interval();
+    setup_p2p();
 
     init_encryption_password_lock();
 

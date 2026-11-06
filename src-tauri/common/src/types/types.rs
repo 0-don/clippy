@@ -163,6 +163,7 @@ pub struct CustomCommand {
     pub super_key: bool,
     pub key: String,
     pub output: String,
+    pub target: String,
     pub scripts: CommandScripts,
 }
 

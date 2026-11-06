@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "অবস্থান পরিবর্তন করুন",
       "CONFIG_LOCATION": "অবস্থান কনফিগার করুন",
       "DATABASE_LOCATION": "ডাটাবেস অবস্থান",
+      "DEVICES": "ডিভাইস",
       "DISCONNECT": "সংযোগ বিচ্ছিন্ন করুন",
+      "LAST_SEEN": "শেষ দেখা {{time}}",
       "OPEN": "খোলা",
       "RECONNECT": "আবার সংযোগ করুন",
       "RESET_LOCATION": "অবস্থান রিসেট করুন",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "শেষ সিঙ্ক: {{time}}",
       "SYNC": "সিঙ্ক",
       "SYNC_LIMIT": "কয়টি ক্লিপবোর্ড সিঙ্ক করা উচিত?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক্রোনাইজ করুন"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক্রোনাইজ করুন",
+      "THIS_DEVICE": "এই ডিভাইস"
     },
     "COMMANDS": {
       "ADD": "কমান্ড যোগ করুন",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "আউটপুট উপেক্ষা করুন",
       "OUTPUT_PASTE": "আউটপুট পেস্ট করুন",
       "REMOVE": "সরান",
+      "RUN_ON_ALL": "সব ডিভাইসে চালান",
+      "RUN_ON_LOCAL": "এই ডিভাইসে চালান",
+      "RUN_ON_OTHERS": "অন্য ডিভাইসে চালান",
       "SCRIPT": "স্ক্রিপ্ট",
       "TEST": "পরীক্ষা করুন",
       "TEST_OTHER_OS": "অন্য সিস্টেমের স্ক্রিপ্ট শুধু সেই সিস্টেমেই পরীক্ষা করা যায়",

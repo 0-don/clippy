@@ -140,7 +140,9 @@
       "CHANGE_LOCATION": "Alterar localização",
       "CONFIG_LOCATION": "Local de configuração",
       "DATABASE_LOCATION": "Localização da base de dados",
+      "DEVICES": "Dispositivos",
       "DISCONNECT": "Desligar",
+      "LAST_SEEN": "visto pela última vez {{time}}",
       "OPEN": "Abrir",
       "RECONNECT": "Voltar a ligar",
       "RESET_LOCATION": "Redefinir local",
@@ -150,7 +152,8 @@
       "STATUS_SYNCED": "Última sincronização: {{time}}",
       "SYNC": "Sincronizar",
       "SYNC_LIMIT": "Quantas áreas de transferência devem ser sincronizadas?",
-      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"
+      "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência",
+      "THIS_DEVICE": "este dispositivo"
     },
     "COMMANDS": {
       "ADD": "Adicionar comando",
@@ -165,6 +168,9 @@
       "OUTPUT_IGNORE": "Ignorar saída",
       "OUTPUT_PASTE": "Colar saída",
       "REMOVE": "Remover",
+      "RUN_ON_ALL": "Executar em todos os dispositivos",
+      "RUN_ON_LOCAL": "Executar neste dispositivo",
+      "RUN_ON_OTHERS": "Executar nos outros dispositivos",
       "SCRIPT": "Script",
       "TEST": "Testar",
       "TEST_OTHER_OS": "Scripts de outro sistema só podem ser testados nesse sistema",

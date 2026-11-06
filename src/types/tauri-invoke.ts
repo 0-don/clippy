@@ -5,6 +5,7 @@ import {
   CustomCommand,
   DatabaseInfo,
   DecryptEvent,
+  Devices,
   Hotkey,
   SearchEvent,
   Settings,
@@ -60,6 +61,7 @@ export enum InvokeCommand {
   SyncAuthenticateToggle = "sync_authenticate_toggle",
   SyncLimitChange = "sync_limit_change",
   SyncStatus = "sync_status",
+  GetDevices = "get_devices",
   SyncDisconnect = "sync_disconnect",
   SyncReconnect = "sync_reconnect",
 
@@ -215,6 +217,10 @@ export interface TauriInvokeCommands {
   [InvokeCommand.SyncStatus]: {
     args: undefined;
     return: SyncStatus;
+  };
+  [InvokeCommand.GetDevices]: {
+    args: undefined;
+    return: Devices;
   };
   [InvokeCommand.SyncDisconnect]: {
     args: undefined;
