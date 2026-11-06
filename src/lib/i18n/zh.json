@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "按下按键",
       "RECORD": "录制",
+      "RESET": "恢复默认值",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "账户",
       "CHANGE_LOCATION": "更改位置",
       "CONFIG_LOCATION": "配置位置",
       "DATABASE_LOCATION": "数据库位置",
+      "DISCONNECT": "断开连接",
       "OPEN": "打开",
+      "RECONNECT": "重新连接",
       "RESET_LOCATION": "重置位置",
+      "STATUS_AUTH_ERROR": "已退出 Google 云端硬盘，请重新连接以恢复同步",
+      "STATUS_CONNECTING": "正在连接",
+      "STATUS_ERROR": "同步失败",
+      "STATUS_SYNCED": "上次同步：{{time}}",
       "SYNC": "同步",
       "SYNC_LIMIT": "应该同步多少个剪贴板？",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "同步剪贴板历史记录"

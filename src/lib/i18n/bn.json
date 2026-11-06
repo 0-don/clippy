@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "কী চাপুন",
       "RECORD": "রেকর্ড করুন",
+      "RESET": "ডিফল্টে রিসেট করুন",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "অ্যাকাউন্ট",
       "CHANGE_LOCATION": "অবস্থান পরিবর্তন করুন",
       "CONFIG_LOCATION": "অবস্থান কনফিগার করুন",
       "DATABASE_LOCATION": "ডাটাবেস অবস্থান",
+      "DISCONNECT": "সংযোগ বিচ্ছিন্ন করুন",
       "OPEN": "খোলা",
+      "RECONNECT": "আবার সংযোগ করুন",
       "RESET_LOCATION": "অবস্থান রিসেট করুন",
+      "STATUS_AUTH_ERROR": "Google Drive থেকে সাইন আউট হয়ে গেছে, সিঙ্ক আবার শুরু করতে পুনরায় সংযোগ করুন",
+      "STATUS_CONNECTING": "সংযোগ হচ্ছে",
+      "STATUS_ERROR": "সিঙ্ক ব্যর্থ হয়েছে",
+      "STATUS_SYNCED": "শেষ সিঙ্ক: {{time}}",
       "SYNC": "সিঙ্ক",
       "SYNC_LIMIT": "কয়টি ক্লিপবোর্ড সিঙ্ক করা উচিত?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "ক্লিপবোর্ড ইতিহাস সিঙ্ক্রোনাইজ করুন"

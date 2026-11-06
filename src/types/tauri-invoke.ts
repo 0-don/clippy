@@ -8,6 +8,7 @@ import {
   Hotkey,
   SearchEvent,
   Settings,
+  SyncStatus,
   TextMatcher,
 } from ".";
 import { Channel } from "@tauri-apps/api/core";
@@ -34,6 +35,7 @@ export enum InvokeCommand {
   // Hotkey commands
   GetHotkeys = "get_hotkeys",
   UpdateHotkey = "update_hotkey",
+  ResetHotkey = "reset_hotkey",
   StopHotkeys = "stop_hotkeys",
   GetKeyboardLayout = "get_keyboard_layout",
 
@@ -57,6 +59,9 @@ export enum InvokeCommand {
   // Sync commands
   SyncAuthenticateToggle = "sync_authenticate_toggle",
   SyncLimitChange = "sync_limit_change",
+  SyncStatus = "sync_status",
+  SyncDisconnect = "sync_disconnect",
+  SyncReconnect = "sync_reconnect",
 
   // Cipher commands
   EnableEncryption = "enable_encryption",
@@ -128,6 +133,10 @@ export interface TauriInvokeCommands {
   [InvokeCommand.UpdateHotkey]: {
     args: { hotkey: Hotkey };
     return: boolean;
+  };
+  [InvokeCommand.ResetHotkey]: {
+    args: { hotkey: Hotkey };
+    return: Hotkey;
   };
   [InvokeCommand.StopHotkeys]: {
     args: undefined;
@@ -202,6 +211,18 @@ export interface TauriInvokeCommands {
   [InvokeCommand.SyncLimitChange]: {
     args: { syncLimit: number };
     return: Settings;
+  };
+  [InvokeCommand.SyncStatus]: {
+    args: undefined;
+    return: SyncStatus;
+  };
+  [InvokeCommand.SyncDisconnect]: {
+    args: undefined;
+    return: void;
+  };
+  [InvokeCommand.SyncReconnect]: {
+    args: undefined;
+    return: boolean;
   };
 
   // Cipher commands

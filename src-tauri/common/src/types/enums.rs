@@ -166,6 +166,8 @@ pub enum ListenEvent {
     Progress,
     #[sea_orm(iden = "password_lock")]
     PasswordLock,
+    #[sea_orm(iden = "sync_status")]
+    SyncStatus,
 }
 
 #[derive(DeriveIden, EnumIter, PartialEq, Eq, Hash, Serialize, Deserialize, Debug, Clone)]

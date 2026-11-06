@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Pulsa las teclas",
       "RECORD": "Grabar",
+      "RESET": "Restablecer valor predeterminado",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Cuenta",
       "CHANGE_LOCATION": "Cambiar ubicación",
       "CONFIG_LOCATION": "Ubicación de configuración",
       "DATABASE_LOCATION": "Ubicación de la base de datos",
+      "DISCONNECT": "Desconectar",
       "OPEN": "Abierto",
+      "RECONNECT": "Reconectar",
       "RESET_LOCATION": "Restablecer ubicación",
+      "STATUS_AUTH_ERROR": "Sesión de Google Drive cerrada, vuelve a conectar para reanudar la sincronización",
+      "STATUS_CONNECTING": "Conectando",
+      "STATUS_ERROR": "Error de sincronización",
+      "STATUS_SYNCED": "Última sincronización: {{time}}",
       "SYNC": "Sincronizar",
       "SYNC_LIMIT": "¿Cuántos portapapeles se deben sincronizar?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar el historial del portapapeles"

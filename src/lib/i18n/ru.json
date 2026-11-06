@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Нажмите клавиши",
       "RECORD": "Записать",
+      "RESET": "Сбросить по умолчанию",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Аккаунт",
       "CHANGE_LOCATION": "Изменить местоположение",
       "CONFIG_LOCATION": "Расположение конфигурации",
       "DATABASE_LOCATION": "Расположение базы данных",
+      "DISCONNECT": "Отключить",
       "OPEN": "Открыть",
+      "RECONNECT": "Переподключить",
       "RESET_LOCATION": "Сбросить местоположение",
+      "STATUS_AUTH_ERROR": "Выполнен выход из Google Диска, переподключитесь, чтобы возобновить синхронизацию",
+      "STATUS_CONNECTING": "Подключение",
+      "STATUS_ERROR": "Ошибка синхронизации",
+      "STATUS_SYNCED": "Последняя синхронизация: {{time}}",
       "SYNC": "Синхронизировать",
       "SYNC_LIMIT": "Сколько буферов обмена следует синхронизировать?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Синхронизировать историю буфера обмена"

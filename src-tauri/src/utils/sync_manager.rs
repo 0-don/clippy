@@ -3,8 +3,9 @@ use crate::service::clipboard::{delete_clipboards_db, new_clipboard_event};
 use crate::service::settings::update_settings_from_sync;
 use crate::service::{
     clipboard::{get_clipboard_uuids_db, get_latest_syncable_cliboards_db, upsert_clipboard_dto},
-    sync::get_sync_provider,
+    sync::{get_sync_provider, get_sync_status, update_sync_status},
 };
+use common::types::sync::SyncState;
 use sea_orm::prelude::Uuid;
 use std::time::Duration;
 use tokio::{task::JoinHandle, time};
@@ -22,9 +23,19 @@ impl SyncManager {
         }
     }
 
-    async fn sync_job() -> Result<(), Box<dyn std::error::Error>> {
+    /// Returns false when the provider is no longer signed in.
+    async fn sync_job() -> Result<bool, Box<dyn std::error::Error>> {
         let provider = get_sync_provider().await;
-        if provider.is_authenticated().await {
+        if !provider.is_authenticated().await {
+            return Ok(false);
+        }
+
+        if get_sync_status().email.is_none() {
+            let email = provider.account_email().await;
+            update_sync_status(|status| status.email = email);
+        }
+
+        {
             let settings = provider.get_settings().await?;
             update_settings_from_sync(settings).await?;
 
@@ -61,7 +72,7 @@ impl SyncManager {
             provider.cleanup_old_clipboards(&remote_clipboards).await?;
         }
 
-        Ok(())
+        Ok(true)
     }
 
     pub async fn start(&mut self) {
@@ -80,8 +91,24 @@ impl SyncManager {
         let handle = tokio::spawn(async move {
             loop {
                 // Run the sync job and wait for it to complete
-                if let Err(e) = Self::sync_job().await {
-                    printlog!("sync job failed: {:?}", e);
+                match Self::sync_job().await {
+                    Ok(true) => update_sync_status(|status| {
+                        status.state = SyncState::Synced;
+                        status.last_synced_at = Some(chrono::Utc::now().timestamp());
+                        status.error = None;
+                    }),
+                    Ok(false) => update_sync_status(|status| {
+                        status.state = SyncState::AuthError;
+                        status.error = None;
+                    }),
+                    Err(e) => {
+                        printlog!("sync job failed: {:?}", e);
+                        let error = e.to_string();
+                        update_sync_status(|status| {
+                            status.state = SyncState::Error;
+                            status.error = Some(error);
+                        });
+                    }
                 }
 
                 time::sleep(interval).await;

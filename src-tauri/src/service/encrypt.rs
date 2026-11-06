@@ -1,7 +1,7 @@
 use super::clipboard::{init_clipboards, load_clipboards_with_relations};
-use super::sync::{get_sync_manager, get_sync_provider};
+use super::sync::{get_sync_manager, get_sync_provider, update_remote_clipboards};
 use crate::prelude::*;
-use crate::service::clipboard::upsert_clipboard_dto;
+use crate::service::clipboard::upsert_clipboard_dtos;
 use crate::service::settings::get_global_settings;
 use crate::tao::connection::db;
 use crate::tao::global::get_app;
@@ -10,11 +10,14 @@ use common::constants::ENCRYPTION_MAGIC_STRING;
 use common::types::cipher::{EncryptionError, ENCRYPTION_KEY};
 use common::types::enums::ListenEvent;
 use common::types::orm_query::FullClipboardDto;
+use common::types::sync::Clippy;
 use common::types::types::{CommandError, Progress};
 use entity::clipboard;
 use ring::rand::SecureRandom;
 use ring::{aead, rand};
+use sea_orm::prelude::Uuid;
 use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+use std::collections::HashMap;
 use tauri::{Emitter, EventTarget};
 
 pub async fn encrypt_all_clipboards(full: bool) -> Result<(), CommandError> {
@@ -92,11 +95,34 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
         (None, Vec::new())
     };
 
+    const BATCH_SIZE: usize = 500;
     let total = clipboards.len();
+    let remote_by_id: HashMap<Uuid, Clippy> = remote_clipboards
+        .into_iter()
+        .map(|remote| (remote.id, remote))
+        .collect();
+    let mut done = 0;
 
-    for (index, clipboard) in clipboards.into_iter().enumerate() {
-        let encrypted = encrypt_clipboard(clipboard);
-        upsert_clipboard_dto(encrypted.clone()).await?;
+    while !clipboards.is_empty() {
+        let encrypted: Vec<FullClipboardDto> = clipboards
+            .drain(..BATCH_SIZE.min(clipboards.len()))
+            .map(encrypt_clipboard)
+            .collect();
+
+        let remote_updates: Vec<(FullClipboardDto, Clippy)> = encrypted
+            .iter()
+            .filter_map(|local| {
+                let remote = remote_by_id.get(&local.clipboard.id)?;
+                Some((local.clone(), remote.clone()))
+            })
+            .collect();
+
+        done += encrypted.len();
+        upsert_clipboard_dtos(encrypted).await?;
+
+        if let Some(provider) = &provider {
+            update_remote_clipboards(provider.clone(), remote_updates).await;
+        }
 
         get_app()
             .emit_to(
@@ -105,19 +131,10 @@ async fn encrypt_all_clipboards_internal() -> Result<(), CommandError> {
                 Progress {
                     label: "SETTINGS.ENCRYPT.ENCRYPTION_PROGRESS_LOCAL".to_string(),
                     total,
-                    current: index + 1,
+                    current: done,
                 },
             )
             .map_err(|e| CommandError::new(&e.to_string()))?;
-
-        if let Some(provider) = &provider {
-            if let Some(remote) = remote_clipboards
-                .iter()
-                .find(|r| r.id == encrypted.clipboard.id)
-            {
-                provider.update_clipboard(&encrypted, remote).await.ok();
-            }
-        }
     }
 
     // Restart sync manager (was stopped at the beginning if sync was enabled)

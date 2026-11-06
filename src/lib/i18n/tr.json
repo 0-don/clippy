@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Tuşlara basın",
       "RECORD": "Kaydet",
+      "RESET": "Varsayılana sıfırla",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Hesap",
       "CHANGE_LOCATION": "Konumu değiştir",
       "CONFIG_LOCATION": "Yapılandırma konumu",
       "DATABASE_LOCATION": "Veritabanı konumu",
+      "DISCONNECT": "Bağlantıyı kes",
       "OPEN": "Açık",
+      "RECONNECT": "Yeniden bağlan",
       "RESET_LOCATION": "Konumu sıfırla",
+      "STATUS_AUTH_ERROR": "Google Drive oturumu kapandı, senkronizasyona devam etmek için yeniden bağlanın",
+      "STATUS_CONNECTING": "Bağlanıyor",
+      "STATUS_ERROR": "Senkronizasyon başarısız",
+      "STATUS_SYNCED": "Son senkronizasyon: {{time}}",
       "SYNC": "Senkronizasyon",
       "SYNC_LIMIT": "Kaç panonun senkronize edilmesi gerekiyor?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Panonun Geçmişini Senkronize Et"

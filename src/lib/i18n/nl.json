@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Druk op toetsen",
       "RECORD": "Opnemen",
+      "RESET": "Standaard herstellen",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Account",
       "CHANGE_LOCATION": "Locatie wijzigen",
       "CONFIG_LOCATION": "Configuratielocatie",
       "DATABASE_LOCATION": "Locatie van de database",
+      "DISCONNECT": "Ontkoppelen",
       "OPEN": "Open",
+      "RECONNECT": "Opnieuw verbinden",
       "RESET_LOCATION": "Locatie resetten",
+      "STATUS_AUTH_ERROR": "Afgemeld bij Google Drive, verbind opnieuw om de synchronisatie te hervatten",
+      "STATUS_CONNECTING": "Verbinden",
+      "STATUS_ERROR": "Synchronisatie mislukt",
+      "STATUS_SYNCED": "Laatst gesynchroniseerd: {{time}}",
       "SYNC": "Synchroniseren",
       "SYNC_LIMIT": "Hoeveel klemborden moeten er worden gesynchroniseerd?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Klembordgeschiedenis synchroniseren"

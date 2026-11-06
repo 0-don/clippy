@@ -1,4 +1,4 @@
-use super::cipher::{init_password_lock_event, is_encryption_key_set};
+use super::cipher::{clear_encryption_key, init_password_lock_event, is_encryption_key_set};
 use super::clipboard::get_last_clipboard_db;
 use super::decrypt::decrypt_all_clipboards;
 use super::sync::upsert_settings_sync;
@@ -124,9 +124,14 @@ pub fn setup_settings() {
                 settings.display_scale = get_monitor_scale_factor();
                 settings.language = get_system_language().to_string();
 
-                let _ = update_settings_db(settings)
+                // Local only: an empty history is not proof of a new install, and
+                // uploading here would overwrite the synced settings with defaults.
+                let active_model: settings::ActiveModel = settings.into();
+                let settings = settings::Entity::update(active_model.reset_all())
+                    .exec(db())
                     .await
                     .expect("Failed to update settings");
+                set_global_settings(settings);
 
                 // Show window on first launch so users know the app is running
                 crate::service::window::toggle_main_window();
@@ -228,6 +233,7 @@ pub async fn update_settings_from_sync(
             decrypt_all_clipboards()
                 .await
                 .expect("Failed to decrypt clipboards");
+            clear_encryption_key();
         }
         _ => {}
     }

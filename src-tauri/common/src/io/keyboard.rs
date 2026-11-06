@@ -1,4 +1,4 @@
-use crate::types::types::KeyboardLayout;
+use crate::types::{enums::HotkeyEvent, types::KeyboardLayout};
 
 pub fn get_keyboard_layout() -> KeyboardLayout {
     if cfg!(target_os = "linux") {
@@ -54,4 +54,25 @@ pub fn get_keyboard_layout() -> KeyboardLayout {
     // Default to QWERTZ for unsupported OS
     println!("{} default QWERTZ", std::env::consts::OS);
     KeyboardLayout::Qwertz
+}
+
+/// Default `(ctrl, key)` for a built-in hotkey, or None for events without one.
+pub fn default_hotkey(event: &HotkeyEvent) -> Option<(bool, &'static str)> {
+    Some(match event {
+        HotkeyEvent::WindowDisplayToggle => match get_keyboard_layout() {
+            KeyboardLayout::Qwerty => (true, "Y"),
+            KeyboardLayout::Qwertz => (true, "D"),
+        },
+        HotkeyEvent::ScrollToTop => (false, "E"),
+        HotkeyEvent::RecentClipboards => (false, "R"),
+        HotkeyEvent::StarredClipboards => (false, "T"),
+        HotkeyEvent::History => (false, "H"),
+        HotkeyEvent::ViewMore => (false, "M"),
+        HotkeyEvent::SyncClipboardHistory => (false, "P"),
+        HotkeyEvent::Settings => (false, "O"),
+        HotkeyEvent::About => (false, "I"),
+        HotkeyEvent::Exit => (false, "X"),
+        HotkeyEvent::TypeClipboard => (true, "B"),
+        _ => return None,
+    })
 }

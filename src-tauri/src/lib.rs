@@ -106,6 +106,7 @@ pub fn run() {
             //
             hotkey::get_hotkeys,
             hotkey::update_hotkey,
+            hotkey::reset_hotkey,
             hotkey::stop_hotkeys,
             hotkey::get_keyboard_layout,
             //
@@ -131,6 +132,9 @@ pub fn run() {
             //
             sync::sync_authenticate_toggle,
             sync::sync_limit_change,
+            sync::sync_status,
+            sync::sync_disconnect,
+            sync::sync_reconnect,
             //
             //
             cipher::enable_encryption,

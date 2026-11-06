@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "کیز دبائیں",
       "RECORD": "ریکارڈ کریں",
+      "RESET": "ڈیفالٹ پر ری سیٹ کریں",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "اکاؤنٹ",
       "CHANGE_LOCATION": "مقام تبدیل کریں۔",
       "CONFIG_LOCATION": "مقام ترتیب دیں۔",
       "DATABASE_LOCATION": "ڈیٹا بیس کا مقام",
+      "DISCONNECT": "منقطع کریں",
       "OPEN": "کھولیں۔",
+      "RECONNECT": "دوبارہ جوڑیں",
       "RESET_LOCATION": "مقام کو دوبارہ ترتیب دیں۔",
+      "STATUS_AUTH_ERROR": "Google Drive سے سائن آؤٹ ہو گیا، سنک دوبارہ شروع کرنے کے لیے دوبارہ جوڑیں",
+      "STATUS_CONNECTING": "جڑ رہا ہے",
+      "STATUS_ERROR": "سنک ناکام ہو گیا",
+      "STATUS_SYNCED": "آخری سنک: {{time}}",
       "SYNC": "مطابقت پذیری",
       "SYNC_LIMIT": "کتنے کلپ بورڈز کو مطابقت پذیر ہونا چاہئے؟",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "کلپ بورڈ کی تاریخ کو ہم آہنگ کریں۔"

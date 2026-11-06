@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Nhấn phím",
       "RECORD": "Ghi",
+      "RESET": "Đặt lại về mặc định",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Tài khoản",
       "CHANGE_LOCATION": "Thay đổi vị trí",
       "CONFIG_LOCATION": "Vị trí cấu hình",
       "DATABASE_LOCATION": "Vị trí cơ sở dữ liệu",
+      "DISCONNECT": "Ngắt kết nối",
       "OPEN": "Mở",
+      "RECONNECT": "Kết nối lại",
       "RESET_LOCATION": "Đặt lại vị trí",
+      "STATUS_AUTH_ERROR": "Đã đăng xuất khỏi Google Drive, hãy kết nối lại để tiếp tục đồng bộ",
+      "STATUS_CONNECTING": "Đang kết nối",
+      "STATUS_ERROR": "Đồng bộ thất bại",
+      "STATUS_SYNCED": "Đồng bộ lần cuối: {{time}}",
       "SYNC": "Đồng bộ",
       "SYNC_LIMIT": "Cần đồng bộ bao nhiêu bảng tạm?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Đồng bộ hóa lịch sử clipboard"

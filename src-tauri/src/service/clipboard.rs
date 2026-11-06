@@ -222,23 +222,39 @@ pub async fn insert_clipboard_dbo(model: FullClipboardDbo) -> Result<FullClipboa
 }
 
 pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> {
+    upsert_clipboard_dtos(vec![model]).await
+}
+
+/// Writes all clipboards in one transaction: per-row commits dominate bulk
+/// encrypt/decrypt time on large databases.
+pub async fn upsert_clipboard_dtos(models: Vec<FullClipboardDto>) -> Result<(), DbErr> {
     let txn = db().begin().await?;
+    for model in models {
+        upsert_clipboard_dto_in(&txn, model).await?;
+    }
+    txn.commit().await
+}
+
+async fn upsert_clipboard_dto_in(
+    txn: &sea_orm::DatabaseTransaction,
+    model: FullClipboardDto,
+) -> Result<(), DbErr> {
 
     // Delete existing clipboard and all related records through cascade
     entity::clipboard::Entity::delete_by_id(model.clipboard.id)
-        .exec(&txn)
+        .exec(txn)
         .await?;
 
     // Insert clipboard
     entity::clipboard::ActiveModel::from(model.clipboard)
-        .insert(&txn)
+        .insert(txn)
         .await?;
 
     // Insert text if data exists
     if let Some(text) = model.text {
         if !text.data.is_empty() {
             entity::clipboard_text::ActiveModel::from(text)
-                .insert(&txn)
+                .insert(txn)
                 .await?;
         }
     }
@@ -247,7 +263,7 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     if let Some(html) = model.html {
         if !html.data.is_empty() {
             entity::clipboard_html::ActiveModel::from(html)
-                .insert(&txn)
+                .insert(txn)
                 .await?;
         }
     }
@@ -256,7 +272,7 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     if let Some(image) = model.image {
         if !image.data.is_empty() {
             entity::clipboard_image::ActiveModel::from(image)
-                .insert(&txn)
+                .insert(txn)
                 .await?;
         }
     }
@@ -265,7 +281,7 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
     if let Some(rtf) = model.rtf {
         if !rtf.data.is_empty() {
             entity::clipboard_rtf::ActiveModel::from(rtf)
-                .insert(&txn)
+                .insert(txn)
                 .await?;
         }
     }
@@ -278,11 +294,10 @@ pub async fn upsert_clipboard_dto(model: FullClipboardDto) -> Result<(), DbErr> 
             .map(entity::clipboard_file::ActiveModel::from)
             .collect();
         entity::clipboard_file::Entity::insert_many(file_models)
-            .exec(&txn)
+            .exec(txn)
             .await?;
     }
 
-    txn.commit().await?;
     Ok(())
 }
 
@@ -1058,7 +1073,13 @@ pub fn init_clipboards() {
 
 pub fn new_clipboard_event(mut clipboard: FullClipboardDto) {
     if clipboard.clipboard.encrypted && is_encryption_key_set() {
-        clipboard = decrypt_clipboard(clipboard).expect("Failed to decrypt clipboard");
+        clipboard = match decrypt_clipboard(clipboard) {
+            Ok(clipboard) => clipboard,
+            Err(e) => {
+                printlog!("Skipping live update for undecryptable clipboard: {:?}", e);
+                return;
+            }
+        };
     }
 
     get_main_window()

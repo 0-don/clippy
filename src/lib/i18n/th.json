@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "กดปุ่ม",
       "RECORD": "บันทึก",
+      "RESET": "รีเซ็ตเป็นค่าเริ่มต้น",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "บัญชี",
       "CHANGE_LOCATION": "เปลี่ยนตำแหน่ง",
       "CONFIG_LOCATION": "กำหนดค่าตำแหน่ง",
       "DATABASE_LOCATION": "ตำแหน่งที่ตั้งฐานข้อมูล",
+      "DISCONNECT": "ยกเลิกการเชื่อมต่อ",
       "OPEN": "เปิด",
+      "RECONNECT": "เชื่อมต่อใหม่",
       "RESET_LOCATION": "รีเซ็ตตำแหน่ง",
+      "STATUS_AUTH_ERROR": "ออกจากระบบ Google Drive แล้ว เชื่อมต่อใหม่เพื่อซิงค์ต่อ",
+      "STATUS_CONNECTING": "กำลังเชื่อมต่อ",
+      "STATUS_ERROR": "การซิงค์ล้มเหลว",
+      "STATUS_SYNCED": "ซิงค์ล่าสุด: {{time}}",
       "SYNC": "การซิงค์",
       "SYNC_LIMIT": "จะต้องซิงค์คลิปบอร์ดกี่อัน?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "ซิงโครไนซ์ประวัติคลิปบอร์ด"

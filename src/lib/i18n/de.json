@@ -70,6 +70,7 @@
       "CTRL": "Strg",
       "PRESS_KEYS": "Tasten drücken",
       "RECORD": "Aufnehmen",
+      "RESET": "Auf Standard zurücksetzen",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Konto",
       "CHANGE_LOCATION": "Standort ändern",
       "CONFIG_LOCATION": "Konfigurationsort",
       "DATABASE_LOCATION": "Datenbankstandort",
+      "DISCONNECT": "Trennen",
       "OPEN": "Offen",
+      "RECONNECT": "Neu verbinden",
       "RESET_LOCATION": "Standort zurücksetzen",
+      "STATUS_AUTH_ERROR": "Von Google Drive abgemeldet, neu verbinden, um die Synchronisierung fortzusetzen",
+      "STATUS_CONNECTING": "Verbinde",
+      "STATUS_ERROR": "Synchronisierung fehlgeschlagen",
+      "STATUS_SYNCED": "Zuletzt synchronisiert: {{time}}",
       "SYNC": "Synchronisieren",
       "SYNC_LIMIT": "Wie viele Zwischenablagen sollen synchronisiert werden?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Zwischenablageverlauf synchronisieren"

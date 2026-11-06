@@ -1,4 +1,5 @@
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
+import { BiRegularReset } from "solid-icons/bi";
 import { VsClose } from "solid-icons/vs";
 import { Component, createSignal, onCleanup, Show } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
@@ -96,6 +97,7 @@ interface HotkeyRecorderProps {
   icon?: boolean;
   onRecord: (hotkey: RecordedHotkey) => void;
   onClear: () => void;
+  onReset?: () => void;
 }
 
 export const HotkeyRecorder: Component<HotkeyRecorderProps> = (props) => {
@@ -198,6 +200,19 @@ export const HotkeyRecorder: Component<HotkeyRecorderProps> = (props) => {
       >
         <VsClose />
       </button>
+      <Show when={props.onReset}>
+        <button
+          type="button"
+          class={cn(
+            "text-muted-foreground hover:text-foreground cursor-pointer p-1",
+            recording() && "invisible",
+          )}
+          title={t("MAIN.KEYS.RESET")}
+          onClick={() => props.onReset?.()}
+        >
+          <BiRegularReset />
+        </button>
+      </Show>
     </div>
   );
 };

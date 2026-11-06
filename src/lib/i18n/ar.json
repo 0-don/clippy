@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "اضغط على المفاتيح",
       "RECORD": "تسجيل",
+      "RESET": "إعادة التعيين إلى الافتراضي",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "الحساب",
       "CHANGE_LOCATION": "تغيير الموقع",
       "CONFIG_LOCATION": "موقع التكوين",
       "DATABASE_LOCATION": "موقع قاعدة البيانات",
+      "DISCONNECT": "قطع الاتصال",
       "OPEN": "يفتح",
+      "RECONNECT": "إعادة الاتصال",
       "RESET_LOCATION": "إعادة تعيين الموقع",
+      "STATUS_AUTH_ERROR": "تم تسجيل الخروج من Google Drive، أعد الاتصال لاستئناف المزامنة",
+      "STATUS_CONNECTING": "جارٍ الاتصال",
+      "STATUS_ERROR": "فشلت المزامنة",
+      "STATUS_SYNCED": "آخر مزامنة: {{time}}",
       "SYNC": "المزامنة",
       "SYNC_LIMIT": "كم عدد الحافظات التي يجب مزامنتها؟",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "مزامنة سجل الحافظة"

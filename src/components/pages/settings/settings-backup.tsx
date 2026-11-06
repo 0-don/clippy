@@ -2,14 +2,32 @@ import { AiTwotoneFolderOpen } from "solid-icons/ai";
 import { BiRegularReset } from "solid-icons/bi";
 import { BsGearWideConnected } from "solid-icons/bs";
 import { SiSqlite } from "solid-icons/si";
-import { TbOutlineDatabaseStar, TbOutlineExchange, TbOutlineNumbers } from "solid-icons/tb";
-import { Component, createResource, Show } from "solid-js";
-import { invokeCommand } from "../../../lib/tauri";
+import {
+  TbOutlineCloud,
+  TbOutlineDatabaseStar,
+  TbOutlineExchange,
+  TbOutlineMail,
+  TbOutlineNumbers,
+  TbOutlinePlugConnectedX,
+  TbOutlineRefresh,
+} from "solid-icons/tb";
+import {
+  Component,
+  createResource,
+  createSignal,
+  onCleanup,
+  onMount,
+  Show,
+} from "solid-js";
+import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation, HotkeyEvent } from "../../../types/enums";
+import { SyncStatus } from "../../../types";
 import { InvokeCommand } from "../../../types/tauri-invoke";
+import { ListenEvent } from "../../../types/tauri-listen";
 import { MAX_SYNC_LIMIT } from "../../../utils/constants";
+import dayjs from "../../../utils/dayjs";
 import { Button } from "../../elements/button";
 import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
@@ -26,6 +44,41 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const [configUrl] = createResource(() =>
     invokeCommand(InvokeCommand.GetConfigPath),
   );
+  const [syncStatus, setSyncStatus] = createSignal<SyncStatus>();
+  const [now, setNow] = createSignal(Date.now());
+
+  onMount(async () => {
+    setSyncStatus(await invokeCommand(InvokeCommand.SyncStatus));
+  });
+  const unlisten = listenEvent(ListenEvent.SyncStatus, setSyncStatus);
+  const clock = setInterval(() => setNow(Date.now()), 30_000);
+  onCleanup(() => {
+    clearInterval(clock);
+    void unlisten.then((stop) => stop());
+  });
+
+  const statusText = () => {
+    const status = syncStatus();
+    switch (status?.state) {
+      case "synced":
+        now();
+        return t("SETTINGS.BACKUP.STATUS_SYNCED", {
+          time: dayjs
+            .unix(status.last_synced_at ?? 0)
+            .locale(SettingsStore.settings()?.language || "en")
+            .fromNow(),
+        });
+      case "auth_error":
+        return t("SETTINGS.BACKUP.STATUS_AUTH_ERROR");
+      case "error":
+        return t("SETTINGS.BACKUP.STATUS_ERROR");
+      default:
+        return t("SETTINGS.BACKUP.STATUS_CONNECTING");
+    }
+  };
+
+  const hasProblem = () =>
+    syncStatus()?.state === "auth_error" || syncStatus()?.state === "error";
 
   return (
     <>
@@ -52,6 +105,52 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
         </div>
 
         <Show when={SettingsStore.settings()?.sync}>
+          <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+            <div class="flex items-center space-x-2 truncate">
+              <TbOutlineMail />
+              <h6 class="text-sm">{t("SETTINGS.BACKUP.ACCOUNT")}</h6>
+            </div>
+            <span class="truncate text-sm text-muted-foreground">
+              {syncStatus()?.email ?? "..."}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between space-x-2 px-5 pb-5">
+            <div class="flex flex-col truncate">
+              <div class="flex items-center space-x-2">
+                <TbOutlineCloud />
+                <h6
+                  class="text-sm"
+                  classList={{ "text-red-500": hasProblem() }}
+                >
+                  {statusText()}
+                </h6>
+              </div>
+              <Show when={syncStatus()?.state === "error" && syncStatus()?.error}>
+                <p
+                  class="ml-6 truncate text-xs text-muted-foreground"
+                  title={syncStatus()?.error ?? ""}
+                >
+                  {syncStatus()?.error}
+                </p>
+              </Show>
+            </div>
+            <div class="flex shrink-0 gap-2">
+              <Show when={hasProblem()}>
+                <Button
+                  label="SETTINGS.BACKUP.RECONNECT"
+                  onClick={() => invokeCommand(InvokeCommand.SyncReconnect)}
+                  Icon={TbOutlineRefresh}
+                />
+              </Show>
+              <Button
+                label="SETTINGS.BACKUP.DISCONNECT"
+                onClick={() => invokeCommand(InvokeCommand.SyncDisconnect)}
+                Icon={TbOutlinePlugConnectedX}
+              />
+            </div>
+          </div>
+
           <div class="flex items-center justify-between space-x-2 px-5 pb-5">
             <div class="flex items-center space-x-2 truncate">
               <TbOutlineNumbers />

@@ -8,13 +8,13 @@ use super::{
 use crate::tao::{connection::db, global::get_app};
 use crate::{prelude::*, service::settings::update_settings_db};
 use common::types::{
-    cipher::{EncryptionError, EncryptionKeyData, ENCRYPTION_KEY},
+    cipher::{EncryptionError, EncryptionKeyData, ENCRYPTION_KEY, ENCRYPTION_KEY_FALLBACK},
     enums::{ListenEvent, PasswordAction},
     orm_query::FullClipboardDto,
     types::CommandError,
 };
 use entity::clipboard;
-use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter, QueryOrder};
 use std::num::NonZeroU32;
 use tauri::{Emitter, EventTarget};
 
@@ -25,40 +25,36 @@ const PBKDF2_ITERATIONS: u32 = 600_000;
 /// stored clipboard, falling back to the legacy SHA-256 key for migration. Returns
 /// `Ok(true)` if any encrypted clipboard exists (so a decrypt/encrypt pass is needed),
 /// `Ok(false)` if there is nothing encrypted to act on.
-async fn set_key_and_verify_password(password: &str) -> Result<bool, CommandError> {
-    set_encryption_key(password).map_err(|e| CommandError::new(&e.to_string()))?;
+pub async fn set_key_and_verify_password(password: &str) -> Result<bool, CommandError> {
+    let (pbkdf2, legacy) = (pbkdf2_key(password), legacy_sha256_key(password));
 
     let db = db();
     let encrypted_clipboard = clipboard::Entity::find()
         .filter(clipboard::Column::Encrypted.eq(true))
+        .order_by_desc(clipboard::Column::Id)
         .one(db)
         .await?;
 
     let Some(clipboard) = encrypted_clipboard else {
+        store_keys(pbkdf2, legacy).map_err(|e| CommandError::new(&e.to_string()))?;
         return Ok(false);
     };
 
     let mut clipboards = load_clipboards_with_relations(vec![clipboard]).await;
     let test_clipboard = clipboards.remove(0);
 
-    // Try PBKDF2 key first, fall back to legacy SHA-256 for migration.
-    if decrypt_clipboard(test_clipboard.clone()).is_err() {
-        clear_encryption_key();
-        set_encryption_key_legacy_sha256(password)
-            .map_err(|e| CommandError::new(&e.to_string()))?;
-
-        decrypt_clipboard(test_clipboard).map_err(|e| {
-            clear_encryption_key();
-            match e {
-                EncryptionError::DecryptionFailed | EncryptionError::InvalidKey => {
-                    CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD")
-                }
-                _ => CommandError::new(&e.to_string()),
-            }
-        })?;
+    // Each candidate is tested alone: with the fallback loaded the first test always
+    // passes, and new data would be encrypted with a key the old data does not use.
+    for (primary, fallback) in [(pbkdf2, legacy), (legacy, pbkdf2)] {
+        store_primary_only(primary).map_err(|e| CommandError::new(&e.to_string()))?;
+        if decrypt_clipboard(test_clipboard.clone()).is_ok() {
+            store_keys(primary, fallback).map_err(|e| CommandError::new(&e.to_string()))?;
+            return Ok(true);
+        }
     }
 
-    Ok(true)
+    clear_encryption_key();
+    Err(CommandError::new("MAIN.ERROR.INCORRECT_PASSWORD"))
 }
 
 pub async fn handle_password_unlock(
@@ -69,7 +65,7 @@ pub async fn handle_password_unlock(
 
     match action {
         PasswordAction::Encrypt => {
-            set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
+            set_key_and_verify_password(&password).await?;
             encrypt_all_clipboards(false).await?;
             let mut settings = get_global_settings();
             settings.encryption = true;
@@ -122,6 +118,10 @@ pub fn clear_encryption_key() {
         .lock()
         .map_err(|e| CommandError::new(&e.to_string()))
         .unwrap() = None;
+    *ENCRYPTION_KEY_FALLBACK
+        .lock()
+        .map_err(|e| CommandError::new(&e.to_string()))
+        .unwrap() = None;
 }
 
 /// Checks if encryption key is set
@@ -130,30 +130,24 @@ pub fn is_encryption_key_set() -> bool {
 }
 
 pub fn verify_encryption_password(password: String) -> Result<bool, EncryptionError> {
-    let mut provided_key = [0u8; 32];
-    ring::pbkdf2::derive(
-        ring::pbkdf2::PBKDF2_HMAC_SHA256,
-        NonZeroU32::new(PBKDF2_ITERATIONS).unwrap(),
-        PBKDF2_SALT,
-        password.as_bytes(),
-        &mut provided_key,
-    );
-
     let current_key = ENCRYPTION_KEY
         .lock()
         .map_err(|_| EncryptionError::KeyLockFailed)?;
     let current = current_key.as_ref().ok_or(EncryptionError::NoKey)?;
 
-    // Constant-time comparison to prevent timing attacks
-    let mut diff = 0u8;
-    for (a, b) in provided_key.iter().zip(current.0.iter()) {
-        diff |= a ^ b;
-    }
-    Ok(diff == 0)
+    // Either derivation may be the loaded key (legacy SHA-256 databases).
+    let matches = |provided: [u8; 32]| {
+        // Constant-time comparison to prevent timing attacks
+        let mut diff = 0u8;
+        for (a, b) in provided.iter().zip(current.0.iter()) {
+            diff |= a ^ b;
+        }
+        diff == 0
+    };
+    Ok(matches(pbkdf2_key(&password)) | matches(legacy_sha256_key(&password)))
 }
 
-/// Sets the encryption key derived from a password using PBKDF2
-pub fn set_encryption_key(password: &str) -> Result<(), EncryptionError> {
+fn pbkdf2_key(password: &str) -> [u8; 32] {
     let mut key_bytes = [0u8; 32];
     ring::pbkdf2::derive(
         ring::pbkdf2::PBKDF2_HMAC_SHA256,
@@ -162,26 +156,34 @@ pub fn set_encryption_key(password: &str) -> Result<(), EncryptionError> {
         password.as_bytes(),
         &mut key_bytes,
     );
+    key_bytes
+}
 
+fn legacy_sha256_key(password: &str) -> [u8; 32] {
+    let mut hasher = ring::digest::Context::new(&ring::digest::SHA256);
+    hasher.update(password.as_bytes());
+    let mut key_bytes = [0u8; 32];
+    key_bytes.copy_from_slice(hasher.finish().as_ref());
+    key_bytes
+}
+
+fn store_keys(primary: [u8; 32], fallback: [u8; 32]) -> Result<(), EncryptionError> {
     *ENCRYPTION_KEY
         .lock()
-        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(EncryptionKeyData(key_bytes));
-
+        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(EncryptionKeyData(primary));
+    *ENCRYPTION_KEY_FALLBACK
+        .lock()
+        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(EncryptionKeyData(fallback));
     Ok(())
 }
 
-/// Legacy SHA-256 key derivation for migrating existing encrypted users
-pub fn set_encryption_key_legacy_sha256(password: &str) -> Result<(), EncryptionError> {
-    let mut hasher = ring::digest::Context::new(&ring::digest::SHA256);
-    hasher.update(password.as_bytes());
-    let key = hasher.finish();
-    let mut key_bytes = [0u8; 32];
-    key_bytes.copy_from_slice(key.as_ref());
-
+fn store_primary_only(primary: [u8; 32]) -> Result<(), EncryptionError> {
     *ENCRYPTION_KEY
         .lock()
-        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(EncryptionKeyData(key_bytes));
-
+        .map_err(|_| EncryptionError::KeyLockFailed)? = Some(EncryptionKeyData(primary));
+    *ENCRYPTION_KEY_FALLBACK
+        .lock()
+        .map_err(|_| EncryptionError::KeyLockFailed)? = None;
     Ok(())
 }
 

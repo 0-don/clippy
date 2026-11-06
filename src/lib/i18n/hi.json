@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "कुंजियाँ दबाएँ",
       "RECORD": "रिकॉर्ड करें",
+      "RESET": "डिफ़ॉल्ट पर रीसेट करें",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "खाता",
       "CHANGE_LOCATION": "स्थान बदलें",
       "CONFIG_LOCATION": "कॉन्फ़िगरेशन स्थान",
       "DATABASE_LOCATION": "डेटाबेस स्थान",
+      "DISCONNECT": "डिस्कनेक्ट करें",
       "OPEN": "खुला",
+      "RECONNECT": "फिर से कनेक्ट करें",
       "RESET_LOCATION": "स्थान रीसेट करें",
+      "STATUS_AUTH_ERROR": "Google Drive से साइन आउट हो गया, सिंक फिर से शुरू करने के लिए दोबारा कनेक्ट करें",
+      "STATUS_CONNECTING": "कनेक्ट हो रहा है",
+      "STATUS_ERROR": "सिंक विफल रहा",
+      "STATUS_SYNCED": "पिछला सिंक: {{time}}",
       "SYNC": "साथ-साथ करना",
       "SYNC_LIMIT": "कितने क्लिपबोर्ड को सिंक किया जाना चाहिए?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "क्लिपबोर्ड इतिहास सिंक्रनाइज़ करें"

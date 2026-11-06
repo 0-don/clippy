@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Press keys",
       "RECORD": "Record",
+      "RESET": "Reset to default",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Account",
       "CHANGE_LOCATION": "Change location",
       "CONFIG_LOCATION": "Config location",
       "DATABASE_LOCATION": "Database location",
+      "DISCONNECT": "Disconnect",
       "OPEN": "Open",
+      "RECONNECT": "Reconnect",
       "RESET_LOCATION": "Reset location",
+      "STATUS_AUTH_ERROR": "Signed out of Google Drive, reconnect to resume syncing",
+      "STATUS_CONNECTING": "Connecting",
+      "STATUS_ERROR": "Sync failed",
+      "STATUS_SYNCED": "Last synced {{time}}",
       "SYNC": "Sync",
       "SYNC_LIMIT": "How many clipboards should be synced?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronize clipboard history"

@@ -1,17 +1,35 @@
 use crate::{
     service::{
         settings::{get_global_settings, init_settings_window, set_global_settings},
-        sync::{get_sync_provider, sync_toggle, upsert_settings_sync},
+        sync::{
+            get_sync_provider, get_sync_status, sync_disconnect as disconnect,
+            sync_reconnect as reconnect, sync_toggle, upsert_settings_sync,
+        },
     },
     tao::connection::db,
 };
-use common::types::types::CommandError;
+use common::types::{sync::SyncStatus, types::CommandError};
 use entity::settings::{self, ActiveModel};
 use sea_orm::{ActiveModelTrait, EntityTrait};
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
     Ok(sync_toggle().await?)
+}
+
+#[tauri::command]
+pub fn sync_status() -> SyncStatus {
+    get_sync_status()
+}
+
+#[tauri::command]
+pub async fn sync_disconnect() -> Result<(), CommandError> {
+    disconnect().await
+}
+
+#[tauri::command]
+pub async fn sync_reconnect() -> Result<bool, CommandError> {
+    reconnect().await
 }
 
 #[tauri::command]

@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "키를 누르세요",
       "RECORD": "녹화",
+      "RESET": "기본값으로 재설정",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "계정",
       "CHANGE_LOCATION": "위치 변경",
       "CONFIG_LOCATION": "구성 위치",
       "DATABASE_LOCATION": "데이터베이스 위치",
+      "DISCONNECT": "연결 해제",
       "OPEN": "열려 있는",
+      "RECONNECT": "다시 연결",
       "RESET_LOCATION": "위치 재설정",
+      "STATUS_AUTH_ERROR": "Google 드라이브에서 로그아웃되었습니다. 동기화를 재개하려면 다시 연결하세요",
+      "STATUS_CONNECTING": "연결 중",
+      "STATUS_ERROR": "동기화 실패",
+      "STATUS_SYNCED": "마지막 동기화: {{time}}",
       "SYNC": "동조",
       "SYNC_LIMIT": "몇 개의 클립보드를 동기화해야 하나요?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "클립보드 기록 동기화"

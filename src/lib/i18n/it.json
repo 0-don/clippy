@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Premi i tasti",
       "RECORD": "Registra",
+      "RESET": "Ripristina predefinito",
       "SHIFT": "Maiusc",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Account",
       "CHANGE_LOCATION": "Cambia posizione",
       "CONFIG_LOCATION": "Percorso configurazione",
       "DATABASE_LOCATION": "Percorso database",
+      "DISCONNECT": "Disconnetti",
       "OPEN": "Apri",
+      "RECONNECT": "Riconnetti",
       "RESET_LOCATION": "Reimposta posizione",
+      "STATUS_AUTH_ERROR": "Disconnesso da Google Drive, riconnettiti per riprendere la sincronizzazione",
+      "STATUS_CONNECTING": "Connessione in corso",
+      "STATUS_ERROR": "Sincronizzazione non riuscita",
+      "STATUS_SYNCED": "Ultima sincronizzazione: {{time}}",
       "SYNC": "Sincronizza",
       "SYNC_LIMIT": "Quante cartelle degli appunti devono essere sincronizzate?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizza cronologia appunti"

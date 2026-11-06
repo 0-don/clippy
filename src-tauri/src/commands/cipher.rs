@@ -1,7 +1,7 @@
 use crate::service::{
     cipher::{
         handle_password_unlock, handle_password_unlock_streaming, is_encryption_key_set,
-        set_encryption_key,
+        set_key_and_verify_password,
     },
     decrypt::{remove_encryption, remove_encryption_streaming},
     encrypt::encrypt_all_clipboards,
@@ -68,7 +68,9 @@ pub async fn enable_encryption(
         return Err(CommandError::new("MAIN.ERROR.PASSWORD_NOT_MATCH"));
     }
 
-    set_encryption_key(&password).map_err(|e| CommandError::new(&e.to_string()))?;
+    // Matches the key of clipboards that are already encrypted, so a half-encrypted
+    // database never ends up on two keys; a different password is rejected.
+    set_key_and_verify_password(&password).await?;
 
     encrypt_all_clipboards(true).await?;
 

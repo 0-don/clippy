@@ -1,8 +1,8 @@
 use super::{
     cipher::{clear_encryption_key, is_encryption_key_set, verify_encryption_password},
-    clipboard::{load_clipboards_with_relations, upsert_clipboard_dto},
+    clipboard::{load_clipboards_with_relations, upsert_clipboard_dto, upsert_clipboard_dtos},
     settings::{get_global_settings, update_settings_db},
-    sync::{get_sync_manager, get_sync_provider},
+    sync::{get_sync_manager, get_sync_provider, update_remote_clipboards},
 };
 use crate::{
     prelude::*,
@@ -10,21 +10,23 @@ use crate::{
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use common::{constants::ENCRYPTION_MAGIC_STRING, types::{
-    cipher::{EncryptionError, ENCRYPTION_KEY},
+    cipher::{EncryptionError, ENCRYPTION_KEY, ENCRYPTION_KEY_FALLBACK},
     enums::ListenEvent,
     orm_query::FullClipboardDto,
+    sync::Clippy,
     types::{CommandError, Progress},
 }};
 use entity::clipboard;
 use rayon::prelude::*;
 use ring::aead;
 use sea_orm::prelude::Uuid;
-use sea_orm::{ColumnTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder};
+use sea_orm::{ColumnTrait, EntityTrait, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect};
+use std::collections::HashMap;
 use tauri::{Emitter, EventTarget};
 
 /// Rows per page. Blobs (image/file data) dominate memory, so keep pages small to
 /// cap RAM at one page of decrypted blobs regardless of total DB size.
-const DECRYPT_PAGE_SIZE: u64 = 32;
+const DECRYPT_PAGE_SIZE: u64 = 256;
 
 /// Streams decryption of all locally-stored encrypted clipboards, paginated and
 /// decrypted in parallel across cores. `on_batch(batch, current, total)` is called
@@ -92,15 +94,28 @@ where
         .count(db)
         .await? as usize;
 
-    // UUIDv7 ids are time-ordered, so order_by_desc(Id) is a stable newest-first cursor.
-    let mut paginator = clipboard::Entity::find()
-        .filter(clipboard::Column::Encrypted.eq(true))
-        .order_by_desc(clipboard::Column::Id)
-        .paginate(db, DECRYPT_PAGE_SIZE);
+    let remote_by_id: HashMap<Uuid, Clippy> = remote_clipboards
+        .into_iter()
+        .map(|remote| (remote.id, remote))
+        .collect();
 
     let mut processed = 0usize;
+    // Keyset cursor over time-ordered UUIDv7 ids. Offset paging skipped a page
+    // each round, because decrypted rows leave the `encrypted = true` filter.
+    let mut before: Option<Uuid> = None;
 
-    while let Some(models) = paginator.fetch_and_next().await? {
+    loop {
+        let mut query = clipboard::Entity::find()
+            .filter(clipboard::Column::Encrypted.eq(true))
+            .order_by_desc(clipboard::Column::Id)
+            .limit(DECRYPT_PAGE_SIZE);
+        if let Some(id) = before {
+            query = query.filter(clipboard::Column::Id.lt(id));
+        }
+        let models = query.all(db).await?;
+        let Some(last) = models.last() else { break };
+        before = Some(last.id);
+
         let page = load_clipboards_with_relations(models).await;
 
         // Decrypt the whole page in parallel; pure CPU, no DB, no global lock.
@@ -116,35 +131,31 @@ where
             .await
             .map_err(|e| CommandError::new(&e.to_string()))?;
 
-        // Serial DB writes (SQLite is single-writer) + collect this page's successes.
         let mut batch: Vec<FullClipboardDto> = Vec::with_capacity(decrypted.len());
         for result in decrypted {
             processed += 1;
             match result {
-                Ok(clipboard) => {
-                    upsert_clipboard_dto(clipboard.clone()).await?;
-
-                    if let Some(provider) = &provider {
-                        if let Some(remote) =
-                            remote_clipboards.iter().find(|r| r.id == clipboard.clipboard.id)
-                        {
-                            provider.update_clipboard(&clipboard, remote).await.ok();
-                        }
-                    }
-                    batch.push(clipboard);
-                }
+                Ok(clipboard) => batch.push(clipboard),
+                // Left encrypted on both sides: a wrong key (e.g. one from before a
+                // password change) is recoverable, a deletion is not.
                 Err((id, e)) => {
-                    printlog!("Failed to decrypt clipboard {}: {:?}", id, e);
-
-                    clipboard::Entity::delete_by_id(id).exec(db).await?;
-
-                    if let Some(provider) = &provider {
-                        if let Some(remote) = remote_clipboards.iter().find(|r| r.id == id) {
-                            provider.mark_for_deletion(remote).await;
-                        }
-                    }
+                    printlog!("Failed to decrypt clipboard {}, keeping it encrypted: {:?}", id, e);
                 }
             }
+        }
+
+        let remote_updates: Vec<(FullClipboardDto, Clippy)> = batch
+            .iter()
+            .filter_map(|local| {
+                let remote = remote_by_id.get(&local.clipboard.id)?;
+                Some((local.clone(), remote.clone()))
+            })
+            .collect();
+
+        upsert_clipboard_dtos(batch.clone()).await?;
+
+        if let Some(provider) = &provider {
+            update_remote_clipboards(provider.clone(), remote_updates).await;
         }
 
         on_batch(common::io::clipboard::trim_clipboard_data(batch), processed, total);
@@ -410,6 +421,7 @@ pub fn decrypt_data_with_key(
         return Err(EncryptionError::NotEncrypted);
     }
 
+    let key_bytes = key;
     // Create unbound key from key bytes
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, key)
         .map_err(|_| EncryptionError::DecryptionFailed)?;
@@ -427,10 +439,39 @@ pub fn decrypt_data_with_key(
     let mut in_out = encrypted_data[magic_bytes_len + 12..].to_vec();
 
     // Decrypt in place
-    match key.open_in_place(nonce, aead::Aad::empty(), &mut in_out) {
-        Ok(decrypted) => Ok(decrypted.to_vec()),
-        Err(_) => Err(EncryptionError::InvalidKey),
+    if let Ok(decrypted) = key.open_in_place(nonce, aead::Aad::empty(), &mut in_out) {
+        return Ok(decrypted.to_vec());
     }
+
+    let fallback = ENCRYPTION_KEY_FALLBACK
+        .lock()
+        .map_err(|_| EncryptionError::KeyLockFailed)?
+        .as_ref()
+        .map(|k| k.0)
+        .ok_or(EncryptionError::InvalidKey)?;
+    if &fallback == key_bytes {
+        return Err(EncryptionError::InvalidKey);
+    }
+    decrypt_data_with_key_only(encrypted_data, &fallback)
+}
+
+fn decrypt_data_with_key_only(
+    encrypted_data: &[u8],
+    key: &[u8; 32],
+) -> Result<Vec<u8>, EncryptionError> {
+    let magic_len = ENCRYPTION_MAGIC_STRING.as_bytes().len();
+    let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, key)
+        .map_err(|_| EncryptionError::DecryptionFailed)?;
+    let key = aead::LessSafeKey::new(unbound_key);
+    let nonce = aead::Nonce::assume_unique_for_key(
+        encrypted_data[magic_len..magic_len + 12]
+            .try_into()
+            .map_err(|_| EncryptionError::DecryptionFailed)?,
+    );
+    let mut in_out = encrypted_data[magic_len + 12..].to_vec();
+    key.open_in_place(nonce, aead::Aad::empty(), &mut in_out)
+        .map(|decrypted| decrypted.to_vec())
+        .map_err(|_| EncryptionError::InvalidKey)
 }
 
 pub async fn remove_encryption(password: String) -> Result<(), CommandError> {

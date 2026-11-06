@@ -1,4 +1,4 @@
-import { ClipboardWithRelations, Progress } from ".";
+import { ClipboardWithRelations, Progress, SyncStatus } from ".";
 import { Tab } from "../utils/constants";
 import { PasswordAction } from "./enums";
 
@@ -12,6 +12,7 @@ export enum ListenEvent {
   NewClipboard = "new_clipboard",
   PasswordLock = "password_lock",
   Progress = "progress",
+  SyncStatus = "sync_status",
 }
 
 export interface TauriListenEvents {
@@ -24,4 +25,5 @@ export interface TauriListenEvents {
   [ListenEvent.NewClipboard]: ClipboardWithRelations;
   [ListenEvent.Progress]: Progress;
   [ListenEvent.PasswordLock]: PasswordAction;
+  [ListenEvent.SyncStatus]: SyncStatus;
 }

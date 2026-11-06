@@ -9,6 +9,10 @@ pub struct EncryptionKeyData(pub [u8; 32]);
 // Global encryption key stored in memory (zeroed on drop)
 pub static ENCRYPTION_KEY: Mutex<Option<EncryptionKeyData>> = Mutex::new(None);
 
+/// The same password's other derivation (PBKDF2 vs legacy SHA-256). Databases from
+/// before the PBKDF2 switch, or ones a sync left half converted, hold both.
+pub static ENCRYPTION_KEY_FALLBACK: Mutex<Option<EncryptionKeyData>> = Mutex::new(None);
+
 #[derive(Debug)]
 pub enum EncryptionError {
     NoKey,

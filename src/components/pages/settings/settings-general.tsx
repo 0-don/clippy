@@ -29,7 +29,7 @@ import {
   ThemeName,
 } from "../../../utils/constants";
 import { Dropdown } from "../../elements/dropdown";
-import { Input } from "../../elements/input";
+import { Slider } from "../../elements/slider";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { useLanguage } from "../../provider/language-provider";
@@ -153,22 +153,14 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 <FiSliders />
                 <h6 class="text-sm">{t("SETTINGS.GENERAL.GLASS_OPACITY")}</h6>
               </div>
-              <div class="flex items-center space-x-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  class="accent-primary"
-                  value={SettingsStore.settings()!.glass_opacity}
-                  onInput={(e) =>
-                    onGlassSlide({ glass_opacity: Number(e.currentTarget.value) })
-                  }
-                />
-                <span class="w-9 text-right text-xs text-muted-foreground tabular-nums">
-                  {Math.round(SettingsStore.settings()!.glass_opacity * 100)}%
-                </span>
-              </div>
+              <Slider
+                value={SettingsStore.settings()!.glass_opacity}
+                min={0}
+                max={1}
+                step={0.01}
+                format={(value) => `${Math.round(value * 100)}%`}
+                onInput={(glass_opacity) => onGlassSlide({ glass_opacity })}
+              />
             </div>
           </Show>
         </Show>
@@ -323,17 +315,16 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
             <h6 class="text-sm">{t("SETTINGS.GENERAL.WINDOW_SCALE")}</h6>
           </div>
 
-          <Input
-            type="number"
-            step="0.01"
+          <Slider
+            value={SettingsStore.settings()!.display_scale}
             min={0.5}
             max={2}
-            value={SettingsStore.settings()!.display_scale}
-            debounce={1000}
-            onInput={async (e) => {
-              SettingsStore.updateSettings({
+            step={0.05}
+            format={(value) => value.toFixed(2)}
+            onChange={async (display_scale) => {
+              await SettingsStore.updateSettings({
                 ...SettingsStore.settings()!,
-                display_scale: Number(parseFloat(e.target.value).toFixed(2)),
+                display_scale,
               });
               await invokeCommand(InvokeCommand.OpenNewWindow, {
                 windowName: WebWindow.Settings,

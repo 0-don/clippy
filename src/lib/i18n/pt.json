@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Prima as teclas",
       "RECORD": "Gravar",
+      "RESET": "Repor predefinição",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Conta",
       "CHANGE_LOCATION": "Alterar localização",
       "CONFIG_LOCATION": "Local de configuração",
       "DATABASE_LOCATION": "Localização da base de dados",
+      "DISCONNECT": "Desligar",
       "OPEN": "Abrir",
+      "RECONNECT": "Voltar a ligar",
       "RESET_LOCATION": "Redefinir local",
+      "STATUS_AUTH_ERROR": "Sessão do Google Drive terminada, volte a ligar para retomar a sincronização",
+      "STATUS_CONNECTING": "A ligar",
+      "STATUS_ERROR": "Falha na sincronização",
+      "STATUS_SYNCED": "Última sincronização: {{time}}",
       "SYNC": "Sincronizar",
       "SYNC_LIMIT": "Quantas áreas de transferência devem ser sincronizadas?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Sincronizar o histórico da área de transferência"

@@ -9,6 +9,12 @@ function createHotkeyStore() {
     createSignal<boolean>(false);
   const [hotkeys, setHotkeys] = createSignal<Hotkey[]>([]);
 
+  const resetHotkey = async (hotkey: Hotkey) =>
+    updateHotkey(
+      await invokeCommand(InvokeCommand.ResetHotkey, { hotkey }),
+      false,
+    );
+
   const updateHotkey = async (
     hotkey: Hotkey,
     upload: boolean | undefined = true,
@@ -36,6 +42,7 @@ function createHotkeyStore() {
     hotkeys,
     setHotkeys,
     updateHotkey,
+    resetHotkey,
     init,
     getHotkey,
     getHotkeyIcon,

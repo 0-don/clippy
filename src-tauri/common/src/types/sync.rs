@@ -15,8 +15,29 @@ pub struct Clippy {
     pub deleted_at: Option<NaiveDateTime>,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SyncState {
+    #[default]
+    Disabled,
+    Connecting,
+    Synced,
+    AuthError,
+    Error,
+}
+
+#[derive(Clone, Debug, Default, serde::Serialize)]
+pub struct SyncStatus {
+    pub state: SyncState,
+    pub email: Option<String>,
+    pub last_synced_at: Option<i64>,
+    pub error: Option<String>,
+}
+
 #[async_trait::async_trait]
 pub trait SyncProvider: Send + Sync {
+    async fn account_email(&self) -> Option<String>;
+
     async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>>;
 
     async fn compare_and_fetch_new_clipboards(

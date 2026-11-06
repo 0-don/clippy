@@ -70,6 +70,7 @@
       "CTRL": "Ctrl",
       "PRESS_KEYS": "Naciśnij klawisze",
       "RECORD": "Nagraj",
+      "RESET": "Przywróć domyślne",
       "SHIFT": "Shift",
       "SUPER_LINUX": "Super",
       "SUPER_MAC": "Cmd",
@@ -135,11 +136,18 @@
   },
   "SETTINGS": {
     "BACKUP": {
+      "ACCOUNT": "Konto",
       "CHANGE_LOCATION": "Zmień lokalizację",
       "CONFIG_LOCATION": "Lokalizacja konfiguracji",
       "DATABASE_LOCATION": "Lokalizacja bazy danych",
+      "DISCONNECT": "Rozłącz",
       "OPEN": "Otwarty",
+      "RECONNECT": "Połącz ponownie",
       "RESET_LOCATION": "Zresetuj lokalizację",
+      "STATUS_AUTH_ERROR": "Wylogowano z Dysku Google, połącz ponownie, aby wznowić synchronizację",
+      "STATUS_CONNECTING": "Łączenie",
+      "STATUS_ERROR": "Synchronizacja nie powiodła się",
+      "STATUS_SYNCED": "Ostatnia synchronizacja: {{time}}",
       "SYNC": "Synchronizacja",
       "SYNC_LIMIT": "Ile schowków powinno być synchronizowanych?",
       "SYNCHRONIZE_CLIPBOARD_HISTORY": "Synchronizuj historię schowka"

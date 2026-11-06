@@ -208,7 +208,9 @@ impl GoogleDriveProviderImpl {
         Ok(all_files)
     }
 
-    async fn find_settings_file(&self) -> Result<Option<File>, Box<dyn std::error::Error>> {
+    /// All settings files, newest first. Older builds created a new file on
+    /// every save, so there can be many.
+    async fn list_settings_files(&self) -> Result<Vec<File>, Box<dyn std::error::Error>> {
         let (_, file_list) = self
             .0
             .hub
@@ -216,16 +218,36 @@ impl GoogleDriveProviderImpl {
             .list()
             .q(&format!("name contains '{}'", BACKUP_SETTINGS_PREFIX))
             .spaces("appDataFolder")
+            .order_by("modifiedTime desc")
+            .param("fields", "files(id,name,modifiedTime)")
             .add_scope(Scope::Appdata.as_ref())
             .doit()
             .await?;
 
-        Ok(file_list.files.and_then(|files| files.into_iter().next()))
+        Ok(file_list.files.unwrap_or_default())
+    }
+
+    async fn find_settings_file(&self) -> Result<Option<File>, Box<dyn std::error::Error>> {
+        Ok(self.list_settings_files().await?.into_iter().next())
     }
 }
 
 #[async_trait::async_trait]
 impl SyncProvider for GoogleDriveProviderImpl {
+    async fn account_email(&self) -> Option<String> {
+        let (_, about) = self
+            .0
+            .hub
+            .about()
+            .get()
+            .param("fields", "user(emailAddress)")
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
+            .await
+            .ok()?;
+        about.user?.email_address
+    }
+
     async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>> {
         let filelist = self.fetch_all_clipboard_files().await?;
         let mut clipboards = Vec::new();
@@ -589,25 +611,46 @@ impl SyncProvider for GoogleDriveProviderImpl {
         &self,
         settings: &HashMap<String, Value>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let file = File {
-            name: Some(format!("{}.json", BACKUP_SETTINGS_PREFIX)),
-            mime_type: Some("application/json".into()),
-            parents: Some(vec!["appDataFolder".into()]),
-            ..Default::default()
-        };
+        let content = serde_json::to_string(settings)?;
+        let mut existing = self.list_settings_files().await?.into_iter();
 
-        // Upload the settings (will overwrite if exists)
-        let (_, _) = self
-            .0
-            .hub
-            .files()
-            .create(file)
-            .add_scope(Scope::Appdata.as_ref())
-            .upload(
-                Cursor::new(serde_json::to_string(settings)?),
-                "application/json".parse()?,
-            )
-            .await?;
+        match existing.next().and_then(|file| file.id) {
+            Some(id) => {
+                self.0
+                    .hub
+                    .files()
+                    .update(File::default(), &id)
+                    .add_scope(Scope::Appdata.as_ref())
+                    .upload(Cursor::new(content), "application/json".parse()?)
+                    .await?;
+            }
+            None => {
+                let file = File {
+                    name: Some(format!("{}.json", BACKUP_SETTINGS_PREFIX)),
+                    mime_type: Some("application/json".into()),
+                    parents: Some(vec!["appDataFolder".into()]),
+                    ..Default::default()
+                };
+                self.0
+                    .hub
+                    .files()
+                    .create(file)
+                    .add_scope(Scope::Appdata.as_ref())
+                    .upload(Cursor::new(content), "application/json".parse()?)
+                    .await?;
+            }
+        }
+
+        for duplicate in existing.filter_map(|file| file.id) {
+            self.0
+                .hub
+                .files()
+                .delete(&duplicate)
+                .add_scope(Scope::Appdata.as_ref())
+                .doit()
+                .await
+                .ok();
+        }
 
         printlog!("(remote) uploaded settings");
 

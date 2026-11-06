@@ -30,6 +30,7 @@ export const Shortcut: Component<ShortcutProps> = (props) => {
             status: false,
           })
         }
+        onReset={() => HotkeyStore.resetHotkey(props.hotkey)}
       />
     </div>
   );

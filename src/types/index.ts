@@ -200,3 +200,17 @@ export type TextMatcher = {
   substitution: string;
   enabled: boolean;
 };
+
+export type SyncState =
+  | "disabled"
+  | "connecting"
+  | "synced"
+  | "auth_error"
+  | "error";
+
+export type SyncStatus = {
+  state: SyncState;
+  email: string | null;
+  last_synced_at: number | null;
+  error: string | null;
+};
