@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "Cambiar la posición de la ventana",
       "COLOR_THEME": "Tema de color",
       "GLASS_EFFECT": "Efecto de vidrio",
+      "GLASS_OPACITY": "Tinte del cristal",
       "HTML_CLIPBOARD_TOOLTIP": "Información sobre herramientas del portapapeles HTML",
       "KEYBOARD_SHORTCUT": "Atajo de teclado",
       "OCR": "Reconocimiento de texto en imágenes",

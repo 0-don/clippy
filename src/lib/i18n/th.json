@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "เปลี่ยนตำแหน่งหน้าต่าง",
       "COLOR_THEME": "ธีมสี",
       "GLASS_EFFECT": "เอฟเฟกต์กระจก",
+      "GLASS_OPACITY": "สีกระจก",
       "HTML_CLIPBOARD_TOOLTIP": "คำแนะนำคลิปบอร์ด HTML",
       "KEYBOARD_SHORTCUT": "แป้นพิมพ์ลัด",
       "OCR": "การจดจำข้อความในรูปภาพ",

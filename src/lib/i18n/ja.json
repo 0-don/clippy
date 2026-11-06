@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "ウィンドウの位置を変更する",
       "COLOR_THEME": "カラーテーマ",
       "GLASS_EFFECT": "ガラス効果",
+      "GLASS_OPACITY": "ガラスの色合い",
       "HTML_CLIPBOARD_TOOLTIP": "HTML クリップボード ツールチップ",
       "KEYBOARD_SHORTCUT": "キーボードショートカット",
       "OCR": "画像の文字認識",

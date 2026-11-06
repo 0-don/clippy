@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "Alterar a posição da janela",
       "COLOR_THEME": "Tema de cor",
       "GLASS_EFFECT": "Efeito de vidro",
+      "GLASS_OPACITY": "Tonalidade do vidro",
       "HTML_CLIPBOARD_TOOLTIP": "Dica de ferramenta da área de transferência HTML",
       "KEYBOARD_SHORTCUT": "Atalho de teclado",
       "OCR": "Reconhecimento de texto em imagens",

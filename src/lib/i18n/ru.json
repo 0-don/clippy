@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "Изменить положение окна",
       "COLOR_THEME": "Цветовая тема",
       "GLASS_EFFECT": "Эффект стекла",
+      "GLASS_OPACITY": "Оттенок стекла",
       "HTML_CLIPBOARD_TOOLTIP": "Подсказка буфера обмена HTML",
       "KEYBOARD_SHORTCUT": "Сочетание клавиш",
       "OCR": "Распознавание текста на изображениях",

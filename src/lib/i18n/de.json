@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "Fensterposition ändern",
       "COLOR_THEME": "Farbthema",
       "GLASS_EFFECT": "Glaseffekt",
+      "GLASS_OPACITY": "Glastönung",
       "HTML_CLIPBOARD_TOOLTIP": "HTML-Zwischenablage-Tooltip",
       "KEYBOARD_SHORTCUT": "Tastenkombination",
       "OCR": "Texterkennung in Bildern",

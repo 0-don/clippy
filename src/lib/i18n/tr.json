@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "Pencere konumunu değiştir",
       "COLOR_THEME": "Renk teması",
       "GLASS_EFFECT": "Cam efekti",
+      "GLASS_OPACITY": "Cam tonu",
       "HTML_CLIPBOARD_TOOLTIP": "HTML panosu araç ipucu",
       "KEYBOARD_SHORTCUT": "Klavye kısayolu",
       "OCR": "Görsellerde metin tanıma",

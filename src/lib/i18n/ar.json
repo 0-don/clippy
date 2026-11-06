@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "تغيير موضع النافذة",
       "COLOR_THEME": "سمة الألوان",
       "GLASS_EFFECT": "تأثير الزجاج",
+      "GLASS_OPACITY": "صبغة الزجاج",
       "HTML_CLIPBOARD_TOOLTIP": "تلميحات حول حافظة HTML",
       "KEYBOARD_SHORTCUT": "اختصار لوحة المفاتيح",
       "OCR": "التعرف على النص في الصور",

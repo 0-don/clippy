@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "창 위치 변경",
       "COLOR_THEME": "색상 테마",
       "GLASS_EFFECT": "유리 효과",
+      "GLASS_OPACITY": "유리 색조",
       "HTML_CLIPBOARD_TOOLTIP": "HTML 클립보드 툴팁",
       "KEYBOARD_SHORTCUT": "단축키",
       "OCR": "이미지 텍스트 인식",

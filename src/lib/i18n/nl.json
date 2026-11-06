@@ -194,6 +194,7 @@
       "CHANGE_WINDOW_POSITION": "Vensterpositie wijzigen",
       "COLOR_THEME": "Kleurthema",
       "GLASS_EFFECT": "Glaseffect",
+      "GLASS_OPACITY": "Glastint",
       "HTML_CLIPBOARD_TOOLTIP": "HTML-klembord-tooltip",
       "KEYBOARD_SHORTCUT": "Sneltoets",
       "OCR": "Tekstherkenning in afbeeldingen",
