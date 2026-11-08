@@ -5,7 +5,8 @@ use crate::{
         window_events::setup_window_event_listener,
     },
     service::{
-        cipher::init_encryption_password_lock, p2p::setup_p2p, settings::setup_settings,
+        cipher::init_encryption_password_lock, p2p::setup_p2p,
+        settings::{autostart, setup_settings},
         sync::setup_sync_interval, window::setup_window,
     },
     tao::{config::setup_config, connection::init_db, tao_constants::setup_globals},
@@ -22,6 +23,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'st
     });
 
     setup_settings();
+    autostart();
     setup_window();
     // Cinnamon and others ship no StatusNotifierWatcher; the hotkey still opens the window.
     if let Err(e) = setup_system_tray() {

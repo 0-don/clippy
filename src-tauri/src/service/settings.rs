@@ -15,21 +15,37 @@ use entity::settings;
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::json;
 use std::collections::HashMap;
+#[cfg(target_os = "linux")]
+use std::path::Path;
 use std::sync::Mutex;
 use tauri::Manager;
 use tauri::{Emitter, EventTarget};
 use tauri_plugin_autostart::AutoLaunchManager;
 
+/// Applies the startup setting to the OS. Runs on every launch, not only on toggle:
+/// re-enabling rewrites the entry with the current executable, so a moved or
+/// updated binary keeps starting.
 pub fn autostart() {
+    // A dev build would point the user's real login entry at target/debug.
+    if cfg!(debug_assertions) {
+        return;
+    }
     tauri::async_runtime::spawn(async {
-        let settings = get_global_settings();
         let manager = get_app().state::<AutoLaunchManager>();
-
-        // Use the manager as needed
-        if settings.startup && !manager.is_enabled().expect("Failed to check auto-launch") {
-            manager.enable().expect("Failed to enable auto-launch");
+        let result = if get_global_settings().startup {
+            // auto-launch creates only the last path component, failing without ~/.config.
+            #[cfg(target_os = "linux")]
+            if let Some(home) = std::env::var_os("HOME") {
+                let _ = std::fs::create_dir_all(Path::new(&home).join(".config/autostart"));
+            }
+            manager.enable()
+        } else if manager.is_enabled().unwrap_or(false) {
+            manager.disable()
         } else {
-            manager.disable().expect("Failed to disable auto-launch");
+            Ok(())
+        };
+        if let Err(e) = result {
+            printlog!("Failed to apply autostart setting: {:?}", e);
         }
     });
 }
