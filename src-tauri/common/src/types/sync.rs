@@ -41,6 +41,9 @@ pub struct DeviceInfo {
     pub name: String,
     pub os: String,
     pub last_seen: i64,
+    /// Serialized iroh EndpointAddr, so peers can dial without DNS discovery.
+    #[serde(default)]
+    pub addr: Option<serde_json::Value>,
 }
 
 #[async_trait::async_trait]
@@ -52,6 +55,19 @@ pub trait SyncProvider: Send + Sync {
     async fn list_devices(&self) -> Result<Vec<DeviceInfo>, Box<dyn std::error::Error>>;
 
     async fn remove_device(&self, id: &str);
+
+    /// Leaves a command for a device that could not be reached directly.
+    async fn push_remote_command(
+        &self,
+        device_id: &str,
+        payload: &str,
+    ) -> Result<(), Box<dyn std::error::Error>>;
+
+    /// Returns and deletes the commands left for this device.
+    async fn take_remote_commands(
+        &self,
+        device_id: &str,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>>;
 
     async fn fetch_all_clipboards(&self) -> Result<Vec<Clippy>, Box<dyn std::error::Error>>;
 

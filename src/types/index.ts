@@ -225,7 +225,16 @@ export type DeviceInfo = {
   last_seen: number;
 };
 
+export type PeerLink = "direct" | "relay" | "drive" | "offline";
+
+export type PeerStatus = {
+  link: PeerLink;
+  rtt_ms: number | null;
+};
+
 export type Devices = {
   this_device: string;
+  online: boolean;
   devices: DeviceInfo[];
+  statuses: Record<string, PeerStatus>;
 };

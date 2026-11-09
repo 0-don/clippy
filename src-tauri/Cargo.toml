@@ -1,6 +1,6 @@
 [package]
 name = "clippy"
-version = "1.7.13"
+version = "1.7.14"
 description = "Clipboard Manager built with Rust & Typescript"
 authors = ["0-don"]
 license = "MIT"
@@ -92,7 +92,7 @@ moka = { version = "0", features = ["sync"] }
 
 # ocr
 ocr-rs = "2"
-iroh = "1.4.1"
+iroh = { version = "1.4.1", features = ["platform-verifier"] }
 gethostname = "1"
 
 [target.'cfg(target_os = "linux")'.dependencies]

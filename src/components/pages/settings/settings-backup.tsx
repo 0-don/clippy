@@ -25,7 +25,8 @@ import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
 import { FolderLocation, HotkeyEvent } from "../../../types/enums";
-import { Devices, SyncStatus } from "../../../types";
+import { DeviceInfo, Devices, PeerLink, SyncStatus } from "../../../types";
+import { DictionaryKey } from "../../../lib/i18n";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { ListenEvent } from "../../../types/tauri-listen";
 import { MAX_SYNC_LIMIT } from "../../../utils/constants";
@@ -35,6 +36,13 @@ import { Input } from "../../elements/input";
 import { TextBlock } from "../../elements/text-block";
 import { Toggle } from "../../elements/toggle";
 import { useLanguage } from "../../provider/language-provider";
+
+const PEER_LINK_LABELS: Record<PeerLink, DictionaryKey> = {
+  direct: "SETTINGS.BACKUP.LINK_DIRECT",
+  relay: "SETTINGS.BACKUP.LINK_RELAY",
+  drive: "SETTINGS.BACKUP.LINK_DRIVE",
+  offline: "SETTINGS.BACKUP.LINK_OFFLINE",
+};
 
 interface SettingsBackupProps {}
 
@@ -72,6 +80,22 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
       .unix(unixSeconds)
       .locale(SettingsStore.settings()?.language || "en")
       .fromNow();
+  };
+
+  const deviceStatus = (device: DeviceInfo) => {
+    const list = devices()!;
+    if (device.id === list.this_device) {
+      return `${t("SETTINGS.BACKUP.THIS_DEVICE")}, ${t(
+        list.online ? "SETTINGS.BACKUP.P2P_READY" : "SETTINGS.BACKUP.DRIVE_ONLY",
+      )}`;
+    }
+    const status = list.statuses[device.id];
+    if (!status) return t("SETTINGS.BACKUP.LINK_CHECKING");
+    const label = t(PEER_LINK_LABELS[status.link]);
+    if (status.link === "offline") {
+      return `${label}, ${t("SETTINGS.BACKUP.LAST_SEEN", { time: fromNow(device.last_seen) })}`;
+    }
+    return status.rtt_ms === null ? label : `${label}, ${status.rtt_ms} ms`;
   };
 
   const statusText = () => {
@@ -178,11 +202,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
                       <span class="text-muted-foreground">({device.os})</span>
                     </span>
                     <span class="shrink-0 text-muted-foreground">
-                      {device.id === devices()!.this_device
-                        ? t("SETTINGS.BACKUP.THIS_DEVICE")
-                        : t("SETTINGS.BACKUP.LAST_SEEN", {
-                            time: fromNow(device.last_seen),
-                          })}
+                      {deviceStatus(device)}
                     </span>
                   </div>
                 )}

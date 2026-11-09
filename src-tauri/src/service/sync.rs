@@ -79,6 +79,11 @@ pub async fn upsert_settings_sync(
     Ok(())
 }
 
+/// The signed in provider, without starting a login when there is none.
+pub async fn current_sync_provider() -> Option<Arc<dyn SyncProvider>> {
+    SYNC_PROVIDER.lock().await.clone()
+}
+
 pub async fn get_sync_provider() -> Arc<dyn SyncProvider> {
     if let Some(provider) = SYNC_PROVIDER.lock().await.as_ref() {
         return provider.clone();

@@ -7,7 +7,10 @@ use crate::{
 };
 use chrono::{NaiveDateTime, TimeZone, Utc};
 use common::{
-    constants::{BACKUP_FILE_PREFIX, BACKUP_SETTINGS_PREFIX, DEVICE_FILE_PREFIX, TOKEN_NAME},
+    constants::{
+        BACKUP_FILE_PREFIX, BACKUP_SETTINGS_PREFIX, DEVICE_FILE_PREFIX, REMOTE_COMMAND_FILE_PREFIX,
+        TOKEN_NAME,
+    },
     printlog,
     types::{
         enums::ListenEvent,
@@ -309,6 +312,82 @@ impl SyncProvider for GoogleDriveProviderImpl {
             }
         }
         Ok(devices)
+    }
+
+    async fn push_remote_command(
+        &self,
+        device_id: &str,
+        payload: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let file = File {
+            name: Some(format!(
+                "{}{}_{}.json",
+                REMOTE_COMMAND_FILE_PREFIX,
+                device_id,
+                Uuid::now_v7()
+            )),
+            mime_type: Some("application/json".into()),
+            parents: Some(vec!["appDataFolder".into()]),
+            ..Default::default()
+        };
+        self.0
+            .hub
+            .files()
+            .create(file)
+            .add_scope(Scope::Appdata.as_ref())
+            .upload(Cursor::new(payload.to_string()), "application/json".parse()?)
+            .await?;
+        Ok(())
+    }
+
+    async fn take_remote_commands(
+        &self,
+        device_id: &str,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let (_, file_list) = self
+            .0
+            .hub
+            .files()
+            .list()
+            .q(&format!(
+                "name contains '{}{}'",
+                REMOTE_COMMAND_FILE_PREFIX, device_id
+            ))
+            .spaces("appDataFolder")
+            .param("fields", "files(id)")
+            .add_scope(Scope::Appdata.as_ref())
+            .doit()
+            .await?;
+
+        let mut payloads = Vec::new();
+        for id in file_list.files.unwrap_or_default().into_iter().filter_map(|f| f.id) {
+            let downloaded = self
+                .0
+                .hub
+                .files()
+                .get(&id)
+                .param("alt", "media")
+                .add_scope(Scope::Appdata.as_ref())
+                .doit()
+                .await;
+            let Ok((mut response, _)) = downloaded else { continue };
+            let body = response.body_mut().collect().await?.to_bytes();
+
+            // A command that cannot be removed would run again on every poll.
+            let deleted = self
+                .0
+                .hub
+                .files()
+                .delete(&id)
+                .add_scope(Scope::Appdata.as_ref())
+                .doit()
+                .await
+                .is_ok();
+            if deleted {
+                payloads.push(String::from_utf8_lossy(&body).into_owned());
+            }
+        }
+        Ok(payloads)
     }
 
     async fn remove_device(&self, id: &str) {

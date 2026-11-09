@@ -1354,7 +1354,7 @@ dependencies = [
 
 [[package]]
 name = "clippy"
-version = "1.7.13"
+version = "1.7.14"
 dependencies = [
  "base64 0.23.1",
  "chrono",
@@ -3849,6 +3849,7 @@ dependencies = [
  "reqwest",
  "rustls",
  "rustls-pki-types",
+ "rustls-platform-verifier",
  "serde",
  "serde_bytes",
  "strum",

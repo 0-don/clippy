@@ -15,6 +15,7 @@ use common::types::{
 };
 use entity::settings::{self, ActiveModel};
 use sea_orm::{ActiveModelTrait, EntityTrait};
+use std::collections::HashMap;
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
@@ -24,14 +25,18 @@ pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
 #[derive(serde::Serialize)]
 pub struct Devices {
     this_device: String,
+    online: bool,
     devices: Vec<DeviceInfo>,
+    statuses: HashMap<String, p2p::PeerStatus>,
 }
 
 #[tauri::command]
 pub fn get_devices() -> Devices {
     Devices {
         this_device: p2p::device_id(),
+        online: p2p::is_online(),
         devices: p2p::devices(),
+        statuses: p2p::peer_statuses(),
     }
 }
 

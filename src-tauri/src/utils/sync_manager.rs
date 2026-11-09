@@ -7,25 +7,35 @@ use crate::service::{
 };
 use crate::service::p2p;
 use common::types::sync::{SyncProvider, SyncState};
-use std::sync::atomic::{AtomicI64, Ordering};
+use std::sync::{
+    atomic::{AtomicI64, Ordering},
+    Mutex,
+};
 use sea_orm::prelude::Uuid;
 use std::time::Duration;
 use tokio::{task::JoinHandle, time};
 
 /// Re-published this often so other devices can show when it was last online.
-const DEVICE_PUBLISH_INTERVAL_SECS: i64 = 300;
+const DEVICE_PUBLISH_INTERVAL_SECS: i64 = 120;
 static LAST_DEVICE_PUBLISH: AtomicI64 = AtomicI64::new(0);
+static LAST_PUBLISHED_ADDR: Mutex<Option<serde_json::Value>> = Mutex::new(None);
 
 async fn refresh_devices(provider: &dyn SyncProvider) {
+    let device = p2p::this_device();
     let now = chrono::Utc::now().timestamp();
-    if now - LAST_DEVICE_PUBLISH.load(Ordering::Relaxed) >= DEVICE_PUBLISH_INTERVAL_SECS {
-        match provider.upsert_device(&p2p::this_device()).await {
-            Ok(()) => LAST_DEVICE_PUBLISH.store(now, Ordering::Relaxed),
+    let addr_changed = *LAST_PUBLISHED_ADDR.lock().expect("addr poisoned") != device.addr;
+    if addr_changed || now - LAST_DEVICE_PUBLISH.load(Ordering::Relaxed) >= DEVICE_PUBLISH_INTERVAL_SECS {
+        match provider.upsert_device(&device).await {
+            Ok(()) => {
+                LAST_DEVICE_PUBLISH.store(now, Ordering::Relaxed);
+                *LAST_PUBLISHED_ADDR.lock().expect("addr poisoned") = device.addr;
+            }
             Err(e) => printlog!("p2p: failed to publish device: {:?}", e),
         }
     }
     if let Ok(devices) = provider.list_devices().await {
         p2p::set_devices(devices);
+        tauri::async_runtime::spawn(p2p::probe_devices());
     }
 }
 

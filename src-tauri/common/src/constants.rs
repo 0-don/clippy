@@ -19,6 +19,7 @@ pub static BACKUP_SETTINGS_PREFIX: &str = "settings";
 pub static BACKUP_FILE_PREFIX: &str = "clippy";
 pub static DEVICE_FILE_PREFIX: &str = "device_";
 pub static DEVICE_KEY_NAME: &str = "device.key";
+pub static REMOTE_COMMAND_FILE_PREFIX: &str = "remotecmd_";
 pub static BACKDUP_DATE_FORMAT: &str = "%Y%m%d%H%M%S";
 
 pub static MAIN_WINDOW_X: i32 = 375;
