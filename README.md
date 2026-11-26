@@ -107,7 +107,7 @@ nix-env -iA nixpkgs.clippy-clipboard
   - Clipboard text passed on stdin and as `CLIPPY_TEXT`, output copied or pasted back
   - One script per operating system, synced between devices
 - **Command line:**
-  - `clippy list`, `get`, `copy`, `add`, `search` and `run` talk to the running app
+  - `clippy list`, `get`, `copy`, `add`, `edit`, `rename`, `star`, `delete`, `search` and `run` talk to the running app
   - Pipe text in with `echo hi | clippy add`, script with `--json` output
 - **Smart clipboard features:**
   - Type out clipboard content (where pasting isn't allowed) **ctrl+b**

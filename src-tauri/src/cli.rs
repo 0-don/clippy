@@ -7,7 +7,10 @@ use std::{
 };
 
 const CLI_FILE_NAME: &str = "cli.json";
-const COMMANDS: [&str; 7] = ["list", "search", "get", "copy", "add", "run", "help"];
+const COMMANDS: [&str; 12] = [
+    "list", "search", "get", "copy", "add", "edit", "rename", "star", "unstar", "delete", "run",
+    "help",
+];
 
 const HELP: &str = "Usage: clippy <command> [arguments]
 
@@ -18,6 +21,10 @@ Talks to the running Clippy. Index 1 is the newest clipboard.
   get [INDEX|ID]                    print a clipboard (default 1)
   copy [INDEX|ID]                   put a clipboard back on the system clipboard
   add [TEXT]                        copy text, or stdin when TEXT is missing
+  edit INDEX|ID [TEXT]              replace a text clipboard, opens $EDITOR without TEXT
+  rename INDEX|ID [NAME]            name a clipboard, no NAME removes the name
+  star INDEX|ID, unstar INDEX|ID    add to or remove from favorites
+  delete INDEX|ID                   delete a clipboard
   run NAME                          run a custom command as if its hotkey was pressed
   help                              show this help
 ";
@@ -75,10 +82,29 @@ pub fn run_client(args: &[String]) -> Option<i32> {
     }
 
     let mut args: Vec<String> = args[1..].to_vec();
-    if command == "add" && args.is_empty() && !std::io::stdin().is_terminal() {
-        let mut text = String::new();
-        if std::io::stdin().read_to_string(&mut text).is_ok() {
-            args.push(text);
+    let missing_text = match command {
+        "add" => args.is_empty(),
+        "edit" => args.len() == 1,
+        _ => false,
+    };
+    if missing_text {
+        if !std::io::stdin().is_terminal() {
+            let mut text = String::new();
+            if std::io::stdin().read_to_string(&mut text).is_ok() {
+                args.push(text);
+            }
+        } else if command == "edit" {
+            match edit_in_editor(&args[0]) {
+                Ok(Some(text)) => args.push(text),
+                Ok(None) => {
+                    eprintln!("unchanged");
+                    return Some(0);
+                }
+                Err(e) => {
+                    eprintln!("{e}");
+                    return Some(1);
+                }
+            }
         }
     }
 
@@ -99,6 +125,36 @@ pub fn run_client(args: &[String]) -> Option<i32> {
             Some(2)
         }
     }
+}
+
+/// Opens the current text in the user's editor; None when nothing changed.
+fn edit_in_editor(selector: &str) -> Result<Option<String>, String> {
+    let current = match send("get", vec![selector.to_string()]) {
+        Ok(response) if response.ok => response.output,
+        Ok(response) => return Err(response.output),
+        Err(e) => return Err(format!("clippy is not running ({e})")),
+    };
+    let path = std::env::temp_dir().join(format!("clippy-edit-{}.txt", std::process::id()));
+    std::fs::write(&path, &current).map_err(|e| e.to_string())?;
+
+    let editor = std::env::var("VISUAL")
+        .or_else(|_| std::env::var("EDITOR"))
+        .unwrap_or_else(|_| if cfg!(windows) { "notepad" } else { "vi" }.to_string());
+    let mut parts = editor.split_whitespace();
+    let program = parts.next().unwrap_or("vi");
+    let status = std::process::Command::new(program)
+        .args(parts)
+        .arg(&path)
+        .status()
+        .map_err(|e| format!("could not start {program}: {e}"));
+    let edited = std::fs::read_to_string(&path);
+    let _ = std::fs::remove_file(&path);
+
+    if !status?.success() {
+        return Err(format!("{program} exited with an error"));
+    }
+    let edited = edited.map_err(|e| e.to_string())?;
+    Ok((edited != current).then_some(edited))
 }
 
 fn send(command: &str, args: Vec<String>) -> Result<Response, String> {
@@ -135,11 +191,16 @@ fn send(command: &str, args: Vec<String>) -> Result<Response, String> {
 pub mod server {
     use super::{cli_file, Endpoint, Request, Response, HELP};
     use crate::{
-        commands::clipboard::{get_clipboard, get_clipboards},
+        commands::clipboard::{
+            delete_clipboard, get_clipboard, get_clipboards, rename_clipboard, star_clipboard,
+            update_clipboard_content,
+        },
         prelude::*,
         service::{
-            cipher::is_encryption_key_set, clipboard::copy_clipboard_from_id,
-            custom_command::run_command_hotkey, settings::get_global_settings,
+            cipher::is_encryption_key_set,
+            clipboard::{copy_clipboard_from_id, init_clipboards},
+            custom_command::run_command_hotkey,
+            settings::get_global_settings,
         },
         tao::{connection::db, global::get_app},
     };
@@ -254,7 +315,7 @@ pub mod server {
     }
 
     async fn handle(command: &str, args: &[String]) -> Response {
-        let reads_history = matches!(command, "list" | "search" | "get" | "copy");
+        let reads_history = !matches!(command, "add" | "run" | "help");
         if reads_history && is_locked() {
             return fail("clippy is locked, enter the password in the app first");
         }
@@ -268,6 +329,11 @@ pub mod server {
             "get" => get(options.positional.first()).await,
             "copy" => copy(options.positional.first()).await,
             "add" => add(args),
+            "edit" => edit(&options.positional).await,
+            "rename" => rename(&options.positional).await,
+            "star" => star(options.positional.first(), true).await,
+            "unstar" => star(options.positional.first(), false).await,
+            "delete" => delete(options.positional.first()).await,
             "run" => run(args).await,
             _ => ok(HELP.trim_end()),
         }
@@ -442,6 +508,79 @@ pub mod server {
             Ok(true) => ok(""),
             Ok(false) => fail("could not copy this clipboard"),
             Err(e) => fail(e.to_string()),
+        }
+    }
+
+    /// Write commands need an explicit target, defaulting to the newest is too easy to regret.
+    async fn target(selector: Option<&String>, usage: &str) -> Result<clipboard::Model, Response> {
+        match selector {
+            Some(selector) => resolve(Some(selector)).await.map_err(fail),
+            None => Err(fail(format!("usage: clippy {usage}"))),
+        }
+    }
+
+    async fn edit(positional: &[String]) -> Response {
+        let model = match target(positional.first(), "edit INDEX|ID [TEXT]").await {
+            Ok(model) => model,
+            Err(response) => return response,
+        };
+        let text = positional[1..].join(" ");
+        let result = update_clipboard_content(model.id, model.name.clone(), text).await;
+        match result {
+            Ok(_) => {
+                init_clipboards();
+                ok("")
+            }
+            Err(CommandError::Error(e)) => fail(e),
+        }
+    }
+
+    async fn rename(positional: &[String]) -> Response {
+        let model = match target(positional.first(), "rename INDEX|ID [NAME]").await {
+            Ok(model) => model,
+            Err(response) => return response,
+        };
+        let name = positional[1..].join(" ");
+        let name = (!name.trim().is_empty()).then_some(name);
+        match rename_clipboard(model.id, name).await {
+            Ok(_) => {
+                init_clipboards();
+                ok("")
+            }
+            Err(CommandError::Error(e)) => fail(e),
+        }
+    }
+
+    async fn star(selector: Option<&String>, starred: bool) -> Response {
+        let usage = if starred {
+            "star INDEX|ID"
+        } else {
+            "unstar INDEX|ID"
+        };
+        let model = match target(selector, usage).await {
+            Ok(model) => model,
+            Err(response) => return response,
+        };
+        match star_clipboard(model.id, starred).await {
+            Ok(_) => {
+                init_clipboards();
+                ok("")
+            }
+            Err(CommandError::Error(e)) => fail(e),
+        }
+    }
+
+    async fn delete(selector: Option<&String>) -> Response {
+        let model = match target(selector, "delete INDEX|ID").await {
+            Ok(model) => model,
+            Err(response) => return response,
+        };
+        match delete_clipboard(model.id).await {
+            Ok(()) => {
+                init_clipboards();
+                ok("")
+            }
+            Err(CommandError::Error(e)) => fail(e),
         }
     }
 
