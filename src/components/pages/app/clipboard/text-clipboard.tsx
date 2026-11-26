@@ -1,7 +1,6 @@
-import Tooltip from "@corvu/tooltip";
 import { BsFiletypeHtml, BsJournalRichtext } from "solid-icons/bs";
 import { FiFileText, FiLink } from "solid-icons/fi";
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component, createMemo } from "solid-js";
 import { rgbCompatible } from "../../../../lib/colors";
 import { ClipboardStore } from "../../../../store/clipboard-store";
 import { SettingsStore } from "../../../../store/settings-store";
@@ -10,6 +9,7 @@ import { ClipboardTextType, ClipboardType } from "../../../../types/enums";
 import { copyEntry } from "../../../../utils/clipboard-actions";
 import { LANGUAGES } from "../../../../utils/constants";
 import dayjs from "../../../../utils/dayjs";
+import { HtmlTooltip } from "../../../elements/html-tooltip";
 import { ClipboardHeader } from "./clipboard-header";
 
 interface TextClipboardProps {
@@ -18,57 +18,49 @@ interface TextClipboardProps {
 }
 
 export const TextClipboard: Component<TextClipboardProps> = (props) => {
-  const [fromNowString, setFromNowString] = createSignal(
-    dayjs.utc(props.data.clipboard.created_at).fromNow(),
-  );
+  const fromNow = () =>
+    dayjs
+      .utc(props.data.clipboard.created_at)
+      .locale(SettingsStore.settings()?.language || LANGUAGES[0])
+      .fromNow();
 
-  let type = ClipboardType.Text;
+  const content = createMemo(() => {
+    const text = props.data.text?.data;
+    const html = props.data.html?.data;
+    const rtf = props.data.rtf?.data;
 
-  let data = props.data.text?.data;
-  let textType = props.data.text?.type as ClipboardTextType;
+    if (rtf && html) return { type: ClipboardType.Rtf, data: text || rtf };
+    if (html) return { type: ClipboardType.Html, data: text || html };
+    return { type: ClipboardType.Text, data: text };
+  });
 
-  if (props.data.text?.data && props.data.html?.data) {
-    type = ClipboardType.Html;
-    data = props.data.text?.data;
-  }
-  if (!props.data.text?.data && props.data.html?.data) {
-    type = ClipboardType.Html;
-    data = props.data.html.data;
-  }
-  if (props.data.text?.data && props.data.rtf?.data && props.data.html?.data) {
-    type = ClipboardType.Rtf;
-    data = props.data.text.data;
-  }
-  if (!props.data.text?.data && props.data.rtf?.data && props.data.html?.data) {
-    type = ClipboardType.Rtf;
-    data = props.data.rtf.data;
-  }
+  const data = () => content().data;
 
   const getIcon = () => {
-    if (type === ClipboardType.Html) {
+    if (content().type === ClipboardType.Html) {
       return BsFiletypeHtml;
     }
-    if (type === ClipboardType.Rtf) {
+    if (content().type === ClipboardType.Rtf) {
       return BsJournalRichtext;
     }
 
-    switch (textType) {
+    switch (props.data.text?.type) {
       case ClipboardTextType.Link:
         return FiLink;
       case ClipboardTextType.Hex:
         return () => (
           <div
-            class="h-5 w-5 rounded-md border border-solid border-border"
+            class="border-border h-5 w-5 rounded-md border border-solid"
             style={{
-              "background-color": data?.includes("#") ? data : `#${data}`,
+              "background-color": data()?.includes("#") ? data() : `#${data()}`,
             }}
           />
         );
       case ClipboardTextType.Rgb:
         return () => (
           <div
-            class="h-5 w-5 rounded-md border border-solid border-border"
-            style={{ "background-color": rgbCompatible(data || "")! }}
+            class="border-border h-5 w-5 rounded-md border border-solid"
+            style={{ "background-color": rgbCompatible(data() || "")! }}
           />
         );
       default:
@@ -81,69 +73,59 @@ export const TextClipboard: Component<TextClipboardProps> = (props) => {
     await copyEntry(props.data.clipboard.id, ClipboardType.Text);
   };
 
-  createEffect(() => {
-    dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
-    setFromNowString(dayjs.utc(props.data.clipboard.created_at).fromNow());
-  });
+  const expandedClass = () =>
+    ClipboardStore.isExpanded(props.data.clipboard.id)
+      ? "max-h-96 overflow-y-auto wrap-break-word whitespace-pre-wrap"
+      : "truncate";
 
   return (
-    <Tooltip openDelay={1000}>
-      <Tooltip.Trigger>
-        <button type="button" onClick={handleClick} class="clipboard relative">
-          <ClipboardHeader {...props} Icon={getIcon()} />
+    <HtmlTooltip
+      delay={1000}
+      html={
+        SettingsStore.settings()?.tooltip ? props.data.html?.data : undefined
+      }
+    >
+      <button type="button" onClick={handleClick} class="clipboard relative">
+        <ClipboardHeader {...props} Icon={getIcon()} />
 
-          <div class="min-w-0 flex-1">
-            {props.data.clipboard.name ? (
-              <>
-                <p class="w-[calc(100vw-6.5rem)] truncate text-left text-sm font-medium">
-                  {props.data.clipboard.name}
-                </p>
-                <p
-                  class={`w-[calc(100vw-6.5rem)] text-left text-xs text-muted-foreground ${
-                    ClipboardStore.isExpanded(props.data.clipboard.id)
-                      ? "max-h-96 overflow-y-auto wrap-break-word whitespace-pre-wrap"
-                      : "truncate"
-                  }`}
-                >
-                  {data}
-                </p>
-              </>
-            ) : (
-              <p
-                class={`w-[calc(100vw-6.5rem)] text-left text-sm ${
-                  ClipboardStore.isExpanded(props.data.clipboard.id)
-                    ? "max-h-96 overflow-y-auto wrap-break-word whitespace-pre-wrap"
-                    : "truncate"
-                }`}
-                title={
-                  !props.data.html?.data && SettingsStore.settings()?.tooltip
-                    ? data
-                    : undefined
-                }
-              >
-                {data}
+        <div class="min-w-0 flex-1">
+          {props.data.clipboard.name ? (
+            <>
+              <p class="w-[calc(100vw-6.5rem)] truncate text-left text-sm font-medium">
+                {props.data.clipboard.name}
               </p>
-            )}
-            <div
-              class="text-left text-xs font-thin text-muted-foreground"
-              title={new Date(props.data.clipboard.created_at).toLocaleString()}
+              <p
+                class={[
+                  "text-muted-foreground w-[calc(100vw-6.5rem)] text-left text-xs",
+                  expandedClass(),
+                ]}
+              >
+                {data()}
+              </p>
+            </>
+          ) : (
+            <p
+              class={[
+                "w-[calc(100vw-6.5rem)] text-left text-sm",
+                expandedClass(),
+              ]}
+              title={
+                !props.data.html?.data && SettingsStore.settings()?.tooltip
+                  ? data()
+                  : undefined
+              }
             >
-              {fromNowString()}
-            </div>
-          </div>
-        </button>
-      </Tooltip.Trigger>
-
-      {SettingsStore.settings()?.tooltip && props.data.html?.data && (
-        <Tooltip.Portal>
-          <Tooltip.Content
-            style={{ "max-width": "300px", "max-height": "300px" }}
-            class="truncate rounded-md bg-popover text-popover-foreground p-1 shadow-lg"
+              {data()}
+            </p>
+          )}
+          <div
+            class="text-muted-foreground text-left text-xs font-thin"
+            title={new Date(props.data.clipboard.created_at).toLocaleString()}
           >
-            <div innerHTML={props.data.html.data} />
-          </Tooltip.Content>
-        </Tooltip.Portal>
-      )}
-    </Tooltip>
+            {fromNow()}
+          </div>
+        </div>
+      </button>
+    </HtmlTooltip>
   );
 };

@@ -1,6 +1,6 @@
 import { FiSave, FiX } from "solid-icons/fi";
 import { ImSpinner } from "solid-icons/im";
-import { Component, createResource, createSignal, Show } from "solid-js";
+import { Component, createSignal, onSettled, Show } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
 import { invokeCommand } from "../../lib/tauri";
 import { ClipboardWithRelations, TauriError } from "../../types";
@@ -19,19 +19,19 @@ export const ClipboardEditor: Component<ClipboardEditorProps> = (props) => {
   const { t } = useLanguage();
   const [saving, setSaving] = createSignal(false);
   const [error, setError] = createSignal("");
-  const [name, setName] = createSignal(props.entry.clipboard.name || "");
+  const [name, setName] = createSignal(() => props.entry.clipboard.name || "");
   const [data, setData] = createSignal("");
+  const [loading, setLoading] = createSignal(true);
 
   // List payloads are truncated to a preview length, so the full text has to be
   // fetched before it can be edited.
-  const [loaded] = createResource(
-    () => props.entry.clipboard.id,
-    async (id) => {
-      const full = await invokeCommand(InvokeCommand.GetClipboard, { id });
-      setData(full.text?.data || "");
-      return true;
-    },
-  );
+  onSettled(() => {
+    void invokeCommand(InvokeCommand.GetClipboard, {
+      id: props.entry.clipboard.id,
+    })
+      .then((full) => setData(full.text?.data || ""))
+      .finally(() => setLoading(false));
+  });
 
   const onSave = async () => {
     setError("");
@@ -88,7 +88,7 @@ export const ClipboardEditor: Component<ClipboardEditorProps> = (props) => {
       />
 
       <Show
-        when={!loaded.loading}
+        when={!loading()}
         fallback={
           <div class="flex flex-1 items-center justify-center">
             <ImSpinner class="text-foreground animate-spin" />
@@ -122,7 +122,7 @@ export const ClipboardEditor: Component<ClipboardEditorProps> = (props) => {
           Icon={saving() ? ImSpinner : FiSave}
           iconClassName={saving() ? "animate-spin" : ""}
           onClick={onSave}
-          disabled={saving() || loaded.loading}
+          disabled={saving() || loading()}
         />
       </div>
     </div>

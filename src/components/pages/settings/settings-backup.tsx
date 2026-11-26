@@ -12,15 +12,7 @@ import {
   TbOutlinePlugConnectedX,
   TbOutlineRefresh,
 } from "solid-icons/tb";
-import {
-  Component,
-  createResource,
-  createSignal,
-  For,
-  onCleanup,
-  onMount,
-  Show,
-} from "solid-js";
+import { Component, createSignal, For, onSettled, Show } from "solid-js";
 import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { HotkeyStore } from "../../../store/hotkey-store";
 import { SettingsStore } from "../../../store/settings-store";
@@ -48,30 +40,31 @@ interface SettingsBackupProps {}
 
 export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
   const { t } = useLanguage();
-  const [databaseUrl, setDatabaseUrl] = createResource(() =>
-    invokeCommand(InvokeCommand.GetDbPath),
-  );
-  const [configUrl] = createResource(() =>
-    invokeCommand(InvokeCommand.GetConfigPath),
-  );
+  const [databaseUrl, setDatabaseUrl] = createSignal<string>();
+  const [configUrl, setConfigUrl] = createSignal<string>();
+  const loadDatabaseUrl = async () =>
+    setDatabaseUrl(await invokeCommand(InvokeCommand.GetDbPath));
   const [syncStatus, setSyncStatus] = createSignal<SyncStatus>();
   const [devices, setDevices] = createSignal<Devices>();
   const loadDevices = async () =>
     setDevices(await invokeCommand(InvokeCommand.GetDevices));
   const [now, setNow] = createSignal(Date.now());
 
-  onMount(async () => {
-    setSyncStatus(await invokeCommand(InvokeCommand.SyncStatus));
-    await loadDevices();
-  });
-  const unlisten = listenEvent(ListenEvent.SyncStatus, (status) => {
-    setSyncStatus(status);
+  onSettled(() => {
+    void loadDatabaseUrl();
+    void invokeCommand(InvokeCommand.GetConfigPath).then(setConfigUrl);
+    void invokeCommand(InvokeCommand.SyncStatus).then(setSyncStatus);
     void loadDevices();
-  });
-  const clock = setInterval(() => setNow(Date.now()), 30_000);
-  onCleanup(() => {
-    clearInterval(clock);
-    void unlisten.then((stop) => stop());
+
+    const unlisten = listenEvent(ListenEvent.SyncStatus, (status) => {
+      setSyncStatus(status);
+      void loadDevices();
+    });
+    const clock = setInterval(() => setNow(Date.now()), 30_000);
+    return () => {
+      clearInterval(clock);
+      void unlisten.then((stop) => stop());
+    };
   });
 
   const fromNow = (unixSeconds: number) => {
@@ -86,7 +79,9 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
     const list = devices()!;
     if (device.id === list.this_device) {
       return `${t("SETTINGS.BACKUP.THIS_DEVICE")}, ${t(
-        list.online ? "SETTINGS.BACKUP.P2P_READY" : "SETTINGS.BACKUP.DRIVE_ONLY",
+        list.online
+          ? "SETTINGS.BACKUP.P2P_READY"
+          : "SETTINGS.BACKUP.DRIVE_ONLY",
       )}`;
     }
     const status = list.statuses[device.id];
@@ -147,7 +142,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               <TbOutlineMail />
               <h6 class="text-sm">{t("SETTINGS.BACKUP.ACCOUNT")}</h6>
             </div>
-            <span class="truncate text-sm text-muted-foreground">
+            <span class="text-muted-foreground truncate text-sm">
               {syncStatus()?.email ?? "..."}
             </span>
           </div>
@@ -156,16 +151,15 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
             <div class="flex flex-col truncate">
               <div class="flex items-center space-x-2">
                 <TbOutlineCloud />
-                <h6
-                  class="text-sm"
-                  classList={{ "text-red-500": hasProblem() }}
-                >
+                <h6 class={["text-sm", { "text-red-500": hasProblem() }]}>
                   {statusText()}
                 </h6>
               </div>
-              <Show when={syncStatus()?.state === "error" && syncStatus()?.error}>
+              <Show
+                when={syncStatus()?.state === "error" && syncStatus()?.error}
+              >
                 <p
-                  class="ml-6 truncate text-xs text-muted-foreground"
+                  class="text-muted-foreground ml-6 truncate text-xs"
                   title={syncStatus()?.error ?? ""}
                 >
                   {syncStatus()?.error}
@@ -201,7 +195,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
                       {device.name}{" "}
                       <span class="text-muted-foreground">({device.os})</span>
                     </span>
-                    <span class="shrink-0 text-muted-foreground">
+                    <span class="text-muted-foreground shrink-0">
                       {deviceStatus(device)}
                     </span>
                   </div>
@@ -241,7 +235,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div class="relative w-full cursor-pointer">
             <div
               title={databaseUrl()}
-              class="w-full truncate rounded-md border border-border bg-popover px-3 py-0.5 text-left text-sm italic focus:bg-muted focus:outline-hidden text-foreground"
+              class="border-border bg-popover focus:bg-muted text-foreground w-full truncate rounded-md border px-3 py-0.5 text-left text-sm italic focus:outline-hidden"
             >
               {databaseUrl()}
             </div>
@@ -251,7 +245,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               label="SETTINGS.BACKUP.RESET_LOCATION"
               onClick={async () => {
                 await SettingsStore.resetClipboardDbLocation();
-                setDatabaseUrl.refetch();
+                await loadDatabaseUrl();
               }}
               Icon={BiRegularReset}
             />
@@ -260,7 +254,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
               label="SETTINGS.BACKUP.CHANGE_LOCATION"
               onClick={async () => {
                 await SettingsStore.changeClipboardDbLocation();
-                setDatabaseUrl.refetch();
+                await loadDatabaseUrl();
               }}
               Icon={TbOutlineExchange}
             />
@@ -286,7 +280,7 @@ export const SettingsBackup: Component<SettingsBackupProps> = ({}) => {
           <div class="relative w-full cursor-pointer">
             <div
               title={configUrl()}
-              class="w-full truncate rounded-md border border-border bg-popover px-3 py-0.5 text-left text-sm italic focus:bg-muted focus:outline-hidden text-foreground"
+              class="border-border bg-popover focus:bg-muted text-foreground w-full truncate rounded-md border px-3 py-0.5 text-left text-sm italic focus:outline-hidden"
             >
               {configUrl()}
             </div>

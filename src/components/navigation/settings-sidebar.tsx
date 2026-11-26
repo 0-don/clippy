@@ -1,4 +1,5 @@
-import { Component, For, onCleanup, onMount } from "solid-js";
+import { Dynamic } from "@solidjs/web";
+import { Component, For, onSettled } from "solid-js";
 import { cn } from "../../lib/utils";
 import { SettingsStore } from "../../store/settings-store";
 import { useLanguage } from "../provider/language-provider";
@@ -29,26 +30,28 @@ export const SettingsSidebar: Component = () => {
     }
   };
 
-  onMount(() => window.addEventListener("keydown", handleKeyNavigation));
-  onCleanup(() => window.removeEventListener("keydown", handleKeyNavigation));
+  onSettled(() => {
+    window.addEventListener("keydown", handleKeyNavigation);
+    return () => window.removeEventListener("keydown", handleKeyNavigation);
+  });
 
   return (
     <nav class="bg-secondary flex w-40 shrink-0 flex-col gap-1 overflow-y-auto p-2">
-      <For each={SettingsStore.tabs()}>
+      <For each={SettingsStore.tabs()} keyed={(tab) => tab.name}>
         {(tab) => (
           <button
             type="button"
             class={cn(
               "flex w-full cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm font-medium",
-              tab.current
+              tab().current
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
             )}
-            onClick={() => SettingsStore.setCurrentTab(tab.name)}
-            title={t(tab.name)}
+            onClick={() => SettingsStore.setCurrentTab(tab().name)}
+            title={t(tab().name)}
           >
-            <tab.Icon class="shrink-0 text-base" />
-            <span class="truncate">{t(tab.name)}</span>
+            <Dynamic component={tab().Icon} class="shrink-0 text-base" />
+            <span class="truncate">{t(tab().name)}</span>
           </button>
         )}
       </For>

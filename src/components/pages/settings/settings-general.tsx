@@ -9,7 +9,7 @@ import {
   TbOutlineTooltip,
 } from "solid-icons/tb";
 import { VsRocket } from "solid-icons/vs";
-import { Component, onCleanup, Show } from "solid-js";
+import { Component, onSettled, Show } from "solid-js";
 import { msg } from "../../../lib/i18n";
 import { invokeCommand } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
@@ -53,7 +53,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
     );
   };
 
-  onCleanup(() => clearTimeout(glassPersistTimer));
+  onSettled(() => () => clearTimeout(glassPersistTimer));
 
   return (
     <Show when={SettingsStore.settings()}>
@@ -193,7 +193,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
                 {t("SETTINGS.GENERAL.SUPPRESS_HOTKEY_ON_FULLSCREEN")}
               </h6>
             </div>
-            <p class="ml-6 text-xs text-muted-foreground">
+            <p class="text-muted-foreground ml-6 text-xs">
               {t("SETTINGS.GENERAL.SUPPRESS_HOTKEY_ON_FULLSCREEN_INFO")}
             </p>
           </div>
@@ -216,7 +216,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
               <TbOutlineTextRecognition />
               <h6 class="text-sm">{t("SETTINGS.GENERAL.OCR")}</h6>
             </div>
-            <p class="ml-6 text-xs text-muted-foreground">
+            <p class="text-muted-foreground ml-6 text-xs">
               {t("SETTINGS.GENERAL.OCR_INFO")}
             </p>
           </div>
@@ -239,7 +239,7 @@ export const SettingsGeneral: Component<SettingsGeneralProps> = ({}) => {
               <RiDeviceKeyboardFill />
               <h6 class="text-sm">{t("SETTINGS.GENERAL.PASTE_ON_SELECT")}</h6>
             </div>
-            <p class="ml-6 text-xs text-muted-foreground">
+            <p class="text-muted-foreground ml-6 text-xs">
               {t("SETTINGS.GENERAL.PASTE_ON_SELECT_INFO")}
             </p>
           </div>

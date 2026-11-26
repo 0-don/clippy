@@ -1,14 +1,12 @@
-import { Component, onMount } from "solid-js";
-import { ClipboardStore } from "../../../store/clipboard-store";
+import { Component, onSettled } from "solid-js";
+import { ClipboardStore, initialWhere } from "../../../store/clipboard-store";
 import { Clipboards } from "./clipboard/clipboards";
 
-interface RecentClipboardsProps {}
-
-export const RecentClipboards: Component<RecentClipboardsProps> = ({}) => {
-  onMount(async () => {
-    ClipboardStore.resetWhere();
-    const clipboards = await ClipboardStore.getClipboards();
-    ClipboardStore.setClipboards(clipboards);
+export const RecentClipboards: Component = () => {
+  onSettled(() => {
+    void ClipboardStore.getClipboards(initialWhere).then(
+      ClipboardStore.setClipboards,
+    );
   });
 
   return <Clipboards />;

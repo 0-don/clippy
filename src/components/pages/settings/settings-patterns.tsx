@@ -1,6 +1,6 @@
 import { AiFillEye, AiFillEyeInvisible } from "solid-icons/ai";
 import { TbOutlineGridPattern, TbOutlineTrash } from "solid-icons/tb";
-import { Component, createSignal, Index, Show } from "solid-js";
+import { Component, createSignal, For, Show } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
 import { SettingsStore } from "../../../store/settings-store";
 import { InvokeCommand } from "../../../types/tauri-invoke";
@@ -47,19 +47,19 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
       title={t("SETTINGS.PATTERNS.CHANGE_YOUR_TEXT_MATCHES")}
     >
       <div class="flex items-center justify-between gap-2 px-5 pb-5">
-        <p class="text-sm text-muted-foreground">
+        <p class="text-muted-foreground text-sm">
           {t("SETTINGS.PATTERNS.INFO")}
         </p>
       </div>
       {/* Table Headers */}
       <div class="mb-2 grid grid-cols-[1fr_1fr_auto_auto] gap-2.5 px-5">
-        <div class="text-sm font-bold text-muted-foreground">
+        <div class="text-muted-foreground text-sm font-bold">
           {t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}
         </div>
-        <div class="text-sm font-bold text-muted-foreground">
+        <div class="text-muted-foreground text-sm font-bold">
           {t("SETTINGS.PATTERNS.SUBSTITUTION")}
         </div>
-        <div class="text-sm font-bold text-muted-foreground">
+        <div class="text-muted-foreground text-sm font-bold">
           {t("SETTINGS.PATTERNS.ACTIONS")}
         </div>
         <div></div> {/* Empty header for action button */}
@@ -73,7 +73,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
           placeholder={t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}
           value={matchExpression()}
           onInput={(e) => setMatchExpression(e.currentTarget.value)}
-          minLength={MIN_PATTERN_LENGTH}
+          minlength={MIN_PATTERN_LENGTH}
           maxlength={MAX_DESCRIPTION_LENGTH}
           required
         />
@@ -81,7 +81,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
           placeholder={t("SETTINGS.PATTERNS.SUBSTITUTION")}
           value={substitution()}
           onInput={(e) => setSubstitution(e.currentTarget.value)}
-          minLength={0}
+          minlength={0}
           maxlength={MAX_DESCRIPTION_LENGTH}
         />
         <CheckBox
@@ -107,14 +107,14 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
       </div>
       {/* Existing patterns list */}
       <div class="h-72 overflow-auto px-5">
-        <Index each={SettingsStore.settings()?.text_matchers || []}>
+        <For each={SettingsStore.settings()?.text_matchers || []} keyed={false}>
           {(pattern, index) => (
             <div class="flex flex-col gap-2.5">
               <div class="mt-2.5 grid grid-cols-[1fr_1fr_auto_auto] gap-2.5">
                 <Input
                   placeholder={t("SETTINGS.PATTERNS.MATCH_EXPRESSION")}
                   type={passwordType() ? "password" : "text"}
-                  minLength={MIN_PATTERN_LENGTH}
+                  minlength={MIN_PATTERN_LENGTH}
                   maxlength={MAX_DESCRIPTION_LENGTH}
                   value={pattern().match_expression}
                   debounce={1000}
@@ -138,7 +138,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
                   placeholder={t("SETTINGS.PATTERNS.SUBSTITUTION")}
                   type={passwordType() ? "password" : "text"}
                   value={pattern().substitution}
-                  minLength={0}
+                  minlength={0}
                   maxlength={MAX_DESCRIPTION_LENGTH}
                   debounce={1000}
                   onInput={(e) => {
@@ -184,7 +184,7 @@ export const SettingsPatterns: Component<SettingsPatternsProps> = ({}) => {
               <hr class="border-border" />
             </div>
           )}
-        </Index>
+        </For>
       </div>
     </TextBlock>
   );

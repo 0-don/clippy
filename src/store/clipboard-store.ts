@@ -1,5 +1,5 @@
 import { Channel } from "@tauri-apps/api/core";
-import { createRoot, createSignal } from "solid-js";
+import { createRoot, createSignal, flush } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
 import {
   ClipboardWhere,
@@ -22,9 +22,9 @@ export const initialWhere: ClipboardWhere = {
 function createClipboardStore() {
   const [clipboardSyncProgress, setClipboardSyncProgress] =
     createSignal<Progress>();
-  const [clipboardRef, setClipboardRef] = createSignal<
-    HTMLDivElement | undefined
-  >();
+  let listElement: HTMLDivElement | undefined;
+  const clipboardRef = () => listElement;
+  const setClipboardRef = (el: HTMLDivElement) => (listElement = el);
   const [clipboards, setClipboards] = createSignal<ClipboardWithRelations[]>(
     [],
   );
@@ -32,7 +32,6 @@ function createClipboardStore() {
   const [hasMore, setHasMore] = createSignal(true);
   // Monotonic id to discard stale streamed search results (latest call wins).
   let searchRequestId = 0;
-  const resetWhere = () => setWhere(initialWhere);
   const [selectedIndex, setSelectedIndex] = createSignal(-1);
   const [isSearching, setIsSearching] = createSignal(false);
   const [expandedIds, setExpandedIds] = createSignal<Set<number>>(new Set());
@@ -51,10 +50,12 @@ function createClipboardStore() {
 
   const isExpanded = (id: number) => expandedIds().has(id);
 
-  const getClipboards = async () => {
+  // Takes the filter instead of reading where(): a write is not readable until the next flush.
+  const getClipboards = async (next: ClipboardWhere) => {
+    setWhere(next);
     setIsSearching(true);
     try {
-      const response = await invokeCommand(InvokeCommand.GetClipboards, where());
+      const response = await invokeCommand(InvokeCommand.GetClipboards, next);
       setHasMore(response.has_more);
       return response.clipboards;
     } finally {
@@ -132,9 +133,7 @@ function createClipboardStore() {
     const onChunk = new Channel<DecryptEvent>();
     onChunk.onmessage = (message) => {
       if (message.event === "batch") {
-        setClipboards((prev) =>
-          mergeClipboards(prev, message.data.clipboards),
-        );
+        setClipboards((prev) => mergeClipboards(prev, message.data.clipboards));
         setClipboardSyncProgress({
           label: "SETTINGS.ENCRYPT.DECRYPTION_PROGRESS_LOCAL",
           current: message.data.current,
@@ -160,55 +159,59 @@ function createClipboardStore() {
       return;
     }
 
-    setWhere(initialWhere);
     setExpandedIds(new Set<number>());
-    const clipboards = await getClipboards();
+    const clipboards = await getClipboards(initialWhere);
     setClipboards(clipboards);
-    ClipboardStore.clipboardRef()?.scrollTo(0, 0);
+    clipboardRef()?.scrollTo(0, 0);
   };
 
   const resetClipboards = async () => {
-    setWhere(initialWhere);
     setHasMore(true);
     setExpandedIds(new Set<number>());
-    const clipboards = await getClipboards();
+    const clipboards = await getClipboards(initialWhere);
     setClipboards(clipboards);
   };
 
+  const loadMore = async () => {
+    const more = await getClipboards({
+      ...where(),
+      cursor: clipboards().length,
+    });
+    setClipboards((prev) => [...prev, ...more]);
+  };
+
   const handleKeyDown = async (e: KeyboardEvent) => {
-    if (!clipboards().length) return;
+    const count = clipboards().length;
+    if (!count) return;
 
     switch (e.key) {
-      case "ArrowDown":
+      case "ArrowDown": {
         e.preventDefault();
-        const isLastItem = selectedIndex() === clipboards().length - 1;
+        const current = selectedIndex();
+        let next = current < count - 1 ? current + 1 : current;
 
-        // If we're at the last item and there's more data, load more
-        if (isLastItem && hasMore()) {
-          setWhere((prev) => ({ ...prev, cursor: clipboards().length }));
-          const newClipboards = await getClipboards();
-          setClipboards((prev) => [...prev, ...newClipboards]);
-          // Move to next item after loading more
-          setSelectedIndex((prev) => prev + 1);
-        } else {
-          // Normal navigation if not at last item or no more data
-          setSelectedIndex((prev) =>
-            prev < clipboards().length - 1 ? prev + 1 : prev,
-          );
+        if (current === count - 1 && hasMore()) {
+          await loadMore();
+          next = current + 1;
         }
 
-        // Ensure selected item is visible
-        const nextElement = clipboardRef()?.children[selectedIndex() + 1];
-        nextElement?.scrollIntoView({ block: "nearest" });
+        setSelectedIndex(next);
+        flush();
+        clipboardRef()?.children[next + 1]?.scrollIntoView({
+          block: "nearest",
+        });
         break;
+      }
 
-      case "ArrowUp":
+      case "ArrowUp": {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
-        // Ensure selected item is visible
-        const prevElement = clipboardRef()?.children[selectedIndex()];
-        prevElement?.scrollIntoView({ block: "nearest" });
+        const current = selectedIndex();
+        const next = current > 0 ? current - 1 : current;
+        setSelectedIndex(next);
+        flush();
+        clipboardRef()?.children[next]?.scrollIntoView({ block: "nearest" });
         break;
+      }
 
       case "Enter":
         if (selectedIndex() >= 0) {
@@ -223,13 +226,11 @@ function createClipboardStore() {
     clipboards,
     newClipboard,
     setClipboards,
-    where,
-    setWhere,
     hasMore,
     setHasMore,
     resetClipboards,
-    resetWhere,
     getClipboards,
+    loadMore,
     searchStream,
     unlockStream,
     mergeClipboards,

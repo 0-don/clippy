@@ -4,7 +4,7 @@ import {
   TbOutlineTrash,
 } from "solid-icons/tb";
 import { VsTerminal } from "solid-icons/vs";
-import { Accessor, Component, createSignal, For, Index, Show } from "solid-js";
+import { Accessor, Component, createSignal, For, Show } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand } from "../../../lib/tauri";
 import { cn } from "../../../lib/utils";
@@ -135,11 +135,11 @@ export const SettingsCommands: Component = () => {
         <For each={INTERPRETERS}>{(name) => <option value={name} />}</For>
       </datalist>
       <div class="flex flex-col gap-4 px-5 pb-5">
-        <Index each={commands()}>
+        <For each={commands()} keyed={false}>
           {(command, index) => (
             <CommandEditor command={command} index={index} />
           )}
-        </Index>
+        </For>
       </div>
     </TextBlock>
   );
@@ -152,7 +152,7 @@ interface CommandEditorProps {
 
 const CommandEditor: Component<CommandEditorProps> = (props) => {
   const { t } = useLanguage();
-  const [os, setOs] = createSignal<CommandOs>(currentOs());
+  const [os, setOs] = createSignal<CommandOs>(currentOs);
   const [result, setResult] = createSignal<{ ok: boolean; text: string }>();
   const [running, setRunning] = createSignal(false);
 
@@ -235,8 +235,9 @@ const CommandEditor: Component<CommandEditorProps> = (props) => {
               label: TARGET_LABELS[target],
             }))}
             value={
-              COMMAND_TARGETS.find((target) => target === props.command().target) ??
-              "local"
+              COMMAND_TARGETS.find(
+                (target) => target === props.command().target,
+              ) ?? "local"
             }
             onChange={(target) =>
               update({
@@ -301,7 +302,7 @@ const CommandEditor: Component<CommandEditorProps> = (props) => {
       <textarea
         class="border-border bg-popover text-foreground focus:border-primary min-h-24 w-full resize-y rounded-md border p-1.5 font-mono text-xs focus:outline-hidden"
         placeholder={t("SETTINGS.COMMANDS.SCRIPT")}
-        spellcheck={false}
+        spellcheck="false"
         value={script().script}
         onChange={(e) => updateScript({ script: e.currentTarget.value })}
       />

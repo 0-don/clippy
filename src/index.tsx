@@ -1,5 +1,5 @@
-import { onMount } from "solid-js";
-import { render } from "solid-js/web";
+import { render } from "@solidjs/web";
+import { onSettled } from "solid-js";
 import App from "./components/pages/app/app";
 import LanguageProvider from "./components/provider/language-provider";
 import { listenEvent } from "./lib/tauri";
@@ -11,7 +11,7 @@ import "./styles.css";
 import { ListenEvent } from "./types/tauri-listen";
 
 const Index = () => {
-  onMount(() => {
+  onSettled(() => {
     SettingsStore.init();
     HotkeyStore.init();
   });

@@ -1,5 +1,6 @@
 import { IconTypes } from "solid-icons";
-import { Component, ComponentProps, splitProps } from "solid-js";
+import { ComponentProps } from "@solidjs/web";
+import { Component, omit } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
 import { cn } from "../../lib/utils";
 import { useLanguage } from "../provider/language-provider";
@@ -11,13 +12,14 @@ type ButtonProps = ComponentProps<"button"> & {
 };
 
 export const Button: Component<ButtonProps> = (props) => {
-  const [local, buttonProps] = splitProps(props, [
+  const buttonProps = omit(
+    props,
     "label",
     "iconClassName",
     "Icon",
     "children",
     "class",
-  ]);
+  );
 
   const { t } = useLanguage();
 
@@ -26,16 +28,16 @@ export const Button: Component<ButtonProps> = (props) => {
       type={buttonProps.type || "button"}
       {...buttonProps}
       class={cn(
-        "flex items-center justify-center rounded-sm bg-primary px-1 py-1 text-xs font-bold text-primary-foreground hover:bg-primary/90 disabled:bg-muted",
+        "bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted flex items-center justify-center rounded-sm px-1 py-1 text-xs font-bold",
         !buttonProps.disabled ? "cursor-pointer" : "cursor-not-allowed",
-        local.class,
+        props.class,
       )}
     >
-      {local.Icon && (
-        <local.Icon class={cn("mr-1 text-lg", local.iconClassName)} />
+      {props.Icon && (
+        <props.Icon class={cn("mr-1 text-lg", props.iconClassName)} />
       )}
-      {local.children}
-      <span>{t(local.label) || local.label}</span>
+      {props.children}
+      <span>{t(props.label) || props.label}</span>
     </button>
   );
 };

@@ -1,5 +1,5 @@
 import { VsArrowSwap } from "solid-icons/vs";
-import { Component, createSignal } from "solid-js";
+import { Component } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
 
 import { useLanguage } from "../provider/language-provider";
@@ -13,15 +13,15 @@ interface DropdownProps {
 
 export const Dropdown: Component<DropdownProps> = (props) => {
   const { t } = useLanguage();
-  const [ref, setRef] = createSignal<HTMLSelectElement>();
+  let select: HTMLSelectElement | undefined;
 
   return (
     <div
-      onClick={() => ref()?.dispatchEvent(new MouseEvent("mousedown"))}
-      class={`${props.className ? props.className : ""} group flex items-center justify-between rounded-md border border-border bg-popover p-1 px-1.5 text-sm text-foreground focus:ring-0 focus:outline-hidden`}
+      onClick={() => select?.dispatchEvent(new MouseEvent("mousedown"))}
+      class={`${props.className ? props.className : ""} group border-border bg-popover text-foreground flex items-center justify-between rounded-md border p-1 px-1.5 text-sm focus:ring-0 focus:outline-hidden`}
     >
       <select
-        ref={setRef}
+        ref={select}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         class="cursor-pointer appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden"
@@ -36,7 +36,7 @@ export const Dropdown: Component<DropdownProps> = (props) => {
           </option>
         ))}
       </select>
-      <VsArrowSwap class="rotate-90 group-hover:text-primary" />
+      <VsArrowSwap class="group-hover:text-primary rotate-90" />
     </div>
   );
 };

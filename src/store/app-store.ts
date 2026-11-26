@@ -2,24 +2,32 @@ import { BsStarFill } from "solid-icons/bs";
 import { CgMore } from "solid-icons/cg";
 import { TbOutlineSearch } from "solid-icons/tb";
 import { VsHistory } from "solid-icons/vs";
-import { createResource, createRoot, createSignal } from "solid-js";
+import { createRoot, createSignal } from "solid-js";
 import { invokeCommand } from "../lib/tauri";
-import { Tabs } from "../types";
+import { Settings, Tabs } from "../types";
 import { HotkeyEvent, PasswordAction } from "../types/enums";
 import { InvokeCommand } from "../types/tauri-invoke";
-import { LANGUAGES, LANGUAGE_KEY, TAB_NAMES, Tab } from "../utils/constants";
+import {
+  LANGUAGES,
+  LANGUAGE_KEY,
+  Language,
+  TAB_NAMES,
+  Tab,
+} from "../utils/constants";
 import { SettingsStore } from "./settings-store";
 
 function createAppStore() {
   const [passwordLock, setPasswordLock] = createSignal<PasswordAction>();
-  const detectedLocale =
-    localStorage.getItem(LANGUAGE_KEY) || Object.values(LANGUAGES)[0];
+  const storedLocale = localStorage.getItem(LANGUAGE_KEY);
+  const detectedLocale: Language =
+    LANGUAGES.find((language) => language === storedLocale) ?? LANGUAGES[0];
 
-  const [locale, setLocale] = createResource(
-    async () =>
+  const [locale, setLocale] = createSignal<Language>(detectedLocale);
+  const refreshLocale = async () =>
+    setLocale(
       (await invokeCommand(InvokeCommand.GetSettings))?.language ||
-      detectedLocale,
-  );
+        detectedLocale,
+    );
 
   const [tabs, setTabs] = createSignal<Tabs[]>([
     {
@@ -53,21 +61,22 @@ function createAppStore() {
   const getCurrentTab = () => tabs().find((s) => s.current)!;
 
   // OS is needed to gate the glass feature (Windows/macOS only). Resolved once.
-  const [os] = createResource(async () => {
-    try {
-      return await invokeCommand(InvokeCommand.GetOs);
-    } catch {
-      return "";
-    }
-  });
+  const [os, setOs] = createSignal<string>();
+  invokeCommand(InvokeCommand.GetOs)
+    .then(setOs)
+    .catch(() => setOs(""));
+  void refreshLocale();
 
   // Apply the full appearance to <html> from the current settings:
   // - `.dark` class -> light vs dark within the chosen theme
   // - `data-theme`  -> which named palette
   // - `data-glass`  -> translucent surfaces for the native window blur
   //   (gated off on Linux, where native glass is unsupported)
-  const applyAppearance = () => {
-    const settings = SettingsStore.settings();
+  // Takes the settings explicitly: a setter is not visible to reads until the next flush.
+  const applyAppearance = (
+    settings: Settings | undefined = SettingsStore.settings(),
+    platform = os(),
+  ) => {
     const html = document.querySelector("html");
     if (!html) return;
 
@@ -77,19 +86,22 @@ function createAppStore() {
 
     html.setAttribute("data-theme", settings?.theme || "neutral");
 
-    os() !== "linux" && settings?.glass
+    platform !== "linux" && settings?.glass
       ? html.setAttribute("data-glass", "on")
       : html.removeAttribute("data-glass");
 
     // Glass tint: push the slider value (0..1) onto <html> as a CSS var. styles.css
     // derives the surface alphas from it via calc(), so dragging the slider restyles
     // the glass live. Fall back to the DB default if the setting is missing.
-    html.style.setProperty("--glass-opacity", `${settings?.glass_opacity ?? 0.55}`);
+    html.style.setProperty(
+      "--glass-opacity",
+      `${settings?.glass_opacity ?? 0.55}`,
+    );
   };
 
   return {
     locale,
-    setLocale,
+    refreshLocale,
     os,
     passwordLock,
     setPasswordLock,
@@ -97,10 +109,7 @@ function createAppStore() {
     setTabs,
     changeTab,
     getCurrentTab,
-    // Kept the `darkMode` name as the public entry point so existing callers
-    // (settings-store init, dark-mode toggle effect) keep working; it now
-    // applies theme + glass too.
-    darkMode: applyAppearance,
+    applyAppearance,
   };
 }
 

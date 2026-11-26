@@ -1,7 +1,7 @@
 import { RiDeviceKeyboardFill } from "solid-icons/ri";
 import { BiRegularReset } from "solid-icons/bi";
 import { VsClose } from "solid-icons/vs";
-import { Component, createSignal, onCleanup, Show } from "solid-js";
+import { Component, createSignal, onSettled, Show } from "solid-js";
 import { DictionaryKey } from "../../lib/i18n";
 import { invokeCommand } from "../../lib/tauri";
 import { cn } from "../../lib/utils";
@@ -157,7 +157,7 @@ export const HotkeyRecorder: Component<HotkeyRecorderProps> = (props) => {
     window.removeEventListener("blur", stop);
   }
 
-  onCleanup(stop);
+  onSettled(() => stop);
 
   return (
     <div class="flex items-center gap-1">

@@ -6,7 +6,10 @@ import { Toggle } from "../elements/toggle";
 interface DarkModeProps {}
 
 export const DarkMode: Component<DarkModeProps> = ({}) => {
-  createEffect(AppStore.darkMode);
+  createEffect(
+    () => [SettingsStore.settings(), AppStore.os()] as const,
+    ([settings, os]) => AppStore.applyAppearance(settings, os),
+  );
 
   return (
     <Toggle

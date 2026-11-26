@@ -1,6 +1,6 @@
 import { FiArrowUp } from "solid-icons/fi";
 import { ImSpinner2 } from "solid-icons/im";
-import { Component, For, Show, createSignal, onCleanup, onMount } from "solid-js";
+import { Component, For, Show, createSignal, onSettled } from "solid-js";
 import clippy from "../../../../assets/clippy.png";
 import { listenEvent } from "../../../../lib/tauri";
 import { ClipboardStore } from "../../../../store/clipboard-store";
@@ -23,27 +23,19 @@ export const Clipboards: Component = () => {
     ref.scrollTop !== 0 ? setScrollToTop(true) : setScrollToTop(false);
 
     if (bottom && ClipboardStore.hasMore() && !ClipboardStore.isSearching()) {
-      ClipboardStore.setWhere((prev) => ({
-        ...prev,
-        cursor: ClipboardStore.clipboards().length,
-      }));
-      const newClipboards = await ClipboardStore.getClipboards();
-      ClipboardStore.setClipboards((prev) => [...prev, ...newClipboards]);
+      await ClipboardStore.loadMore();
     }
   };
 
-  onMount(async () => {
-    const unlisten = await listenEvent(ListenEvent.ScrollToTop, () =>
+  onSettled(() => {
+    const unlisten = listenEvent(ListenEvent.ScrollToTop, () =>
       ClipboardStore.clipboardRef()?.scrollTo(0, 0),
     );
-    onCleanup(() => unlisten());
-  });
-
-  onMount(() => {
     window.addEventListener("keydown", ClipboardStore.handleKeyDown);
-  });
-  onCleanup(() => {
-    window.removeEventListener("keydown", ClipboardStore.handleKeyDown);
+    return () => {
+      void unlisten.then((stop) => stop());
+      window.removeEventListener("keydown", ClipboardStore.handleKeyDown);
+    };
   });
 
   return (
@@ -54,7 +46,7 @@ export const Clipboards: Component = () => {
           when={!ClipboardStore.isSearching()}
           fallback={
             <div class="flex h-screen w-full items-center justify-center">
-              <ImSpinner2 class="animate-spin text-4xl opacity-30 text-foreground" />
+              <ImSpinner2 class="text-foreground animate-spin text-4xl opacity-30" />
             </div>
           }
         >
@@ -75,13 +67,13 @@ export const Clipboards: Component = () => {
         <Show when={scrollToTop()}>
           <button
             type="button"
-            class="absolute right-4 bottom-5 z-10 rounded-full bg-secondary px-2 py-1 hover:bg-muted"
+            class="bg-secondary hover:bg-muted absolute right-4 bottom-5 z-10 rounded-full px-2 py-1"
             onClick={ClipboardStore.init}
           >
             <div class="relative flex items-center justify-center py-1">
-              <FiArrowUp class="text-xl text-foreground!" />
+              <FiArrowUp class="text-foreground! text-xl" />
               <Show when={HotkeyStore.globalHotkeyEvent()}>
-                <div class="absolute top-0 left-0 -mt-3 -ml-3 rounded-xs bg-card px-1 text-[12px] font-semibold">
+                <div class="bg-card absolute top-0 left-0 -mt-3 -ml-3 rounded-xs px-1 text-[12px] font-semibold">
                   {
                     HotkeyStore.hotkeys().find(
                       (key) => key.event === HotkeyEvent.ScrollToTop,

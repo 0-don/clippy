@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { join, resolve } from "node:path";
 import { defineConfig } from "vite";
 import checker from "vite-plugin-checker";
-import solidPlugin from "vite-plugin-solid";
+import solidPlugin from "@solidjs/vite-plugin";
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 

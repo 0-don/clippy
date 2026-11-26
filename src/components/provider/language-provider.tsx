@@ -3,50 +3,40 @@ import {
   resolveTemplate,
   translator,
 } from "@solid-primitives/i18n";
+import { JSX } from "@solidjs/web";
 import {
-  JSX,
-  Resource,
-  ResourceActions,
   createContext,
   createEffect,
-  createResource,
+  createSignal,
   useContext,
 } from "solid-js";
-import { Dictionary, Locale, fetchDictionary } from "../../lib/i18n";
+import { Dictionary, fetchDictionary } from "../../lib/i18n";
 import { AppStore } from "../../store/app-store";
-import { LANGUAGES, LANGUAGE_KEY, Language } from "../../utils/constants";
+import { LANGUAGE_KEY } from "../../utils/constants";
 
 export interface LanguageContextType {
-  locale: Resource<Locale>;
-  setLocale: ResourceActions<Language | undefined, unknown>;
   t: Translator<Dictionary, string>;
 }
 
 export const LanguageContext = createContext<LanguageContextType>();
 
 export function useLanguage() {
-  return useContext(LanguageContext!)!;
+  return useContext(LanguageContext);
 }
 
 export default function LanguageProvider(props: { children: JSX.Element }) {
-  const [dict] = createResource(AppStore.locale, fetchDictionary);
+  const [dict, setDict] = createSignal<Dictionary>();
 
-  createEffect(() =>
-    localStorage.setItem(
-      LANGUAGE_KEY,
-      AppStore.locale() || Object.values(LANGUAGES)[0],
-    ),
-  );
+  createEffect(AppStore.locale, (locale) => {
+    localStorage.setItem(LANGUAGE_KEY, locale);
+    void fetchDictionary(locale).then(setDict);
+  });
 
   const contextValue: LanguageContextType = {
-    locale: AppStore.locale,
-    setLocale: AppStore.setLocale,
     t: translator(dict, resolveTemplate) as Translator<Dictionary, string>,
   };
 
   return (
-    <LanguageContext.Provider value={contextValue}>
-      {props.children}
-    </LanguageContext.Provider>
+    <LanguageContext value={contextValue}>{props.children}</LanguageContext>
   );
 }

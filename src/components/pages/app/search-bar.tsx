@@ -5,8 +5,7 @@ import {
   Component,
   createEffect,
   createSignal,
-  onCleanup,
-  onMount,
+  onSettled,
   Show,
 } from "solid-js";
 import { invokeCommand } from "../../../lib/tauri";
@@ -25,56 +24,60 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
   const [search, setSearch] = createSignal("");
   const [showImages, setShowImages] = createSignal(false);
 
-  onMount(async () => {
+  onSettled(() => {
     input?.focus();
-    await invokeCommand(InvokeCommand.StopHotkeys);
-    HotkeyStore.enableGlobalHotkeyEvent(false);
+    void invokeCommand(InvokeCommand.StopHotkeys).then(() =>
+      HotkeyStore.enableGlobalHotkeyEvent(false),
+    );
   });
 
-  createEffect(() => {
-    const text = search();
-    const img = showImages();
+  createEffect(
+    () => ({
+      text: search(),
+      img: showImages(),
+      // Encrypted search decrypts every row, so give typing a moment to settle.
+      delay: SettingsStore.settings()?.encryption ? 300 : 0,
+    }),
+    ({ text, img, delay }) => {
+      const delayDebounceFn = setTimeout(async () => {
+        const star =
+          AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS"
+            ? true
+            : undefined;
+        const search = text.length && !img ? text : undefined;
 
-    // Use conditional debounce: 300ms for encrypted search, 0ms for non-encrypted
-    const debounceDelay = SettingsStore.settings()?.encryption ? 300 : 0;
+        if (search || img) {
+          await ClipboardStore.searchStream(search, star, img || undefined);
+        } else {
+          const clipboards = await ClipboardStore.getClipboards({
+            ...initialWhere,
+            star,
+          });
+          ClipboardStore.setClipboards(clipboards);
+        }
+      }, delay);
 
-    const delayDebounceFn = setTimeout(async () => {
-      const star =
-        AppStore.getCurrentTab()?.name === "MAIN.HOTKEY.STARRED_CLIPBOARDS"
-          ? true
-          : undefined;
-      const search = text.length && !img ? text : undefined;
-
-      if (search || img) {
-        await ClipboardStore.searchStream(search, star, img || undefined);
-      } else {
-        ClipboardStore.setWhere(() => ({
-          ...initialWhere,
-          star,
-        }));
-        const clipboards = await ClipboardStore.getClipboards();
-        ClipboardStore.setClipboards(clipboards);
-      }
-    }, debounceDelay);
-
-    onCleanup(() => clearTimeout(delayDebounceFn));
-  });
+      return () => clearTimeout(delayDebounceFn);
+    },
+  );
 
   return (
     <>
-      <div class="flex items-center bg-card">
+      <div class="bg-card flex items-center">
         <div class="relative w-full">
           <div class="absolute inset-y-0 left-2 flex items-center">
             <Show
               when={!ClipboardStore.isSearching()}
-              fallback={<ImSpinner2 class="animate-spin opacity-50 text-foreground" />}
+              fallback={
+                <ImSpinner2 class="text-foreground animate-spin opacity-50" />
+              }
             >
-              <FiSearch class="opacity-50 text-foreground" />
+              <FiSearch class="text-foreground opacity-50" />
             </Show>
           </div>
           <input
             placeholder={t("CLIPBOARD.SEARCH_ENTRIES")}
-            class="bg-secondary focus:bg-muted w-full border border-border py-2 pr-2 pl-8 placeholder:text-sm focus:outline-hidden text-foreground"
+            class="bg-secondary focus:bg-muted border-border text-foreground w-full border py-2 pr-2 pl-8 placeholder:text-sm focus:outline-hidden"
             type="text"
             autofocus
             autocomplete="off"
@@ -88,7 +91,7 @@ export const SearchBar: Component<SearchBarProps> = ({}) => {
           />
           <div class="absolute inset-y-0 right-2 flex items-center">
             <FaRegularImage
-              class={`hover:text-primary ${showImages() ? "text-primary" : ""}`}
+              class={["hover:text-primary", { "text-primary": showImages() }]}
               onClick={() => setShowImages(!showImages())}
             />
           </div>

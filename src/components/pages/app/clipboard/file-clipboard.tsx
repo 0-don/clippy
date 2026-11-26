@@ -1,5 +1,5 @@
 import { VsFileBinary } from "solid-icons/vs";
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component } from "solid-js";
 import { SettingsStore } from "../../../../store/settings-store";
 import { ClipboardFileModel, ClipboardWithRelations } from "../../../../types";
 import { ClipboardType } from "../../../../types/enums";
@@ -15,9 +15,11 @@ interface FileClipboardProps {
 }
 
 export const FileClipboard: Component<FileClipboardProps> = (props) => {
-  const [fromNowString, setFromNowString] = createSignal(
-    dayjs.utc(props.data.clipboard.created_at).fromNow(),
-  );
+  const fromNow = () =>
+    dayjs
+      .utc(props.data.clipboard.created_at)
+      .locale(SettingsStore.settings()?.language || LANGUAGES[0])
+      .fromNow();
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -53,13 +55,6 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
       .join("\n");
   };
 
-  createEffect(() => {
-    dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
-    setFromNowString(dayjs.utc(props.data.clipboard.created_at).fromNow());
-  });
-
-  const groupedFiles = getGroupedFiles();
-
   return (
     <button type="button" onClick={handleClick} class="clipboard">
       <ClipboardHeader {...props} Icon={VsFileBinary} />
@@ -70,20 +65,22 @@ export const FileClipboard: Component<FileClipboardProps> = (props) => {
             {props.data.clipboard.name}
           </p>
         )}
-        {Object.entries(groupedFiles).map(([type, data]) => (
+        {Object.entries(getGroupedFiles()).map(([type, data]) => (
           <span class="flex items-center gap-1">
             <span class="truncate text-sm">
               {data.count} {type}
             </span>
-            <span class="text-xs text-muted-foreground">{formatBytes(data.size)}</span>
+            <span class="text-muted-foreground text-xs">
+              {formatBytes(data.size)}
+            </span>
           </span>
         ))}
 
         <div
-          class="text-left text-xs font-thin text-muted-foreground"
+          class="text-muted-foreground text-left text-xs font-thin"
           title={dayjs.utc(props.data.clipboard.created_at).format()}
         >
-          {fromNowString()}
+          {fromNow()}
         </div>
       </div>
     </button>

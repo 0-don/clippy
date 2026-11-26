@@ -1,7 +1,7 @@
 import { BsHddFill } from "solid-icons/bs";
 import { FiGlobe } from "solid-icons/fi";
 import { ImSpinner } from "solid-icons/im";
-import { createEffect, onCleanup, Show } from "solid-js";
+import { createEffect, Show } from "solid-js";
 import { listenEvent } from "../../../lib/tauri";
 import { AppStore } from "../../../store/app-store";
 import { ClipboardStore } from "../../../store/clipboard-store";
@@ -20,16 +20,13 @@ function App() {
 
   listenEvent(ListenEvent.Progress, ClipboardStore.setClipboardSyncProgress);
 
-  createEffect(() => {
-    const progress = ClipboardStore.clipboardSyncProgress();
-
-    if (progress) {
-      const timeout = setTimeout(() => {
-        ClipboardStore.setClipboardSyncProgress(undefined);
-      }, 5000);
-
-      onCleanup(() => clearTimeout(timeout));
-    }
+  createEffect(ClipboardStore.clipboardSyncProgress, (progress) => {
+    if (!progress) return;
+    const timeout = setTimeout(
+      () => ClipboardStore.setClipboardSyncProgress(undefined),
+      5000,
+    );
+    return () => clearTimeout(timeout);
   });
 
   return (
@@ -37,13 +34,13 @@ function App() {
       <Show when={AppStore.passwordLock()}>
         <PasswordLock />
       </Show>
-      <div class="glass-surface flex h-full w-full overflow-hidden bg-background text-foreground">
-        <div class="flex w-12 flex-col items-center space-y-3 bg-secondary pt-2">
+      <div class="glass-surface bg-background text-foreground flex h-full w-full overflow-hidden">
+        <div class="bg-secondary flex w-12 flex-col items-center space-y-3 pt-2">
           <AppSidebar />
         </div>
         <div class="flex h-screen min-w-0 flex-1 flex-col">
           <div class="z-10 flex w-full justify-between overflow-visible px-2 py-1">
-            <p class="text-xs font-semibold text-muted-foreground uppercase select-none">
+            <p class="text-muted-foreground text-xs font-semibold uppercase select-none">
               {t(AppStore.getCurrentTab().name)}
             </p>
             <Show

@@ -1,9 +1,10 @@
 import { BsDeviceHdd } from "solid-icons/bs";
 import { FiTrash2 } from "solid-icons/fi";
 import { SiSqlite } from "solid-icons/si";
-import { Component, createResource } from "solid-js";
+import { Component, createSignal, onSettled } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand } from "../../../lib/tauri";
+import { DatabaseInfo } from "../../../types";
 import { ClipboardType } from "../../../types/enums";
 import { InvokeCommand } from "../../../types/tauri-invoke";
 import { formatBytes } from "../../../utils";
@@ -23,13 +24,15 @@ const CLIPBOARD_TYPES: { type: ClipboardType | null; label: DictionaryKey }[] =
 
 export const SettingsHistory: Component = () => {
   const { t } = useLanguage();
-  const [databaseInfo, { refetch }] = createResource(() =>
-    invokeCommand(InvokeCommand.GetDbInfo),
-  );
+  const [databaseInfo, setDatabaseInfo] = createSignal<DatabaseInfo>();
+  const loadDatabaseInfo = async () =>
+    setDatabaseInfo(await invokeCommand(InvokeCommand.GetDbInfo));
+
+  onSettled(() => void loadDatabaseInfo());
 
   const handleClear = async (type: ClipboardType | null) => {
     await invokeCommand(InvokeCommand.ClearClipboards, { type });
-    refetch();
+    await loadDatabaseInfo();
   };
 
   return (

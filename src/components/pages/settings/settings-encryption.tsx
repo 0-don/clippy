@@ -2,7 +2,7 @@ import { Channel } from "@tauri-apps/api/core";
 import { AiFillLock, AiFillUnlock } from "solid-icons/ai";
 import { BsFileEarmarkLock2Fill } from "solid-icons/bs";
 import { ImSpinner } from "solid-icons/im";
-import { Component, createSignal, Show } from "solid-js";
+import { Component, createSignal, onSettled, Show } from "solid-js";
 import { DictionaryKey } from "../../../lib/i18n";
 import { invokeCommand, listenEvent } from "../../../lib/tauri";
 import { cn } from "../../../lib/utils";
@@ -35,7 +35,7 @@ export const SettingsEncryption: Component<SettingsEncryptionProps> = ({}) => {
       title={t("SETTINGS.ENCRYPT.ENCRYPT_DECRYPT")}
     >
       <div class="px-5 pb-5">
-        <p class="text-sm text-muted-foreground">
+        <p class="text-muted-foreground text-sm">
           {t("SETTINGS.ENCRYPT.INFO")}
         </p>
         <Show
@@ -83,7 +83,10 @@ const Encrypt: Component = ({}) => {
     }
   };
 
-  listenEvent(ListenEvent.Progress, setEncryptionProgress);
+  onSettled(() => {
+    const unlisten = listenEvent(ListenEvent.Progress, setEncryptionProgress);
+    return () => void unlisten.then((stop) => stop());
+  });
 
   return (
     <form class="flex flex-col gap-2" onSubmit={onSubmit}>
@@ -91,8 +94,8 @@ const Encrypt: Component = ({}) => {
         <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
         <Input
           required
-          minLength={1}
-          maxLength={128}
+          minlength={1}
+          maxlength={128}
           value={password()}
           onInput={(e) => setPassword(e.target.value)}
         />
@@ -101,8 +104,8 @@ const Encrypt: Component = ({}) => {
         <label>{t("SETTINGS.ENCRYPT.CONFIRM_PASSWORD")}</label>
         <Input
           required
-          minLength={MIN_PASSWORD_LENGTH}
-          maxLength={MAX_PASSWORD_LENGTH}
+          minlength={MIN_PASSWORD_LENGTH}
+          maxlength={MAX_PASSWORD_LENGTH}
           value={confirmPassword()}
           onInput={(e) => setConfirmPassword(e.target.value)}
         />
@@ -174,7 +177,10 @@ const Decrypt: Component = ({}) => {
     }
   };
 
-  listenEvent(ListenEvent.Progress, setEncryptionProgress);
+  onSettled(() => {
+    const unlisten = listenEvent(ListenEvent.Progress, setEncryptionProgress);
+    return () => void unlisten.then((stop) => stop());
+  });
 
   return (
     <>
@@ -196,8 +202,8 @@ const Decrypt: Component = ({}) => {
         <div>
           <label>{t("SETTINGS.ENCRYPT.PASSWORD")}</label>
           <Input
-            minLength={MIN_PASSWORD_LENGTH}
-            maxLength={MAX_PASSWORD_LENGTH}
+            minlength={MIN_PASSWORD_LENGTH}
+            maxlength={MAX_PASSWORD_LENGTH}
             value={password()}
             onInput={(e) => setPassword(e.target.value)}
           />

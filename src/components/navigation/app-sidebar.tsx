@@ -1,3 +1,4 @@
+import { Dynamic } from "@solidjs/web";
 import { Component, For, Show } from "solid-js";
 import { AppStore } from "../../store/app-store";
 import { HotkeyStore } from "../../store/hotkey-store";
@@ -10,33 +11,27 @@ export const AppSidebar: Component<AppSidebarProps> = ({}) => {
 
   return (
     <Show when={HotkeyStore.hotkeys().length}>
-      <For each={AppStore.tabs()}>
-        {({ current, Icon, name, id }) => {
-          const currentHotkey = HotkeyStore.hotkeys()?.find(
-            (key) => key?.name === name,
-          );
+      <For each={AppStore.tabs()} keyed={(tab) => tab.id}>
+        {(tab) => {
+          const hotkey = () =>
+            HotkeyStore.hotkeys().find((key) => key.name === tab().name);
 
           return (
             <div
-              class={`${
-                current
-                  ? "text-foreground"
-                  : "text-muted-foreground"
-              } relative flex h-6 w-full cursor-pointer items-center justify-center py-5 text-xl select-none hover:text-foreground`}
-              title={t(currentHotkey!.name)}
-              onClick={() => AppStore.changeTab(id)}
+              class={[
+                "hover:text-foreground relative flex h-6 w-full cursor-pointer items-center justify-center py-5 text-xl select-none",
+                tab().current ? "text-foreground" : "text-muted-foreground",
+              ]}
+              title={t(tab().name)}
+              onClick={() => AppStore.changeTab(tab().id)}
             >
-              <Icon title={t(name)} />
-              <Show
-                when={
-                  currentHotkey?.event &&
-                  HotkeyStore.getHotkey(currentHotkey?.event) &&
-                  HotkeyStore.globalHotkeyEvent()
-                }
-              >
-                <div class="absolute -top-0.5 left-1 rounded-xs bg-secondary px-1 py-1 text-xs font-semibold text-secondary-foreground">
-                  {currentHotkey!.key}
-                </div>
+              <Dynamic component={tab().Icon} title={t(tab().name)} />
+              <Show when={HotkeyStore.globalHotkeyEvent() && hotkey()}>
+                {(key) => (
+                  <div class="bg-secondary text-secondary-foreground absolute -top-0.5 left-1 rounded-xs px-1 py-1 text-xs font-semibold">
+                    {key().key}
+                  </div>
+                )}
               </Show>
             </div>
           );

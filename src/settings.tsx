@@ -1,5 +1,5 @@
-import { onMount } from "solid-js";
-import { Show, render } from "solid-js/web";
+import { render } from "@solidjs/web";
+import { Show, onSettled } from "solid-js";
 import { SettingsBackup } from "./components/pages/settings/settings-backup";
 import { SettingsCommands } from "./components/pages/settings/settings-commands";
 import { SettingsEncryption } from "./components/pages/settings/settings-encryption";
@@ -21,7 +21,7 @@ const Settings = () => {
 
   listenEvent(ListenEvent.InitHotkeys, HotkeyStore.init);
 
-  onMount(() => {
+  onSettled(() => {
     SettingsStore.init();
     HotkeyStore.init();
   });

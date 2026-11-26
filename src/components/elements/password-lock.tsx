@@ -43,14 +43,14 @@ export const PasswordLock: Component = () => {
 
   return (
     <div class="fixed inset-0 z-9999 flex items-center justify-center bg-black/95">
-      <div class="w-80 rounded-lg bg-card p-5 shadow-lg">
+      <div class="bg-card w-80 rounded-lg p-5 shadow-lg">
         <form class="flex flex-col gap-2" onSubmit={onSubmit}>
           <Input
             type="password"
             required
             placeholder={t("SETTINGS.ENCRYPT.PASSWORD")}
-            minLength={MIN_PASSWORD_LENGTH}
-            maxLength={MAX_PASSWORD_LENGTH}
+            minlength={MIN_PASSWORD_LENGTH}
+            maxlength={MAX_PASSWORD_LENGTH}
             value={password()}
             onInput={(e) => setPassword(e.target.value)}
             autofocus

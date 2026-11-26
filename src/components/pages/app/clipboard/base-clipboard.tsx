@@ -29,11 +29,11 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
 
   const handleDelete = async (id: number) => {
     await invokeCommand(InvokeCommand.DeleteClipboard, { id });
-    ClipboardStore.setClipboards((prev) => {
-      const updated = prev.filter((o) => o.clipboard.id !== id);
-      if (!updated.length) ClipboardStore.resetClipboards();
-      return updated;
-    });
+    const remaining = ClipboardStore.clipboards().filter(
+      (o) => o.clipboard.id !== id,
+    );
+    ClipboardStore.setClipboards(remaining);
+    if (!remaining.length) await ClipboardStore.resetClipboards();
   };
 
   const handleStar = async (clipboard: ClipboardModel) => {
@@ -108,7 +108,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
   };
 
   return (
-    <div class={`group relative ${props.isSelected ? "bg-muted" : ""}`}>
+    <div class={["group relative", { "bg-muted": props.isSelected }]}>
       <Show when={editing()}>
         <ClipboardEditor
           entry={props.data}
@@ -129,27 +129,27 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
               class={`${
                 props.data.clipboard.star
                   ? "text-yellow-400 dark:text-yellow-300"
-                  : "hidden text-foreground"
+                  : "text-foreground hidden"
               } cursor-pointer group-hover:block hover:text-yellow-400 dark:hover:text-yellow-300`}
             />
             <div class="flex items-center gap-1">
               <FiEdit3
                 onClick={handleEdit}
                 title={t("CLIPBOARD.EDIT_ENTRY")}
-                class="hidden cursor-pointer text-foreground group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
+                class="text-foreground hidden cursor-pointer group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
               />
               {props.data.rtf && (
                 <BsJournalRichtext
                   onClick={handleRtfCopy}
                   title={t("CLIPBOARD.COPY_AS_RTF")}
-                  class="hidden cursor-pointer text-foreground group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
+                  class="text-foreground hidden cursor-pointer group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
                 />
               )}
               {props.data.html && (
                 <TbOutlineSourceCode
                   onClick={handleHtmlCopy}
                   title={t("CLIPBOARD.COPY_AS_HTML")}
-                  class="hidden cursor-pointer text-foreground group-hover:block hover:text-green-600 dark:hover:text-green-400"
+                  class="text-foreground hidden cursor-pointer group-hover:block hover:text-green-600 dark:hover:text-green-400"
                 />
               )}
             </div>
@@ -159,13 +159,13 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
                   <FiChevronUp
                     onClick={handleExpandToggle}
                     title={t("CLIPBOARD.COLLAPSE")}
-                    class="cursor-pointer text-foreground hover:text-blue-600 dark:hover:text-blue-400"
+                    class="text-foreground cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
                   />
                 ) : (
                   <FiChevronDown
                     onClick={handleExpandToggle}
                     title={t("CLIPBOARD.EXPAND")}
-                    class="hidden cursor-pointer text-foreground group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
+                    class="text-foreground hidden cursor-pointer group-hover:block hover:text-blue-600 dark:hover:text-blue-400"
                   />
                 ))}
               <IoTrashOutline
@@ -174,7 +174,7 @@ export const BaseClipboard: Component<BaseClipboardProps> = (props) => {
                   handleDelete(props.data.clipboard.id);
                 }}
                 title={t("CLIPBOARD.DELETE_CLIPBOARD")}
-                class="hidden cursor-pointer text-foreground group-hover:block hover:text-red-600 dark:hover:text-red-600"
+                class="text-foreground hidden cursor-pointer group-hover:block hover:text-red-600 dark:hover:text-red-600"
               />
             </div>
           </div>

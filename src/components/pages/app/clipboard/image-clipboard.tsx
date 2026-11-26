@@ -1,5 +1,5 @@
 import { BsImages } from "solid-icons/bs";
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component } from "solid-js";
 import { invokeCommand } from "../../../../lib/tauri";
 import { ClipboardStore } from "../../../../store/clipboard-store";
 import { SettingsStore } from "../../../../store/settings-store";
@@ -21,9 +21,11 @@ interface ImageClipboardProps {
 export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
   const { t } = useLanguage();
   let dbClickTimer: any;
-  const [fromNowString, setFromNowString] = createSignal(
-    dayjs.utc(props.data.clipboard.created_at).fromNow(),
-  );
+  const fromNow = () =>
+    dayjs
+      .utc(props.data.clipboard.created_at)
+      .locale(SettingsStore.settings()?.language || LANGUAGES[0])
+      .fromNow();
 
   const handleClick = async (e: MouseEvent) => {
     e.stopPropagation();
@@ -42,12 +44,7 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
     });
   };
 
-  createEffect(() => {
-    dayjs.locale(SettingsStore.settings()?.language || LANGUAGES[0]);
-    setFromNowString(dayjs.utc(props.data.clipboard.created_at).fromNow());
-  });
-
-  const imageInfo =
+  const imageInfo = () =>
     props.data.image &&
     `${props.data.image.width}x${props.data.image.height} ${formatBytes(Number(props.data.image.size || "0"))}`;
 
@@ -69,20 +66,21 @@ export const ImageClipboard: Component<ImageClipboardProps> = (props) => {
         {props.data.image?.thumbnail && (
           <img
             src={`data:image/*;base64,${props.data.image.thumbnail}`}
-            class={`w-[calc(100%-3rem)] rounded-md ${
+            class={[
+              "w-[calc(100%-3rem)] rounded-md",
               ClipboardStore.isExpanded(props.data.clipboard.id)
                 ? "max-h-96 object-contain"
-                : "max-h-20 object-cover"
-            }`}
-            alt={imageInfo}
-            title={`${imageInfo}\n${t("CLIPBOARD.DOUBLE_CLICK_SAVE")}`}
+                : "max-h-20 object-cover",
+            ]}
+            alt={imageInfo()}
+            title={`${imageInfo()}\n${t("CLIPBOARD.DOUBLE_CLICK_SAVE")}`}
           />
         )}
         <div
-          class="text-left text-xs font-thin text-muted-foreground"
+          class="text-muted-foreground text-left text-xs font-thin"
           title={dayjs.utc(props.data.clipboard.created_at).format()}
         >
-          {fromNowString()}
+          {fromNow()}
         </div>
       </div>
     </button>

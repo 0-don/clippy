@@ -67,8 +67,8 @@ function createSettingsStore() {
   const init = async () => {
     const settings = await invokeCommand(InvokeCommand.GetSettings);
     setSettings(settings);
-    AppStore.darkMode();
-    AppStore.setLocale.refetch();
+    AppStore.applyAppearance(settings);
+    void AppStore.refreshLocale();
   };
 
   const changeClipboardDbLocation = async () =>

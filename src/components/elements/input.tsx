@@ -1,4 +1,5 @@
-import { Component, ComponentProps, JSX, splitProps } from "solid-js";
+import { ComponentProps, JSX } from "@solidjs/web";
+import { Component, omit } from "solid-js";
 import { cn } from "../../lib/utils";
 
 type InputProps = ComponentProps<"input"> & {
@@ -6,20 +7,16 @@ type InputProps = ComponentProps<"input"> & {
 };
 
 export const Input: Component<InputProps> = (props) => {
-  const [local, inputProps] = splitProps(props, [
-    "debounce",
-    "onInput",
-    "class",
-  ]);
+  const inputProps = omit(props, "debounce", "onInput", "class");
   let timeoutId: number;
 
   const onInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-    if (!local.onInput) return;
+    if (!props.onInput) return;
 
     const handler =
-      typeof local.onInput === "function" ? local.onInput : local.onInput[0];
+      typeof props.onInput === "function" ? props.onInput : props.onInput[0];
 
-    if (local.debounce) {
+    if (props.debounce) {
       clearTimeout(timeoutId);
       const value = e.currentTarget.value;
       const input = e.currentTarget;
@@ -30,7 +27,7 @@ export const Input: Component<InputProps> = (props) => {
           currentTarget: input,
           target: input,
         });
-      }, local.debounce);
+      }, props.debounce);
     } else {
       handler(e);
     }
@@ -38,14 +35,14 @@ export const Input: Component<InputProps> = (props) => {
 
   return (
     <div
-      class={`group flex items-center justify-between rounded-md border border-border bg-popover p-1 px-1.5 text-sm focus-within:border-primary ${local.class || ""}`}
+      class={`group border-border bg-popover focus-within:border-primary flex items-center justify-between rounded-md border p-1 px-1.5 text-sm ${props.class || ""}`}
     >
       <input
         {...inputProps}
         onInput={onInput}
         class={cn(
-          "w-full appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden text-foreground",
-          local.class,
+          "text-foreground w-full appearance-none bg-transparent text-sm focus:ring-0 focus:outline-hidden",
+          props.class,
         )}
       />
     </div>
