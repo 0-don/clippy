@@ -106,6 +106,9 @@ nix-env -iA nixpkgs.clippy-clipboard
   - Bind a hotkey to your own script (sh, bash, Python, PowerShell and more)
   - Clipboard text passed on stdin and as `CLIPPY_TEXT`, output copied or pasted back
   - One script per operating system, synced between devices
+- **Command line:**
+  - `clippy list`, `get`, `copy`, `add`, `search` and `run` talk to the running app
+  - Pipe text in with `echo hi | clippy add`, script with `--json` output
 - **Smart clipboard features:**
   - Type out clipboard content (where pasting isn't allowed) **ctrl+b**
   - Smart search for links, colors, images, hex codes etc.

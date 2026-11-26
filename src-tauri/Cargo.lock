@@ -1359,6 +1359,7 @@ dependencies = [
  "base64 0.23.1",
  "chrono",
  "common",
+ "dirs 7.0.0",
  "dotenvy",
  "enigo",
  "entity",

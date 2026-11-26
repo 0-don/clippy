@@ -1,4 +1,5 @@
 use super::tray::setup_system_tray;
+use crate::cli::server::setup_cli_server;
 use crate::{
     events::{
         clipboard_events::setup_clipboard_listener, hotkey_events::setup_hotkey_listener,
@@ -35,6 +36,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'st
     setup_window_event_listener();
     setup_sync_interval();
     setup_p2p();
+    setup_cli_server();
 
     init_encryption_password_lock();
 

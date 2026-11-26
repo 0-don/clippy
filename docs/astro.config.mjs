@@ -47,6 +47,7 @@ export default defineConfig({
                 },
                 { label: "Global Hotkeys", slug: "features/hotkeys" },
                 { label: "Commands", slug: "features/commands" },
+                { label: "Command line", slug: "features/cli" },
                 { label: "Cloud Sync", slug: "features/cloud-sync" },
                 { label: "File Support", slug: "features/file-support" },
               ],
