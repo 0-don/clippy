@@ -334,7 +334,7 @@ impl ClipboardType {
         }
     }
 
-    pub fn to_json_value(types: &Vec<Self>) -> JsonValue {
+    pub fn to_json_value(types: &[Self]) -> JsonValue {
         json!(types.iter().map(|t| t.to_string()).collect::<Vec<_>>())
     }
 }

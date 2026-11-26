@@ -9,12 +9,12 @@ pub mod google_drive;
 pub fn uuid_to_datetime(uuid: &Uuid) -> NaiveDateTime {
     let ts = uuid.get_timestamp().expect("Not a time-based UUID");
     let (secs, nanos) = ts.to_unix();
-    DateTime::from_timestamp(secs as i64, nanos as u32)
+    DateTime::from_timestamp(secs as i64, nanos)
         .expect("Invalid timestamp")
         .naive_utc()
 }
 
-pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clippy> {
+pub fn parse_clipboard_info(filename: &str, provider_id: &str) -> Option<Clippy> {
     let [_, uuid, star, encrypted, created_at, deleted_at]: [&str; 6] = filename
         .trim_end_matches(".json")
         .split('_')
@@ -38,7 +38,7 @@ pub fn parse_clipboard_info(filename: &str, provider_id: &String) -> Option<Clip
         encrypted,
         created_at,
         deleted_at,
-        provider_id: provider_id.clone(),
+        provider_id: provider_id.to_string(),
     })
 }
 

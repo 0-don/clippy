@@ -50,7 +50,7 @@ fn register_hotkeys_inner(global_only: bool) {
     // Always register global hotkeys
     {
         let mut global_hotkeys_to_register = Vec::new();
-        for (_, hotkey) in get_global_hotkey_store().iter_mut() {
+        for hotkey in get_global_hotkey_store().values_mut() {
             if !hotkey.state {
                 global_hotkeys_to_register.push(hotkey.hotkey);
                 hotkey.state = true;
@@ -94,7 +94,7 @@ fn unregister_hotkeys_inner(global_only: bool) {
     // Unregister global hotkeys only if explicitly requested (app shutdown)
     if global_only {
         let mut global_hotkeys_to_unregister = Vec::new();
-        for (_, hotkey) in get_global_hotkey_store().iter_mut() {
+        for hotkey in get_global_hotkey_store().values_mut() {
             if hotkey.state {
                 global_hotkeys_to_unregister.push(hotkey.hotkey);
                 hotkey.state = false;

@@ -3,7 +3,7 @@ pub use sea_orm::Iden;
 
 impl Language {
     pub fn from_iso_code(lang_code: &str) -> Self {
-        match &*lang_code {
+        match lang_code {
             code if code == Language::Mandarin.to_string() => Language::Mandarin,
             code if code == Language::Hindi.to_string() => Language::Hindi,
             code if code == Language::Spanish.to_string() => Language::Spanish,

@@ -19,7 +19,7 @@ pub fn setup_config() {
     }
 
     let config = Config {
-        db: format!("{}", &data_path.db_file_path),
+        db: data_path.db_file_path.to_string(),
     };
 
     fs::write(
@@ -88,7 +88,7 @@ pub fn change_clipboard_db_location_enable() {
     if let Some(dir) = get_app().dialog().file().blocking_pick_folder() {
         // Convert path to string
         let dir = dir.to_string();
-        let dir_file = format!("{}/clippy.sqlite", &dir);
+        let dir_file = format!("{}/clippy.sqlite", dir);
 
         // check if backup file exists
         if !Path::new(&dir_file).exists() {

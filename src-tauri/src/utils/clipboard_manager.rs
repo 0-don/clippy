@@ -50,7 +50,7 @@ use tauri_plugin_clipboard::Clipboard;
 use urlencoding::decode;
 
 pub trait ClipboardManagerExt {
-    fn new() -> FullClipboardDbo;
+    fn new() -> Self;
     fn upsert_clipboard() -> impl std::future::Future<Output = ()> + Send;
     fn check_if_duplicate(&mut self) -> impl std::future::Future<Output = Option<Uuid>> + Send;
     fn parse_model(
@@ -191,7 +191,7 @@ impl ClipboardManagerExt for FullClipboardDbo {
 
     async fn check_if_duplicate(&mut self) -> Option<Uuid> {
         let recent = get_recent_clipboards_db(1).await.ok()?;
-        let curr_types = ClipboardType::from_json_value(&self.clipboard_model.types.as_ref())?;
+        let curr_types = ClipboardType::from_json_value(self.clipboard_model.types.as_ref())?;
 
         for entry in recent {
             let entry_types = match ClipboardType::from_json_value(&entry.clipboard.types) {

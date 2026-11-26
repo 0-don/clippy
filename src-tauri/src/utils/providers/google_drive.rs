@@ -446,7 +446,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
         }
 
         // Sort by created_at
-        clipboards.sort_by(|a, b| b.id.cmp(&a.id));
+        clipboards.sort_by_key(|c| std::cmp::Reverse(c.id));
 
         if !clipboards.is_empty() {
             let newest = &clipboards[0];
@@ -467,7 +467,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
     async fn compare_and_fetch_new_clipboards(
         &self,
         local_clipboards: &HashMap<Uuid, (bool, NaiveDateTime)>,
-        remote_clipboards: &Vec<Clippy>,
+        remote_clipboards: &[Clippy],
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
 
@@ -512,7 +512,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
     async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
-        remote_clipboards: &Vec<Clippy>,
+        remote_clipboards: &[Clippy],
     ) -> Result<Vec<Clippy>, Box<dyn std::error::Error>> {
         let mut new_clipboards = Vec::new();
 
@@ -576,7 +576,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
     async fn download_by_id(
         &self,
-        id: &String,
+        id: &str,
     ) -> Result<FullClipboardDto, Box<dyn std::error::Error>> {
         let (mut response, _) = self
             .0
@@ -595,7 +595,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
 
     async fn cleanup_old_clipboards(
         &self,
-        remote_clipboards: &Vec<Clippy>,
+        remote_clipboards: &[Clippy],
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sync_limit = get_global_settings().sync_limit as usize;
 
@@ -604,7 +604,7 @@ impl SyncProvider for GoogleDriveProviderImpl {
             remote_clipboards.iter().filter(|clip| !clip.star).collect();
 
         // Sort by creation date
-        all_clipboards.sort_by(|a, b| a.id.cmp(&b.id));
+        all_clipboards.sort_by_key(|a| a.id);
 
         // Find all marked-for-deletion indices
         let marked_indices: Vec<usize> = all_clipboards
@@ -857,9 +857,6 @@ impl SyncProvider for GoogleDriveProviderImpl {
     }
 
     async fn is_authenticated(&self) -> bool {
-        match self.0.hub.auth.get_token(&[Scope::Appdata.as_ref()]).await {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+        self.0.hub.auth.get_token(&[Scope::Appdata.as_ref()]).await.is_ok()
     }
 }

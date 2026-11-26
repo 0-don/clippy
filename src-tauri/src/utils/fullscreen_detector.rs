@@ -163,9 +163,9 @@ fn is_fullscreen_linux() -> bool {
         }
 
         let root = XDefaultRootWindow(display);
-        let net_active_window = XInternAtom(display, b"_NET_ACTIVE_WINDOW\0".as_ptr() as *const c_char, 1);
-        let net_wm_state = XInternAtom(display, b"_NET_WM_STATE\0".as_ptr() as *const c_char, 1);
-        let net_wm_state_fullscreen = XInternAtom(display, b"_NET_WM_STATE_FULLSCREEN\0".as_ptr() as *const c_char, 1);
+        let net_active_window = XInternAtom(display, c"_NET_ACTIVE_WINDOW".as_ptr(), 1);
+        let net_wm_state = XInternAtom(display, c"_NET_WM_STATE".as_ptr(), 1);
+        let net_wm_state_fullscreen = XInternAtom(display, c"_NET_WM_STATE_FULLSCREEN".as_ptr(), 1);
 
         if net_active_window == 0 || net_wm_state == 0 || net_wm_state_fullscreen == 0 {
             XCloseDisplay(display);

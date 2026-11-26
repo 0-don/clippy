@@ -74,13 +74,13 @@ pub trait SyncProvider: Send + Sync {
     async fn compare_and_fetch_new_clipboards(
         &self,
         local_clipboards: &HashMap<Uuid, (bool, NaiveDateTime)>,
-        remote_clipboards: &Vec<Clippy>,
+        remote_clipboards: &[Clippy],
     ) -> Result<Vec<FullClipboardDto>, Box<dyn std::error::Error>>;
 
     async fn upload_new_clipboards(
         &self,
         new_local_clipboards: &[FullClipboardDto],
-        remote_clipboards: &Vec<Clippy>,
+        remote_clipboards: &[Clippy],
     ) -> Result<Vec<Clippy>, Box<dyn std::error::Error>>;
 
     async fn mark_for_deletion(&self, clippy: &Clippy);
@@ -89,7 +89,7 @@ pub trait SyncProvider: Send + Sync {
 
     async fn download_by_id(
         &self,
-        id: &String,
+        id: &str,
     ) -> Result<FullClipboardDto, Box<dyn std::error::Error>>;
 
     async fn upload_clipboard(
@@ -107,7 +107,7 @@ pub trait SyncProvider: Send + Sync {
 
     async fn cleanup_old_clipboards(
         &self,
-        remote_clipboards: &Vec<Clippy>,
+        remote_clipboards: &[Clippy],
     ) -> Result<(), Box<dyn std::error::Error>>;
 
     async fn upsert_settings(

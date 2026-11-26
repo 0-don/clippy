@@ -463,7 +463,7 @@ pub async fn get_latest_syncable_cliboards_db() -> Result<Vec<FullClipboardDto>,
         .into_values()
         .collect::<Vec<_>>();
 
-    clipboards.sort_by(|a, b| b.id.cmp(&a.id));
+    clipboards.sort_by_key(|c| std::cmp::Reverse(c.id));
 
     if !clipboards.is_empty() {
         let newest = &clipboards[0];
@@ -708,7 +708,6 @@ pub async fn delete_clipboards_db(
                     command
                 );
                 provider.mark_for_deletion(&clippy).await;
-                break;
             }
         });
     }
@@ -790,7 +789,7 @@ pub async fn clear_clipboards_db(r#type: Option<ClipboardType>) -> Result<(), Db
                         remote_clipboards_to_delete.push(clipboard.clone());
 
                         // If no types remain, delete the clipboard
-                        clipboard::Entity::delete_by_id(clipboard.id.clone())
+                        clipboard::Entity::delete_by_id(clipboard.id)
                             .exec(db)
                             .await?;
                     } else {
@@ -928,7 +927,7 @@ pub async fn copy_clipboard_from_id(
                 .filter_map(|f| {
                     let path = std::env::temp_dir().join(format!(
                         "{}.{}",
-                        &f.name,
+                        f.name,
                         f.extension.as_ref().expect("Failed to get file extension")
                     ));
                     std::fs::write(&path, &f.data).ok()?;
@@ -1025,34 +1024,34 @@ pub fn filter_clipboards(
                 let contains_search = clipboard
                     .text
                     .as_ref()
-                    .map_or(false, |t| t.data.to_lowercase().contains(&search_lower))
+                    .is_some_and(|t| t.data.to_lowercase().contains(&search_lower))
                     || clipboard
                         .html
                         .as_ref()
-                        .map_or(false, |h| h.data.to_lowercase().contains(&search_lower))
+                        .is_some_and(|h| h.data.to_lowercase().contains(&search_lower))
                     || clipboard
                         .rtf
                         .as_ref()
-                        .map_or(false, |r| r.data.to_lowercase().contains(&search_lower))
+                        .is_some_and(|r| r.data.to_lowercase().contains(&search_lower))
                     || clipboard.files.iter().any(|f| {
                         f.name.to_lowercase().contains(&search_lower)
                             || f.extension
                                 .as_ref()
-                                .map_or(false, |e| e.to_lowercase().contains(&search_lower))
+                                .is_some_and(|e| e.to_lowercase().contains(&search_lower))
                             || f.mime_type
                                 .as_ref()
-                                .map_or(false, |m| m.to_lowercase().contains(&search_lower))
+                                .is_some_and(|m| m.to_lowercase().contains(&search_lower))
                     })
-                    || clipboard.image.as_ref().map_or(false, |i| {
+                    || clipboard.image.as_ref().is_some_and(|i| {
                         i.extension.to_lowercase().contains(&search_lower)
                             || i.ocr_text
                                 .as_ref()
-                                .map_or(false, |t| t.to_lowercase().contains(&search_lower))
+                                .is_some_and(|t| t.to_lowercase().contains(&search_lower))
                     })
                     || clipboard
                         .text
                         .as_ref()
-                        .map_or(false, |t| t.r#type.to_lowercase().contains(&search_lower));
+                        .is_some_and(|t| t.r#type.to_lowercase().contains(&search_lower));
 
                 if !contains_search {
                     return false;

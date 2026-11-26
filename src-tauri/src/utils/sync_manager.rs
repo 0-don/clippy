@@ -98,7 +98,7 @@ impl SyncManager {
                 .upload_new_clipboards(&new_local_clipboards, &remote_clipboards)
                 .await?;
 
-            remote_clipboards.extend(new_remote_clipboards.into_iter());
+            remote_clipboards.extend(new_remote_clipboards);
 
             provider.cleanup_old_clipboards(&remote_clipboards).await?;
         }

@@ -315,12 +315,12 @@ pub async fn copy_clipboard(id: Uuid, r#type: ClipboardType) -> Result<bool, Com
 
 #[tauri::command]
 pub async fn star_clipboard(id: Uuid, star: bool) -> Result<bool, CommandError> {
-    Ok(star_clipboard_db(id, star).await?)
+    star_clipboard_db(id, star).await
 }
 
 #[tauri::command]
 pub async fn rename_clipboard(id: Uuid, name: Option<String>) -> Result<bool, CommandError> {
-    Ok(rename_clipboard_db(id, name).await?)
+    rename_clipboard_db(id, name).await
 }
 
 /// Full, untrimmed entry, decrypted where possible.
@@ -345,7 +345,7 @@ pub async fn update_clipboard_content(
     name: Option<String>,
     data: String,
 ) -> Result<bool, CommandError> {
-    Ok(update_clipboard_content_db(id, name, data).await?)
+    update_clipboard_content_db(id, name, data).await
 }
 
 #[tauri::command]

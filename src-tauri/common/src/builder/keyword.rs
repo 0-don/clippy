@@ -1,19 +1,16 @@
 use crate::types::enums::{ClipboardTextType, ClipboardType, Language};
 use std::collections::HashMap;
 
+pub type ClipboardKeywords = HashMap<Language, HashMap<ClipboardType, Vec<String>>>;
+pub type TextKeywords = HashMap<Language, HashMap<ClipboardTextType, Vec<String>>>;
+
+#[derive(Default)]
 pub struct KeywordBuilder {
     clipboard_keywords: HashMap<Language, HashMap<ClipboardType, Vec<String>>>,
     text_keywords: HashMap<Language, HashMap<ClipboardTextType, Vec<String>>>,
 }
 
 impl KeywordBuilder {
-    pub fn new() -> Self {
-        Self {
-            clipboard_keywords: HashMap::new(),
-            text_keywords: HashMap::new(),
-        }
-    }
-
     pub fn add_type(mut self, lang: Language, type_: ClipboardType, keywords: &[&str]) -> Self {
         self.clipboard_keywords
             .entry(lang)
@@ -35,12 +32,7 @@ impl KeywordBuilder {
         self
     }
 
-    pub fn build(
-        self,
-    ) -> (
-        HashMap<Language, HashMap<ClipboardType, Vec<String>>>,
-        HashMap<Language, HashMap<ClipboardTextType, Vec<String>>>,
-    ) {
+    pub fn build(self) -> (ClipboardKeywords, TextKeywords) {
         (self.clipboard_keywords, self.text_keywords)
     }
 
@@ -70,11 +62,8 @@ impl KeywordBuilder {
         })
     }
 
-    pub fn build_default() -> (
-        HashMap<Language, HashMap<ClipboardType, Vec<String>>>,
-        HashMap<Language, HashMap<ClipboardTextType, Vec<String>>>,
-    ) {
-        let mut builder = KeywordBuilder::new();
+    pub fn build_default() -> (ClipboardKeywords, TextKeywords) {
+        let mut builder = KeywordBuilder::default();
 
         // English (en)
         builder = builder

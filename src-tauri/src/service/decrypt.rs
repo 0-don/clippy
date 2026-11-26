@@ -459,7 +459,7 @@ fn decrypt_data_with_key_only(
     encrypted_data: &[u8],
     key: &[u8; 32],
 ) -> Result<Vec<u8>, EncryptionError> {
-    let magic_len = ENCRYPTION_MAGIC_STRING.as_bytes().len();
+    let magic_len = ENCRYPTION_MAGIC_STRING.len();
     let unbound_key = aead::UnboundKey::new(&aead::AES_256_GCM, key)
         .map_err(|_| EncryptionError::DecryptionFailed)?;
     let key = aead::LessSafeKey::new(unbound_key);

@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 #[tauri::command]
 pub async fn sync_authenticate_toggle() -> Result<bool, CommandError> {
-    Ok(sync_toggle().await?)
+    sync_toggle().await
 }
 
 #[derive(serde::Serialize)]
